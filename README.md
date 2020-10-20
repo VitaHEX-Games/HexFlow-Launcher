@@ -1,2 +1,2 @@
-# Hex-Flow-Launcher
+# HexFlow-Launcher
 A 3d cover flow like launcher for PS Vita
