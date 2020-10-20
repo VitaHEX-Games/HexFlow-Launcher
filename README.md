@@ -2,12 +2,12 @@
 A 3d coverflow like launcher for PS Vita.
 <p>&nbsp;</p>
 <p>Display and launch your games and homebrews in style.<br /><strong>HexFlow Launcher</strong> features a 3d user interface to display your games with their box art and supports many customization options like custom covers and backgrounds.</p>
-<h3>Features</h3>
-<h4>Custom Covers</h4>
+<p>&nbsp;</p>
+<h2>Custom Covers</h2>
 <p>Place your custom covers in "<em>ux0:/data/HexFlow/COVERS/PSVITA/</em>"</p>
 <p>Cover images must be in <strong>png</strong> format and file name must match the <strong>App ID</strong> or the <strong>App Name</strong> of each app (recomended resolution 256x256px). <a href="https://live.staticflickr.com/7176/6885249717_738e8ee187_n.jpg" target="_blank" rel="noopener">Sample image</a></p>
 <p>&nbsp;</p>
-<h4>Custom Background</h4>
+<h2>Custom Background</h2>
 <p>Place your custom background image in "<em>ux0:/data/HexFlow/</em>"</p>
 <p>Background image must be named '<strong>Background.jpg</strong>' or '<strong>Background.png</strong>' (recomended resolution 1280x720px or less).</p>
 <p>&nbsp;</p>
