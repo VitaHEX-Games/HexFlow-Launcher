@@ -22,10 +22,12 @@ A 3d coverflow like launcher for PS Vita.
 <p><strong>Circle</strong>: Change View/Cancel</p>
 <p><strong>Start</strong>: Extras menu</p>
 <p>&nbsp;</p>
+<h1>Downloads</h1>
+<p>Grab the latest version from the Releases page <a href="https://github.com/VitaHEX-Games/Consolepedia-3D/releases">HERE</a></p>
+<p>&nbsp;</p>
 <h3>Credits</h3>
 <p>Programming/UI: <strong>Sakis RG</strong></p>
 <p>Developed with <a href="http://rinnegatamante.github.io/lpp-vita/" target="_blank" rel="noopener">Lua Player Plus</a> by <strong>Rinnegatamante</strong></p>
-<p>&nbsp;</p>
 <p>&nbsp;</p>
 <h3>Support</h3>
 <p>If you want to support my work you can become a <a href="https://www.patreon.com/vitahex">Patron</a>.</p>
