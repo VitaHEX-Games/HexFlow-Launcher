@@ -23,7 +23,7 @@ A 3d coverflow like launcher for PS Vita.
 <p><strong>Start</strong>: Extras menu</p>
 <p>&nbsp;</p>
 <h1>Downloads</h1>
-<p>Grab the latest version from the Releases page <a href="https://github.com/VitaHEX-Games/Consolepedia-3D/releases">HERE</a></p>
+<p>Grab the latest version from the Releases page <a href="https://github.com/VitaHEX-Games/HexFlow-Launcher/releases">HERE</a></p>
 <p>&nbsp;</p>
 <h3>Credits</h3>
 <p>Programming/UI: <strong>Sakis RG</strong></p>
