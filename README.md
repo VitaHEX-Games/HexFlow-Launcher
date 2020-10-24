@@ -29,6 +29,10 @@ A 3d coverflow like launcher for PS Vita.
 <p>Programming/UI: <strong>Sakis RG</strong></p>
 <p>Developed with <a href="http://rinnegatamante.github.io/lpp-vita/" target="_blank" rel="noopener">Lua Player Plus</a> by <strong>Rinnegatamante</strong></p>
 <p>&nbsp;</p>
+<h2>Known Issues</h2>
+<p>- Changing Categories multiple times might cause the covers to disappear</p>
+<p>- Loading the library for the first time might seem slow depending on the number of games/apps you have installed</p>
+<p>&nbsp;</p>
 <h3>Support</h3>
 <p>If you want to support my work you can become a <a href="https://www.patreon.com/vitahex">Patron</a>.</p>
 <p>PayPal option is also available <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=RM8ECMVYMTXGJ&amp;source=url">HERE</a></p>
