@@ -6,6 +6,8 @@ A 3d coverflow like launcher for PS Vita.
 <h2>Custom Covers</h2>
 <p>Place your custom covers in "<em>ux0:/data/HexFlow/COVERS/PSVITA/</em>"</p>
 <p>Cover images must be in <strong>png</strong> format and file name must match the <strong>App ID</strong> or the <strong>App Name</strong> of each app (recomended resolution 256x256px). <a href="https://live.staticflickr.com/7176/6885249717_738e8ee187_n.jpg" target="_blank" rel="noopener">Sample image</a></p>
+<p>You can download covers from the link below. A big thanks to <b>astuermer</b> for his contribution.</p>
+<p><a href="https://github.com/andiweli/hexflow-covers" target="_blank" rel="noopener">https://github.com/andiweli/hexflow-covers</a></p>
 <p>&nbsp;</p>
 <h2>Custom Background</h2>
 <p>Place your custom background image in "<em>ux0:/data/HexFlow/</em>"</p>
@@ -28,6 +30,8 @@ A 3d coverflow like launcher for PS Vita.
 <h3>Credits</h3>
 <p>Programming/UI: <strong>Sakis RG</strong></p>
 <p>Developed with <a href="http://rinnegatamante.github.io/lpp-vita/" target="_blank" rel="noopener">Lua Player Plus</a> by <strong>Rinnegatamante</strong></p>
+<h3>Special Thanks</h3>
+<p><a href="https://github.com/andiweli/hexflow-covers" target="_blank" rel="noopener">HEXFlow Covers Git</a>: <strong>andiweli</strong></p>
 <p>&nbsp;</p>
 <h2>Known Issues</h2>
 <p>- Changing Categories multiple times might cause the covers to disappear</p>
