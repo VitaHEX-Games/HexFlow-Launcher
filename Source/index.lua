@@ -1,8 +1,8 @@
--- HexFlow Launcher  version 0.2 by VitaHEX
+-- HexFlow Launcher  version 0.2.1 by VitaHEX
 -- https://www.patreon.com/vitahex
 
 local working_dir = "ux0:/app"
-local appversion = "0.2"
+local appversion = "0.2.1"
 function System.currentDirectory(dir)
 	if dir == nil then
 		return working_dir
@@ -298,17 +298,33 @@ files_table = listDirectory(System.currentDirectory())
 function GetInfoSelected () 
 
 	if showCat == 1 then
-		info = System.extractSfo(working_dir .. "/" .. games_table[p].name .. "/sce_sys/param.sfo")
-		icon_path = "ur0:/appmeta/" .. games_table[p].name .. "/icon0.png"
+		if #games_table>0 then
+			if System.doesFileExist(working_dir .. "/" .. games_table[p].name .. "/sce_sys/param.sfo") then
+				info = System.extractSfo(working_dir .. "/" .. games_table[p].name .. "/sce_sys/param.sfo")
+				icon_path = "ur0:/appmeta/" .. games_table[p].name .. "/icon0.png"
+			end
+		end
 	elseif showCat == 2 then
-		info = System.extractSfo(working_dir .. "/" .. homebrews_table[p].name .. "/sce_sys/param.sfo")
-		icon_path = "ur0:/appmeta/" .. homebrews_table[p].name .. "/icon0.png"
+		if #homebrews_table>0 then
+			if System.doesFileExist(working_dir .. "/" .. homebrews_table[p].name .. "/sce_sys/param.sfo") then
+				info = System.extractSfo(working_dir .. "/" .. homebrews_table[p].name .. "/sce_sys/param.sfo")
+				icon_path = "ur0:/appmeta/" .. homebrews_table[p].name .. "/icon0.png"
+			end
+		end
 	elseif showCat == 3 then
-		info = System.extractSfo(working_dir .. "/" .. psp_table[p].name .. "/sce_sys/param.sfo")
-		icon_path = "ur0:/appmeta/" .. psp_table[p].name .. "/icon0.png"
+		if #psp_table>0 then
+			if System.doesFileExist(working_dir .. "/" .. psp_table[p].name .. "/sce_sys/param.sfo") then
+				info = System.extractSfo(working_dir .. "/" .. psp_table[p].name .. "/sce_sys/param.sfo")
+				icon_path = "ur0:/appmeta/" .. psp_table[p].name .. "/icon0.png"
+			end
+		end
 	else
-		info = System.extractSfo(working_dir .. "/" .. files_table[p].name .. "/sce_sys/param.sfo")
-		icon_path = "ur0:/appmeta/" .. files_table[p].name .. "/icon0.png"
+		if #files_table>0 then
+			if System.doesFileExist(working_dir .. "/" .. files_table[p].name .. "/sce_sys/param.sfo") then
+				info = System.extractSfo(working_dir .. "/" .. files_table[p].name .. "/sce_sys/param.sfo")
+				icon_path = "ur0:/appmeta/" .. files_table[p].name .. "/icon0.png"
+			end
+		end
 	end
 
 	app_title = tostring(info.title)
@@ -965,12 +981,28 @@ while true do
 
 	if showCat == 1 then
 		curTotal = #games_table
+		if #games_table == 0 then 
+			p=0
+			master_index = p
+		end
 	elseif showCat == 2 then
 		curTotal = #homebrews_table
+		if #homebrews_table == 0 then 
+			p=0
+			master_index = p
+		end
 	elseif showCat == 3 then
 		curTotal = #psp_table
+		if #psp_table == 0 then 
+			p=0
+			master_index = p
+		end
 	else
 		curTotal = #files_table
+		if #files_table == 0 then 
+			p=0
+			master_index = p
+		end
 	end
 	
 	-- Check for out of bounds in menu
