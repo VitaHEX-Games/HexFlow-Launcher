@@ -34,7 +34,7 @@ A 3d coverflow like launcher for PS Vita.
 <p><a href="https://github.com/andiweli/hexflow-covers" target="_blank" rel="noopener">HEXFlow Covers Git</a>: <strong>andiweli</strong></p>
 <p>&nbsp;</p>
 <h2>Known Issues</h2>
-<p>- Changing Categories multiple times might cause the covers to disappear</p>
+<p>- Only games/apps from ux0 are supported</p>
 <p>- Loading the library for the first time might seem slow depending on the number of games/apps you have installed</p>
 <p>&nbsp;</p>
 <h3>Support</h3>
