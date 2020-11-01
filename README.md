@@ -6,7 +6,8 @@ A 3d coverflow like launcher for PS Vita.
 <h2>Custom Covers</h2>
 <p>Place your custom covers in "<em>ux0:/data/HexFlow/COVERS/PSVITA/</em>"</p>
 <p>Cover images must be in <strong>png</strong> format and file name must match the <strong>App ID</strong> or the <strong>App Name</strong> of each app (recomended resolution 256x256px). <a href="https://live.staticflickr.com/7176/6885249717_738e8ee187_n.jpg" target="_blank" rel="noopener">Sample image</a></p>
-<p>You can download covers from the link below. A big thanks to <b>astuermer</b> for his contribution.</p>
+<h3>Download Covers and Backgrounds</h3>
+<p>You can download covers and backgrounds from the link below. A big thanks to <b>astuermer</b> for his contribution.</p>
 <p><a href="https://github.com/andiweli/hexflow-covers" target="_blank" rel="noopener">https://github.com/andiweli/hexflow-covers</a></p>
 <p>&nbsp;</p>
 <h2>Custom Background</h2>
