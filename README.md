@@ -33,7 +33,7 @@ A 3d coverflow like launcher for PS Vita.
 <p>Developed with <a href="http://rinnegatamante.github.io/lpp-vita/" target="_blank" rel="noopener">Lua Player Plus</a> by <strong>Rinnegatamante</strong></p>
 <h3>Special Thanks</h3>
 <p><strong>Creckeryop</strong> for the async implementation</p>
-<p><a href="https://github.com/andiweli/hexflow-covers" target="_blank" rel="noopener">HEXFlow Covers Git</a>: <strong>andiweli</strong></p>
+<p><a href="https://github.com/andiweli/hexflow-covers" target="_blank" rel="noopener">HEXFlow Covers Git</a> by <strong>andiweli</strong></p>
 <p>&nbsp;</p>
 <h2>Known Issues</h2>
 <p>- Only games/apps from ux0 are supported</p>
