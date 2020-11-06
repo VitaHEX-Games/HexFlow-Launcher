@@ -35,9 +35,6 @@ A 3d coverflow like launcher for PS Vita.
 <p><strong>Creckeryop</strong> for the async implementation</p>
 <p><a href="https://github.com/andiweli/hexflow-covers" target="_blank" rel="noopener">HEXFlow Covers Git</a> by <strong>andiweli</strong></p>
 <p>&nbsp;</p>
-<h2>Known Issues</h2>
-<p>- Only games/apps from ux0 are supported</p>
-<p>&nbsp;</p>
 <h3>Support</h3>
 <p>If you want to support my work you can become a <a href="https://www.patreon.com/vitahex">Patron</a>.</p>
 <p>PayPal option is also available <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=RM8ECMVYMTXGJ&amp;source=url">HERE</a></p>
