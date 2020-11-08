@@ -1,8 +1,8 @@
--- HexFlow Launcher  version 0.3 by VitaHEX
+-- HexFlow Launcher  version 0.3.1 by VitaHEX
 -- https://www.patreon.com/vitahex
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "0.3"
+local appversion = "0.3.1"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -104,6 +104,8 @@ local red = Color.new(190, 0, 0)
 local blue = Color.new(2, 72, 158)
 local yellow = Color.new(225, 184, 0)
 local green = Color.new(79, 152, 37)
+local purple = Color.new(151, 0, 185)
+local orange = Color.new(220, 120, 0)
 local bg = Color.new(153, 217, 234)
 local themeCol = Color.new(2, 72, 158)
 
@@ -128,7 +130,7 @@ local curTotal = 1
 local startCategory = 1
 local setReflections = 1
 local setSounds = 1
-local themeColor = 0 -- 0 blue, 1 red, 2 yellow, 3 green, 4 grey, 5 black
+local themeColor = 0 -- 0 blue, 1 red, 2 yellow, 3 green, 4 grey, 5 black, 6 purple, 7 orange
 local menuItems = 3
 local setBackground = 1
 
@@ -163,7 +165,6 @@ elseif System.doesFileExist("ux0:/data/HexFlow/Background.jpg") then
 end
 
 function SetThemeColor()
-    -- 0 default blue, 1 red, 2 yellow, 3 green, 4 grey, 5 black
     if themeColor == 1 then
         themeCol = red
     elseif themeColor == 2 then
@@ -174,6 +175,10 @@ function SetThemeColor()
         themeCol = lightgrey
     elseif themeColor == 5 then
         themeCol = black
+    elseif themeColor == 6 then
+        themeCol = purple
+    elseif themeColor == 7 then
+        themeCol = orange
     else
         themeCol = blue -- default blue
     end
@@ -196,7 +201,10 @@ function OneshotPrint(my_func)
 end
 
 function PrintCentered(font, x, y, text, color, size)
-    Font.print(font, x - ((string.len(text) / 2) * (size / 3)) - string.len(text), y, text, color)
+	text = text:gsub("\n","")
+	local width = Font.getTextWidth(font,text)
+    Font.print(font, x - width / 2, y, text, color)
+   -- Font.print(font, x - ((string.len(text) / 2) * (size / 3)) - string.len(text), y, text, color)
 end
 
 function TableConcat(t1, t2)
@@ -227,6 +235,7 @@ function listDirectory(dir)
     homebrews_table = {}
     
     for i, file in pairs(dir) do
+	local custom_path, custom_path_id = nil, nil
         if file.directory then
             -- get app name to match with custom cover file name
             if System.doesFileExist(working_dir .. "/" .. file.name .. "/sce_sys/param.sfo") then
@@ -254,9 +263,9 @@ function listDirectory(dir)
             end
         end
         
-		if System.doesFileExist(custom_path) then
+		if custom_path and System.doesFileExist(custom_path) then
 			img_path = custom_path --custom cover by app name
-		elseif System.doesFileExist(custom_path_id) then
+		elseif custom_path_id and System.doesFileExist(custom_path_id) then
 			img_path = custom_path_id --custom cover by app id
 		else
 			if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
@@ -952,6 +961,10 @@ while true do
             Font.print(fnt22, 84 + 260, 152 + 120, "Grey", white)
         elseif themeColor == 5 then
             Font.print(fnt22, 84 + 260, 152 + 120, "Black", white)
+        elseif themeColor == 6 then
+            Font.print(fnt22, 84 + 260, 152 + 120, "Purple", white)
+        elseif themeColor == 7 then
+            Font.print(fnt22, 84 + 260, 152 + 120, "Orange", white)
         else
             Font.print(fnt22, 84 + 260, 152 + 120, "Blue", white)
         end
@@ -994,7 +1007,7 @@ while true do
                         setSounds = 1
                     end
                 elseif menuY == 3 then
-                    if themeColor < 5 then
+                    if themeColor < 7 then
                         themeColor = themeColor + 1
                     else
                         themeColor = 0
