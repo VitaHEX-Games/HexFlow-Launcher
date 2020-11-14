@@ -1,8 +1,9 @@
--- HexFlow Launcher  version 0.3.1 by VitaHEX
+-- HexFlow Launcher  version 0.4 by VitaHEX
 -- https://www.patreon.com/vitahex
+
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "0.3.1"
+local appversion = "0.4"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -13,9 +14,12 @@ end
 
 Network.init()
 local onlineCovers = "https://raw.githubusercontent.com/andiweli/hexflow-covers/main/Covers/PSVita/"
+local onlineCoversPSP = "https://raw.githubusercontent.com/andiweli/hexflow-covers/main/Covers/PSP/"
+local onlineCoversPSX = "https://raw.githubusercontent.com/andiweli/hexflow-covers/main/Covers/PS1/"
 
 Sound.init()
 local click = Sound.open("app0:/DATA/click2.wav")
+local sndMusic = click--temp
 local imgCoverTmp = Graphics.loadImage("app0:/DATA/noimg.png")
 local backTmp = Graphics.loadImage("app0:/DATA/noimg.png")
 local btnX = Graphics.loadImage("app0:/DATA/x.png")
@@ -25,21 +29,25 @@ local btnO = Graphics.loadImage("app0:/DATA/o.png")
 local imgWifi = Graphics.loadImage("app0:/DATA/wifi.png")
 local imgBattery = Graphics.loadImage("app0:/DATA/bat.png")
 local imgBack = Graphics.loadImage("app0:/DATA/back_01.jpg")
-
+local imgFloor = Graphics.loadImage("app0:/DATA/floor.png")
+Graphics.setImageFilters(imgFloor, FILTER_LINEAR, FILTER_LINEAR)
 
 local cur_dir = "ux0:/data/HexFlow/"
 local covers_psv = "ux0:/data/HexFlow/COVERS/PSVITA/"
 local covers_psp = "ux0:/data/HexFlow/COVERS/PSP/"
+local covers_psx = "ux0:/data/HexFlow/COVERS/PSX/"
 
 -- Create directories
 System.createDirectory("ux0:/data/HexFlow/")
 System.createDirectory("ux0:/data/HexFlow/COVERS/")
 System.createDirectory(covers_psv)
 System.createDirectory(covers_psp)
+System.createDirectory(covers_psx)
 
 -- load textures
 local imgBox = Graphics.loadImage("app0:/DATA/vita_cover.png")
 local imgBoxPSP = Graphics.loadImage("app0:/DATA/psp_cover.png")
+local imgBoxPSX = Graphics.loadImage("app0:/DATA/psx_cover.png")
 
 -- Load models
 local modBox = Render.loadObject("app0:/DATA/box.obj", imgBox)
@@ -52,10 +60,17 @@ local modCoverPSP = Render.loadObject("app0:/DATA/coverpsp.obj", imgCoverTmp)
 local modBoxPSPNoref = Render.loadObject("app0:/DATA/boxpsp_noreflx.obj", imgBoxPSP)
 local modCoverPSPNoref = Render.loadObject("app0:/DATA/coverpsp_noreflx.obj", imgCoverTmp)
 
+local modBoxPSX = Render.loadObject("app0:/DATA/boxpsx.obj", imgBoxPSX)
+local modCoverPSX = Render.loadObject("app0:/DATA/coverpsx.obj", imgCoverTmp)
+local modBoxPSXNoref = Render.loadObject("app0:/DATA/boxpsx_noreflx.obj", imgBoxPSX)
+local modCoverPSXNoref = Render.loadObject("app0:/DATA/coverpsx_noreflx.obj", imgCoverTmp)
+
 local modCoverHbr = Render.loadObject("app0:/DATA/cover_square.obj", imgCoverTmp)
 local modCoverHbrNoref = Render.loadObject("app0:/DATA/cover_square_noreflx.obj", imgCoverTmp)
+
 local modBackground = Render.loadObject("app0:/DATA/planebg.obj", imgBack)
 local modDefaultBackground = Render.loadObject("app0:/DATA/planebg.obj", imgBack)
+local modFloor = Render.loadObject("app0:/DATA/planefloor.obj", imgFloor)
 
 local img_path = ""
 
@@ -74,7 +89,7 @@ Font.setPixelSizes(fnt35, 35)
 local menuX = 0
 local menuY = 0
 local showMenu = 0
-local showCat = 1 -- Category: 0 = all, 1 = games, 2 = homebrews, 3 = psp
+local showCat = 1 -- Category: 0 = all, 1 = games, 2 = homebrews, 3 = psp, 4 = psx
 local showView = 0
 
 local info = System.extractSfo("app0:/sce_sys/param.sfo")
@@ -82,6 +97,7 @@ local app_version = info.version
 local app_title = info.title
 local app_category = info.category
 local app_titleid = info.titleid
+local app_size = 0
 
 local master_index = 1
 local p = 1
@@ -116,6 +132,9 @@ local space = 1
 local touchdown = 0
 local startCovers = false
 local inPreview = false
+local apptype = 0
+local appdir = ""
+local getCovers = 0--0 PSV, 1 PSP, 2 PS1
 
 local prevX = 0
 local prevZ = 0
@@ -133,6 +152,7 @@ local setSounds = 1
 local themeColor = 0 -- 0 blue, 1 red, 2 yellow, 3 green, 4 grey, 5 black, 6 purple, 7 orange
 local menuItems = 3
 local setBackground = 1
+local setLanguage = 0
 
 if System.doesFileExist(cur_dir .. "/config.dat") then
     local file_config = System.openFile(cur_dir .. "/config.dat", FREAD)
@@ -145,9 +165,10 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
     local getSounds = tonumber(string.sub(str, 3, 3)); if getSounds ~= nil then setSounds = getSounds end
     local getthemeColor = tonumber(string.sub(str, 4, 4)); if getthemeColor ~= nil then themeColor = getthemeColor end
     local getBackground = tonumber(string.sub(str, 5, 5)); if getBackground ~= nil then setBackground = getBackground end
+    local getLanguage = tonumber(string.sub(str, 6, 6)); if getLanguage ~= nil then setLanguage = getLanguage end
 else
     local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
-    System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground, 5)
+    System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground .. setLanguage, 6)
     System.closeFile(file_config)
 end
 showCat = startCategory
@@ -162,6 +183,14 @@ elseif System.doesFileExist("ux0:/data/HexFlow/Background.jpg") then
     imgCustomBack = Graphics.loadImage("ux0:/data/HexFlow/Background.jpg")
     Graphics.setImageFilters(imgCustomBack, FILTER_LINEAR, FILTER_LINEAR)
     Render.useTexture(modBackground, imgCustomBack)
+end
+
+-- Custom Music
+if System.doesFileExist(cur_dir .. "/Music.mp3") then
+	sndMusic = Sound.open(cur_dir .. "/Music.mp3")
+	if setSounds == 1 then
+		Sound.play(sndMusic, LOOP)
+	end
 end
 
 function SetThemeColor()
@@ -200,11 +229,52 @@ function OneshotPrint(my_func)
     my_func()
 end
 
+local lang_lines = {}
+local lang_default = "PS VITA\nHOMEBREWS\nPSP\nPS1\nALL\nSETTINGS\nLaunch\nDetails\nCategory\nView\nClose\nVersion\nAbout\nStartup Category\nReflection Effect\nSounds\nTheme Color\nCustom Background\nDownload Covers\nReload Covers Database\nLanguage\nON\nOFF\nRed\nYellow\nGreen\nGrey\nBlack\nPurple\nOrange\nBlue\nSelect"
+function ChangeLanguage()
+if #lang_lines>0 then
+	for k in pairs (lang_lines) do
+		lang_lines [k] = nil
+	end
+end
+
+local lang = "EN.ini"
+ -- 0 EN, 1 DE, 2 FR, 3 IT, 4 SP
+	if setLanguage == 1 then
+		lang = "DE.ini"
+	elseif setLanguage == 2 then
+		lang = "FR.ini"
+	elseif setLanguage == 3 then
+		lang = "IT.ini"
+	elseif setLanguage == 4 then
+		lang = "SP.ini"
+	elseif setLanguage == 5 then
+		lang = "RU.ini"
+	else
+		lang = "EN.ini"
+	end
+	
+	if System.doesFileExist("app0:/translations/" .. lang) then
+		langfile = "app0:/translations/" .. lang
+	else
+		--create default EN.ini if language is missing
+		handle = System.openFile("ux0:/data/HexFlow/EN.ini", FCREATE)
+		System.writeFile(handle, "" .. lang_default, string.len(lang_default))
+		System.closeFile(handle)
+		langfile = "ux0:/data/HexFlow/EN.ini"
+		setLanguage=0
+	end
+
+    for line in io.lines(langfile) do
+        lang_lines[#lang_lines+1] = line
+    end
+end
+ChangeLanguage()
+
 function PrintCentered(font, x, y, text, color, size)
 	text = text:gsub("\n","")
 	local width = Font.getTextWidth(font,text)
     Font.print(font, x - width / 2, y, text, color)
-   -- Font.print(font, x - ((string.len(text) / 2) * (size / 3)) - string.len(text), y, text, color)
 end
 
 function TableConcat(t1, t2)
@@ -215,6 +285,9 @@ function TableConcat(t1, t2)
 end
 
 function FreeMemory()
+	if System.doesFileExist(cur_dir .. "/Music.mp3") then
+		Sound.close(sndMusic)
+	end
     Graphics.freeImage(imgCoverTmp)
     Graphics.freeImage(btnX)
     Graphics.freeImage(btnT)
@@ -232,10 +305,12 @@ function listDirectory(dir)
     files_table = {}
     games_table = {}
     psp_table = {}
+    psx_table = {}
     homebrews_table = {}
+	-- app_type = 0 -- 0 homebrew, 1 psvita, 2 psp, 3 psx
     
     for i, file in pairs(dir) do
-	local custom_path, custom_path_id = nil, nil
+	local custom_path, custom_path_id, app_type = nil, nil, nil
         if file.directory then
             -- get app name to match with custom cover file name
             if System.doesFileExist(working_dir .. "/" .. file.name .. "/sce_sys/param.sfo") then
@@ -248,18 +323,28 @@ function listDirectory(dir)
                 table.insert(games_table, file)
                 custom_path = covers_psv .. app_title .. ".png"
                 custom_path_id = covers_psv .. file.name .. ".png"
-            elseif string.match(file.name, "PSPEMU") and not string.match(file.name, "PSPEMUCFW") then
+				file.app_type=1
+            elseif System.doesFileExist(working_dir .. "/" .. file.name .. "/data/boot.bin") and not System.doesFileExist("ux0:pspemu/PSP/GAME/" .. file.name .. "/EBOOT.PBP") then
                 -- Scan PSP Games
                 table.insert(folders_table, file)
                 table.insert(psp_table, file)
                 custom_path = covers_psp .. app_title .. ".png"
                 custom_path_id = covers_psp .. file.name .. ".png"
+				file.app_type=2
+            elseif System.doesFileExist(working_dir .. "/" .. file.name .. "/data/boot.bin") and System.doesFileExist("ux0:pspemu/PSP/GAME/" .. file.name .. "/EBOOT.PBP") then
+                -- Scan PSX Games
+                table.insert(folders_table, file)
+                table.insert(psx_table, file)
+                custom_path = covers_psx .. app_title .. ".png"
+                custom_path_id = covers_psx .. file.name .. ".png"
+				file.app_type=3
             else
                 -- Scan Homebrews
                 table.insert(folders_table, file)
                 table.insert(homebrews_table, file)
                 custom_path = covers_psv .. app_title .. ".png"
                 custom_path_id = covers_psv .. file.name .. ".png"
+				file.app_type=0
             end
         end
         
@@ -275,6 +360,9 @@ function listDirectory(dir)
 			end
 		end
         
+        table.insert(files_table, 4, file.app_type)
+		
+		
         --add blank icon to all
         file.icon = imgCoverTmp
         file.icon_path = img_path
@@ -291,6 +379,7 @@ function listDirectory(dir)
     table.sort(games_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(homebrews_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(psp_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(psx_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     
     return_table = TableConcat(folders_table, files_table)
     
@@ -307,6 +396,22 @@ end
 
 files_table = listDirectory(System.currentDirectory())
 
+function getAppSize(dir)
+    local size = 0
+    local function get_size(dir)
+        local d = System.listDirectory(dir) or {}
+        for _, v in ipairs(d) do
+            if v.directory then
+                get_size(dir .. "/" .. v.name)
+            else
+                size = size + v.size
+            end
+        end
+    end
+	get_size(dir)
+	return size
+end
+
 function GetInfoSelected()
     if showCat == 1 then
         if #games_table > 0 then
@@ -314,7 +419,12 @@ function GetInfoSelected()
                 info = System.extractSfo(working_dir .. "/" .. games_table[p].name .. "/sce_sys/param.sfo")
                 icon_path = "ur0:/appmeta/" .. games_table[p].name .. "/icon0.png"
                 pic_path = "ur0:/appmeta/" .. games_table[p].name .. "/pic0.png"
+				app_title = tostring(info.title)
+				apptype = games_table[p].app_type
+				appdir=working_dir .. "/" .. games_table[p].name
             end
+		else
+			app_title = "-"
         end
     elseif showCat == 2 then
         if #homebrews_table > 0 then
@@ -322,7 +432,12 @@ function GetInfoSelected()
                 info = System.extractSfo(working_dir .. "/" .. homebrews_table[p].name .. "/sce_sys/param.sfo")
                 icon_path = "ur0:/appmeta/" .. homebrews_table[p].name .. "/icon0.png"
                 pic_path = "ur0:/appmeta/" .. homebrews_table[p].name .. "/pic0.png"
+				app_title = tostring(info.title)
+				apptype = homebrews_table[p].app_type
+				appdir=working_dir .. "/" .. homebrews_table[p].name
             end
+		else
+			app_title = "-"
         end
     elseif showCat == 3 then
         if #psp_table > 0 then
@@ -330,7 +445,25 @@ function GetInfoSelected()
                 info = System.extractSfo(working_dir .. "/" .. psp_table[p].name .. "/sce_sys/param.sfo")
                 icon_path = "ur0:/appmeta/" .. psp_table[p].name .. "/icon0.png"
                 pic_path = "ur0:/appmeta/" .. psp_table[p].name .. "/pic0.png"
+				app_title = tostring(info.title)
+				apptype = psp_table[p].app_type
+				appdir=working_dir .. "/" .. psp_table[p].name
             end
+		else
+			app_title = "-"
+        end
+    elseif showCat == 4 then
+        if #psx_table > 0 then
+            if System.doesFileExist(working_dir .. "/" .. psx_table[p].name .. "/sce_sys/param.sfo") then
+                info = System.extractSfo(working_dir .. "/" .. psx_table[p].name .. "/sce_sys/param.sfo")
+                icon_path = "ur0:/appmeta/" .. psx_table[p].name .. "/icon0.png"
+                pic_path = "ur0:/appmeta/" .. psx_table[p].name .. "/pic0.png"
+				app_title = tostring(info.title)
+				apptype = psx_table[p].app_type
+				appdir="ux0:pspemu/PSP/GAME/" .. psx_table[p].name
+            end
+		else
+			app_title = "-"
         end
     else
         if #files_table > 0 then
@@ -338,14 +471,26 @@ function GetInfoSelected()
                 info = System.extractSfo(working_dir .. "/" .. files_table[p].name .. "/sce_sys/param.sfo")
                 icon_path = "ur0:/appmeta/" .. files_table[p].name .. "/icon0.png"
                 pic_path = "ur0:/appmeta/" .. files_table[p].name .. "/pic0.png"
+				app_title = tostring(info.title)
+				apptype = files_table[p].app_type
+				--appdir=working_dir .. "/" .. files_table[p].name
+				if apptype==1 then
+					appdir=working_dir .. "/" .. files_table[p].name
+				elseif apptype==2 then
+					appdir=working_dir .. "/" .. files_table[p].name
+				elseif apptype==3 then
+					appdir="ux0:pspemu/PSP/GAME/" .. files_table[p].name
+				else
+					appdir=working_dir .. "/" .. files_table[p].name
+				end
             end
+		else
+			app_title = "-"
         end
     end
-    
-    app_title = tostring(info.title)
+
     app_titleid = tostring(info.titleid)
     app_version = tostring(info.version)
-
 end
 
 function DownloadCovers()
@@ -357,78 +502,203 @@ function DownloadCovers()
     
     local app_idx = 1
     local running = false
+	status = System.getMessageState()
     
-    if Network.isWifiEnabled() and #games_table > 0 then
-        
-        status = System.getMessageState()
-        if status ~= RUNNING then
-            if scanComplete == false then
-                System.setMessage("Downloading covers...", true)
-                System.setMessageProgMsg(txt)
-                
-                while app_idx <= #games_table do
-                    if System.getAsyncState() ~= 0 then
-                        Network.downloadFileAsync(onlineCovers .. games_table[app_idx].name .. ".png", "ux0:/data/HexFlow/" .. games_table[app_idx].name .. ".png")
-                        running = true
-                    end
-                    if System.getAsyncState() == 1 then
-                        Graphics.initBlend()
-                        Graphics.termBlend()
-                        Screen.flip()
-                        running = false
-                    end
-                    if running == false then
-                        if System.doesFileExist("ux0:/data/HexFlow/" .. games_table[app_idx].name .. ".png") then
-                            tmpfile = System.openFile("ux0:/data/HexFlow/" .. games_table[app_idx].name .. ".png", FREAD)
-                            size = System.sizeFile(tmpfile)
-                            if size < 1024 then
-                                System.deleteFile("ux0:/data/HexFlow/" .. games_table[app_idx].name .. ".png")
-                            else
-                                System.rename("ux0:/data/HexFlow/" .. games_table[app_idx].name .. ".png", covers_psv .. games_table[app_idx].name .. ".png")
-                                cvrfound = cvrfound + 1
-                            end
-                            System.closeFile(tmpfile)
-                            
-                            percent = (app_idx / #games_table) * 100
-                            txt = "Downloading covers...\nCover " .. games_table[app_idx].name .. "\nFound " .. cvrfound .. " of " .. #games_table
-                            
-                            Graphics.initBlend()
-                            Graphics.termBlend()
-                            Screen.flip()
-                            app_idx = app_idx + 1
-                        end
-                    end
-                    
-                    if txt ~= old_txt then
-                        System.setMessageProgMsg(txt)
-                        old_txt = txt
-                    end
-                    if percent ~= old_percent then
-                        System.setMessageProgress(percent)
-                        old_percent = percent
-                    end
-                end
-                
-                if app_idx >= #games_table then
-                    System.closeMessage()
-                    scanComplete = true
-                end
-            
-            else
-                --System.setMessage("Please restart the app to import the new covers", false, BUTTON_OK)
-				--restart if pressed again
-				FreeIcons()
-				FreeMemory()
-				Network.term()
-				dofile("app0:index.lua")
-            end
+    if Network.isWifiEnabled() then
+		-- scan PSVITA
+        if getCovers==0 and #games_table > 0 then
+			if status ~= RUNNING then
+				if scanComplete == false then
+					System.setMessage("Downloading covers...", true)
+					System.setMessageProgMsg(txt)
+					
+					while app_idx <= #games_table do
+						if System.getAsyncState() ~= 0 then
+							Network.downloadFileAsync(onlineCovers .. games_table[app_idx].name .. ".png", "ux0:/data/HexFlow/" .. games_table[app_idx].name .. ".png")
+							running = true
+						end
+						if System.getAsyncState() == 1 then
+							Graphics.initBlend()
+							Graphics.termBlend()
+							Screen.flip()
+							running = false
+						end
+						if running == false then
+							if System.doesFileExist("ux0:/data/HexFlow/" .. games_table[app_idx].name .. ".png") then
+								tmpfile = System.openFile("ux0:/data/HexFlow/" .. games_table[app_idx].name .. ".png", FREAD)
+								size = System.sizeFile(tmpfile)
+								if size < 1024 then
+									System.deleteFile("ux0:/data/HexFlow/" .. games_table[app_idx].name .. ".png")
+								else
+									System.rename("ux0:/data/HexFlow/" .. games_table[app_idx].name .. ".png", covers_psv .. games_table[app_idx].name .. ".png")
+									cvrfound = cvrfound + 1
+								end
+								System.closeFile(tmpfile)
+								
+								percent = (app_idx / #games_table) * 100
+								txt = "Downloading PS Vita covers...\nCover " .. games_table[app_idx].name .. "\nFound " .. cvrfound .. " of " .. #games_table
+								
+								Graphics.initBlend()
+								Graphics.termBlend()
+								Screen.flip()
+								app_idx = app_idx + 1
+							end
+						end
+						
+						if txt ~= old_txt then
+							System.setMessageProgMsg(txt)
+							old_txt = txt
+						end
+						if percent ~= old_percent then
+							System.setMessageProgress(percent)
+							old_percent = percent
+						end
+					end
+					if app_idx >= #games_table then
+						System.closeMessage()
+						scanComplete = true
+					end
+				else
+					FreeIcons()
+					FreeMemory()
+					Network.term()
+					dofile("app0:index.lua")
+				end
+			end
         end
+		-- scan PSP
+        if  getCovers==1 and #psp_table > 0 then
+			if status ~= RUNNING then
+				if scanComplete == false then
+					System.setMessage("Downloading covers...", true)
+					System.setMessageProgMsg(txt)
+					
+					while app_idx <= #psp_table do
+						if System.getAsyncState() ~= 0 then
+							Network.downloadFileAsync(onlineCoversPSP .. psp_table[app_idx].name .. ".png", "ux0:/data/HexFlow/" .. psp_table[app_idx].name .. ".png")
+							running = true
+						end
+						if System.getAsyncState() == 1 then
+							Graphics.initBlend()
+							Graphics.termBlend()
+							Screen.flip()
+							running = false
+						end
+						if running == false then
+							if System.doesFileExist("ux0:/data/HexFlow/" .. psp_table[app_idx].name .. ".png") then
+								tmpfile = System.openFile("ux0:/data/HexFlow/" .. psp_table[app_idx].name .. ".png", FREAD)
+								size = System.sizeFile(tmpfile)
+								if size < 1024 then
+									System.deleteFile("ux0:/data/HexFlow/" .. psp_table[app_idx].name .. ".png")
+								else
+									System.rename("ux0:/data/HexFlow/" .. psp_table[app_idx].name .. ".png", covers_psp .. psp_table[app_idx].name .. ".png")
+									cvrfound = cvrfound + 1
+								end
+								System.closeFile(tmpfile)
+								
+								percent = (app_idx / #psp_table) * 100
+								txt = "Downloading PSP covers...\nCover " .. psp_table[app_idx].name .. "\nFound " .. cvrfound .. " of " .. #psp_table
+								
+								Graphics.initBlend()
+								Graphics.termBlend()
+								Screen.flip()
+								app_idx = app_idx + 1
+							end
+						end
+						
+						if txt ~= old_txt then
+							System.setMessageProgMsg(txt)
+							old_txt = txt
+						end
+						if percent ~= old_percent then
+							System.setMessageProgress(percent)
+							old_percent = percent
+						end
+					end
+					if app_idx >= #psp_table then
+						System.closeMessage()
+						scanComplete = true
+					end
+				else
+					FreeIcons()
+					FreeMemory()
+					Network.term()
+					dofile("app0:index.lua")
+				end
+			end
+        end
+		
+		-- scan PS1
+        if  getCovers==2 and #psx_table > 0 then
+			if status ~= RUNNING then
+				if scanComplete == false then
+					System.setMessage("Downloading covers...", true)
+					System.setMessageProgMsg(txt)
+					
+					while app_idx <= #psx_table do
+						if System.getAsyncState() ~= 0 then
+							Network.downloadFileAsync(onlineCoversPSX .. psx_table[app_idx].name .. ".png", "ux0:/data/HexFlow/" .. psx_table[app_idx].name .. ".png")
+							running = true
+						end
+						if System.getAsyncState() == 1 then
+							Graphics.initBlend()
+							Graphics.termBlend()
+							Screen.flip()
+							running = false
+						end
+						if running == false then
+							if System.doesFileExist("ux0:/data/HexFlow/" .. psx_table[app_idx].name .. ".png") then
+								tmpfile = System.openFile("ux0:/data/HexFlow/" .. psx_table[app_idx].name .. ".png", FREAD)
+								size = System.sizeFile(tmpfile)
+								if size < 1024 then
+									System.deleteFile("ux0:/data/HexFlow/" .. psx_table[app_idx].name .. ".png")
+								else
+									System.rename("ux0:/data/HexFlow/" .. psx_table[app_idx].name .. ".png", covers_psx .. psx_table[app_idx].name .. ".png")
+									cvrfound = cvrfound + 1
+								end
+								System.closeFile(tmpfile)
+								
+								percent = (app_idx / #psx_table) * 100
+								txt = "Downloading PS1 covers...\nCover " .. psx_table[app_idx].name .. "\nFound " .. cvrfound .. " of " .. #psx_table
+								
+								Graphics.initBlend()
+								Graphics.termBlend()
+								Screen.flip()
+								app_idx = app_idx + 1
+							end
+						end
+						
+						if txt ~= old_txt then
+							System.setMessageProgMsg(txt)
+							old_txt = txt
+						end
+						if percent ~= old_percent then
+							System.setMessageProgress(percent)
+							old_percent = percent
+						end
+					end
+					if app_idx >= #psx_table then
+						System.closeMessage()
+						scanComplete = true
+					end
+				else
+					FreeIcons()
+					FreeMemory()
+					Network.term()
+					dofile("app0:index.lua")
+				end
+			end
+        end
+	else
+		if status ~= RUNNING then
+			System.setMessage("Internet Connection Required", false, BUTTON_OK)
+		end
+		
     end
     gettingCovers = false
 end
 
-
-local function DrawCover(x, y, text, icon, sel)
+local function DrawCover(x, y, text, icon, sel, apptype)
     rot = 0
     extraz = 0
     extrax = 0
@@ -494,7 +764,7 @@ local function DrawCover(x, y, text, icon, sel)
     Render.setCamera(camX, 0, 0, 0.0, 0.0, 0.0)
     
     if hideBoxes <= 0 then
-        if string.match(text, "PCS") and not string.match(text, "PCSI") then
+        if apptype==1 then
             -- PSVita Boxes
             if setReflections == 1 then
                 Render.useTexture(modCover, icon)
@@ -505,7 +775,7 @@ local function DrawCover(x, y, text, icon, sel)
                 Render.drawModel(modCoverNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif string.match(text, "PSPEMU") and not string.match(text, "PSPEMUCFW") then
+        elseif apptype==2 then
             -- PSP Boxes
             if setReflections == 1 then
                 Render.useTexture(modCoverPSP, icon)
@@ -515,6 +785,17 @@ local function DrawCover(x, y, text, icon, sel)
                 Render.useTexture(modCoverPSPNoref, icon)
                 Render.drawModel(modCoverPSPNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxPSPNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+            end
+        elseif apptype==3 then
+            -- PSX Boxes
+            if setReflections == 1 then
+                Render.useTexture(modCoverPSX, icon)
+                Render.drawModel(modCoverPSX, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+                Render.drawModel(modBoxPSX, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+            else
+                Render.useTexture(modCoverPSXNoref, icon)
+                Render.drawModel(modCoverPSXNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+                Render.drawModel(modBoxPSXNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
         else
             -- Homebrew Icon
@@ -558,6 +839,14 @@ function FreeIcons()
             v.ricon = nil
         end
     end
+    for k, v in pairs(psx_table) do
+        FileLoad[v] = nil
+        Threads.remove(v)
+        if v.ricon then
+            Graphics.freeImage(v.ricon)
+            v.ricon = nil
+        end
+    end
     for k, v in pairs(homebrews_table) do
         FileLoad[v] = nil
         Threads.remove(v)
@@ -566,6 +855,108 @@ function FreeIcons()
             v.ricon = nil
         end
     end
+end
+
+function DownloadSingleCover()
+    cvrfound = 0
+    app_idx = p
+    running = false
+	status = System.getMessageState()
+	
+	local coverspath = ""
+	local onlineCoverspath = ""
+
+	
+	if Network.isWifiEnabled() then
+		if apptype == 1 then
+			coverspath = covers_psv
+			onlineCoverspath = onlineCovers
+		elseif apptype == 2 then
+			coverspath = covers_psp
+			onlineCoverspath = onlineCoversPSP
+		elseif apptype == 3 then
+			coverspath = covers_psx
+			onlineCoverspath = onlineCoversPSX
+		else
+			coverspath = covers_psv
+			onlineCoverspath = onlineCovers
+		end
+	
+		Network.downloadFile(onlineCoverspath .. app_titleid .. ".png", "ux0:/data/HexFlow/" .. app_titleid .. ".png")
+		
+		if System.doesFileExist("ux0:/data/HexFlow/" .. app_titleid .. ".png") then
+			tmpfile = System.openFile("ux0:/data/HexFlow/" .. app_titleid .. ".png", FREAD)
+			size = System.sizeFile(tmpfile)
+			if size < 1024 then
+				System.deleteFile("ux0:/data/HexFlow/" .. app_titleid .. ".png")
+			else
+				System.rename("ux0:/data/HexFlow/" .. app_titleid .. ".png", coverspath .. app_titleid .. ".png")
+				cvrfound = 1
+			end
+			System.closeFile(tmpfile)
+		end
+		
+		if cvrfound==1 then
+			if showCat == 1 then
+				--"games_table"
+				games_table[app_idx].icon_path=coverspath .. app_titleid .. ".png"
+				if FileLoad[games_table[app_idx]] == true then
+					FileLoad[games_table[app_idx]] = nil
+					Threads.remove(games_table[app_idx])
+				end
+				if games_table[app_idx].ricon then
+					games_table[app_idx].ricon = nil
+				end
+			elseif showCat == 2 then
+				--"homebrews_table"
+					
+			elseif showCat == 3 then
+				--"psp_table"
+				psp_table[app_idx].icon_path=coverspath .. app_titleid .. ".png"
+				if FileLoad[psp_table[app_idx]] == true then
+					FileLoad[psp_table[app_idx]] = nil
+					Threads.remove(psp_table[app_idx])
+				end
+				if psp_table[app_idx].ricon then
+					psp_table[app_idx].ricon = nil
+				end
+			elseif showCat == 4 then
+				--"psx_table"
+				psx_table[app_idx].icon_path=coverspath .. app_titleid .. ".png"
+				if FileLoad[psx_table[app_idx]] == true then
+					FileLoad[psx_table[app_idx]] = nil
+					Threads.remove(psx_table[app_idx])
+				end
+				if psx_table[app_idx].ricon then
+					psx_table[app_idx].ricon = nil
+				end
+			else
+				--"files_table"
+				files_table[app_idx].icon_path=coverspath .. app_titleid .. ".png"
+				if FileLoad[files_table[app_idx]] == true then
+					FileLoad[files_table[app_idx]] = nil
+					Threads.remove(files_table[app_idx])
+				end
+				if files_table[app_idx].ricon then
+					files_table[app_idx].ricon = nil
+				end
+			end
+			if status ~= RUNNING then
+				System.setMessage("Cover " .. app_titleid .. " found!", false, BUTTON_OK)
+			end
+		else
+			if status ~= RUNNING then
+				System.setMessage("Cover not found", false, BUTTON_OK)
+			end
+		end
+		
+	else
+		if status ~= RUNNING then
+			System.setMessage("Internet Connection Required", false, BUTTON_OK)
+		end
+	end
+	
+	gettingCovers = false
 end
 
 -- Main loop
@@ -611,23 +1002,37 @@ while true do
         Graphics.drawImage(888, 41, imgBattery)
         Graphics.fillRect(891, 891 + (life / 5.2), 45, 53, white)
         -- Footer buttons and icons
-        Graphics.drawImage(850, 510, btnX)
-        Font.print(fnt20, 878, 508, "Launch", white)
-        Graphics.drawImage(750, 510, btnT)
-        Font.print(fnt20, 778, 508, "Details", white)
-        Graphics.drawImage(620, 510, btnS)
-        Font.print(fnt20, 648, 508, "Category", white)
-        Graphics.drawImage(530, 510, btnO)
-        Font.print(fnt20, 558, 508, "View", white)
-        
+		if setLanguage==5 then
+		--Russian language fix positions
+			Graphics.drawImage(824, 510, btnX)
+			Font.print(fnt20, 824+28, 508, lang_lines[7], white)--Launch
+			Graphics.drawImage(710, 510, btnT)
+			Font.print(fnt20, 710+28, 508, lang_lines[8], white)--Details
+			Graphics.drawImage(570, 510, btnS)
+			Font.print(fnt20, 570+28, 508, lang_lines[9], white)--Category
+			Graphics.drawImage(480, 510, btnO)
+			Font.print(fnt20, 480+28, 508, lang_lines[10], white)--View
+		else
+			Graphics.drawImage(904-(string.len(lang_lines[7])*10), 510, btnX)
+			Font.print(fnt20, 904+28-(string.len(lang_lines[7])*10), 508, lang_lines[7], white)--Launch
+			Graphics.drawImage(790-(string.len(lang_lines[8])*10), 510, btnT)
+			Font.print(fnt20, 790+28-(string.len(lang_lines[8])*10), 508, lang_lines[8], white)--Details
+			Graphics.drawImage(670-(string.len(lang_lines[9])*10), 510, btnS)
+			Font.print(fnt20, 670+28-(string.len(lang_lines[9])*10), 508, lang_lines[9], white)--Category
+			Graphics.drawImage(520-(string.len(lang_lines[10])*10), 510, btnO)
+			Font.print(fnt20, 520+28-(string.len(lang_lines[10])*10), 508, lang_lines[10], white)--View
+		end
+		
         if showCat == 1 then
-            Font.print(fnt22, 32, 34, "GAMES", white)
+            Font.print(fnt22, 32, 34, lang_lines[1], white)--GAMES
         elseif showCat == 2 then
-            Font.print(fnt22, 32, 34, "HOMEBREWS", white)
+            Font.print(fnt22, 32, 34, lang_lines[2], white)--HOMEBREWS
         elseif showCat == 3 then
-            Font.print(fnt22, 32, 34, "PSP", white)
+            Font.print(fnt22, 32, 34, lang_lines[3], white)--PSP
+        elseif showCat == 4 then
+            Font.print(fnt22, 32, 34, lang_lines[4], white)--PSX
         else
-            Font.print(fnt22, 32, 34, "ALL", white)
+            Font.print(fnt22, 32, 34, lang_lines[5], white)--ALL
         end
         if Network.isWifiEnabled() then
             Graphics.drawImage(800, 38, imgWifi)-- wifi icon
@@ -660,9 +1065,9 @@ while true do
                         })
                     end
                     if file.ricon ~= nil then
-                        DrawCover((targetX + l * space) - (#games_table * space + space), -0.6, file.name, file.ricon, base_x)--draw visible covers only
+                        DrawCover((targetX + l * space) - (#games_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
                     else
-                        DrawCover((targetX + l * space) - (#games_table * space + space), -0.6, file.name, file.icon, base_x)--draw visible covers only
+                        DrawCover((targetX + l * space) - (#games_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
                     end
                 else
                     if FileLoad[file] == true then
@@ -696,9 +1101,9 @@ while true do
                         })
                     end
                     if file.ricon ~= nil then
-                        DrawCover((targetX + l * space) - (#homebrews_table * space + space), -0.6, file.name, file.ricon, base_x)--draw visible covers only
+                        DrawCover((targetX + l * space) - (#homebrews_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
                     else
-                        DrawCover((targetX + l * space) - (#homebrews_table * space + space), -0.6, file.name, file.icon, base_x)--draw visible covers only
+                        DrawCover((targetX + l * space) - (#homebrews_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
                     end
                 else
                     if FileLoad[file] == true then
@@ -731,9 +1136,9 @@ while true do
                         })
                     end
                     if file.ricon ~= nil then
-                        DrawCover((targetX + l * space) - (#psp_table * space + space), -0.6, file.name, file.ricon, base_x)--draw visible covers only
+                        DrawCover((targetX + l * space) - (#psp_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
                     else
-                        DrawCover((targetX + l * space) - (#psp_table * space + space), -0.6, file.name, file.icon, base_x)--draw visible covers only
+                        DrawCover((targetX + l * space) - (#psp_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
                     end
                 else
                     if FileLoad[file] == true then
@@ -748,6 +1153,41 @@ while true do
             end
             if showView ~= 2 then
                 PrintCentered(fnt20, 480, 462, p .. " of " .. #psp_table, white, 20)-- Draw total items
+            end
+        elseif showCat == 4 then
+            --PSX
+            for l, file in pairs(psx_table) do
+                if (l >= master_index) then
+                    base_x = base_x + space
+                end
+                if l > p-8 and base_x < 10 then
+                    if FileLoad[file] == nil then
+                        FileLoad[file] = true
+                        Threads.addTask(file, {
+                            Type = "ImageLoad",
+                            Path = file.icon_path,
+                            Table = file,
+                            Index = "ricon"
+                        })
+                    end
+                    if file.ricon ~= nil then
+                        DrawCover((targetX + l * space) - (#psx_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
+                    else
+                        DrawCover((targetX + l * space) - (#psx_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
+                    end
+                else
+                    if FileLoad[file] == true then
+                        FileLoad[file] = nil
+                        Threads.remove(file)
+                    end
+                    if file.ricon then
+                        Graphics.freeImage(file.ricon)
+                        file.ricon = nil
+                    end
+                end
+            end
+            if showView ~= 2 then
+                PrintCentered(fnt20, 480, 462, p .. " of " .. #psx_table, white, 20)-- Draw total items
             end
         else
             --ALL
@@ -766,9 +1206,9 @@ while true do
                         })
                     end
                     if file.ricon ~= nil then
-                        DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.ricon, base_x)--draw visible covers only
+                        DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
                     else
-                        DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.icon, base_x)--draw visible covers only
+                        DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
                     end
                 else
                     if FileLoad[file] == true then
@@ -802,7 +1242,18 @@ while true do
             startCovers = true
             GetInfoSelected()
         end
-        
+		
+		if setReflections==1 then
+			floorY = 0
+			if showView == 2 then
+				floorY = -0.6
+			elseif showView == 3 then
+				floorY = -0.3
+			end
+			--Draw half transparent floor for reflection effect
+			Render.drawModel(modFloor, 0, -0.6+floorY, 0, 0, 0, 0)
+		end
+		
         prevX = 0
         prevZ = 0
         prevRot = 0
@@ -811,8 +1262,10 @@ while true do
         
         -- PREVIEW
         -- Footer buttons and icons
-        Graphics.drawImage(850, 510, btnO)
-        Font.print(fnt20, 878, 508, "Close", white)
+        Graphics.drawImage(900-(string.len(lang_lines[11])*10), 510, btnO)
+        Font.print(fnt20, 900+28-(string.len(lang_lines[11])*10), 508, lang_lines[11], white)--Close
+        Graphics.drawImage(750-(string.len(lang_lines[32])*10), 510, btnX)
+        Font.print(fnt20, 750+28-(string.len(lang_lines[32])*10), 508, lang_lines[32], white)--Select
         
         Graphics.fillRect(24, 470, 24, 470, darkalpha)
         Render.setCamera(0, 0, 0, 0.0, 0.0, 0.0)
@@ -831,6 +1284,9 @@ while true do
             else
                 Render.useTexture(modBackground, imgCustomBack)
             end
+			
+			app_size = getAppSize(appdir)/1024/1024
+			menuY=0
             inPreview = true
         end
         
@@ -849,9 +1305,6 @@ while true do
         
         txtname = string.sub(app_title, 1, 32) .. "\n" .. string.sub(app_title, 33)
         
-        Font.print(fnt22, 50, 190, txtname, white)-- app name
-        Font.print(fnt22, 50, 240, "App ID: " .. app_titleid .. "\nVersion: " .. app_version, white)-- Draw info
-        
         -- Set cover image
         if showCat == 1 then
             --Graphics.setImageFilters(games_table[p].icon, FILTER_LINEAR, FILTER_LINEAR)
@@ -859,10 +1312,12 @@ while true do
 				Render.useTexture(modCoverNoref, games_table[p].ricon)
 				Render.useTexture(modCoverHbrNoref, games_table[p].ricon)
 				Render.useTexture(modCoverPSPNoref, games_table[p].ricon)
+				Render.useTexture(modCoverPSXNoref, games_table[p].ricon)
 			else 
 				Render.useTexture(modCoverNoref, games_table[p].icon)
 				Render.useTexture(modCoverHbrNoref, games_table[p].icon)
 				Render.useTexture(modCoverPSPNoref, games_table[p].icon)
+				Render.useTexture(modCoverPSXNoref, games_table[p].icon)
 			end
         elseif showCat == 2 then
             --Graphics.setImageFilters(homebrews_table[p].icon, FILTER_LINEAR, FILTER_LINEAR)
@@ -870,10 +1325,12 @@ while true do
 				Render.useTexture(modCoverNoref, homebrews_table[p].ricon)
 				Render.useTexture(modCoverHbrNoref, homebrews_table[p].ricon)
 				Render.useTexture(modCoverPSPNoref, homebrews_table[p].ricon)
+				Render.useTexture(modCoverPSXNoref, homebrews_table[p].ricon)
 			else 
 				Render.useTexture(modCoverNoref, homebrews_table[p].icon)
 				Render.useTexture(modCoverHbrNoref, homebrews_table[p].icon)
 				Render.useTexture(modCoverPSPNoref, homebrews_table[p].icon)
+				Render.useTexture(modCoverPSXNoref, homebrews_table[p].icon)
 			end
         elseif showCat == 3 then
             --Graphics.setImageFilters(psp_table[p].icon, FILTER_LINEAR, FILTER_LINEAR)
@@ -881,10 +1338,25 @@ while true do
 				Render.useTexture(modCoverNoref, psp_table[p].ricon)
 				Render.useTexture(modCoverHbrNoref, psp_table[p].ricon)
 				Render.useTexture(modCoverPSPNoref, psp_table[p].ricon)
+				Render.useTexture(modCoverPSXNoref, psp_table[p].ricon)
 			else 
 				Render.useTexture(modCoverNoref, psp_table[p].icon)
 				Render.useTexture(modCoverHbrNoref, psp_table[p].icon)
 				Render.useTexture(modCoverPSPNoref, psp_table[p].icon)
+				Render.useTexture(modCoverPSXNoref, psp_table[p].icon)
+			end
+        elseif showCat == 4 then
+            --Graphics.setImageFilters(psx_table[p].icon, FILTER_LINEAR, FILTER_LINEAR)
+			if psx_table[p].ricon ~= nil then
+				Render.useTexture(modCoverNoref, psx_table[p].ricon)
+				Render.useTexture(modCoverHbrNoref, psx_table[p].ricon)
+				Render.useTexture(modCoverPSPNoref, psx_table[p].ricon)
+				Render.useTexture(modCoverPSXNoref, psx_table[p].ricon)
+			else 
+				Render.useTexture(modCoverNoref, psx_table[p].icon)
+				Render.useTexture(modCoverHbrNoref, psx_table[p].icon)
+				Render.useTexture(modCoverPSPNoref, psx_table[p].icon)
+				Render.useTexture(modCoverPSXNoref, psx_table[p].icon)
 			end
         else
             --Graphics.setImageFilters(files_table[p].icon, FILTER_LINEAR, FILTER_LINEAR)
@@ -892,104 +1364,159 @@ while true do
 				Render.useTexture(modCoverNoref, files_table[p].ricon)
 				Render.useTexture(modCoverHbrNoref, files_table[p].ricon)
 				Render.useTexture(modCoverPSPNoref, files_table[p].ricon)
+				Render.useTexture(modCoverPSXNoref, files_table[p].ricon)
 			else 
 				Render.useTexture(modCoverNoref, files_table[p].icon)
 				Render.useTexture(modCoverHbrNoref, files_table[p].icon)
 				Render.useTexture(modCoverPSPNoref, files_table[p].icon)
+				Render.useTexture(modCoverPSXNoref, files_table[p].icon)
 			end
         end
-        
+		
+        local tmpapptype=""
+		
         -- Draw box
-        if string.match(app_titleid, "PCS") and not string.match(app_titleid, "PCSI") then
+        if apptype==1 then
             Render.drawModel(modCoverNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-        elseif string.match(app_titleid, "PSPEMU") and not string.match(app_titleid, "PSPEMUCFW") then
+			tmpapptype = "PS Vita Game"
+        elseif apptype==2 then
             Render.drawModel(modCoverPSPNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxPSPNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+			tmpapptype = "PSP Game"
+        elseif apptype==3 then
+            Render.drawModel(modCoverPSXNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxPSXNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+			tmpapptype = "PS1 Game"
         else
             Render.drawModel(modCoverHbrNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+			tmpapptype = "Homebrew"
         end
     
+        Font.print(fnt22, 50, 190, txtname, white)-- app name
+        Font.print(fnt22, 50, 240, tmpapptype .. "\nApp ID: " .. app_titleid .. "\nVersion: " .. app_version .. "\nSize: " .. string.format("%02d", app_size) .. "Mb", white)-- Draw info
+		
+
+		menuItems = 1
+		Graphics.fillRect(24, 470, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
+		Font.print(fnt22, 50, 352, "Download Cover", white)
+		
+		status = System.getMessageState()
+        if status ~= RUNNING then
+            
+            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+                if menuY == 0 then
+					if gettingCovers == false then
+                        gettingCovers = true
+                        DownloadSingleCover()
+                    end
+				end
+			end
+		end
+		
     elseif showMenu == 2 then
         
         -- SETTINGS
         -- Footer buttons and icons
-        Graphics.drawImage(850, 510, btnO)
-        Font.print(fnt20, 878, 508, "Close", white)
-        Graphics.drawImage(750, 510, btnX)
-        Font.print(fnt20, 778, 508, "Select", white)
+        Graphics.drawImage(900-(string.len(lang_lines[11])*10), 510, btnO)
+        Font.print(fnt20, 900+28-(string.len(lang_lines[11])*10), 508, lang_lines[11], white)--Close
+        Graphics.drawImage(750-(string.len(lang_lines[32])*10), 510, btnX)
+        Font.print(fnt20, 750+28-(string.len(lang_lines[32])*10), 508, lang_lines[32], white)--Select
         Graphics.fillRect(60, 900, 24, 472, darkalpha)
-        Font.print(fnt22, 84, 42, "SETTINGS", white)-- Draw info
+        Font.print(fnt22, 84, 42, lang_lines[6], white)--SETTINGS
+        Graphics.drawLine(60, 900, 74, 74, white)
+        Graphics.fillRect(60, 900, 110 + (menuY * 40), 150 + (menuY * 40), themeCol)-- selection
         
-        Graphics.fillRect(60, 900, 150 + (menuY * 40), 190 + (menuY * 40), themeCol)-- selection
+        menuItems = 7
         
-        menuItems = 6
-        
-        Font.print(fnt22, 84, 152, "Startup Category: ", white)
+        Font.print(fnt22, 84, 112, lang_lines[14] .. ": ", white)--Startup Category
         if startCategory == 0 then
-            Font.print(fnt22, 84 + 260, 152, "ALL", white)
+            Font.print(fnt22, 84 + 260, 112, lang_lines[5], white)--ALL
         elseif startCategory == 1 then
-            Font.print(fnt22, 84 + 260, 152, "GAMES", white)
+            Font.print(fnt22, 84 + 260, 112, lang_lines[1], white)--GAMES
         elseif startCategory == 2 then
-            Font.print(fnt22, 84 + 260, 152, "HOMEBREWS", white)
+            Font.print(fnt22, 84 + 260, 112, lang_lines[2], white)--HOMEBREWS
         elseif startCategory == 3 then
-            Font.print(fnt22, 84 + 260, 152, "PSP", white)
+            Font.print(fnt22, 84 + 260, 112, lang_lines[3], white)--PSP
+        elseif startCategory == 4 then
+            Font.print(fnt22, 84 + 260, 112, lang_lines[4], white)--PSX
         end
         
-        Font.print(fnt22, 84, 152 + 40, "Reflection Effect: ", white)
+        Font.print(fnt22, 84, 112 + 40, lang_lines[15] .. ": ", white)
         if setReflections == 1 then
-            Font.print(fnt22, 84 + 260, 152 + 40, "ON", white)
+            Font.print(fnt22, 84 + 260, 112 + 40, lang_lines[22], white)--ON
         else
-            Font.print(fnt22, 84 + 260, 152 + 40, "OFF", white)
+            Font.print(fnt22, 84 + 260, 112 + 40, lang_lines[23], white)--OFF
         end
         
-        Font.print(fnt22, 84, 152 + 80, "Sounds: ", white)
+        Font.print(fnt22, 84, 112 + 80, lang_lines[16] .. ": ", white)--SOUNDS
         if setSounds == 1 then
-            Font.print(fnt22, 84 + 260, 152 + 80, "ON", white)
+            Font.print(fnt22, 84 + 260, 112 + 80, lang_lines[22], white)--ON
         else
-            Font.print(fnt22, 84 + 260, 152 + 80, "OFF", white)
+            Font.print(fnt22, 84 + 260, 112 + 80, lang_lines[23], white)--OFF
         end
         
-        Font.print(fnt22, 84, 152 + 120, "Theme Color: ", white)
+        Font.print(fnt22, 84, 112 + 120,  lang_lines[17] .. ": ", white)
         if themeColor == 1 then
-            Font.print(fnt22, 84 + 260, 152 + 120, "Red", white)
+            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[24], white)--Red
         elseif themeColor == 2 then
-            Font.print(fnt22, 84 + 260, 152 + 120, "Yellow", white)
+            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[25], white)--Yellow
         elseif themeColor == 3 then
-            Font.print(fnt22, 84 + 260, 152 + 120, "Green", white)
+            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[26], white)--Green
         elseif themeColor == 4 then
-            Font.print(fnt22, 84 + 260, 152 + 120, "Grey", white)
+            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[27], white)--Grey
         elseif themeColor == 5 then
-            Font.print(fnt22, 84 + 260, 152 + 120, "Black", white)
+            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[28], white)--Black
         elseif themeColor == 6 then
-            Font.print(fnt22, 84 + 260, 152 + 120, "Purple", white)
+            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[29], white)--Purple
         elseif themeColor == 7 then
-            Font.print(fnt22, 84 + 260, 152 + 120, "Orange", white)
+            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[30], white)--Orange
         else
-            Font.print(fnt22, 84 + 260, 152 + 120, "Blue", white)
+            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[31], white)--Blue
         end
         
-        Font.print(fnt22, 84, 152 + 160, "Custom Background: ", white)
+        Font.print(fnt22, 84, 112 + 160,  lang_lines[18] .. ": ", white)
         if setBackground == 1 then
-            Font.print(fnt22, 84 + 260, 152 + 160, "ON", white)
+            Font.print(fnt22, 84 + 260, 112 + 160, lang_lines[22], white)--ON
         else
-            Font.print(fnt22, 84 + 260, 152 + 160, "OFF", white)
+            Font.print(fnt22, 84 + 260, 112 + 160, lang_lines[23], white)--OFF
         end
         
 		if scanComplete == false then
-			Font.print(fnt22, 84, 152 + 200, "Download Covers", white)
+			if getCovers == 1 then
+				Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  PSP  >", white)--Download Covers
+			elseif getCovers == 2 then
+				Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  PS1  >", white)--Download Covers
+			else
+				Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  PS VITA  >", white)--Download Covers
+			end
 		else
-			Font.print(fnt22, 84, 152 + 200, "Reload Covers Database", white)
+			Font.print(fnt22, 84, 112 + 200,  lang_lines[20], white)--Reload Covers Database
 		end
 		
-        Font.print(fnt22, 84, 152 + 240, "About", white)
+        Font.print(fnt22, 84, 112 + 240, lang_lines[21] .. ": ", white)
+        if setLanguage == 1 then
+            Font.print(fnt22, 84 + 260, 112 + 240, "German", white)
+        elseif setLanguage == 2 then
+            Font.print(fnt22, 84 + 260, 112 + 240, "French", white)
+        elseif setLanguage == 3 then
+            Font.print(fnt22, 84 + 260, 112 + 240, "Italian", white)
+        elseif setLanguage == 4 then
+            Font.print(fnt22, 84 + 260, 112 + 240, "Spanish", white)
+        elseif setLanguage == 5 then
+            Font.print(fnt22, 84 + 260, 112 + 240, "Russian", white)
+        else
+            Font.print(fnt22, 84 + 260, 112 + 240, "English", white)
+        end
+		
+        Font.print(fnt22, 84, 112 + 280, lang_lines[13], white)--About
         
         status = System.getMessageState()
         if status ~= RUNNING then
             
             if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
                 if menuY == 0 then
-                    if startCategory < 3 then
+                    if startCategory < 4 then
                         startCategory = startCategory + 1
                     else
                         startCategory = 0
@@ -1003,8 +1530,18 @@ while true do
                 elseif menuY == 2 then
                     if setSounds == 1 then
                         setSounds = 0
+						if System.doesFileExist(cur_dir .. "/Music.mp3") then
+							if Sound.isPlaying(sndMusic) then
+								Sound.pause(sndMusic)
+							end
+						end
                     else
                         setSounds = 1
+						if System.doesFileExist(cur_dir .. "/Music.mp3") then
+							if not Sound.isPlaying(sndMusic) then
+								Sound.play(sndMusic, LOOP)
+							end
+						end
                     end
                 elseif menuY == 3 then
                     if themeColor < 7 then
@@ -1025,6 +1562,13 @@ while true do
                         DownloadCovers()
                     end
                 elseif menuY == 6 then
+                    if setLanguage < 5 then
+                        setLanguage = setLanguage + 1
+                    else
+                        setLanguage = 0
+                    end
+					ChangeLanguage()
+                elseif menuY == 7 then
                     showMenu = 3
                     menuY = 0
                 end
@@ -1032,7 +1576,7 @@ while true do
                 
                 --Save settings
                 local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
-                System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground, 5)
+                System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground .. setLanguage, 6)
                 System.closeFile(file_config)
             elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
                 --menu
@@ -1041,6 +1585,8 @@ while true do
                     end
                 if menuY > 0 then
                     menuY = menuY - 1
+					else
+					menuY=menuItems
                 end
             elseif (Controls.check(pad, SCE_CTRL_DOWN)) and not (Controls.check(oldpad, SCE_CTRL_DOWN)) then
                 --menu
@@ -1049,23 +1595,45 @@ while true do
                     end
                 if menuY < menuItems then
                     menuY = menuY + 1
+					else
+					menuY=0
                 end
+            elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
+                --covers download selection
+				if menuY==5 then
+					if getCovers > 0 then
+						getCovers = getCovers - 1
+					else
+						getCovers=2
+					end
+				end
+            elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
+                --covers download selection
+				if menuY==5 then
+					if getCovers < 2 then
+						getCovers = getCovers + 1
+					else
+						getCovers=0
+					end
+				end
             end
         end
     elseif showMenu == 3 then
         
         -- ABOUT
         -- Footer buttons and icons
-        Graphics.drawImage(850, 510, btnO)
-        Font.print(fnt22, 878, 508, "Close", white)
+        Graphics.drawImage(900-(string.len(lang_lines[11])*10), 510, btnO)
+        Font.print(fnt20, 900+28-(string.len(lang_lines[11])*10), 508, lang_lines[11], white)--Close
         
         Graphics.fillRect(30, 930, 24, 496, darkalpha)-- bg
         
         Font.print(fnt20, 54, 42, "HexFlow Launcher - ver." .. appversion .. "\nby VitaHEX Games\nSupport this project on patreon.com/vitahex", white)-- Draw info
-        --Graphics.drawLine(30, 930, 140, 140, white)
-        Font.print(fnt20, 54, 132, "Custom Covers\nPlace your custom covers in 'ux0:/data/HexFlow/COVERS/PSVITA/' or '.../PSP/'\nCover images must be in png format and file name must match the App ID or the App Name."
+        Graphics.drawLine(30, 930, 124, 124, white)
+        Graphics.drawLine(30, 930, 284, 284, white)
+        Font.print(fnt20, 54, 132, "Custom Covers\nPlace your custom covers in 'ux0:/data/HexFlow/COVERS/PSVITA' or '/PSP' or '/PS1'\nCover images must be in png format and file name must match the App ID or the App Name"
             .. "\n\nCustom Background\nPlace your custom background image in 'ux0:/data/HexFlow/'\nBackground image must be named 'Background.jpg' or 'Background.png' (720p max)"
-            .. "\n\nCredits\nProgramming/UI\nSakis RG\n\nDeveloped with Lua Player Plus by Rinnegatamante\n\nSpecial Thanks\nCreckeryop, Andreas Stürmer, Roc6d, Badmanwazzy37", white)-- Draw info
+            .. "\n\nCREDITS\nProgramming/UI by Sakis RG\n\nDeveloped with Lua Player Plus by Rinnegatamante\n\nSpecial Thanks\nCreckeryop, Andreas Stürmer, Roc6d, Badmanwazzy37"
+			.. "\n\nTranslations: TheheroGAC, chronoss, stuermerandreas, kodyna91, _novff", white)-- Draw info
     
     end
     
@@ -1122,7 +1690,7 @@ while true do
         
         -- Navigation Buttons
         if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
-            if gettingCovers == false then
+            if gettingCovers == false and app_title~="-" then
                 FreeMemory()
                 if showCat == 1 then
                     System.launchApp(games_table[p].name)
@@ -1130,13 +1698,15 @@ while true do
                     System.launchApp(homebrews_table[p].name)
                 elseif showCat == 3 then
                     System.launchApp(psp_table[p].name)
+                elseif showCat == 4 then
+                    System.launchApp(psx_table[p].name)
                 else
                     System.launchApp(files_table[p].name)
                 end
                 System.exit()
             end
         elseif (Controls.check(pad, SCE_CTRL_TRIANGLE) and not Controls.check(oldpad, SCE_CTRL_TRIANGLE)) then
-            if showMenu == 0 then
+            if showMenu == 0 and app_title~="-" then
 				prvRotY = 0
                 showMenu = 1
             end
@@ -1146,7 +1716,7 @@ while true do
             end
         elseif (Controls.check(pad, SCE_CTRL_SQUARE) and not Controls.check(oldpad, SCE_CTRL_SQUARE)) then
             -- CATEGORY
-            if showCat < 3 then
+            if showCat < 4 then
                 showCat = showCat + 1
             else
                 showCat = 0
@@ -1289,6 +1859,12 @@ while true do
     elseif showCat == 3 then
         curTotal = #psp_table
         if #psp_table == 0 then
+            p = 0
+            master_index = p
+        end
+    elseif showCat == 4 then
+        curTotal = #psx_table
+        if #psx_table == 0 then
             p = 0
             master_index = p
         end
