@@ -1,6 +1,6 @@
 # HexFlow-Launcher
 A 3d coverflow like launcher for PS Vita.
-<p><img src="/Media/screen_01.jpg" width="800" title="screen-01"></p>
+<p><img src="/Media/screen_02.jpg" width="800" title="screen-01"></p>
 <p>Display and launch your games and homebrews in style.<br /><strong>HexFlow Launcher</strong> features a 3d user interface to display your games with their box art and supports many customization options like custom covers and backgrounds.</p>
 <p>Launching a game/app from <strong>HexFlow Launcher</strong> will close the launcher automaticaly without asking.</p>
 <h2>Custom Covers</h2>
@@ -45,7 +45,7 @@ A 3d coverflow like launcher for PS Vita.
 <p>Italian - @TheheroGAC</p>
 <p>Russian - @_novff</p>
 <p>&nbsp;</p>
-<h3>Support</h3>
+<h2>Support</h2>
 <p>If you want to support my work you can become a <a href="https://www.patreon.com/vitahex">Patron</a>.</p>
 <p>PayPal option is also available <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=RM8ECMVYMTXGJ&amp;source=url">HERE</a></p>
 <p><a href="https://twitter.com/VitaHex">VitaHEX Twitter</a></p>
