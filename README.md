@@ -16,10 +16,10 @@ A 3d coverflow like launcher for PS Vita.
 <h3>Custom Music</h3>
 <p>Place your  <strong>Music.mp3</strong> file in "<em>ux0:data/HexFlow/</em>"</p>
 <p>&nbsp;</p>
-
 <h2>AutoBoot</h2>
 <p>If you want to auto-launch <strong>HexFlow Launcher</strong> every time your PS Vita boots up you can use the <a href="https://vitadb.rinnegatamante.it/#/info/261" target="_blank" rel="noopener"><strong>AutoBoot</strong></a> plugin by Rinnegatamante.</p>
 <p>&nbsp;</p>
+<p><img src="/Media/screen_01.jpg" width="800" title="screen-01"></p>
 <h2>Controls</h2>
 <p>Navigate your library using the <strong>DPad</strong> or the <strong>Left Stick</strong> or with the <strong>Touch Screen</strong>.</p>
 <p><strong>R/L triggers</strong>: Skip 5 items</p>
