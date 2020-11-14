@@ -11,9 +11,12 @@ A 3d coverflow like launcher for PS Vita.
 <p><a href="https://github.com/andiweli/hexflow-covers" target="_blank" rel="noopener">https://github.com/andiweli/hexflow-covers</a></p>
 <p>&nbsp;</p>
 <h2>Custom Background</h2>
-<p>Place your custom background image in "<em>ux0:/data/HexFlow/</em>"</p>
-<p>Background image must be named '<strong>Background.jpg</strong>' or '<strong>Background.png</strong>' (recomended resolution 1280x720px or less).</p>
+<p>Place your <strong>Background.png</strong> image in "<em>ux0:/data/HexFlow/</em>" (recomended resolution 1280x720px or less)</p>
 <p>&nbsp;</p>
+<h2>Custom Music</h2>
+<p>Place your "Music.mp3" file in "<em>ux0:data/HexFlow</em>" folder</p>
+<p>&nbsp;</p>
+
 <h2>AutoBoot</h2>
 <p>If you want to auto-launch <strong>HexFlow Launcher</strong> every time your PS Vita boots up you can use the <a href="https://vitadb.rinnegatamante.it/#/info/261" target="_blank" rel="noopener"><strong>AutoBoot</strong></a> plugin by Rinnegatamante.</p>
 <p>&nbsp;</p>
@@ -32,8 +35,14 @@ A 3d coverflow like launcher for PS Vita.
 <p>Programming/UI: <strong>Sakis RG</strong></p>
 <p>Developed with <a href="http://rinnegatamante.github.io/lpp-vita/" target="_blank" rel="noopener">Lua Player Plus</a> by <strong>Rinnegatamante</strong></p>
 <h3>Special Thanks</h3>
-<p><strong>Creckeryop</strong> for the async implementation</p>
-<p><a href="https://github.com/andiweli/hexflow-covers" target="_blank" rel="noopener">HEXFlow Covers Git</a> by <strong>andiweli</strong></p>
+<p><strong>Creckeryop</strong></p>
+<p><strong>andiweli</strong> (<a href="https://github.com/andiweli/hexflow-covers" target="_blank" rel="noopener">HEXFlow Covers database</a>)</p>
+<h3>Translations</h3>
+<p>French - @chronoss</p>
+<p>German - @stuermerandreas</p>
+<p>Spanish - @kodyna91</p>
+<p>Italian - @TheheroGAC</p>
+<p>Russian - @_novff</p>
 <p>&nbsp;</p>
 <h3>Support</h3>
 <p>If you want to support my work you can become a <a href="https://www.patreon.com/vitahex">Patron</a>.</p>
