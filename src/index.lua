@@ -996,7 +996,7 @@ while true do
         -- MAIN VIEW
         -- Header
         h, m, s = System.getTime()
-        Font.print(fnt20, 726, 34, string.format("%02d:%02d", h, m), white)-- Draw time
+        Font.print(fnt20, 710, 34, string.format("%02d:%02d:%02d", h, m, s), white)-- Draw time
         life = System.getBatteryPercentage()
         Font.print(fnt20, 830, 34, life .. "%", white)-- Draw battery
         Graphics.drawImage(888, 41, imgBattery)
@@ -1035,7 +1035,7 @@ while true do
             Font.print(fnt22, 32, 34, lang_lines[5], white)--ALL
         end
         if Network.isWifiEnabled() then
-            Graphics.drawImage(800, 38, imgWifi)-- wifi icon
+            Graphics.drawImage(800, 34, imgWifi)-- wifi icon
         end
         
         if showView ~= 2 then
