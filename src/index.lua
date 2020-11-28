@@ -1,9 +1,9 @@
--- HexFlow Launcher  version 0.4 by VitaHEX
+-- HexFlow Launcher  version 0.5 by VitaHEX
 -- https://www.patreon.com/vitahex
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "0.4"
+local appversion = "0.5"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -43,6 +43,12 @@ System.createDirectory("ux0:/data/HexFlow/COVERS/")
 System.createDirectory(covers_psv)
 System.createDirectory(covers_psp)
 System.createDirectory(covers_psx)
+
+if not System.doesFileExist(cur_dir .. "/overrides.dat") then
+	local file_over = System.openFile(cur_dir .. "/overrides.dat", FCREATE)
+    System.writeFile(file_over, " ", 1)
+    System.closeFile(file_over)
+end
 
 -- load textures
 local imgBox = Graphics.loadImage("app0:/DATA/vita_cover.png")
@@ -135,6 +141,7 @@ local inPreview = false
 local apptype = 0
 local appdir = ""
 local getCovers = 0--0 PSV, 1 PSP, 2 PS1
+local tmpappcat = 0
 
 local prevX = 0
 local prevZ = 0
@@ -153,6 +160,7 @@ local themeColor = 0 -- 0 blue, 1 red, 2 yellow, 3 green, 4 grey, 5 black, 6 pur
 local menuItems = 3
 local setBackground = 1
 local setLanguage = 0
+local showHomebrews = 0
 
 if System.doesFileExist(cur_dir .. "/config.dat") then
     local file_config = System.openFile(cur_dir .. "/config.dat", FREAD)
@@ -166,9 +174,11 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
     local getthemeColor = tonumber(string.sub(str, 4, 4)); if getthemeColor ~= nil then themeColor = getthemeColor end
     local getBackground = tonumber(string.sub(str, 5, 5)); if getBackground ~= nil then setBackground = getBackground end
     local getLanguage = tonumber(string.sub(str, 6, 6)); if getLanguage ~= nil then setLanguage = getLanguage end
+    local getView = tonumber(string.sub(str, 7, 7)); if getView ~= nil then showView = getView end
+    local getHomebrews = tonumber(string.sub(str, 8, 8)); if getHomebrews ~= nil then showHomebrews = getHomebrews end
 else
     local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
-    System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground .. setLanguage, 6)
+    System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground .. setLanguage .. showView .. showHomebrews, 8)
     System.closeFile(file_config)
 end
 showCat = startCategory
@@ -250,6 +260,8 @@ local lang = "EN.ini"
 		lang = "SP.ini"
 	elseif setLanguage == 5 then
 		lang = "RU.ini"
+	elseif setLanguage == 6 then
+		lang = "SW.ini"
 	else
 		lang = "EN.ini"
 	end
@@ -308,7 +320,13 @@ function listDirectory(dir)
     psx_table = {}
     homebrews_table = {}
 	-- app_type = 0 -- 0 homebrew, 1 psvita, 2 psp, 3 psx
-    
+	local customCategory = 0
+	
+	local file_over = System.openFile(cur_dir .. "/overrides.dat", FREAD)
+	local filesize = System.sizeFile(file_over)
+	local str = System.readFile(file_over, filesize)
+	System.closeFile(file_over)
+
     for i, file in pairs(dir) do
 	local custom_path, custom_path_id, app_type = nil, nil, nil
         if file.directory then
@@ -317,35 +335,161 @@ function listDirectory(dir)
                 info = System.extractSfo(working_dir .. "/" .. file.name .. "/sce_sys/param.sfo")
                 app_title = info.title
             end
+
             if string.match(file.name, "PCS") and not string.match(file.name, "PCSI") then
                 -- Scan PSVita Games
                 table.insert(folders_table, file)
-                table.insert(games_table, file)
+                --table.insert(games_table, file)
                 custom_path = covers_psv .. app_title .. ".png"
                 custom_path_id = covers_psv .. file.name .. ".png"
 				file.app_type=1
+				
+				--CHECK FOR OVERRIDDEN CATEGORY of PSP game
+				if System.doesFileExist(cur_dir .. "/overrides.dat") then
+					--0 deafault, 1 vita, 2 psp, 3 psx, 4 homebrew
+					if string.match(str, file.name .. "=1") then
+						table.insert(games_table, file)
+						custom_path = covers_psv .. app_title .. ".png"
+						custom_path_id = covers_psv .. file.name .. ".png"
+						file.app_type=1
+					elseif string.match(str, file.name .. "=2") then
+						table.insert(psp_table, file)
+						custom_path = covers_psp .. app_title .. ".png"
+						custom_path_id = covers_psp .. file.name .. ".png"
+						file.app_type=2
+					elseif string.match(str, file.name .. "=3") then
+						table.insert(psx_table, file)
+						custom_path = covers_psx .. app_title .. ".png"
+						custom_path_id = covers_psx .. file.name .. ".png"
+						file.app_type=3
+					elseif string.match(str, file.name .. "=4") then
+						table.insert(homebrews_table, file)
+						custom_path = covers_psv .. app_title .. ".png"
+						custom_path_id = covers_psv .. file.name .. ".png"
+						file.app_type=0
+					else
+						table.insert(games_table, file)--default
+					end
+				else
+					table.insert(games_table, file)
+				end
+				--END OVERRIDDEN CATEGORY of Vita game
             elseif System.doesFileExist(working_dir .. "/" .. file.name .. "/data/boot.bin") and not System.doesFileExist("ux0:pspemu/PSP/GAME/" .. file.name .. "/EBOOT.PBP") then
                 -- Scan PSP Games
                 table.insert(folders_table, file)
-                table.insert(psp_table, file)
+                --table.insert(psp_table, file)
                 custom_path = covers_psp .. app_title .. ".png"
                 custom_path_id = covers_psp .. file.name .. ".png"
 				file.app_type=2
+				
+			--CHECK FOR OVERRIDDEN CATEGORY of PSP game
+				if System.doesFileExist(cur_dir .. "/overrides.dat") then
+					--0 deafault, 1 vita, 2 psp, 3 psx, 4 homebrew
+					if string.match(str, file.name .. "=1") then
+						table.insert(games_table, file)
+						custom_path = covers_psv .. app_title .. ".png"
+						custom_path_id = covers_psv .. file.name .. ".png"
+						file.app_type=1
+					elseif string.match(str, file.name .. "=2") then
+						table.insert(psp_table, file)
+						custom_path = covers_psp .. app_title .. ".png"
+						custom_path_id = covers_psp .. file.name .. ".png"
+						file.app_type=2
+					elseif string.match(str, file.name .. "=3") then
+						table.insert(psx_table, file)
+						custom_path = covers_psx .. app_title .. ".png"
+						custom_path_id = covers_psx .. file.name .. ".png"
+						file.app_type=3
+					elseif string.match(str, file.name .. "=4") then
+						table.insert(homebrews_table, file)
+						custom_path = covers_psv .. app_title .. ".png"
+						custom_path_id = covers_psv .. file.name .. ".png"
+						file.app_type=0
+					else
+						table.insert(psp_table, file)--default
+					end
+				else
+					table.insert(psp_table, file)
+				end
+				--END OVERRIDDEN CATEGORY of Vita game
             elseif System.doesFileExist(working_dir .. "/" .. file.name .. "/data/boot.bin") and System.doesFileExist("ux0:pspemu/PSP/GAME/" .. file.name .. "/EBOOT.PBP") then
                 -- Scan PSX Games
                 table.insert(folders_table, file)
-                table.insert(psx_table, file)
+                --table.insert(psx_table, file)
                 custom_path = covers_psx .. app_title .. ".png"
                 custom_path_id = covers_psx .. file.name .. ".png"
 				file.app_type=3
+				
+			--CHECK FOR OVERRIDDEN CATEGORY of PSX game
+				if System.doesFileExist(cur_dir .. "/overrides.dat") then
+					--0 deafault, 1 vita, 2 psp, 3 psx, 4 homebrew
+					if string.match(str, file.name .. "=1") then
+						table.insert(games_table, file)
+						custom_path = covers_psv .. app_title .. ".png"
+						custom_path_id = covers_psv .. file.name .. ".png"
+						file.app_type=1
+					elseif string.match(str, file.name .. "=2") then
+						table.insert(psp_table, file)
+						custom_path = covers_psp .. app_title .. ".png"
+						custom_path_id = covers_psp .. file.name .. ".png"
+						file.app_type=2
+					elseif string.match(str, file.name .. "=3") then
+						table.insert(psx_table, file)
+						custom_path = covers_psx .. app_title .. ".png"
+						custom_path_id = covers_psx .. file.name .. ".png"
+						file.app_type=3
+					elseif string.match(str, file.name .. "=4") then
+						table.insert(homebrews_table, file)
+						custom_path = covers_psv .. app_title .. ".png"
+						custom_path_id = covers_psv .. file.name .. ".png"
+						file.app_type=0
+					else
+						table.insert(psx_table, file)--default
+					end
+				else
+					table.insert(psx_table, file)
+				end
+				--END OVERRIDDEN CATEGORY of PSX game
             else
                 -- Scan Homebrews
                 table.insert(folders_table, file)
-                table.insert(homebrews_table, file)
+                --table.insert(homebrews_table, file)
                 custom_path = covers_psv .. app_title .. ".png"
                 custom_path_id = covers_psv .. file.name .. ".png"
 				file.app_type=0
+				
+			--CHECK FOR OVERRIDDEN CATEGORY of homebrew
+				if System.doesFileExist(cur_dir .. "/overrides.dat") then
+					--0 deafault, 1 vita, 2 psp, 3 psx, 4 homebrew
+					if string.match(str, file.name .. "=1") then
+						table.insert(games_table, file)
+						custom_path = covers_psv .. app_title .. ".png"
+						custom_path_id = covers_psv .. file.name .. ".png"
+						file.app_type=1
+					elseif string.match(str, file.name .. "=2") then
+						table.insert(psp_table, file)
+						custom_path = covers_psp .. app_title .. ".png"
+						custom_path_id = covers_psp .. file.name .. ".png"
+						file.app_type=2
+					elseif string.match(str, file.name .. "=3") then
+						table.insert(psx_table, file)
+						custom_path = covers_psx .. app_title .. ".png"
+						custom_path_id = covers_psx .. file.name .. ".png"
+						file.app_type=3
+					elseif string.match(str, file.name .. "=4") then
+						table.insert(homebrews_table, file)
+						custom_path = covers_psv .. app_title .. ".png"
+						custom_path_id = covers_psv .. file.name .. ".png"
+						file.app_type=0
+					else
+						table.insert(homebrews_table, file)--default
+					end
+				else
+					table.insert(homebrews_table, file)
+				end
+				--END OVERRIDDEN CATEGORY of homebrew
             end
+
         end
         
 		if custom_path and System.doesFileExist(custom_path) then
@@ -491,6 +635,34 @@ function GetInfoSelected()
 
     app_titleid = tostring(info.titleid)
     app_version = tostring(info.version)
+end
+
+function OverrideCategory()
+	if System.doesFileExist(cur_dir .. "/overrides.dat") then
+		local inf = assert(io.open(cur_dir .. "/overrides.dat", "rw"), "Failed to open overrides.dat")
+		local lines = ""
+		while(true) do
+			local line = inf:read("*line")
+			if not line then break end
+			
+			if not string.find(line, app_titleid .. "", 1) then
+				lines = lines .. line .. "\n"
+			end
+		end
+		if tmpappcat>0 then
+			lines = lines .. app_titleid .. "=" .. tmpappcat .. "\n"
+		end
+		inf:close()
+		file = io.open(cur_dir .. "/overrides.dat", "w")
+		file:write(lines)
+		file:close()
+		
+		--Reload
+		FreeIcons()
+		FreeMemory()
+		Network.term()
+		dofile("app0:index.lua")
+	end
 end
 
 function DownloadCovers()
@@ -745,6 +917,17 @@ local function DrawCover(x, y, text, icon, sel, apptype)
             rot = 0.5
             extraz = 2
             extrax = -10
+        end
+    elseif showView == 4 then
+        -- scroll around
+        space = 1
+        zoom = 0
+        if x > 0.5 then
+            extraz = 2 + (x / 1.5)
+            extrax = 1
+        elseif x < -0.5 then
+            extraz = 2 - (x / 1.5)
+            extrax = -1
         end
     else
         -- default view
@@ -1287,6 +1470,7 @@ while true do
 			
 			app_size = getAppSize(appdir)/1024/1024
 			menuY=0
+			tmpappcat=0
             inPreview = true
         end
         
@@ -1374,7 +1558,7 @@ while true do
         end
 		
         local tmpapptype=""
-		
+		local tmpcatText=""
         -- Draw box
         if apptype==1 then
             Render.drawModel(modCoverNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
@@ -1396,11 +1580,28 @@ while true do
         Font.print(fnt22, 50, 190, txtname, white)-- app name
         Font.print(fnt22, 50, 240, tmpapptype .. "\nApp ID: " .. app_titleid .. "\nVersion: " .. app_version .. "\nSize: " .. string.format("%02d", app_size) .. "Mb", white)-- Draw info
 		
+		if tmpappcat==1 then
+			tmpcatText = "PS Vita"
+		elseif tmpappcat==2 then
+			tmpcatText = "PSP"
+		elseif tmpappcat==3 then
+			tmpcatText = "PS1"
+		elseif tmpappcat==4 then
+			tmpcatText = "Homebrew"
+		else
+			tmpcatText = "Default"
+		end
 
 		menuItems = 1
-		Graphics.fillRect(24, 470, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
+		if menuY==1 then
+			Graphics.fillRect(24, 470, 350 + (menuY * 40), 430 + (menuY * 40), themeCol)-- selection two lines
+		else
+			Graphics.fillRect(24, 470, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
+		end
 		Font.print(fnt22, 50, 352, "Download Cover", white)
+		Font.print(fnt22, 50, 352+40, "Override Category: < " .. tmpcatText .. " >\n(Press X to apply Category)", white)
 		
+
 		status = System.getMessageState()
         if status ~= RUNNING then
             
@@ -1410,6 +1611,36 @@ while true do
                         gettingCovers = true
                         DownloadSingleCover()
                     end
+				elseif menuY == 1 then
+					OverrideCategory()
+				end
+			elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
+                if menuY > 0 then
+                    menuY = menuY - 1
+					else
+					menuY=menuItems
+                end
+            elseif (Controls.check(pad, SCE_CTRL_DOWN)) and not (Controls.check(oldpad, SCE_CTRL_DOWN)) then
+                if menuY < menuItems then
+                    menuY = menuY + 1
+					else
+					menuY=0
+                end
+            elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
+				if menuY==1 then
+					if tmpappcat > 0 then
+						tmpappcat = tmpappcat - 1
+					else
+						tmpappcat=4
+					end
+				end
+            elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
+				if menuY==1 then
+					if tmpappcat < 4 then
+						tmpappcat = tmpappcat + 1
+					else
+						tmpappcat=0
+					end
 				end
 			end
 		end
@@ -1422,12 +1653,12 @@ while true do
         Font.print(fnt20, 900+28-(string.len(lang_lines[11])*10), 508, lang_lines[11], white)--Close
         Graphics.drawImage(750-(string.len(lang_lines[32])*10), 510, btnX)
         Font.print(fnt20, 750+28-(string.len(lang_lines[32])*10), 508, lang_lines[32], white)--Select
-        Graphics.fillRect(60, 900, 24, 472, darkalpha)
+        Graphics.fillRect(60, 900, 24, 470, darkalpha)
         Font.print(fnt22, 84, 42, lang_lines[6], white)--SETTINGS
         Graphics.drawLine(60, 900, 74, 74, white)
         Graphics.fillRect(60, 900, 110 + (menuY * 40), 150 + (menuY * 40), themeCol)-- selection
         
-        menuItems = 7
+        menuItems = 8
         
         Font.print(fnt22, 84, 112, lang_lines[14] .. ": ", white)--Startup Category
         if startCategory == 0 then
@@ -1494,7 +1725,7 @@ while true do
 			Font.print(fnt22, 84, 112 + 200,  lang_lines[20], white)--Reload Covers Database
 		end
 		
-        Font.print(fnt22, 84, 112 + 240, lang_lines[21] .. ": ", white)
+        Font.print(fnt22, 84, 112 + 240, lang_lines[21] .. ": ", white)--Language
         if setLanguage == 1 then
             Font.print(fnt22, 84 + 260, 112 + 240, "German", white)
         elseif setLanguage == 2 then
@@ -1505,11 +1736,20 @@ while true do
             Font.print(fnt22, 84 + 260, 112 + 240, "Spanish", white)
         elseif setLanguage == 5 then
             Font.print(fnt22, 84 + 260, 112 + 240, "Russian", white)
+        elseif setLanguage == 6 then
+            Font.print(fnt22, 84 + 260, 112 + 240, "Swedish", white)
         else
             Font.print(fnt22, 84 + 260, 112 + 240, "English", white)
         end
 		
-        Font.print(fnt22, 84, 112 + 280, lang_lines[13], white)--About
+        Font.print(fnt22, 84, 112 + 280, "Homebrews Category:", white)--Show Homebrews
+		if showHomebrews == 1 then
+            Font.print(fnt22, 84 + 260, 112 + 280, lang_lines[22], white)--ON
+        else
+            Font.print(fnt22, 84 + 260, 112 + 280, lang_lines[23], white)--OFF
+        end
+		
+        Font.print(fnt22, 84, 112 + 320, lang_lines[13], white)--About
         
         status = System.getMessageState()
         if status ~= RUNNING then
@@ -1562,13 +1802,19 @@ while true do
                         DownloadCovers()
                     end
                 elseif menuY == 6 then
-                    if setLanguage < 5 then
+                    if setLanguage < 6 then
                         setLanguage = setLanguage + 1
                     else
                         setLanguage = 0
                     end
 					ChangeLanguage()
                 elseif menuY == 7 then
+                    if showHomebrews == 1 then
+                        showHomebrews = 0
+                    else
+                        showHomebrews = 1
+                    end
+                elseif menuY == 8 then
                     showMenu = 3
                     menuY = 0
                 end
@@ -1576,23 +1822,15 @@ while true do
                 
                 --Save settings
                 local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
-                System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground .. setLanguage, 6)
+                System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground .. setLanguage .. showView .. showHomebrews, 8)
                 System.closeFile(file_config)
             elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
-                --menu
-                if setSounds == 1 then
-                    --Sound.play(click, NO_LOOP)
-                    end
                 if menuY > 0 then
                     menuY = menuY - 1
 					else
 					menuY=menuItems
                 end
             elseif (Controls.check(pad, SCE_CTRL_DOWN)) and not (Controls.check(oldpad, SCE_CTRL_DOWN)) then
-                --menu
-                if setSounds == 1 then
-                    --Sound.play(click, NO_LOOP)
-                    end
                 if menuY < menuItems then
                     menuY = menuY + 1
 					else
@@ -1633,7 +1871,7 @@ while true do
         Font.print(fnt20, 54, 132, "Custom Covers\nPlace your custom covers in 'ux0:/data/HexFlow/COVERS/PSVITA' or '/PSP' or '/PS1'\nCover images must be in png format and file name must match the App ID or the App Name"
             .. "\n\nCustom Background\nPlace your custom background image in 'ux0:/data/HexFlow/'\nBackground image must be named 'Background.jpg' or 'Background.png' (720p max)"
             .. "\n\nCREDITS\nProgramming/UI by Sakis RG\n\nDeveloped with Lua Player Plus by Rinnegatamante\n\nSpecial Thanks\nCreckeryop, Andreas Stürmer, Roc6d, Badmanwazzy37"
-			.. "\n\nTranslations: TheheroGAC, chronoss, stuermerandreas, kodyna91, _novff", white)-- Draw info
+			.. "\n\nTranslations: TheheroGAC, chronoss, stuermerandreas, kodyna91, _novff, Spoxnus86", white)-- Draw info
     
     end
     
@@ -1717,7 +1955,11 @@ while true do
         elseif (Controls.check(pad, SCE_CTRL_SQUARE) and not Controls.check(oldpad, SCE_CTRL_SQUARE)) then
             -- CATEGORY
             if showCat < 4 then
-                showCat = showCat + 1
+				if showCat==1 and showHomebrews==0 then
+					showCat = 3
+				else
+					showCat = showCat + 1
+				end
             else
                 showCat = 0
             end
@@ -1729,13 +1971,16 @@ while true do
             FreeIcons()
         elseif (Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE)) then
             -- VIEW
-            if showView < 3 then
+            if showView < 4 then
                 showView = showView + 1
             else
                 showView = 0
             end
             menuY = 0
             startCovers = false
+			local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
+            System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground .. setLanguage .. showView .. showHomebrews, 8)
+            System.closeFile(file_config)
         elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
             if setSounds == 1 then
                 Sound.play(click, NO_LOOP)
