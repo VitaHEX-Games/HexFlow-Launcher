@@ -46,6 +46,7 @@ A 3d coverflow like launcher for PS Vita.
 <p>Spanish - @kodyna91</p>
 <p>Italian - @TheheroGAC</p>
 <p>Russian - @_novff</p>
+<p>Swedish - @Spoxnus86</p>
 <p>&nbsp;</p>
 <h2>Support</h2>
 <p>If you want to support my work you can become a <a href="https://www.patreon.com/vitahex">Patron</a>.</p>
