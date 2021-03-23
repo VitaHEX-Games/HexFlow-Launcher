@@ -262,6 +262,8 @@ local lang = "EN.ini"
 		lang = "RU.ini"
 	elseif setLanguage == 6 then
 		lang = "SW.ini"
+	elseif setLanguage == 7 then
+		lang = "PT.ini"
 	else
 		lang = "EN.ini"
 	end
