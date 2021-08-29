@@ -459,13 +459,19 @@ function cleanRomNames()
     romname_url_encoded = {}
     romname_url_encoded[1] = romname_noExtension[1]:gsub("%s+", '%%%%20')
 
-    -- Remove all text except for within "()"
-    romname_region_initial = {}
-    romname_region_initial[1] = romname_noExtension[1]:match("%((.+)%)")
+    -- Check if name contains parenthesis, if yes strip out to show as version
+    if string.find(romname_noExtension[1], "%(") then
+        -- Remove all text except for within "()"
+        romname_region_initial = {}
+        romname_region_initial[1] = romname_noExtension[1]:match("%((.+)%)")
 
-    -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
-    romname_region = {}
-    romname_region[1] = romname_region_initial[1]:gsub("%) %(", ', ')
+        -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
+        romname_region = {}
+        romname_region[1] = romname_region_initial[1]:gsub("%) %(", ', ')
+    -- If no parenthesis, then add blank to prevent nil error
+    else
+        romname_region[1] = " "
+    end
 end
 
 
@@ -612,7 +618,7 @@ function listDirectory(dir)
                 table.insert(all_games_table, 1, file)
                 file.app_type=1
                 file.xname_rom_minus_ext = file.name
-                file.xname_rom_url_encoded= file.name
+                file.xname_rom_url_encoded = file.name
                 file.xonlineCoversAll = onlineCovers
                 file.xcovers_All = covers_psv
                 
@@ -660,7 +666,7 @@ function listDirectory(dir)
                 table.insert(all_games_table, 2, file)
                 file.app_type=2
                 file.xname_rom_minus_ext = file.name
-                file.xname_rom_url_encoded= file.name
+                file.xname_rom_url_encoded = file.name
                 file.xonlineCoversAll = onlineCoversPSP
                 file.xcovers_All = covers_psp
                 
@@ -707,7 +713,7 @@ function listDirectory(dir)
                 table.insert(all_games_table, 3, file)
                 file.app_type=3
                 file.xname_rom_minus_ext = file.name
-                file.xname_rom_url_encoded= file.name
+                file.xname_rom_url_encoded = file.name
                 file.xonlineCoversAll = onlineCoversPSX
                 file.xcovers_All = covers_psx
 
@@ -785,7 +791,7 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=1
                         file.xname_rom_minus_ext = file.name
-                        file.xname_rom_url_encoded= file.name
+                        file.xname_rom_url_encoded = file.name
                         file.xonlineCoversAll = onlineCovers
                         file.xcovers_All = covers_psv
 
@@ -799,7 +805,7 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=2
                         file.xname_rom_minus_ext = file.name
-                        file.xname_rom_url_encoded= file.name
+                        file.xname_rom_url_encoded = file.name
                         file.xonlineCoversAll = onlineCovers
                         file.xcovers_All = covers_psp
 
@@ -813,7 +819,7 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=3
                         file.xname_rom_minus_ext = file.name
-                        file.xname_rom_url_encoded= file.name
+                        file.xname_rom_url_encoded = file.name
                         file.xonlineCoversAll = onlineCovers
                         file.xcovers_All = covers_psx
 
@@ -827,7 +833,7 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=0
                         file.xname_rom_minus_ext = file.name
-                        file.xname_rom_url_encoded= file.name
+                        file.xname_rom_url_encoded = file.name
                         file.xonlineCoversAll = onlineCovers
                         file.xcovers_All = covers_psv
 
@@ -841,7 +847,7 @@ function listDirectory(dir)
                     table.insert(all_games_table, 1, file)
                     file.app_type=0
                     file.xname_rom_minus_ext = file.name
-                    file.xname_rom_url_encoded= file.name
+                    file.xname_rom_url_encoded = file.name
                     file.xonlineCoversAll = onlineCovers
                     file.xcovers_All = covers_psv
 
@@ -897,9 +903,9 @@ function listDirectory(dir)
             file.app_type=5
 
             file.name_rom_minus_ext = romname_noExtension[1]
-            file.name_rom_minus_region_ext= romname_noRegion_noExtension[1]
-            file.name_rom_url_encoded= romname_url_encoded[1]
-            file.name_rom_region= romname_region[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
 
             table.insert(n64_table, file)
 
@@ -925,7 +931,7 @@ function listDirectory(dir)
             table.insert(all_games_table, 4, file)
             file.app_type=5
             file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded= romname_url_encoded[1]
+            file.xname_rom_url_encoded = romname_url_encoded[1]
             file.xonlineCoversAll = onlineCoversN64
             file.xcovers_All = covers_N64
 
@@ -961,9 +967,9 @@ function listDirectory(dir)
             file.app_type=6
 
             file.name_rom_minus_ext = romname_noExtension[1]
-            file.name_rom_minus_region_ext= romname_noRegion_noExtension[1]
-            file.name_rom_url_encoded= romname_url_encoded[1]
-            file.name_rom_region= romname_region[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
 
             table.insert(snes_table, file)
 
@@ -989,7 +995,7 @@ function listDirectory(dir)
             table.insert(all_games_table, 5, file)
             file.app_type=6
             file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded= romname_url_encoded[1]
+            file.xname_rom_url_encoded = romname_url_encoded[1]
             file.xonlineCoversAll = onlineCoversSNES
             file.xcovers_All = covers_SNES
 
@@ -1024,9 +1030,9 @@ function listDirectory(dir)
             file.app_type=7
 
             file.name_rom_minus_ext = romname_noExtension[1]
-            file.name_rom_minus_region_ext= romname_noRegion_noExtension[1]
-            file.name_rom_url_encoded= romname_url_encoded[1]
-            file.name_rom_region= romname_region[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
 
             table.insert(nes_table, file)
 
@@ -1052,7 +1058,7 @@ function listDirectory(dir)
             table.insert(all_games_table, 6, file)
             file.app_type=7
             file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded= romname_url_encoded[1]
+            file.xname_rom_url_encoded = romname_url_encoded[1]
             file.xonlineCoversAll = onlineCoversNES
             file.xcovers_All = covers_NES
 
@@ -1087,9 +1093,9 @@ function listDirectory(dir)
             file.app_type=8
 
             file.name_rom_minus_ext = romname_noExtension[1]
-            file.name_rom_minus_region_ext= romname_noRegion_noExtension[1]
-            file.name_rom_url_encoded= romname_url_encoded[1]
-            file.name_rom_region= romname_region[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
 
             table.insert(gba_table, file)
 
@@ -1115,7 +1121,7 @@ function listDirectory(dir)
             table.insert(all_games_table, 7, file)
             file.app_type=8
             file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded= romname_url_encoded[1]
+            file.xname_rom_url_encoded = romname_url_encoded[1]
             file.xonlineCoversAll = onlineCoversGBA
             file.xcovers_All = covers_GBA
 
@@ -1150,9 +1156,9 @@ function listDirectory(dir)
             file.app_type=9
 
             file.name_rom_minus_ext = romname_noExtension[1]
-            file.name_rom_minus_region_ext= romname_noRegion_noExtension[1]
-            file.name_rom_url_encoded= romname_url_encoded[1]
-            file.name_rom_region= romname_region[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
 
             table.insert(gbc_table, file)
 
@@ -1178,7 +1184,7 @@ function listDirectory(dir)
             table.insert(all_games_table, 8, file)
             file.app_type=9
             file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded= romname_url_encoded[1]
+            file.xname_rom_url_encoded = romname_url_encoded[1]
             file.xonlineCoversAll = onlineCoversGBC
             file.xcovers_All = covers_GBC
 
@@ -1213,9 +1219,9 @@ function listDirectory(dir)
             file.app_type=10
 
             file.name_rom_minus_ext = romname_noExtension[1]
-            file.name_rom_minus_region_ext= romname_noRegion_noExtension[1]
-            file.name_rom_url_encoded= romname_url_encoded[1]
-            file.name_rom_region= romname_region[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
 
             table.insert(gb_table, file)
 
@@ -1241,7 +1247,7 @@ function listDirectory(dir)
             table.insert(all_games_table, 9, file)
             file.app_type=10
             file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded= romname_url_encoded[1]
+            file.xname_rom_url_encoded = romname_url_encoded[1]
             file.xonlineCoversAll = onlineCoversGB
             file.xcovers_All = covers_GB
 
@@ -1276,9 +1282,9 @@ function listDirectory(dir)
             file.app_type=11
 
             file.name_rom_minus_ext = romname_noExtension[1]
-            file.name_rom_minus_region_ext= romname_noRegion_noExtension[1]
-            file.name_rom_url_encoded= romname_url_encoded[1]
-            file.name_rom_region= romname_region[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
 
             table.insert(md_table, file)
 
@@ -1312,7 +1318,7 @@ function listDirectory(dir)
             table.insert(all_games_table, file)
             file.app_type=11
             file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded= romname_url_encoded[1]
+            file.xname_rom_url_encoded = romname_url_encoded[1]
             file.xonlineCoversAll = onlineCoversMD
             file.xcovers_All = covers_MD
 
@@ -1347,9 +1353,9 @@ function listDirectory(dir)
             file.app_type=12
 
             file.name_rom_minus_ext = romname_noExtension[1]
-            file.name_rom_minus_region_ext= romname_noRegion_noExtension[1]
-            file.name_rom_url_encoded= romname_url_encoded[1]
-            file.name_rom_region= romname_region[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
 
             table.insert(sms_table, file)
 
@@ -1375,7 +1381,7 @@ function listDirectory(dir)
             table.insert(all_games_table, 11, file)
             file.app_type=12
             file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded= romname_url_encoded[1]
+            file.xname_rom_url_encoded = romname_url_encoded[1]
             file.xonlineCoversAll = onlineCoversSMS
             file.xcovers_All = covers_SMS
 
@@ -1410,9 +1416,9 @@ function listDirectory(dir)
             file.app_type=13
 
             file.name_rom_minus_ext = romname_noExtension[1]
-            file.name_rom_minus_region_ext= romname_noRegion_noExtension[1]
-            file.name_rom_url_encoded= romname_url_encoded[1]
-            file.name_rom_region= romname_region[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
 
             table.insert(gg_table, file)
 
@@ -1438,7 +1444,7 @@ function listDirectory(dir)
             table.insert(all_games_table, 12, file)
             file.app_type=13
             file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded= romname_url_encoded[1]
+            file.xname_rom_url_encoded = romname_url_encoded[1]
             file.xonlineCoversAll = onlineCoversGG
             file.xcovers_All = covers_GG
 
