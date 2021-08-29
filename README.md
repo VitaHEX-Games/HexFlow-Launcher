@@ -49,7 +49,8 @@ Once it's finshed loading; close RetroFlow and copy your favourite retro games i
 
 To download cover art, press start, then choose which covers you would like to download. 
 
-## RetroFlow FAQ's
+
+# RetroFlow FAQ's
 
 #### Can I use HexFlow too?
 Yes; RetroFlow is seperate, it uses different folders and a different title ID.
@@ -146,6 +147,7 @@ Programming/UI: **Sakis RG**
 
 Developed with [Lua Player Plus](http://rinnegatamante.github.io/lpp-vita/) by **Rinnegatamante**
 
+
 ### Special Thanks
 
 **Creckeryop**
@@ -170,6 +172,12 @@ Russian - @_novff
 Portuguese - @nighto
 
 Japanese - @iGlitch
+
+
+### Polite notice
+
+Please note that I'm not a developer, this mod started as a personal project, please be mindful that there may be some redundant code, or some requests that will be beyond my knowledge to implement.
+Please feel free to build upon the mod as long as you provide credit to the original HexFlow developer and the people who contributed to the project.
 
 
 ## Support
