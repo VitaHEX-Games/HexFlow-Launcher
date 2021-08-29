@@ -44,7 +44,7 @@ Once it's finshed loading; close RetroFlow and copy your favourite retro games i
 
     ux0:/data/RetroFlow/ROMS/
 
-**Tip**
+**Tip:**
 It's important that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , otherwise cover art won't be found.
 
 #### 4. Download covers
