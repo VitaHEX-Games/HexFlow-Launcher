@@ -31,7 +31,7 @@ Once installed, restart your Vita for the changes to take effect.
 
 #### 2. Install the RetroFlow VPK's.
 
-Install the latest version of RetroFlow and two additional launcher VPK's from [here](https://github.com/jimbob4000/HexFlow-Launcher/releases).
+Install the [latest version of RetroFlow](https://github.com/jimbob4000/HexFlow-Launcher/releases) and two additional launcher VPK's from [here](https://github.com/jimbob4000/HexFlow-Launcher/releases).
 
 RetroFlow is the app you will use to browse games
 The other two VPK's are used to launch [RetroArch](https://www.retroarch.com/index.php?page=platforms) and [DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases).
