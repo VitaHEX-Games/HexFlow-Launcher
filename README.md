@@ -87,7 +87,7 @@ The locations have been setup to keep things simple, if you would like to change
 
 
 
-## Adding PSP and Playstation games
+# Adding PSP and Playstation games
 
 These games require bubbles to be made in order to work.
 
@@ -97,7 +97,7 @@ For PSX2PSP, game folder name must match with the GameID. For example "ux0:pspem
 
 **Subfolders and psp categories plugin are not supported**.
 
-## Custom Covers
+# Custom Covers
 
 Place your custom covers in "_ux0:/data/HexFlow/COVERS/PSVITA/_"
 
