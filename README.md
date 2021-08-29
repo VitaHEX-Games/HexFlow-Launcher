@@ -61,7 +61,7 @@ Yes; RetroFlow is seperate, it uses different folders and a different title ID.
 No; RetroFlow doesn't need bubbles for retro games provided you have installed re-Patch reloaded and the two DaedalusX64 and RetroArch launcher VPK's.
 
 #### How should I name my games so covers are found?
-It's recommended that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , these names are used to match with cover art.
+It's recommended that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , these names are used to match with cover images.
 
 #### How many games can I add?
 Only add your favourite games.
