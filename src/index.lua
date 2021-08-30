@@ -4979,7 +4979,7 @@ while true do
         Font.print(fnt20, 54, 42, "RetroFlow Launcher - ver." .. appversion .. "\n\nRetroFlow (Hexflow mod) by jimbob4000. Original HexFlow app by VitaHex.\nSupport his projects on patreon.com/vitahex", white)-- Draw info
 
         Font.print(fnt20, 54, 132, "Adding Roms\nPlace your game roms in the pre-made folders here 'ux0:/data/RetroFlow/ROMS'"
-            .. "\nFor updates and more information visit: https://github.com/jimbob4000/HexFlow-Launcher"
+            .. "\nFor updates and more information visit: https://github.com/jimbob4000/RetroFlow-Launcher"
             .. "\n\nCustom Background\nPlace your custom background image in 'ux0:/data/RetroFlow/'"
             .. "\nBackground image must be named 'Background.jpg' or 'Background.png' (720p max)"
             .. "\n\nCREDITS\n\nOriginal app by VitHex.\n\nProgramming/UI by Sakis RG.\nDeveloped with Lua Player Plus by Rinnegatamante\nSpecial Thanks: Creckeryop, Andreas Stürmer, Roc6d, Badmanwazzy37"
