@@ -22,12 +22,12 @@ PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment S
 
 # Installation
 
-#### 1. Install re-Patch reloaded 
-Install the latest version of [re-Patch reloaded](https://github.com/SonicMastr/rePatch-reLoaded/releases) by SonicMastr.
+#### 1. Install rePatch reloaded 
+Install the latest version of [rePatch reloaded](https://github.com/SonicMastr/rePatch-reLoaded/releases) by SonicMastr.
 
 The version above is different to one you may find from Autoplugin; the Autoplugin versions won't work.
 
-Once installed, restart your Vita for the changes to take effect.
+Once you've installed rePatch reloaded, restart your Vita for the changes to take effect.
 
 
 #### 2. Install the RetroFlow VPK's.
@@ -59,7 +59,7 @@ To download cover images, press start, then choose which covers you would like t
 Yes; RetroFlow is seperate, it uses different folders and a different title ID.
 
 #### Do I need to create bubbles for retro games?
-No; RetroFlow doesn't need bubbles for retro games provided you have installed re-Patch reloaded and the two DaedalusX64 and RetroArch launcher VPK's.
+No; RetroFlow doesn't need bubbles for retro games provided you have installed rePatch reloaded and the two DaedalusX64 and RetroArch launcher VPK's.
 
 #### How should I name my games so covers are found?
 It's recommended that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , these names are used to match with cover images.
@@ -95,9 +95,9 @@ For example, to use the ux0 roms folder, the start of the section would look lik
     local romFolder_N64 = romFolder .. "Nintendo - Nintendo 64"
 
 
-#### Why is repatch reloaded needed?
+#### Why is rePatch reloaded needed?
 This is plugin is used to avoid needing to create bubbles for each retro game.
-RetroFlow creates text files in the repatch directory for the launchers to use in order to start games.
+RetroFlow creates text files in the rePatch directory for the launchers to use in order to start games.
 
 
 # Adding PSP and Playstation games
