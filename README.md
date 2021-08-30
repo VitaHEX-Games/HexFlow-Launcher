@@ -25,6 +25,8 @@ PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment S
 #### 1. Install re-Patch reloaded 
 Install the latest version of [re-Patch reloaded](https://github.com/SonicMastr/rePatch-reLoaded/releases) by SonicMastr.
 
+(The version above is different to one you may find from Autoplugin; the Autoplugin versions won't work).
+
 Once installed, restart your Vita for the changes to take effect.
 
 (This is plugin is used to avoid needing to create bubbles for each retro game).
