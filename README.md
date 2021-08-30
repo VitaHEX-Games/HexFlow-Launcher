@@ -113,7 +113,7 @@ For PSX2PSP, game folder name must match with the GameID. For example "ux0:pspem
 
 # Custom Covers
 
-Place your custom covers in "_ux0:/data/HexFlow/COVERS/PSVITA/_"
+Place your custom covers in "_ux0:/data/RetroFlow/COVERS/PSVITA/_"
 
 Cover images must be in **png** format and file name must match the **App ID** or the **App Name** of each app (recomended resolution 256x256px). [Sample image](https://live.staticflickr.com/7176/6885249717_738e8ee187_n.jpg)
 
