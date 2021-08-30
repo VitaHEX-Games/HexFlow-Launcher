@@ -78,7 +78,7 @@ Sure; changing your language to 'English - American' will change the 'Mega Drive
 #### Can I change a core for RetroArch?
 The cores have been set by system and cannot be changed on a game-by-game basis at the moment.
 
-To change the core for an entire system, search for "Retroarch Cores" in the file below and edit accordingly. 
+To change the core for an entire system, search for "Retroarch Cores" in the file below and edit the core file names accordingly. 
 
     ux0:/app/RETROFLOW/index.lua
 
