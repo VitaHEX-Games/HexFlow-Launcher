@@ -25,12 +25,9 @@ PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment S
 #### 1. Install re-Patch reloaded 
 Install the latest version of [re-Patch reloaded](https://github.com/SonicMastr/rePatch-reLoaded/releases) by SonicMastr.
 
-(This is plugin is used to avoid needing to create bubbles for each retro game).
+The version above is different to one you may find from Autoplugin; the Autoplugin versions won't work.
 
 Once installed, restart your Vita for the changes to take effect.
-
-**Tip:**
-The version above is different to one you may find from Autoplugin; the Autoplugin versions won't work.
 
 
 #### 2. Install the RetroFlow VPK's.
@@ -91,6 +88,16 @@ The locations have been setup to keep things simple, if you would like to change
 
     ux0:/app/RETROFLOW/index.lua
 
+For example, to use the ux0 roms folder, the start of the section would look like
+
+    -- ROM Folders
+    local romFolder = "ux0:/Roms/"
+    local romFolder_N64 = romFolder .. "Nintendo - Nintendo 64"
+
+
+#### Why is repatch reloaded needed?
+This is plugin is used to avoid needing to create bubbles for each retro game.
+RetroFlow creates text files in the repatch directory for the launchers to use in order to start games.
 
 
 # Adding PSP and Playstation games
