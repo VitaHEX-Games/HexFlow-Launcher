@@ -1,6 +1,6 @@
 ﻿
 # RetroFlow-Launcher
-[![](https://github.com/jimbob4000/HexFlow-Launcher/raw/main/Media/main_screen.png "main_screen")](https://github.com/jimbob4000/HexFlow-Launcher/blob/main/Media/main_screen.png)
+[![](https://github.com/jimbob4000/RetroFlow-Launcher/raw/main/Media/main_screen.png "main_screen")](https://github.com/jimbob4000/RetroFlow-Launcher/blob/main/Media/main_screen.png)
 
 # About
 This is a modded version of [HexFlow Launcher](https://github.com/VitaHEX-Games/HexFlow-Launcher); a 3d coverflow like launcher for PS Vita.
@@ -32,7 +32,7 @@ Once you've installed rePatch reloaded, restart your Vita for the changes to tak
 
 #### 2. Install the RetroFlow VPK's.
 
-Install the [latest version of RetroFlow](https://github.com/jimbob4000/HexFlow-Launcher/releases) and two additional launcher VPK's from [here](https://github.com/jimbob4000/HexFlow-Launcher/releases).
+Install the [latest version of RetroFlow](https://github.com/jimbob4000/RetroFlow-Launcher/releases) and two additional launcher VPK's from [here](https://github.com/jimbob4000/RetroFlow-Launcher/releases).
 
 RetroFlow is the app you will use to browse games
 The other two VPK's are used to launch [RetroArch](https://www.retroarch.com/index.php?page=platforms) and [DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases).
