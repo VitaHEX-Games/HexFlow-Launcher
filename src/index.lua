@@ -476,7 +476,13 @@ end
 
 
 function launch_retroarch()
-    -- Create directory if doesn't exist
+
+    -- Create rePatch directory if doesn't exist
+    if not System.doesDirExist("ux0:/rePatch") then
+        System.createDirectory("ux0:/rePatch")
+    end
+
+    -- Create launch directory if doesn't exist
     if not System.doesDirExist("ux0:/rePatch/RETROFLRA") then
         System.createDirectory("ux0:/rePatch/RETROFLRA")
     end
@@ -534,7 +540,13 @@ end
 
 
 function launch_DaedalusX64()
-    -- CREATE DIRECTORY IF DOESN'T EXIST
+
+    -- Create rePatch directory if doesn't exist
+    if not System.doesDirExist("ux0:/rePatch") then
+        System.createDirectory("ux0:/rePatch")
+    end
+    
+    -- Create launch directory if doesn't exist
     if not System.doesDirExist("ux0:/rePatch/RETROFLDX") then
         System.createDirectory("ux0:/rePatch/RETROFLDX")
     end
