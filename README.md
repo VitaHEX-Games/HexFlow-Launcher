@@ -84,7 +84,7 @@ To change the core for an entire system, search for "Retroarch Cores" in the fil
 
 
 #### Can I change the rom folder locations?
-The locations have been setup to keep things simple, if you would like to change the locations, search for "ROM Folders" in the file below and edit accordingly.
+The locations have been setup to keep things simple, if you would like to change the locations, search for "ROM Folders" in the 'index.lua' file below and edit accordingly.
 
     ux0:/app/RETROFLOW/index.lua
 
