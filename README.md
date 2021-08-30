@@ -3,7 +3,7 @@
 [![](https://github.com/jimbob4000/HexFlow-Launcher/raw/main/Media/main_screen.png "main_screen")](https://github.com/jimbob4000/HexFlow-Launcher/blob/main/Media/main_screen.png)
 
 # About
-This is a modded version of HexFlow Launcher; a 3d coverflow like launcher for PS Vita.
+This is a modded version of [HexFlow Launcher](https://github.com/VitaHEX-Games/HexFlow-Launcher); a 3d coverflow like launcher for PS Vita.
 
 This version includes categories for retro games which can be launched with RetroArch and DaedalusX64, without having to create bubbles for every game!
 
