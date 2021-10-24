@@ -5,7 +5,8 @@
 # About
 This is a modded version of [HexFlow Launcher](https://github.com/VitaHEX-Games/HexFlow-Launcher); a 3d coverflow like launcher for PS Vita.
 
-This version includes categories for retro games which can be launched with RetroArch and DaedalusX64, without having to create bubbles for every game!
+This version includes categories for retro games which can be launched without bubbles for RetroArch and DaedalusX64.
+Playstation and PSP games can also be launched without having to create bubbles for every game!
 
 Display and launch your retro games and homebrews in style.  
 **RetroFlow Launcher** features a 3d user interface to display your games with their box art and supports many customization options like custom covers and backgrounds.
@@ -15,29 +16,20 @@ Launching a game/app from **RetroFlow Launcher** will close the launcher automat
 ### Supported systems:
 PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear.
 
-[DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases) is required for N64 games. [RetroArch](https://www.retroarch.com/index.php?page=platforms) is required for other retro systems.
+[DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases) is required for N64 games. [RetroArch](https://www.retroarch.com/index.php?page=platforms) is required for other retro systems. [Adrenaline](https://github.com/TheOfficialFloW/Adrenaline) is required for Playstation 1 and PSP games.
 
 
 
 
 # Installation
 
-#### 1. Install rePatch reloaded 
-Install the latest version of [rePatch reloaded](https://github.com/SonicMastr/rePatch-reLoaded/releases) by SonicMastr.
+#### 1. Install the RetroFlow VPK's.
 
-The version above is different to one you may find from Autoplugin; the Autoplugin versions won't work.
+Install the [latest version of RetroFlow](https://github.com/jimbob4000/RetroFlow-Launcher/releases) and additional RetroFlow Adrenaline launcher VPK from [here](https://github.com/jimbob4000/RetroFlow-Launcher/releases).
 
-Once you've installed rePatch reloaded, restart your Vita for the changes to take effect.
+'RetroFlow Launcher' is the app you will use to browse games. 'RetroFlow Adrenaline launcher' is needed for launching Playstation and PSP games.
 
-
-#### 2. Install the RetroFlow VPK's.
-
-Install the [latest version of RetroFlow](https://github.com/jimbob4000/RetroFlow-Launcher/releases) and two additional launcher VPK's from [here](https://github.com/jimbob4000/RetroFlow-Launcher/releases).
-
-RetroFlow is the app you will use to browse games
-The other two VPK's are used to launch [RetroArch](https://www.retroarch.com/index.php?page=platforms) and [DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases).
-
-#### 3. Add your retro games to RetroFlow
+#### 2. Add your retro games to RetroFlow
 
 Launch RetroFlow for the first time, RetroFlow will create the folders where you can save your games.
 
@@ -47,6 +39,19 @@ Once it's finshed loading; close RetroFlow and copy your favourite retro games i
 
 **Tip:**
 It's important that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , otherwise cover images won't be found.
+
+
+#### 3. For PSP games, please rename using Leecherman's tool
+
+Please rename PSP ISO files using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
+
+    %NAME% %REGION% %ID%
+
+The result should look like this:
+
+    Cars 2 (US) [UCUS-98766].iso
+
+
 
 #### 4. Download covers
 
@@ -58,16 +63,11 @@ To download cover images, press start, then choose which covers you would like t
 #### Can I use HexFlow too?
 Yes; RetroFlow is seperate, it uses different folders and a different title ID.
 
-#### Do I need to create bubbles for retro games?
-No; RetroFlow doesn't need bubbles for retro games provided you have installed rePatch reloaded and the two DaedalusX64 and RetroArch launcher VPK's.
+#### Do I need to create bubbles for games?
+No; RetroFlow doesn't need bubbles for games.
 
 #### How should I name my games so covers are found?
 It's recommended that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , these names are used to match with cover images.
-
-#### How many games can I add?
-Only add your favourite games.
-
-RetroFlow isn't optimised for large collections of games, it's recommended that you only add you favourite retro games, adding too many games will result in longer load times.
 
 #### Some systems aren't showing?
 Empty collections are hidden by default, once you add some games into the roms folder, they will appear.
@@ -96,20 +96,15 @@ For example, to use the ux0 roms folder, the start of the section would look lik
     local romFolder_N64 = romFolder .. "Nintendo - Nintendo 64"
 
 
-#### Why is rePatch reloaded needed?
-This is plugin is used to avoid needing to create bubbles for each retro game.
-RetroFlow creates text files in the rePatch directory for the launchers to use in order to start games.
-
 
 # Adding PSP and Playstation games
 
 These games require bubbles to be made in order to work.
 
-For PSP or PS1 bubbles generated by Adrenaline Bubbles Manager you must set the value of **BubbleID** to **TitleID** in the settings menu of ABM tool.
+For PSP ISO files please rename using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer). See installation step 3 for the settings. The "ux0:pspemu/PSP/ISO/Cars 2 (US) [UCUS-98766].iso.
 
 For PSX2PSP, game folder name must match with the GameID. For example "ux0:pspemu/PSP/GAME/**SLES01234**".
 
-**Subfolders and psp categories plugin are not supported**.
 
 # Custom Covers
 
@@ -169,6 +164,10 @@ Developed with [Lua Player Plus](http://rinnegatamante.github.io/lpp-vita/) by *
 **andiweli** ([HEXFlow Covers database](https://github.com/andiweli/hexflow-covers))
 
 **DRok17** for his work on bubble builders.
+
+**Rinnegatamante** for tips and support with Lua.  
+
+**Leecherman** for his work on AdrBubbleBooter and the [PSP ISO Renamer](https://sites.google.com/site/theleecherman/PSPISORenamer)
 
 
 ### Translations
