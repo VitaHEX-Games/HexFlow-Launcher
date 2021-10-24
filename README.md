@@ -11,7 +11,7 @@ Playstation and PSP games can also be launched without having to create bubbles 
 Display and launch your retro games and homebrews in style.  
 **RetroFlow Launcher** features a 3d user interface to display your games with their box art and supports many customization options like custom covers and backgrounds.
 
-Launching a game/app from **RetroFlow Launcher** will close the launcher automaticaly without asking.
+Launching a game or app from **RetroFlow Launcher** will close the launcher automaticaly without asking.
 
 ### Supported systems:
 PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear.
