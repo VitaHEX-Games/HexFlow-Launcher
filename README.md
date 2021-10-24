@@ -16,7 +16,7 @@ Launching a game/app from **RetroFlow Launcher** will close the launcher automat
 ### Supported systems:
 PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear.
 
-[DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases) is required for N64 games. [RetroArch](https://www.retroarch.com/index.php?page=platforms) is required for other retro systems. [Adrenaline](https://github.com/TheOfficialFloW/Adrenaline) is required for Playstation 1 and PSP games.
+[DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases) is required for N64 games. [RetroArch](https://www.retroarch.com/index.php?page=platforms) is required for other retro systems. [Adrenaline](https://github.com/TheOfficialFloW/Adrenaline) is required for Playstation and PSP games.
 
 
 
@@ -29,19 +29,7 @@ Install the [latest version of RetroFlow](https://github.com/jimbob4000/RetroFlo
 
 'RetroFlow Launcher' is the app you will use to browse games. 'RetroFlow Adrenaline launcher' is needed for launching Playstation and PSP games.
 
-#### 2. Add your retro games to RetroFlow
-
-Launch RetroFlow for the first time, RetroFlow will create the folders where you can save your games.
-
-Once it's finshed loading; close RetroFlow and copy your favourite retro games into the relevant subfolders below:
-
-    ux0:/data/RetroFlow/ROMS/
-
-**Tip:**
-It's important that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , otherwise cover images won't be found.
-
-
-#### 3. For PSP games, please rename using Leecherman's tool
+#### 2. For PSP games, please rename your ISO files using Leecherman's tool
 
 Please rename PSP ISO files using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
 
@@ -51,6 +39,18 @@ The result should look like this:
 
     Cars 2 (US) [UCUS-98766].iso
 
+More information on PSP and Playstation after the FAQ's section.
+
+#### 3. Add your retro games to RetroFlow
+
+Launch RetroFlow for the first time, RetroFlow will create the folders where you can save your games.
+
+Once it's finshed loading; close RetroFlow and copy your favourite retro games into the relevant subfolders below:
+
+    ux0:/data/RetroFlow/ROMS/
+
+**Tip:**
+It's important that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , otherwise cover images won't be found.
 
 
 #### 4. Download covers
@@ -99,11 +99,30 @@ For example, to use the ux0 roms folder, the start of the section would look lik
 
 # Adding PSP and Playstation games
 
-These games require bubbles to be made in order to work.
+RetroFlow uses the game ID's for Playstation and PSP for cover matching.
+Please use the guides below.
 
-For PSP ISO files please rename using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer). See installation step 3 for the settings. The "ux0:pspemu/PSP/ISO/Cars 2 (US) [UCUS-98766].iso.
+## PSP ##
+For PSP ISO files please rename using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
 
-For PSX2PSP, game folder name must match with the GameID. For example "ux0:pspemu/PSP/GAME/**SLES01234**".
+    %NAME% %REGION% %ID%
+
+The result should look like this:
+
+    Cars 2 (US) [UCUS-98766].iso
+
+RetroFlow uses the ID to match artwork, and tidies the rest of the filename to display in the app.
+
+## Playstation ##
+For PSX2PSP, game folder name must match with the GameID. For example:
+
+    ux0:pspemu/PSP/GAME/**SLES01234**
+
+Games will need to be in a EBOOT format, see here for information on [how to convert PSX Disc Images to EBOOT for PSP](https://www.cfwaifu.com/psx2psp/).
+RetroFlow also uses the ID to lookup the name of the game.
+
+
+
 
 
 # Custom Covers
@@ -124,7 +143,7 @@ Place your **Background.png** or **Background.jpg** image in "_ux0:/data/RetroFl
 
 ### Custom Music
 
-Place your **Music.mp3** file in "_ux0:data/RetroFlow/_" (music will play automaticaly when the "Sounds" option is enabled)
+Place your **Music.mp3** file in "_ux0:data/RetroFlow/_" (music will play automatically when the "Sounds" option is enabled)
 
 ## AutoBoot
 
