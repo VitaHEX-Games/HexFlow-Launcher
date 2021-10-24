@@ -5281,7 +5281,7 @@ while true do
             .. "\n"
             .. "\nAdding PSP Games:"
             .. "\nPlease rename ISO files using Leecherman's 'PSP ISO Renamer tool'."
-            .. "\nTool Parameters: %NAME% %REGION% %ID%."
+            .. "\nTool Parameters: %NAME% (%REGION%) [%ID%]."
             .. "\nSample: Cars 2 (US) [UCUS-98766].iso"
             .. "\n"
             .. "\nFor updates & more info visit: https://github.com/jimbob4000/RetroFlow-Launcher"
