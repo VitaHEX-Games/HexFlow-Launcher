@@ -33,7 +33,7 @@ Install the [latest version of RetroFlow](https://github.com/jimbob4000/RetroFlo
 
 Please rename PSP ISO files using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
 
-    %NAME% %REGION% %ID%
+    %NAME% (%REGION%) [%ID%]
 
 The result should look like this:
 
@@ -105,7 +105,7 @@ Please use the guides below.
 ### PSP ###
 For PSP ISO files please rename using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
 
-    %NAME% %REGION% %ID%
+    %NAME% (%REGION%) [%ID%]
 
 The result should look like this:
 
