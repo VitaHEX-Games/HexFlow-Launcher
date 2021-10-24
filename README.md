@@ -102,7 +102,7 @@ For example, to use the ux0 roms folder, the start of the section would look lik
 RetroFlow uses the game ID's for Playstation and PSP for cover matching.
 Please use the guides below.
 
-## PSP ##
+### PSP ###
 For PSP ISO files please rename using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
 
     %NAME% %REGION% %ID%
@@ -113,7 +113,7 @@ The result should look like this:
 
 RetroFlow uses the ID to match artwork, and tidies the rest of the filename to display in the app.
 
-## Playstation ##
+### Playstation ###
 For PSX2PSP, game folder name must match with the GameID. For example:
 
     ux0:pspemu/PSP/GAME/**SLES01234**
