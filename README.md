@@ -70,9 +70,10 @@ To download cover images, press start, then choose which covers you would like t
 #### I'm on a Mac, how do I rename PSP games?
 You can use the [UMD FileRenamer app here](https://github.com/BrosMakingSoftware/UMD_FileRenamer/releases/tag/v1.0).
 
-Step 1. Download the UMD FileRenamer app above, then 'UMD_FileRenamer-1.0.jar' file and select your folder of games, then rename.
+Step 1. Download the UMD FileRenamer app above
+Open the 'UMD_FileRenamer-1.0.jar' file and select your folder of games, then rename.
 
-Step 2. Replace (parenthesis) with [[brackets]]
+Step 2. Replace (parenthesis) with [brackets]
 In the finder, select all the games, right click and select 'rename items'.
 Replace the opening and closing parenthesis with square brackets instead.
 
