@@ -29,7 +29,9 @@ Install the [latest version of RetroFlow](https://github.com/jimbob4000/RetroFlo
 
 'RetroFlow Launcher' is the app you will use to browse games. 'RetroFlow Adrenaline launcher' is needed for launching Playstation and PSP games.
 
-#### 2. For PSP games, please rename your ISO files using Leecherman's tool
+#### 2. IMPORTANT - Please rename your PSP games using the steps below.
+
+Windows users:
 
 Please rename PSP ISO files using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
 
@@ -38,6 +40,11 @@ Please rename PSP ISO files using Leecherman's [PSP ISO Renamer tool](https://si
 The result should look like this:
 
     Cars 2 (US) [UCUS-98766].iso
+
+
+Mac users:
+See the FAQ's section for an alternative tool for renaming.
+
 
 More information on PSP and Playstation after the FAQ's section.
 
@@ -59,6 +66,25 @@ To download cover images, press start, then choose which covers you would like t
 
 
 # RetroFlow FAQ's
+
+#### I'm on a Mac, how do I rename PSP games?
+You can use the [UMD FileRenamer app here](https://github.com/BrosMakingSoftware/UMD_FileRenamer/releases/tag/v1.0)
+
+Step 1. Rename using the tool
+Open the 'UMD_FileRenamer-1.0.jar' file and select your folder of games, then rename.
+
+Step 2. Rename using finder
+In the finder, select all the games, right click and select 'rename items'.
+Replace the opening and closing parenthesis with square brackets instead.
+
+    Name (XXXX-XXXXX).iso
+
+Will be renamed to:
+
+    Name [XXXX-XXXXX].iso
+
+The game names will be missing the region code, but it's not required for the RetroFlow to work.
+
 
 #### Can I use HexFlow too?
 Yes; RetroFlow is seperate, it uses different folders and a different title ID.
