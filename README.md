@@ -43,7 +43,7 @@ The result should look like this:
 
 
 Mac users:
-See the FAQ's section for an alternative tool for renaming.
+See the FAQ's section for a guide on [renaming on a mac](https://github.com/jimbob4000/RetroFlow-Launcher#im-on-a-mac-how-do-i-rename-psp-games).
 
 
 More information on PSP and Playstation after the FAQ's section.
