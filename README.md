@@ -42,7 +42,7 @@ The result should look like this:
     Cars 2 (US) [UCUS-98766].iso
 
 
-Mac users:
+### Mac users:
 See the FAQ's section for a guide on [renaming on a mac](https://github.com/jimbob4000/RetroFlow-Launcher#im-on-a-mac-how-do-i-rename-psp-games).
 
 
