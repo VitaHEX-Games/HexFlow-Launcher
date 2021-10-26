@@ -23,15 +23,15 @@ PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment S
 
 # Installation
 
-#### 1. Install the RetroFlow VPK's.
+### 1. Install the RetroFlow VPK's.
 
 Install the [latest version of RetroFlow](https://github.com/jimbob4000/RetroFlow-Launcher/releases) and additional RetroFlow Adrenaline launcher VPK from [here](https://github.com/jimbob4000/RetroFlow-Launcher/releases).
 
 'RetroFlow Launcher' is the app you will use to browse games. 'RetroFlow Adrenaline launcher' is needed for launching Playstation and PSP games.
 
-#### 2. IMPORTANT - Please rename your PSP games using the steps below.
+### 2. IMPORTANT - Please rename your PSP games using the steps below.
 
-Windows users:
+#### Windows users:
 
 Please rename PSP ISO files using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
 
@@ -48,7 +48,7 @@ See the FAQ's section for a guide on [renaming on a mac](https://github.com/jimb
 
 More information on PSP and Playstation after the FAQ's section.
 
-#### 3. Add your retro games to RetroFlow
+### 3. Add your retro games to RetroFlow
 
 Launch RetroFlow for the first time, RetroFlow will create the folders where you can save your games.
 
@@ -60,7 +60,7 @@ Once it's finshed loading; close RetroFlow and copy your favourite retro games i
 It's important that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , otherwise cover images won't be found.
 
 
-#### 4. Download covers
+### 4. Download covers
 
 To download cover images, press start, then choose which covers you would like to download. 
 
