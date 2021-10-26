@@ -67,7 +67,7 @@ To download cover images, press start, then choose which covers you would like t
 
 # RetroFlow FAQ's
 
-#### I'm on a Mac, how do I rename PSP games?
+### I'm on a Mac, how do I rename PSP games?
 You can use the [UMD FileRenamer app here](https://github.com/BrosMakingSoftware/UMD_FileRenamer/releases/tag/v1.0).
 
 Step 1. Download the UMD FileRenamer app above
@@ -86,22 +86,22 @@ Will be renamed to:
 The game names will be missing the region code, but it's not required for the RetroFlow to work.
 
 
-#### Can I use HexFlow too?
+### Can I use HexFlow too?
 Yes; RetroFlow is seperate, it uses different folders and a different title ID.
 
-#### Do I need to create bubbles for games?
+### Do I need to create bubbles for games?
 No; RetroFlow doesn't need bubbles for games.
 
-#### How should I name my games so covers are found?
+### How should I name my games so covers are found?
 It's recommended that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , these names are used to match with cover images.
 
-#### Some systems aren't showing?
+### Some systems aren't showing?
 Empty collections are hidden by default, once you add some games into the roms folder, they will appear.
 
-#### Can I change the Mega Drive name to Genesis?
+### Can I change the Mega Drive name to Genesis?
 Sure; changing your language to 'English - American' will change the 'Mega Drive' name and logo to 'Genesis'.
 
-#### Can I change a core for RetroArch?
+### Can I change a core for RetroArch?
 The cores have been set by system and cannot be changed on a game-by-game basis at the moment.
 
 To change the core for an entire system, search for "Retroarch Cores" in the file below and edit the core file names accordingly. 
@@ -110,7 +110,7 @@ To change the core for an entire system, search for "Retroarch Cores" in the fil
 
 The RetroArch core files can be found here: "ux0:/app/RETROVITA/"
 
-#### Can I change the rom folder locations?
+### Can I change the rom folder locations?
 The locations have been setup to keep things simple, if you would like to change the locations, search for "ROM Folders" in the 'index.lua' file below and edit accordingly.
 
     ux0:/app/RETROFLOW/index.lua
@@ -128,7 +128,7 @@ For example, to use the ux0 roms folder, the start of the section would look lik
 RetroFlow uses the game ID's for Playstation and PSP for cover matching.
 Please use the guides below.
 
-### PSP ###
+## PSP
 For PSP ISO files please rename using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
 
     %NAME% (%REGION%) [%ID%]
@@ -139,7 +139,7 @@ The result should look like this:
 
 RetroFlow uses the ID to match artwork, and tidies the rest of the filename to display in the app.
 
-### Playstation ###
+## Playstation
 For PSX2PSP, game folder name must match with the GameID. For example:
 
     ux0:pspemu/PSP/GAME/**SLES01234**
