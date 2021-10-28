@@ -29,7 +29,7 @@ Install the [latest version of RetroFlow](https://github.com/jimbob4000/RetroFlo
 
 'RetroFlow Launcher' is the app you will use to browse games. 'RetroFlow Adrenaline launcher' is needed for launching Playstation and PSP games.
 
-### 2. IMPORTANT - Please rename your PSP games using the steps below.
+### 2. For PSP cover matching please rename your PSP games using the steps below.
 
 #### Windows users:
 
