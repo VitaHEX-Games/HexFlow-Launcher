@@ -53,13 +53,14 @@ More information on PSP and Playstation after the FAQ's section.
 
 ### 3. Check your PS1 and PSP are in the right folders
 
-PSP games should be saved here: 
-
-    ux0:pspemu/ISO/
-
 PS1 games should be saved here:
 
     ux0:pspemu/PSP/GAME/
+
+
+PSP games should be saved here: 
+
+    ux0:pspemu/ISO/
 
 
 ### 4. Add your retro games to RetroFlow
