@@ -48,7 +48,19 @@ See the FAQ's section for a guide on [renaming on a mac](https://github.com/jimb
 
 More information on PSP and Playstation after the FAQ's section.
 
-### 3. Add your retro games to RetroFlow
+
+### 3. Check your PS1 and PSP are in the right folders
+
+PSP games should be saved here: 
+
+    ux0:pspemu/ISO/
+
+PS1 games should be saved here:
+
+    ux0:pspemu/PSP/GAME/
+
+
+### 4. Add your retro games to RetroFlow
 
 Launch RetroFlow for the first time, RetroFlow will create the folders where you can save your games.
 
@@ -60,10 +72,18 @@ Once it's finshed loading; close RetroFlow and copy your favourite retro games i
 It's important that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , otherwise cover images won't be found.
 
 
-### 4. Download covers
+### 5. Download covers
 
 To download cover images, press start, then choose which covers you would like to download. 
 
+
+# Possible incompatabilities
+
+### Repatch
+Potential issue with repatch / repatch_4 plugins in the tai config. May cause the Vita to shutdown. Try disabling these if you encounter an issue.
+
+### PSP homebrew sorter / categories lite
+Potential issue with PSP homebrew sorter / PSP categories lite, if you're experiencing please try without these.
 
 # RetroFlow FAQ's
 
