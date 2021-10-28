@@ -1,10 +1,10 @@
--- RetroFlow Launcher - HexFlow Mod version 2.0 by jimbob4000
+-- RetroFlow Launcher - HexFlow Mod version by jimbob4000
 -- Based on HexFlow Launcher  version 0.5 by VitaHEX
 -- https://www.patreon.com/vitahex
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "2.0"
+local appversion = "2.1"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -901,206 +901,215 @@ function listDirectory(dir)
 
 
     -- SCAN PSP
-    files_PSP = System.listDirectory(romFolder_PSP)
-    for i, file in pairs(files_PSP) do
+    if  System.doesDirExist(romFolder_PSP) then
+        
+        files_PSP = System.listDirectory(romFolder_PSP)
+        for i, file in pairs(files_PSP) do
 
-    local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-        if not file.directory then
+        local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
+            if not file.directory then
 
-            romname_withExtension = file.name
-            cleanRomNamesPSP()
-            info = romname_noRegion_noExtension[1]
-            app_title = titleID_noHyphen[1]
-            -- app_titleid = titleID_noHyphen[1]
-            file.name = titleID_noHyphen[1]
+                romname_withExtension = file.name
+                cleanRomNamesPSP()
+                info = romname_noRegion_noExtension[1]
+                app_title = titleID_noHyphen[1]
+                -- app_titleid = titleID_noHyphen[1]
+                file.name = titleID_noHyphen[1]
 
-                        
-            table.insert(folders_table, file)
-            --table.insert(games_table, file)
-            custom_path = covers_psp .. titleID_noHyphen[1] .. ".png"
-            custom_path_id = covers_psp .. titleID_noHyphen[1] .. ".png"
-            file.app_type=2
+                            
+                table.insert(folders_table, file)
+                --table.insert(games_table, file)
+                custom_path = covers_psp .. titleID_noHyphen[1] .. ".png"
+                custom_path_id = covers_psp .. titleID_noHyphen[1] .. ".png"
+                file.app_type=2
 
-            file.name_rom_minus_ext = romname_noExtension[1]
-            file.name_rom_minus_region_ext = romname_noRegion_noExtension_noTitleID[1] -- DISPLAY NAME
-            file.name_rom_url_encoded = titleID_noHyphen[1]
-            file.name_rom_region = romname_region[1]
-            file.name_title_search = romname_noExtension[1]
-            
+                file.name_rom_minus_ext = romname_noExtension[1]
+                file.name_rom_minus_region_ext = romname_noRegion_noExtension_noTitleID[1] -- DISPLAY NAME
+                file.name_rom_url_encoded = titleID_noHyphen[1]
+                file.name_rom_region = romname_region[1]
+                file.name_title_search = romname_noExtension[1]
+                
 
-            table.insert(psp_table, file)
+                table.insert(psp_table, file)
 
-            if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_psp .. titleID_noHyphen[1] .. ".png" --custom cover by app name
-            elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_psp .. titleID_noHyphen[1] .. ".png" --custom cover by app id
-            else
-                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_psp.png") then
-                    img_path = "ux0:/app/RETROFLOW/DATA/icon_psp.png"  --app icon
+                if custom_path and System.doesFileExist(custom_path) then
+                    img_path = covers_psp .. titleID_noHyphen[1] .. ".png" --custom cover by app name
+                elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                    img_path = covers_psp .. titleID_noHyphen[1] .. ".png" --custom cover by app id
                 else
-                    img_path = "app0:/DATA/noimg.png" --blank grey
+                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
+                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                    else
+                        img_path = "app0:/DATA/noimg.png" --blank grey
+                    end
                 end
+
+                table.insert(files_table, 16, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+                table.insert(files_table, 16, file.name_rom_minus_ext)
+                table.insert(files_table, 16, file.name_rom_minus_region_ext)
+                table.insert(files_table, 16, file.name_rom_url_encoded)
+                table.insert(files_table, 16, file.name_rom_region)
+                table.insert(files_table, 16, file.name_title_search)
+
+                -- all games table
+                table.insert(all_games_table, 2, file)
+                file.app_type=2
+                file.xname_rom_minus_ext = romname_url_encoded[1]
+                file.xname_rom_url_encoded = romname_url_encoded[1]
+                file.xonlineCoversAll = onlineCoversPSP
+                file.xcovers_All = covers_psp
+
+                --add blank icon to all
+                file.icon = imgCoverTmp
+                file.icon_path = img_path
+                
+                table.insert(files_table, 16, file.icon) -- Increased for Retro (All systems + 1 for all view)
+                
+                file.apptitle = romname_noRegion_noExtension_noTitleID[1]
+                table.insert(files_table, 16, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+
             end
-
-            table.insert(files_table, 16, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-            table.insert(files_table, 16, file.name_rom_minus_ext)
-            table.insert(files_table, 16, file.name_rom_minus_region_ext)
-            table.insert(files_table, 16, file.name_rom_url_encoded)
-            table.insert(files_table, 16, file.name_rom_region)
-            table.insert(files_table, 16, file.name_title_search)
-
-            -- all games table
-            table.insert(all_games_table, 2, file)
-            file.app_type=2
-            file.xname_rom_minus_ext = romname_url_encoded[1]
-            file.xname_rom_url_encoded = romname_url_encoded[1]
-            file.xonlineCoversAll = onlineCoversPSP
-            file.xcovers_All = covers_psp
-
-            --add blank icon to all
-            file.icon = imgCoverTmp
-            file.icon_path = img_path
-            
-            table.insert(files_table, 16, file.icon) -- Increased for Retro (All systems + 1 for all view)
-            
-            file.apptitle = romname_noRegion_noExtension_noTitleID[1]
-            table.insert(files_table, 16, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
-
         end
     end
+
+    
 
 
     -- SCAN PSX
-    files_PSX = System.listDirectory(romFolder_PSX)
+    if  System.doesDirExist(romFolder_PSX) then
 
-    -- LOOKUP TITLE ID: Load saved table of previously macthes titleID's for faster name lookup
+        files_PSX = System.listDirectory(romFolder_PSX)
 
-    if System.doesFileExist(user_DB_Folder .. "psx.lua") then
-        database_rename_PSX = user_DB_Folder .. "psx.lua"
-    else
-        database_rename_PSX = "app0:addons/psx.lua"
-    end
+        -- LOOKUP TITLE ID: Load saved table of previously macthes titleID's for faster name lookup
 
-    for i, file in pairs(files_PSX) do
-    local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-        if file.directory then
+        if System.doesFileExist(user_DB_Folder .. "psx.lua") then
+            database_rename_PSX = user_DB_Folder .. "psx.lua"
+        else
+            database_rename_PSX = "app0:addons/psx.lua"
+        end
 
-            romname_withExtension = file.name
-            romname_noExtension = {}
-            romname_noExtension[1] = file.name
+        for i, file in pairs(files_PSX) do
+        local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
+            if file.directory then
 
-                -- LOOKUP TITLE ID: Get game name based on titleID, search saved table of data, or full table of data if titleID not found
+                romname_withExtension = file.name
+                romname_noExtension = {}
+                romname_noExtension[1] = file.name
 
-                -- Load previous matches
-                psxdb = dofile(database_rename_PSX)
+                    -- LOOKUP TITLE ID: Get game name based on titleID, search saved table of data, or full table of data if titleID not found
 
-                -- Check if scanned titleID is a saved match
-                psx_search = psxdb[romname_noExtension[1]]
+                    -- Load previous matches
+                    psxdb = dofile(database_rename_PSX)
 
-                -- If no
-                if psx_search == nil then
+                    -- Check if scanned titleID is a saved match
+                    psx_search = psxdb[romname_noExtension[1]]
 
-                    -- Load the full database to find the new titleID
-                    psxdbfull = dofile("app0:addons/psx.lua")
-                    psx_search_full = psxdbfull[romname_noExtension[1]]
+                    -- If no
+                    if psx_search == nil then
 
-                    -- If not found; use the folder name without adding a game name
-                    if psx_search_full == nil then
-                        title_full = romname_noExtension[1]
+                        -- Load the full database to find the new titleID
+                        psxdbfull = dofile("app0:addons/psx.lua")
+                        psx_search_full = psxdbfull[romname_noExtension[1]]
 
-                    -- If found; use the game name from the full database 
+                        -- If not found; use the folder name without adding a game name
+                        if psx_search_full == nil then
+                            title_full = romname_noExtension[1]
+
+                        -- If found; use the game name from the full database 
+                        else
+                            title_full = psxdbfull[romname_noExtension[1]].name
+                        end
+
+                    -- If found; use the game name from the saved match
                     else
-                        title_full = psxdbfull[romname_noExtension[1]].name
+                        title_full = psxdb[romname_noExtension[1]].name
                     end
 
-                -- If found; use the game name from the saved match
+                romname_noRegion_noExtension = {}
+                romname_noRegion_noExtension[1] = title_full:gsub('%b()', '')
+
+                -- Check if name contains parenthesis, if yes strip out to show as version
+                if string.find(title_full, "%(") then
+                    -- Remove all text except for within "()"
+                    romname_region_initial = {}
+                    romname_region_initial[1] = title_full:match("%((.+)%)")
+
+                    -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
+                    romname_region = {}
+                    romname_region[1] = romname_region_initial[1]:gsub("%) %(", ', ')
+                -- If no parenthesis, then add blank to prevent nil error
                 else
-                    title_full = psxdb[romname_noExtension[1]].name
+                    romname_region[1] = " "
                 end
 
-            romname_noRegion_noExtension = {}
-            romname_noRegion_noExtension[1] = title_full:gsub('%b()', '')
+                --end of function
 
-            -- Check if name contains parenthesis, if yes strip out to show as version
-            if string.find(title_full, "%(") then
-                -- Remove all text except for within "()"
-                romname_region_initial = {}
-                romname_region_initial[1] = title_full:match("%((.+)%)")
+                info = romname_noRegion_noExtension[1]
+                app_title = romname_noRegion_noExtension[1]
+                
+                table.insert(folders_table, file)
+                --table.insert(games_table, file)
+                custom_path = covers_psx .. romname_noExtension[1] .. ".png"
+                custom_path_id = covers_psx .. romname_noExtension[1] .. ".png"
+                file.app_type=3
 
-                -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
-                romname_region = {}
-                romname_region[1] = romname_region_initial[1]:gsub("%) %(", ', ')
-            -- If no parenthesis, then add blank to prevent nil error
-            else
-                romname_region[1] = " "
-            end
+                file.name_rom_minus_ext = romname_noExtension[1]
+                file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+                file.name_rom_url_encoded = tostring(file.name)
+                file.name_rom_region = romname_region[1]
+                file.name_title_search = title_full
+                
 
-            --end of function
+                table.insert(psx_table, file)
 
-            info = romname_noRegion_noExtension[1]
-            app_title = romname_noRegion_noExtension[1]
-            
-            table.insert(folders_table, file)
-            --table.insert(games_table, file)
-            custom_path = covers_psx .. romname_noExtension[1] .. ".png"
-            custom_path_id = covers_psx .. romname_noExtension[1] .. ".png"
-            file.app_type=3
-
-            file.name_rom_minus_ext = romname_noExtension[1]
-            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
-            file.name_rom_url_encoded = tostring(file.name)
-            file.name_rom_region = romname_region[1]
-            file.name_title_search = title_full
-            
-
-            table.insert(psx_table, file)
-
-            if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_psx .. file.name .. ".png" --custom cover by app name
-            elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_psx .. file.name .. ".png" --custom cover by app id
-            else
-                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_psx.png") then
-                    img_path = "ux0:/app/RETROFLOW/DATA/icon_psx.png"  --app icon
+                if custom_path and System.doesFileExist(custom_path) then
+                    img_path = covers_psx .. file.name .. ".png" --custom cover by app name
+                elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                    img_path = covers_psx .. file.name .. ".png" --custom cover by app id
                 else
-                    img_path = "app0:/DATA/noimg.png" --blank grey
+                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
+                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                    else
+                        img_path = "app0:/DATA/noimg.png" --blank grey
+                    end
                 end
+
+                table.insert(files_table, 16, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+                table.insert(files_table, 16, file.name_rom_minus_ext)
+                table.insert(files_table, 16, file.name_rom_minus_region_ext)
+                table.insert(files_table, 16, file.name_rom_url_encoded)
+                table.insert(files_table, 16, file.name_rom_region)
+                table.insert(files_table, 16, file.name_title_search)
+
+                -- all games table
+                table.insert(all_games_table, 3, file)
+                file.app_type=3
+                file.xname_rom_minus_ext = romname_noExtension[1]
+                file.xname_rom_url_encoded = tostring(file.name)
+                file.xonlineCoversAll = onlineCoversPSX
+                file.xcovers_All = covers_psx
+
+                --add blank icon to all
+                file.icon = imgCoverTmp
+                file.icon_path = img_path
+                
+                table.insert(files_table, 16, file.icon) -- Increased for Retro (All systems + 1 for all view)
+                
+                file.apptitle = romname_noRegion_noExtension[1]
+                table.insert(files_table, 16, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+
+                
             end
-
-            table.insert(files_table, 16, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-            table.insert(files_table, 16, file.name_rom_minus_ext)
-            table.insert(files_table, 16, file.name_rom_minus_region_ext)
-            table.insert(files_table, 16, file.name_rom_url_encoded)
-            table.insert(files_table, 16, file.name_rom_region)
-            table.insert(files_table, 16, file.name_title_search)
-
-            -- all games table
-            table.insert(all_games_table, 3, file)
-            file.app_type=3
-            file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded = tostring(file.name)
-            file.xonlineCoversAll = onlineCoversPSX
-            file.xcovers_All = covers_psx
-
-            --add blank icon to all
-            file.icon = imgCoverTmp
-            file.icon_path = img_path
-            
-            table.insert(files_table, 16, file.icon) -- Increased for Retro (All systems + 1 for all view)
-            
-            file.apptitle = romname_noRegion_noExtension[1]
-            table.insert(files_table, 16, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
-
-            
         end
-    end
 
-    -- LOOKUP TITLE ID: Delete old file and save new list of matches
-    if not System.doesFileExist(user_DB_Folder .. "psx.lua") then
-        CreateUserTitleTable_PSX()
-    else
-        System.deleteFile(user_DB_Folder .. "psx.lua")
-        CreateUserTitleTable_PSX()
+        -- LOOKUP TITLE ID: Delete old file and save new list of matches
+        if not System.doesFileExist(user_DB_Folder .. "psx.lua") then
+            CreateUserTitleTable_PSX()
+        else
+            System.deleteFile(user_DB_Folder .. "psx.lua")
+            CreateUserTitleTable_PSX()
+        end
+
     end
 
 
@@ -1133,8 +1142,8 @@ function listDirectory(dir)
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                 img_path = covers_N64 .. romname_noExtension[1] .. ".png" --custom cover by app id
             else
-                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_n64.png") then
-                    img_path = "ux0:/app/RETROFLOW/DATA/icon_n64.png"  --app icon
+                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_n64.png") then
+                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_n64.png"  --app icon
                 else
                     img_path = "app0:/DATA/noimg.png" --blank grey
                 end
@@ -1197,8 +1206,8 @@ function listDirectory(dir)
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                 img_path = covers_SNES .. romname_noExtension[1] .. ".png" --custom cover by app id
             else
-                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_snes.png") then
-                    img_path = "ux0:/app/RETROFLOW/DATA/icon_snes.png"  --app icon
+                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_snes.png") then
+                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_snes.png"  --app icon
                 else
                     img_path = "app0:/DATA/noimg.png" --blank grey
                 end
@@ -1260,8 +1269,8 @@ function listDirectory(dir)
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                 img_path = covers_NES .. romname_noExtension[1] .. ".png" --custom cover by app id
             else
-                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_nes.png") then
-                    img_path = "ux0:/app/RETROFLOW/DATA/icon_nes.png"  --app icon
+                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_nes.png") then
+                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_nes.png"  --app icon
                 else
                     img_path = "app0:/DATA/noimg.png" --blank grey
                 end
@@ -1323,8 +1332,8 @@ function listDirectory(dir)
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                 img_path = covers_GBA .. romname_noExtension[1] .. ".png" --custom cover by app id
             else
-                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_gba.png") then
-                    img_path = "ux0:/app/RETROFLOW/DATA/icon_gba.png"  --app icon
+                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_gba.png") then
+                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_gba.png"  --app icon
                 else
                     img_path = "app0:/DATA/noimg.png" --blank grey
                 end
@@ -1386,8 +1395,8 @@ function listDirectory(dir)
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                 img_path = covers_GBC .. romname_noExtension[1] .. ".png" --custom cover by app id
             else
-                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_gbc.png") then
-                    img_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"  --app icon
+                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_gbc.png") then
+                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_gbc.png"  --app icon
                 else
                     img_path = "app0:/DATA/noimg.png" --blank grey
                 end
@@ -1449,8 +1458,8 @@ function listDirectory(dir)
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                 img_path = covers_GB .. romname_noExtension[1] .. ".png" --custom cover by app id
             else
-                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_gb.png") then
-                    img_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"  --app icon
+                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_gb.png") then
+                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_gb.png"  --app icon
                 else
                     img_path = "app0:/DATA/noimg.png" --blank grey
                 end
@@ -1513,14 +1522,14 @@ function listDirectory(dir)
                 img_path = covers_MD .. romname_noExtension[1] .. ".png" --custom cover by app id
             else
                 if setLanguage == 1 then
-                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_md_usa.png") then
-                        img_path = "ux0:/app/RETROFLOW/DATA/icon_md_usa.png"  --app icon
+                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_md_usa.png") then
+                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_md_usa.png"  --app icon
                     else
                         img_path = "app0:/DATA/noimg.png" --blank grey
                     end
                 else
-                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_md.png") then
-                        img_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"  --app icon
+                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_md.png") then
+                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_md.png"  --app icon
                     else
                         img_path = "app0:/DATA/noimg.png" --blank grey
                     end
@@ -1583,8 +1592,8 @@ function listDirectory(dir)
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                 img_path = covers_SMS .. romname_noExtension[1] .. ".png" --custom cover by app id
             else
-                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_sms.png") then
-                    img_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"  --app icon
+                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_sms.png") then
+                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_sms.png"  --app icon
                 else
                     img_path = "app0:/DATA/noimg.png" --blank grey
                 end
@@ -1646,8 +1655,8 @@ function listDirectory(dir)
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                 img_path = covers_GG .. romname_noExtension[1] .. ".png" --custom cover by app id
             else
-                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_gg.png") then
-                    img_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"  --app icon
+                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_gg.png") then
+                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_gg.png"  --app icon
                 else
                     img_path = "app0:/DATA/noimg.png" --blank grey
                 end
@@ -5510,6 +5519,18 @@ while true do
             end
 
             -- Start skip empty retro categories
+            if showCat == 3 then
+                curTotal = #psp_table
+                if #psp_table == 0 then
+                    showCat = 4
+                end
+            end
+            if showCat == 4 then
+                curTotal = #psx_table
+                if #psx_table == 0 then
+                    showCat = 5
+                end
+            end
             if showCat == 5 then
                 curTotal = #n64_table
                 if #n64_table == 0 then
