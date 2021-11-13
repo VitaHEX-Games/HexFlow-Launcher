@@ -2,9 +2,16 @@
 -- Based on HexFlow Launcher  version 0.5 by VitaHEX
 -- https://www.patreon.com/vitahex
 
+-- Speed related settings
+local cpu_speed = 444
+System.setBusSpeed(222)
+System.setGpuSpeed(222)
+System.setGpuXbarSpeed(166)
+System.setCpuSpeed(cpu_speed)
+
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "2.1"
+local appversion = "3.0"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -12,7 +19,6 @@ function System.currentDirectory(dir)
         working_dir = dir
     end
 end
-
 
 if not System.doesAppExist("RETROLNCR") then
     System.setMessage("Please install RetroFlow Adrenaline Launcher.\nThe VPK is saved here:\n\nux0:/app/RETROFLOW/payloads/\nRetroFlow Adrenaline Launcher.vpk", false, BUTTON_OK)
@@ -36,6 +42,12 @@ local onlineCoversMD = "https://raw.githubusercontent.com/jimbob4000/hexflow-cov
 local onlineCoversSMS = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/SMS/Covers/"
 local onlineCoversGG = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GG/Covers/"
 
+local onlineCoversMAME = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MAME/Covers/"
+local onlineCoversAMIGA = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/AMIGA/Covers/"
+local onlineCoversTG16 = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/TG16/Covers/"
+
+local onlineCoversPCE = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/PCE/Covers/"
+
 
 Sound.init()
 local click = Sound.open("app0:/DATA/click2.wav")
@@ -54,19 +66,38 @@ Graphics.setImageFilters(imgFloor, FILTER_LINEAR, FILTER_LINEAR)
 
 
 local cur_dir = "ux0:/data/RetroFlow/"
-local covers_psv = "ux0:/data/RetroFlow/COVERS/PSVITA/"
-local covers_psp = "ux0:/data/RetroFlow/COVERS/PSP/"
-local covers_psx = "ux0:/data/RetroFlow/COVERS/PSX/"
+local covers_psv = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Vita/"
+local covers_psp = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/"
+local covers_psx = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation/"
 
-local covers_N64 = "ux0:/data/RetroFlow/COVERS/N64/"
-local covers_SNES = "ux0:/data/RetroFlow/COVERS/SNES/"
-local covers_NES = "ux0:/data/RetroFlow/COVERS/NES/"
-local covers_GBA = "ux0:/data/RetroFlow/COVERS/GBA/"
-local covers_GBC = "ux0:/data/RetroFlow/COVERS/GBC/"
-local covers_GB = "ux0:/data/RetroFlow/COVERS/GB/"
-local covers_MD = "ux0:/data/RetroFlow/COVERS/MD/"
-local covers_SMS = "ux0:/data/RetroFlow/COVERS/SMS/"
-local covers_GG = "ux0:/data/RetroFlow/COVERS/GG/"
+local covers_N64 = "ux0:/data/RetroFlow/COVERS/Nintendo - Nintendo 64/"
+local covers_SNES = "ux0:/data/RetroFlow/COVERS/Nintendo - Super Nintendo Entertainment System/"
+local covers_NES = "ux0:/data/RetroFlow/COVERS/Nintendo - Nintendo Entertainment System/"
+local covers_GBA = "ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy Advance/"
+local covers_GBC = "ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy Color/"
+local covers_GB = "ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy/"
+local covers_MD = "ux0:/data/RetroFlow/COVERS/Sega - Mega Drive - Genesis/"
+local covers_SMS = "ux0:/data/RetroFlow/COVERS/Sega - Master System - Mark III/"
+local covers_GG = "ux0:/data/RetroFlow/COVERS/Sega - Game Gear/"
+local covers_MAME = "ux0:/data/RetroFlow/COVERS/MAME/"
+local covers_AMIGA = "ux0:/data/RetroFlow/COVERS/Commodore - Amiga/"
+local covers_TG16 = "ux0:/data/RetroFlow/COVERS/NEC - TurboGrafx 16/"
+local covers_PCE = "ux0:/data/RetroFlow/COVERS/NEC - PC Engine/"
+
+
+-- Tidy up legacy COVER folder structure to a more standard naming convention
+if System.doesDirExist(cur_dir .. "COVERS/PSVITA")  then System.rename(cur_dir .. "COVERS/PSVITA",  cur_dir .. "COVERS/Sony - PlayStation Vita") end
+if System.doesDirExist(cur_dir .. "COVERS/PSP")     then System.rename(cur_dir .. "COVERS/PSP",     cur_dir .. "COVERS/Sony - PlayStation Portable") end
+if System.doesDirExist(cur_dir .. "COVERS/PSX")     then System.rename(cur_dir .. "COVERS/PSX",     cur_dir .. "COVERS/Sony - PlayStation") end
+if System.doesDirExist(cur_dir .. "COVERS/N64")     then System.rename(cur_dir .. "COVERS/N64",     cur_dir .. "COVERS/Nintendo - Nintendo 64") end
+if System.doesDirExist(cur_dir .. "COVERS/SNES")    then System.rename(cur_dir .. "COVERS/SNES",    cur_dir .. "COVERS/Nintendo - Super Nintendo Entertainment System") end
+if System.doesDirExist(cur_dir .. "COVERS/NES")     then System.rename(cur_dir .. "COVERS/NES",     cur_dir .. "COVERS/Nintendo - Nintendo Entertainment System") end
+if System.doesDirExist(cur_dir .. "COVERS/GBA")     then System.rename(cur_dir .. "COVERS/GBA",     cur_dir .. "COVERS/Nintendo - Game Boy Advance") end
+if System.doesDirExist(cur_dir .. "COVERS/GBC")     then System.rename(cur_dir .. "COVERS/GBC",     cur_dir .. "COVERS/Nintendo - Game Boy Color") end
+if System.doesDirExist(cur_dir .. "COVERS/GB")      then System.rename(cur_dir .. "COVERS/GB",      cur_dir .. "COVERS/Nintendo - Game Boy") end
+if System.doesDirExist(cur_dir .. "COVERS/MD")      then System.rename(cur_dir .. "COVERS/MD",      cur_dir .. "COVERS/Sega - Mega Drive - Genesis") end
+if System.doesDirExist(cur_dir .. "COVERS/SMS")     then System.rename(cur_dir .. "COVERS/SMS",     cur_dir .. "COVERS/Sega - Master System - Mark III") end
+if System.doesDirExist(cur_dir .. "COVERS/GG")      then System.rename(cur_dir .. "COVERS/GG",      cur_dir .. "COVERS/Sega - Game Gear") end
 
 
 -- Create directories - Covers
@@ -85,20 +116,40 @@ System.createDirectory(covers_GB)
 System.createDirectory(covers_MD)
 System.createDirectory(covers_SMS)
 System.createDirectory(covers_GG)
+System.createDirectory(covers_MAME)
+System.createDirectory(covers_AMIGA)
+System.createDirectory(covers_TG16)
+System.createDirectory(covers_PCE)
 
 -- ROM Folders
 local romFolder = "ux0:/data/RetroFlow/ROMS/"
-local romFolder_N64 = romFolder .. "N64"
-local romFolder_SNES = romFolder .. "SNES"
-local romFolder_NES = romFolder .. "NES"
-local romFolder_GBA = romFolder .. "GBA"
-local romFolder_GBC = romFolder .. "GBC"
-local romFolder_GB = romFolder .. "GB"
-local romFolder_MD = romFolder .. "MD"
-local romFolder_SMS = romFolder .. "SMS"
-local romFolder_GG = romFolder .. "GG"
-local romFolder_PSX = "ux0:/pspemu/PSP/GAME"
-local romFolder_PSP = "ux0:/pspemu/ISO"
+local romFolder_N64 = romFolder .. "Nintendo - Nintendo 64"
+local romFolder_SNES = romFolder .. "Nintendo - Super Nintendo Entertainment System"
+local romFolder_NES = romFolder .. "Nintendo - Nintendo Entertainment System"
+local romFolder_GBA = romFolder .. "Nintendo - Game Boy Advance"
+local romFolder_GBC = romFolder .. "Nintendo - Game Boy Color"
+local romFolder_GB = romFolder .. "Nintendo - Game Boy"
+local romFolder_MD = romFolder .. "Sega - Mega Drive - Genesis"
+local romFolder_SMS = romFolder .. "Sega - Master System - Mark III"
+local romFolder_GG = romFolder .. "Sega - Game Gear"
+local romFolder_PSP_GAME = "ux0:/pspemu/PSP/GAME"
+local romFolder_PSP_ISO = "ux0:/pspemu/ISO"
+local romFolder_MAME_2000 = romFolder .. "MAME 2000"
+local romFolder_AMIGA = romFolder .. "Commodore - Amiga"
+local romFolder_TG16 = romFolder .. "NEC - TurboGrafx 16"
+local romFolder_PCE = romFolder .. "NEC - PC Engine"
+
+
+-- Tidy up legacy ROM folder structure to a more standard naming convention
+if System.doesDirExist(romFolder .. "N64")  then System.rename(romFolder .. "N64",   romFolder .. "Nintendo - Nintendo 64") end
+if System.doesDirExist(romFolder .. "SNES") then System.rename(romFolder .. "SNES",  romFolder .. "Nintendo - Super Nintendo Entertainment System") end
+if System.doesDirExist(romFolder .. "NES")  then System.rename(romFolder .. "NES",   romFolder .. "Nintendo - Nintendo Entertainment System") end
+if System.doesDirExist(romFolder .. "GBA")  then System.rename(romFolder .. "GBA",   romFolder .. "Nintendo - Game Boy Advance") end
+if System.doesDirExist(romFolder .. "GBC")  then System.rename(romFolder .. "GBC",   romFolder .. "Nintendo - Game Boy Color") end
+if System.doesDirExist(romFolder .. "GB")   then System.rename(romFolder .. "GB",    romFolder .. "Nintendo - Game Boy") end
+if System.doesDirExist(romFolder .. "MD")   then System.rename(romFolder .. "MD",    romFolder .. "Sega - Mega Drive - Genesis") end
+if System.doesDirExist(romFolder .. "SMS")  then System.rename(romFolder .. "SMS",   romFolder .. "Sega - Master System - Mark III") end
+if System.doesDirExist(romFolder .. "GG")   then System.rename(romFolder .. "GG",    romFolder .. "Sega - Game Gear") end
 
 -- Create directories - Rom Folders
 System.createDirectory(romFolder)
@@ -111,21 +162,32 @@ System.createDirectory(romFolder_GB)
 System.createDirectory(romFolder_MD)
 System.createDirectory(romFolder_SMS)
 System.createDirectory(romFolder_GG)
+System.createDirectory(romFolder_MAME_2000)
+System.createDirectory(romFolder_AMIGA)
+System.createDirectory(romFolder_TG16)
+System.createDirectory(romFolder_PCE)
 
 -- Create directories - User Database
 local user_DB_Folder = "ux0:/data/RetroFlow/TITLES/"
 System.createDirectory(user_DB_Folder)
 
+-- Create directories - Database Cache
+local db_Cache_Folder = "ux0:/data/RetroFlow/CACHE/"
+System.createDirectory(db_Cache_Folder)
+
 -- Retroarch Cores
-local coreFolder = "app0:/"
-local core_SNES = coreFolder .. "snes9x2005_libretro.self"
-local core_NES = coreFolder .. "quicknes_libretro.self"
-local core_GBA = coreFolder .. "gpsp_libretro.self"
-local core_GBC = coreFolder .. "gambatte_libretro.self"
-local core_GB = coreFolder .. "gambatte_libretro.self"
-local core_MD = coreFolder .. "genesis_plus_gx_libretro.self"
-local core_SMS = coreFolder .. "smsplus_libretro.self"
-local core_GG = coreFolder .. "smsplus_libretro.self"
+local core_SNES = "app0:/snes9x2005_libretro.self"
+local core_NES = "app0:/quicknes_libretro.self"
+local core_GBA = "app0:/gpsp_libretro.self"
+local core_GBC = "app0:/gambatte_libretro.self"
+local core_GB = "app0:/gambatte_libretro.self"
+local core_MD = "app0:/genesis_plus_gx_libretro.self"
+local core_SMS = "app0:/smsplus_libretro.self"
+local core_GG = "app0:/smsplus_libretro.self"
+local core_MAME = "app0:/mame2000_libretro.self"
+local core_AMIGA = "app0:/puae_libretro.self"
+local core_PCE = "app0:/mednafen_pce_fast_libretro.self"
+local core_TG16 = "app0:/mednafen_pce_fast_libretro.self"
 
 -- Launcher App Directory
 local launch_dir = "ux0:/rePatch/RETROFLOW/"
@@ -166,11 +228,6 @@ local modCoverN64 = Render.loadObject("app0:/DATA/covern64.obj", imgCoverTmp)
 local modBoxN64Noref = Render.loadObject("app0:/DATA/boxn64_noreflx.obj", imgBoxBLANK)
 local modCoverN64Noref = Render.loadObject("app0:/DATA/covern64_noreflx.obj", imgCoverTmp)
 
-local modBoxSNES = Render.loadObject("app0:/DATA/boxsnes.obj", imgBoxBLANK)
-local modCoverSNES = Render.loadObject("app0:/DATA/coversnes.obj", imgCoverTmp)
-local modBoxSNESNoref = Render.loadObject("app0:/DATA/boxsnes_noreflx.obj", imgBoxBLANK)
-local modCoverSNESNoref = Render.loadObject("app0:/DATA/coversnes_noreflx.obj", imgCoverTmp)
-
 local modBoxNES = Render.loadObject("app0:/DATA/boxnes.obj", imgBoxBLANK)
 local modCoverNES = Render.loadObject("app0:/DATA/covernes.obj", imgCoverTmp)
 local modBoxNESNoref = Render.loadObject("app0:/DATA/boxnes_noreflx.obj", imgBoxBLANK)
@@ -210,7 +267,7 @@ Font.setPixelSizes(fnt35, 35)
 local menuX = 0
 local menuY = 0
 local showMenu = 0
-local showCat = 1 -- Category: 0 = all, 1 = games, 2 = homebrews, 3 = psp, 4 = psx, 5 = N64, 6 = SNES, 7 = NES, 8 = GBA, 9 = GBC, 10 = GB, 11 = MD, 12 = SMS, 13 = GG
+local showCat = 1 -- Category: 0 = all, 1 = games, 2 = homebrews, 3 = psp, 4 = psx, 5 = N64, 6 = SNES, 7 = NES, 8 = GBA, 9 = GBC, 10 = GB, 11 = MD, 12 = SMS, 13 = GG, 14 = MAME, 15 = AMIGA, 16 = TG16, 17 = PCE
 local showView = 0
 
 local info = System.extractSfo("app0:/sce_sys/param.sfo")
@@ -255,8 +312,9 @@ local startCovers = false
 local inPreview = false
 local apptype = 0
 local appdir = ""
-local getCovers = 0--0 PSV, 1 PSP, 2 PS1, 3 N64, 4 SNES, 5 NES, 6 GBA, 7 GBC, 8 GB, 9 MD, 10 SMS, 11 GG, 12 All
+local getCovers = 0--0 PSV, 1 PSP, 2 PS1, 3 N64, 4 SNES, 5 NES, 6 GBA, 7 GBC, 8 GB, 9 MD, 10 SMS, 11 GG, 12 MAME, 13 AMIGA, 14 TG16, 17 PCE, 18 All
 local tmpappcat = 0
+local tmpappcat_adrenaline = 0
 
 local prevX = 0
 local prevZ = 0
@@ -275,25 +333,34 @@ local themeColor = 0 -- 0 blue, 1 red, 2 yellow, 3 green, 4 grey, 5 black, 6 pur
 local menuItems = 3
 local setBackground = 1
 local setLanguage = 0
-local showHomebrews = 0
+local showHomebrews = 1 -- On
+local startupScan = 1 -- 0 Off, 1 On
 
-if System.doesFileExist(cur_dir .. "/config.dat") then
-    local file_config = System.openFile(cur_dir .. "/config.dat", FREAD)
+
+-- Delete legacy config file
+if  System.doesFileExist(cur_dir .. "/config.dat") then
+    System.deleteFile(cur_dir .. "/config.dat")
+end
+
+
+if System.doesFileExist(cur_dir .. "/settings.dat") then
+    local file_config = System.openFile(cur_dir .. "/settings.dat", FREAD)
     local filesize = System.sizeFile(file_config)
     local str = System.readFile(file_config, filesize)
     System.closeFile(file_config)
-    
-    local getCategory = tonumber(string.sub(str, 1, 1)); if getCategory ~= nil then startCategory = getCategory end
-    local getReflections = tonumber(string.sub(str, 2, 2)); if getReflections ~= nil then setReflections = getReflections end
-    local getSounds = tonumber(string.sub(str, 3, 3)); if getSounds ~= nil then setSounds = getSounds end
-    local getthemeColor = tonumber(string.sub(str, 4, 4)); if getthemeColor ~= nil then themeColor = getthemeColor end
-    local getBackground = tonumber(string.sub(str, 5, 5)); if getBackground ~= nil then setBackground = getBackground end
-    local getLanguage = tonumber(string.sub(str, 6, 6)); if getLanguage ~= nil then setLanguage = getLanguage end
-    local getView = tonumber(string.sub(str, 7, 7)); if getView ~= nil then showView = getView end
-    local getHomebrews = tonumber(string.sub(str, 8, 8)); if getHomebrews ~= nil then showHomebrews = getHomebrews end
+        
+    local getReflections = tonumber(string.sub(str, 1, 1)); if getReflections ~= nil then setReflections = getReflections end
+    local getSounds = tonumber(string.sub(str, 2, 2)); if getSounds ~= nil then setSounds = getSounds end
+    local getthemeColor = tonumber(string.sub(str, 3, 3)); if getthemeColor ~= nil then themeColor = getthemeColor end
+    local getBackground = tonumber(string.sub(str, 4, 4)); if getBackground ~= nil then setBackground = getBackground end
+    local getLanguage = tonumber(string.sub(str, 5, 5)); if getLanguage ~= nil then setLanguage = getLanguage end
+    local getView = tonumber(string.sub(str, 6, 6)); if getView ~= nil then showView = getView end
+    local getHomebrews = tonumber(string.sub(str, 7, 7)); if getHomebrews ~= nil then showHomebrews = getHomebrews end
+    local getStartupScan = tonumber(string.sub(str, 8, 8)); if getStartupScan ~= nil then startupScan = getStartupScan end
+    local getCategory = tonumber(string.sub(str, 9, 10)); if getCategory ~= nil then startCategory = getCategory end
 else
-    local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
-    System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground .. setLanguage .. showView .. showHomebrews, 8)
+    local file_config = System.openFile(cur_dir .. "/settings.dat", FCREATE)
+    System.writeFile(file_config, setReflections .. setSounds .. themeColor .. setBackground .. setLanguage .. showView .. showHomebrews .. startupScan .. startCategory, 10)
     System.closeFile(file_config)
 end
 showCat = startCategory
@@ -339,13 +406,6 @@ function SetThemeColor()
 end
 SetThemeColor()
 
--- Speed related settings
-local cpu_speed = 333
-System.setBusSpeed(222)
-System.setGpuSpeed(222)
-System.setGpuXbarSpeed(166)
-System.setCpuSpeed(cpu_speed)
-
 function OneshotPrint(my_func)
     my_func()
     Screen.flip()
@@ -355,7 +415,7 @@ function OneshotPrint(my_func)
 end
 
 local lang_lines = {}
-local lang_default = "PS Vita\nHomebrews\nPSP\nPlayStation\nAll\nSettings\nLaunch\nDetails\nCategory\nView\nClose\nVersion\nAbout\nStartup Category\nReflection Effect\nSounds\nTheme Color\nCustom Background\nDownload Covers\nReload Covers Database\nLanguage\nOn\nOff\nRed\nYellow\nGreen\nGrey\nBlack\nPurple\nOrange\nBlue\nSelect\nNintendo 64\nSuper Nintendo\nNintendo Entertainment System\nGame Boy Advance\nGame Boy Color\nGame Boy\nSega Mega Drive\nSega Master System\nSega Game Gear\nHomebrews Category"
+local lang_default = "PS Vita\nHomebrews\nPSP\nPlayStation\nAll\nSettings\nLaunch\nDetails\nCategory\nView\nClose\nVersion\nAbout\nStartup Category\nReflection Effect\nSounds\nTheme Color\nCustom Background\nDownload Covers\nReload Covers Database\nLanguage\nOn\nOff\nRed\nYellow\nGreen\nGrey\nBlack\nPurple\nOrange\nBlue\nSelect\nNintendo 64\nSuper Nintendo\nNintendo Entertainment System\nGame Boy Advance\nGame Boy Color\nGame Boy\nSega Mega Drive\nSega Master System\nSega Game Gear\nMAME\nAmiga\nTurboGrafx-16\nPC Engine\nHomebrews Category\nStartup scan"
 function ChangeLanguage()
 if #lang_lines>0 then
     for k in pairs (lang_lines) do
@@ -475,7 +535,7 @@ function cleanRomNamesPSP()
     romname_noRegion_noExtension[1] = romname_noExtension[1]:gsub(" %(", "%("):gsub('%b()', '')
 
     romname_noRegion_noExtension_noTitleID = {}
-    romname_noRegion_noExtension_noTitleID[1] = romname_noRegion_noExtension[1]:gsub('%b[]', '') -- game without [ULUS-0000]
+    romname_noRegion_noExtension_noTitleID[1] = romname_noRegion_noExtension[1]:gsub(" %[", "%["):gsub('%b[]', '') -- game without [ULUS-0000]
 
     titleID_withHyphen = {}
     titleID_withHyphen[1] = romname_noExtension[1]:match("%[(.+)%]") -- game id without brackets, with hypen ULUS-0000
@@ -653,6 +713,31 @@ function launch_DaedalusX64()
 end
 
 
+function CreateUserTitleTable_PSP()
+
+    local UserGameDB = "psp.lua"
+    local TableToScan = psp_table
+
+    table.sort(TableToScan, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+
+    local file_over = System.openFile(user_DB_Folder .. UserGameDB, FCREATE)
+    System.closeFile(file_over)
+
+    file = io.open(user_DB_Folder .. UserGameDB, "w")
+    file:write('return {' .. "\n")
+    for k, v in pairs(TableToScan) do
+
+        if v.directory == true then
+            file:write('["' .. v.name .. '"] = {name = "' .. v.name_title_search .. '"},' .. "\n")
+        else
+        end
+    end
+    file:write('}')
+    file:close()
+
+end
+
+
 function CreateUserTitleTable_PSX()
 
     local UserGameDB = "psx.lua"
@@ -670,8 +755,137 @@ function CreateUserTitleTable_PSX()
     end
     file:write('}')
     file:close()
+    
+end
+
+function CreateUserTitleTable_MAME()
+
+    local UserGameDB = "mame.lua"
+    local TableToScan = mame_table
+
+    table.sort(TableToScan, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+
+    local file_over = System.openFile(user_DB_Folder .. UserGameDB, FCREATE)
+    System.closeFile(file_over)
+
+    file = io.open(user_DB_Folder .. UserGameDB, "w")
+    file:write('return {' .. "\n")
+    for k, v in pairs(TableToScan) do
+        file:write('["' .. v.name_minus_ext .. '"] = {name = "' .. v.name_title_search .. '"},' .. "\n")
+    end
+    file:write('}')
+    file:close()
 
 end
+
+
+-- PRINT TABLE FUNCTIONS
+
+function cache_all_tables()
+    dofile("app0:addons/printTable.lua")
+    print_tables()
+end
+
+function update_cached_table_files()
+    dofile("app0:addons/printTable.lua")
+    print_table_files()
+end
+
+function update_cached_table_folders()
+    dofile("app0:addons/printTable.lua")
+    print_table_folders()
+end
+
+function update_cached_table_games()
+    dofile("app0:addons/printTable.lua")
+    print_table_games()
+end
+
+function update_cached_table_homebrews()
+    dofile("app0:addons/printTable.lua")
+    print_table_homebrews()
+end
+
+function update_cached_table_psp()
+    dofile("app0:addons/printTable.lua")
+    print_table_psp()
+end
+
+function update_cached_table_psx()
+    dofile("app0:addons/printTable.lua")
+    print_table_psx()
+end
+
+function update_cached_table_n64()
+    dofile("app0:addons/printTable.lua")
+    print_table_n64()
+end
+
+function update_cached_table_snes()
+    dofile("app0:addons/printTable.lua")
+    print_table_snes()
+end
+
+function update_cached_table_nes()
+    dofile("app0:addons/printTable.lua")
+    print_table_nes()
+end
+
+function update_cached_table_gba()
+    dofile("app0:addons/printTable.lua")
+    print_table_gba()
+end
+
+function update_cached_table_gbc()
+    dofile("app0:addons/printTable.lua")
+    print_table_gbc()
+end
+
+function update_cached_table_gb()
+    dofile("app0:addons/printTable.lua")
+    print_table_gb()
+end
+
+function update_cached_table_md()
+    dofile("app0:addons/printTable.lua")
+    print_table_md()
+end
+
+function update_cached_table_sms()
+    dofile("app0:addons/printTable.lua")
+    print_table_sms()
+end
+
+function update_cached_table_gg()
+    dofile("app0:addons/printTable.lua")
+    print_table_gg()
+end
+
+function update_cached_table_mame()
+    dofile("app0:addons/printTable.lua")
+    print_table_mame()
+end
+
+function update_cached_table_amiga()
+    dofile("app0:addons/printTable.lua")
+    print_table_amiga()
+end
+
+function update_cached_table_tg16()
+    dofile("app0:addons/printTable.lua")
+    print_table_tg16()
+end
+
+function update_cached_table_pce()
+    dofile("app0:addons/printTable.lua")
+    print_table_pce()
+end
+
+function update_cached_table_all_games()
+    dofile("app0:addons/printTable.lua")
+    print_table_all_games()
+end
+
 
 
 function listDirectory(dir)
@@ -690,9 +904,13 @@ function listDirectory(dir)
     md_table = {}
     sms_table = {}
     gg_table = {}
+    mame_table = {}
+    amiga_table = {}
+    tg16_table = {}
+    pce_table = {}
     homebrews_table = {}
     all_games_table = {}
-    -- app_type = 0 -- 0 homebrew, 1 psvita, 2 psp, 3 psx, 5 n64, 6 snes, 7 nes, 8 gba, 9 gbc, 10 gb, 11 md, 12 sms, 13 gg
+    -- app_type = 0 -- 0 homebrew, 1 psvita, 2 psp, 3 psx, 5 n64, 6 snes, 7 nes, 8 gba, 9 gbc, 10 gb, 11 md, 12 sms, 13 gg, 14 mame, 15 amiga, 16 tg16, 17 pce
     local customCategory = 0
     
     local file_over = System.openFile(cur_dir .. "/overrides.dat", FREAD)
@@ -714,7 +932,12 @@ function listDirectory(dir)
                 app_title = info.title
             end
 
+            file.game_path = (working_dir .. "/" .. file.name)
+            file.cover_path_online = onlineCovers
+            file.name_minus_ext = file.name
+
             if string.match(file.name, "PCS") and not string.match(file.name, "PCSI") then
+
                 -- Scan PSVita Games
                 table.insert(folders_table, file)
                 --table.insert(games_table, file)
@@ -725,12 +948,12 @@ function listDirectory(dir)
                 -- all games table
                 table.insert(all_games_table, 1, file)
                 file.app_type=1
-                file.xname_rom_minus_ext = file.name
-                file.xname_rom_url_encoded = file.name
-                file.xonlineCoversAll = onlineCovers
-                file.xcovers_All = covers_psv
+                file.name_minus_ext = file.name
+                file.name_rom_url_encoded = file.name
+                file.cover_path_online = onlineCovers
+                file.cover_path_local = covers_psv
                 
-                --CHECK FOR OVERRIDDEN CATEGORY of PSP game
+                --CHECK FOR OVERRIDDEN CATEGORY of VITA game
                 if System.doesFileExist(cur_dir .. "/overrides.dat") then
                     --0 default, 1 vita, 2 psp, 3 psx, 4 homebrew
                     if string.match(str, file.name .. "=1") then
@@ -738,16 +961,6 @@ function listDirectory(dir)
                         custom_path = covers_psv .. app_title .. ".png"
                         custom_path_id = covers_psv .. file.name .. ".png"
                         file.app_type=1
-                    -- elseif string.match(str, file.name .. "=2") then
-                    --     table.insert(psp_table, file)
-                    --     custom_path = covers_psp .. app_title .. ".png"
-                    --     custom_path_id = covers_psp .. file.name .. ".png"
-                    --     file.app_type=2
-                    -- elseif string.match(str, file.name .. "=3") then
-                    --     table.insert(psx_table, file)
-                    --     custom_path = covers_psx .. app_title .. ".png"
-                    --     custom_path_id = covers_psx .. file.name .. ".png"
-                    --     file.app_type=3
                     elseif string.match(str, file.name .. "=4") then
                         table.insert(homebrews_table, file)
                         custom_path = covers_psv .. app_title .. ".png"
@@ -777,6 +990,7 @@ function listDirectory(dir)
                         --table.insert(homebrews_table, file)
                         custom_path = covers_psv .. app_title .. ".png"
                         custom_path_id = covers_psv .. file.name .. ".png"
+                        file.name_rom_url_encoded = file.name
                         file.app_type=0
                     else -- If show Homebrews is false
                         --Check for Vita override and include those games
@@ -786,70 +1000,43 @@ function listDirectory(dir)
                                 table.insert(folders_table, file)
                                 custom_path = covers_psv .. app_title .. ".png"
                                 custom_path_id = covers_psv .. file.name .. ".png"
+                                file.name_rom_url_encoded = file.name
                                 file.app_type=0
                             end
                         end
                     end
                 
                 
-            --CHECK FOR OVERRIDDEN CATEGORY of homebrew
+            --CHECK FOR OVERRIDDEN CATEGORY of HOMEBREW game
                 if System.doesFileExist(cur_dir .. "/overrides.dat") then
                     --0 default, 1 vita, 2 psp, 3 psx, 4 homebrew
                     if string.match(str, file.name .. "=1") then
                         table.insert(games_table, file)
                         custom_path = covers_psv .. app_title .. ".png"
                         custom_path_id = covers_psv .. file.name .. ".png"
+                        file.name_rom_url_encoded = file.name
                         file.app_type=1
 
                          -- all games table
                         table.insert(all_games_table, 1, file)
                         file.app_type=1
-                        file.xname_rom_minus_ext = file.name
-                        file.xname_rom_url_encoded = file.name
-                        file.xonlineCoversAll = onlineCovers
-                        file.xcovers_All = covers_psv
-
-                    -- elseif string.match(str, file.name .. "=2") then
-                    --     table.insert(psp_table, file)
-                    --     custom_path = covers_psp .. app_title .. ".png"
-                    --     custom_path_id = covers_psp .. file.name .. ".png"
-                    --     file.app_type=2
-
-                    --      -- all games table
-                    --     table.insert(all_games_table, 1, file)
-                    --     file.app_type=2
-                    --     file.xname_rom_minus_ext = file.name
-                    --     file.xname_rom_url_encoded = file.name
-                    --     file.xonlineCoversAll = onlineCovers
-                    --     file.xcovers_All = covers_psp
-
-                    -- elseif string.match(str, file.name .. "=3") then
-                    --     table.insert(psx_table, file)
-                    --     custom_path = covers_psx .. app_title .. ".png"
-                    --     custom_path_id = covers_psx .. file.name .. ".png"
-                    --     file.app_type=3
-
-                    --      -- all games table
-                    --     table.insert(all_games_table, 1, file)
-                    --     file.app_type=3
-                    --     file.xname_rom_minus_ext = file.name
-                    --     file.xname_rom_url_encoded = file.name
-                    --     file.xonlineCoversAll = onlineCovers
-                    --     file.xcovers_All = covers_psx
+                        file.name_minus_ext = file.name
+                        file.cover_path_online = onlineCovers
+                        file.cover_path_local = covers_psv
 
                     elseif string.match(str, file.name .. "=4") then
                         table.insert(homebrews_table, file)
                         custom_path = covers_psv .. app_title .. ".png"
                         custom_path_id = covers_psv .. file.name .. ".png"
+                        file.name_rom_url_encoded = file.name
                         file.app_type=0
 
                          -- all games table
                         table.insert(all_games_table, 1, file)
                         file.app_type=0
-                        file.xname_rom_minus_ext = file.name
-                        file.xname_rom_url_encoded = file.name
-                        file.xonlineCoversAll = onlineCovers
-                        file.xcovers_All = covers_psv
+                        file.name_minus_ext = file.name
+                        file.cover_path_online = onlineCovers
+                        file.cover_path_local = covers_psv
 
                     else
                         table.insert(homebrews_table, file)--default
@@ -860,10 +1047,9 @@ function listDirectory(dir)
                      -- all games table
                     table.insert(all_games_table, 1, file)
                     file.app_type=0
-                    file.xname_rom_minus_ext = file.name
-                    file.xname_rom_url_encoded = file.name
-                    file.xonlineCoversAll = onlineCovers
-                    file.xcovers_All = covers_psv
+                    file.name_minus_ext = file.name
+                    file.cover_path_online = onlineCovers
+                    file.cover_path_local = covers_psv
 
                 end
                 --END OVERRIDDEN CATEGORY of homebrew
@@ -883,16 +1069,16 @@ function listDirectory(dir)
             end
         end
         
-        table.insert(files_table, 13, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+        table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
         
         --add blank icon to all
         file.icon = imgCoverTmp
         file.icon_path = img_path
         
-        table.insert(files_table, 13, file.icon) -- Increased for Retro (All systems + 1 for all view)
+        table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
         
         file.apptitle = app_title
-        table.insert(files_table, 13, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
         
     end
 
@@ -900,85 +1086,321 @@ function listDirectory(dir)
     -- SCAN ROMS
 
 
-    -- SCAN PSP
-    if  System.doesDirExist(romFolder_PSP) then
+    -- SCAN PSP - ISO FOLDER
+    if  System.doesDirExist(romFolder_PSP_ISO) then
         
-        files_PSP = System.listDirectory(romFolder_PSP)
+        files_PSP = System.listDirectory(romFolder_PSP_ISO)
         for i, file in pairs(files_PSP) do
 
-        local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-            if not file.directory then
+        local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
+            -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+            if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
 
+                file.launch_argument = ("PATH=ms0:/ISO/" .. file.name)
+                file.game_path = (romFolder_PSP_ISO .. "/" .. file.name)
                 romname_withExtension = file.name
+
                 cleanRomNamesPSP()
                 info = romname_noRegion_noExtension[1]
                 app_title = titleID_noHyphen[1]
                 -- app_titleid = titleID_noHyphen[1]
                 file.name = titleID_noHyphen[1]
 
-                            
-                table.insert(folders_table, file)
-                --table.insert(games_table, file)
-                custom_path = covers_psp .. titleID_noHyphen[1] .. ".png"
-                custom_path_id = covers_psp .. titleID_noHyphen[1] .. ".png"
-                file.app_type=2
 
-                file.name_rom_minus_ext = romname_noExtension[1]
+                file.name_minus_ext = titleID_noHyphen[1]
                 file.name_rom_minus_region_ext = romname_noRegion_noExtension_noTitleID[1] -- DISPLAY NAME
                 file.name_rom_url_encoded = titleID_noHyphen[1]
                 file.name_rom_region = romname_region[1]
                 file.name_title_search = romname_noExtension[1]
-                
 
-                table.insert(psp_table, file)
 
-                if custom_path and System.doesFileExist(custom_path) then
-                    img_path = covers_psp .. titleID_noHyphen[1] .. ".png" --custom cover by app name
-                elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                    img_path = covers_psp .. titleID_noHyphen[1] .. ".png" --custom cover by app id
-                else
-                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                --CHECK FOR OVERRIDDEN CATEGORY of PSP game
+                    if System.doesFileExist(cur_dir .. "/overrides.dat") then
+
+                        -- P1 = PS1, P2 = PSP
+                        if string.match(str, file.name .. "=P1") then
+                            
+                            -- PSX
+                            table.insert(folders_table, file)
+                            --table.insert(games_table, file)
+                            custom_path = covers_psx .. romname_noExtension[1] .. ".png"
+                            custom_path_id = covers_psx .. romname_noExtension[1] .. ".png"
+                            file.app_type=3
+
+                            table.insert(psx_table, file)
+
+                            if custom_path and System.doesFileExist(custom_path) then
+                                img_path = covers_psx .. file.name .. ".png" --custom cover by app name
+                            elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                img_path = covers_psx .. file.name .. ".png" --custom cover by app id
+                            else
+                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
+                                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                else
+                                    img_path = "app0:/DATA/noimg.png" --blank grey
+                                end
+                            end
+
+                            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+                            table.insert(files_table, 17, file.name_minus_ext)
+                            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+                            table.insert(files_table, 17, file.name_rom_url_encoded)
+                            table.insert(files_table, 17, file.name_rom_region)
+                            table.insert(files_table, 17, file.name_title_search)
+
+                            -- all games table
+                            table.insert(all_games_table, 3, file)
+                            file.app_type=3
+                            file.name_minus_ext = romname_noExtension[1]
+                            file.cover_path_online = onlineCoversPSX
+                            file.cover_path_local = covers_psx
+
+                        else
+                            --DEFAULT
+                            table.insert(folders_table, file)
+                            --table.insert(games_table, file)
+                            custom_path = covers_psp .. titleID_noHyphen[1] .. ".png"
+                            custom_path_id = covers_psp .. titleID_noHyphen[1] .. ".png"
+                            file.app_type=2
+
+                            table.insert(psp_table, file)
+
+                            if custom_path and System.doesFileExist(custom_path) then
+                                img_path = covers_psp .. titleID_noHyphen[1] .. ".png" --custom cover by app name
+                            elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                img_path = covers_psp .. titleID_noHyphen[1] .. ".png" --custom cover by app id
+                            else
+                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
+                                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                else
+                                    img_path = "app0:/DATA/noimg.png" --blank grey
+                                end
+                            end
+
+                            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+                            table.insert(files_table, 17, file.name_minus_ext)
+                            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+                            table.insert(files_table, 17, file.name_rom_url_encoded)
+                            table.insert(files_table, 17, file.name_rom_region)
+                            table.insert(files_table, 17, file.name_title_search)
+
+                            -- all games table
+                            table.insert(all_games_table, 2, file)
+                            file.app_type=2
+                            file.cover_path_online = onlineCoversPSP
+                            file.cover_path_local = covers_psp
+                        end
+
                     else
-                        img_path = "app0:/DATA/noimg.png" --blank grey
+                        -- OVERRIDE NOT FOUND
+                        table.insert(folders_table, file)
+                        --table.insert(games_table, file)
+                        custom_path = covers_psp .. titleID_noHyphen[1] .. ".png"
+                        custom_path_id = covers_psp .. titleID_noHyphen[1] .. ".png"
+                        file.app_type=2
+
+                        table.insert(psp_table, file)
+
+                        if custom_path and System.doesFileExist(custom_path) then
+                            img_path = covers_psp .. titleID_noHyphen[1] .. ".png" --custom cover by app name
+                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                            img_path = covers_psp .. titleID_noHyphen[1] .. ".png" --custom cover by app id
+                        else
+                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
+                                img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                            else
+                                img_path = "app0:/DATA/noimg.png" --blank grey
+                            end
+                        end
+
+                        table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+                        table.insert(files_table, 17, file.name_minus_ext)
+                        table.insert(files_table, 17, file.name_rom_minus_region_ext)
+                        table.insert(files_table, 17, file.name_rom_url_encoded)
+                        table.insert(files_table, 17, file.name_rom_region)
+                        table.insert(files_table, 17, file.name_title_search)
+
+                        -- all games table
+                        table.insert(all_games_table, 2, file)
+                        file.app_type=2
+                        file.cover_path_online = onlineCoversPSP
+                        file.cover_path_local = covers_psp
                     end
-                end
-
-                table.insert(files_table, 16, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-                table.insert(files_table, 16, file.name_rom_minus_ext)
-                table.insert(files_table, 16, file.name_rom_minus_region_ext)
-                table.insert(files_table, 16, file.name_rom_url_encoded)
-                table.insert(files_table, 16, file.name_rom_region)
-                table.insert(files_table, 16, file.name_title_search)
-
-                -- all games table
-                table.insert(all_games_table, 2, file)
-                file.app_type=2
-                file.xname_rom_minus_ext = romname_url_encoded[1]
-                file.xname_rom_url_encoded = romname_url_encoded[1]
-                file.xonlineCoversAll = onlineCoversPSP
-                file.xcovers_All = covers_psp
 
                 --add blank icon to all
                 file.icon = imgCoverTmp
                 file.icon_path = img_path
                 
-                table.insert(files_table, 16, file.icon) -- Increased for Retro (All systems + 1 for all view)
+                table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
                 
                 file.apptitle = romname_noRegion_noExtension_noTitleID[1]
-                table.insert(files_table, 16, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+                table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
 
             end
         end
     end
 
     
+    -- SCAN PSP - GAME FOLDER
+    if  System.doesDirExist(romFolder_PSP_GAME) then
+
+        files_PSP = System.listDirectory(romFolder_PSP_GAME)
+
+        -- LOOKUP TITLE ID: Load saved table of previously macthes titleID's for faster name lookup
+
+        if System.doesFileExist(user_DB_Folder .. "psp.lua") then
+            database_rename_PSP = user_DB_Folder .. "psp.lua"
+        else
+            database_rename_PSP = "app0:addons/psp.lua"
+        end
+
+        for i, file in pairs(files_PSP) do
+        local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
+            if file.directory and System.doesFileExist(romFolder_PSP_GAME .. "/" .. file.name .. "/EBOOT.PBP") then
+
+                if string.match(file.name, "NPEG")
+                or string.match(file.name, "NPEH")
+                or string.match(file.name, "UCES")
+                or string.match(file.name, "ULES")
+                or string.match(file.name, "NPUG")
+                or string.match(file.name, "NPUH")
+                or string.match(file.name, "UCUS")
+                or string.match(file.name, "ULUS")
+                or string.match(file.name, "NPJG")
+                or string.match(file.name, "NPJH")
+                or string.match(file.name, "NPHG")
+                or string.match(file.name, "NPHH")
+                or string.match(file.name, "UCAS") then
+
+                    file.launch_argument = ("PATH=ms0:/PSP/GAME/" .. file.name .. "/EBOOT.PBP")
+                    file.game_path = (romFolder_PSP_GAME .. "/" .. file.name)
+
+                    romname_withExtension = file.name
+                    romname_noExtension = {}
+                    romname_noExtension[1] = file.name
+
+                        -- LOOKUP TITLE ID: Get game name based on titleID, search saved table of data, or full table of data if titleID not found
+
+                        -- Load previous matches
+                        pspdb = dofile(database_rename_PSP)
+
+                        -- Check if scanned titleID is a saved match
+                        psp_search = pspdb[romname_noExtension[1]]
+
+                        -- If no
+                        if psp_search == nil then
+
+                            -- Load the full database to find the new titleID
+                            pspdbfull = dofile("app0:addons/psp.lua")
+                            psp_search_full = pspdbfull[romname_noExtension[1]]
+
+                            -- If not found; use the folder name without adding a game name
+                            if psp_search_full == nil then
+                                title_full = romname_noExtension[1]
+
+                            -- If found; use the game name from the full database 
+                            else
+                                title_full = pspdbfull[romname_noExtension[1]].name
+                            end
+
+                        -- If found; use the game name from the saved match
+                        else
+                            title_full = pspdb[romname_noExtension[1]].name
+                        end
+
+                    romname_noRegion_noExtension = {}
+                    romname_noRegion_noExtension[1] = title_full:gsub(" %(", "%("):gsub('%b()', '')
+
+                    -- Check if name contains parenthesis, if yes strip out to show as version
+                    if string.find(title_full, "%(") then
+                        -- Remove all text except for within "()"
+                        romname_region_initial = {}
+                        romname_region_initial[1] = title_full:match("%((.+)%)")
+
+                        -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
+                        romname_region = {}
+                        romname_region[1] = romname_region_initial[1]:gsub("%) %(", ', ')
+                    -- If no parenthesis, then add blank to prevent nil error
+                    else
+                        romname_region[1] = " "
+                    end
+
+                    --end of function
+
+                    info = romname_noRegion_noExtension[1]
+                    app_title = romname_noRegion_noExtension[1]
+                    
+                    table.insert(folders_table, file)
+                    --table.insert(games_table, file)
+                    custom_path = covers_psp .. romname_noExtension[1] .. ".png"
+                    custom_path_id = covers_psp .. romname_noExtension[1] .. ".png"
+                    file.app_type=3
+
+                    file.name_minus_ext = romname_noExtension[1]
+                    file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+                    file.name_rom_url_encoded = tostring(file.name)
+                    file.name_rom_region = romname_region[1]
+                    file.name_title_search = title_full
+                    
+
+                    table.insert(psp_table, file)
+
+                    if custom_path and System.doesFileExist(custom_path) then
+                        img_path = covers_psp .. file.name .. ".png" --custom cover by app name
+                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                        img_path = covers_psp .. file.name .. ".png" --custom cover by app id
+                    else
+                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
+                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                        else
+                            img_path = "app0:/DATA/noimg.png" --blank grey
+                        end
+                    end
+
+                    table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+                    table.insert(files_table, 17, file.name_minus_ext)
+                    table.insert(files_table, 17, file.name_rom_minus_region_ext)
+                    table.insert(files_table, 17, file.name_rom_url_encoded)
+                    table.insert(files_table, 17, file.name_rom_region)
+                    table.insert(files_table, 17, file.name_title_search)
+
+                    -- all games table
+                    table.insert(all_games_table, 2, file)
+                    file.app_type=2
+                    file.name_minus_ext = romname_noExtension[1]
+                    file.cover_path_online = onlineCoversPSP
+                    file.cover_path_local = covers_psp
+
+                    --add blank icon to all
+                    file.icon = imgCoverTmp
+                    file.icon_path = img_path
+                    
+                    table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
+                    
+                    file.apptitle = romname_noRegion_noExtension[1]
+                    table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+                else
+                end
+                
+            end
+        end
+
+        -- LOOKUP TITLE ID: Delete old file and save new list of matches
+        if not System.doesFileExist(user_DB_Folder .. "psp.lua") then
+            CreateUserTitleTable_PSP()
+        else
+            System.deleteFile(user_DB_Folder .. "psp.lua")
+            CreateUserTitleTable_PSP()
+        end
+
+    end
 
 
-    -- SCAN PSX
-    if  System.doesDirExist(romFolder_PSX) then
 
-        files_PSX = System.listDirectory(romFolder_PSX)
+    -- SCAN PS1 - GAME FOLDER
+    if  System.doesDirExist(romFolder_PSP_GAME) then
+
+        files_PSX = System.listDirectory(romFolder_PSP_GAME)
 
         -- LOOKUP TITLE ID: Load saved table of previously macthes titleID's for faster name lookup
 
@@ -989,114 +1411,212 @@ function listDirectory(dir)
         end
 
         for i, file in pairs(files_PSX) do
-        local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-            if file.directory then
+        local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
+            if file.directory and System.doesFileExist(romFolder_PSP_GAME .. "/" .. file.name .. "/EBOOT.PBP") then
 
-                romname_withExtension = file.name
-                romname_noExtension = {}
-                romname_noExtension[1] = file.name
+                if not string.match(file.name, "NPEG")
+                and not string.match(file.name, "NPEH")
+                and not string.match(file.name, "UCES")
+                and not string.match(file.name, "ULES")
+                and not string.match(file.name, "NPUG")
+                and not string.match(file.name, "NPUH")
+                and not string.match(file.name, "UCUS")
+                and not string.match(file.name, "ULUS")
+                and not string.match(file.name, "NPJG")
+                and not string.match(file.name, "NPJH")
+                and not string.match(file.name, "NPHG")
+                and not string.match(file.name, "NPHH")
+                and not string.match(file.name, "UCAS") then
 
-                    -- LOOKUP TITLE ID: Get game name based on titleID, search saved table of data, or full table of data if titleID not found
+                    file.launch_argument = ("PATH=ms0:/PSP/GAME/" .. file.name .. "/EBOOT.PBP")
+                    file.game_path = (romFolder_PSP_GAME .. "/" .. file.name)
 
-                    -- Load previous matches
-                    psxdb = dofile(database_rename_PSX)
+                    romname_withExtension = file.name
+                    romname_noExtension = {}
+                    romname_noExtension[1] = file.name
 
-                    -- Check if scanned titleID is a saved match
-                    psx_search = psxdb[romname_noExtension[1]]
+                        -- LOOKUP TITLE ID: Get game name based on titleID, search saved table of data, or full table of data if titleID not found
 
-                    -- If no
-                    if psx_search == nil then
+                        -- Load previous matches
+                        psxdb = dofile(database_rename_PSX)
 
-                        -- Load the full database to find the new titleID
-                        psxdbfull = dofile("app0:addons/psx.lua")
-                        psx_search_full = psxdbfull[romname_noExtension[1]]
+                        -- Check if scanned titleID is a saved match
+                        psx_search = psxdb[romname_noExtension[1]]
 
-                        -- If not found; use the folder name without adding a game name
-                        if psx_search_full == nil then
-                            title_full = romname_noExtension[1]
+                        -- If no
+                        if psx_search == nil then
 
-                        -- If found; use the game name from the full database 
+                            -- Load the full database to find the new titleID
+                            psxdbfull = dofile("app0:addons/psx.lua")
+                            psx_search_full = psxdbfull[romname_noExtension[1]]
+
+                            -- If not found; use the folder name without adding a game name
+                            if psx_search_full == nil then
+                                title_full = romname_noExtension[1]
+
+                            -- If found; use the game name from the full database 
+                            else
+                                title_full = psxdbfull[romname_noExtension[1]].name
+                            end
+
+                        -- If found; use the game name from the saved match
                         else
-                            title_full = psxdbfull[romname_noExtension[1]].name
+                            title_full = psxdb[romname_noExtension[1]].name
                         end
 
-                    -- If found; use the game name from the saved match
+                    romname_noRegion_noExtension = {}
+                    romname_noRegion_noExtension[1] = title_full:gsub(" %(", "%("):gsub('%b()', '')
+
+                    -- Check if name contains parenthesis, if yes strip out to show as version
+                    if string.find(title_full, "%(") then
+                        -- Remove all text except for within "()"
+                        romname_region_initial = {}
+                        romname_region_initial[1] = title_full:match("%((.+)%)")
+
+                        -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
+                        romname_region = {}
+                        romname_region[1] = romname_region_initial[1]:gsub("%) %(", ', ')
+                    -- If no parenthesis, then add blank to prevent nil error
                     else
-                        title_full = psxdb[romname_noExtension[1]].name
+                        romname_region[1] = " "
                     end
 
-                romname_noRegion_noExtension = {}
-                romname_noRegion_noExtension[1] = title_full:gsub('%b()', '')
+                    --end of function
 
-                -- Check if name contains parenthesis, if yes strip out to show as version
-                if string.find(title_full, "%(") then
-                    -- Remove all text except for within "()"
-                    romname_region_initial = {}
-                    romname_region_initial[1] = title_full:match("%((.+)%)")
+                    info = romname_noRegion_noExtension[1]
+                    app_title = romname_noRegion_noExtension[1]
 
-                    -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
-                    romname_region = {}
-                    romname_region[1] = romname_region_initial[1]:gsub("%) %(", ', ')
-                -- If no parenthesis, then add blank to prevent nil error
-                else
-                    romname_region[1] = " "
-                end
+                    file.name_minus_ext = romname_noExtension[1]
+                    file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+                    file.name_rom_url_encoded = tostring(file.name)
+                    file.name_rom_region = romname_region[1]
+                    file.name_title_search = title_full
+                    
 
-                --end of function
+                    --CHECK FOR OVERRIDDEN CATEGORY of PS1 game
+                    if System.doesFileExist(cur_dir .. "/overrides.dat") then
 
-                info = romname_noRegion_noExtension[1]
-                app_title = romname_noRegion_noExtension[1]
-                
-                table.insert(folders_table, file)
-                --table.insert(games_table, file)
-                custom_path = covers_psx .. romname_noExtension[1] .. ".png"
-                custom_path_id = covers_psx .. romname_noExtension[1] .. ".png"
-                file.app_type=3
+                        -- P1 = PS1, P2 = PSP
+                        if string.match(str, file.name .. "=P2") then
+                            
+                            -- PSP
+                            table.insert(folders_table, file)
+                            --table.insert(games_table, file)
+                            custom_path = covers_psp .. romname_noExtension[1] .. ".png"
+                            custom_path_id = covers_psp .. romname_noExtension[1] .. ".png"
+                            file.app_type=2
 
-                file.name_rom_minus_ext = romname_noExtension[1]
-                file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
-                file.name_rom_url_encoded = tostring(file.name)
-                file.name_rom_region = romname_region[1]
-                file.name_title_search = title_full
-                
+                            table.insert(psp_table, file)
 
-                table.insert(psx_table, file)
+                            if custom_path and System.doesFileExist(custom_path) then
+                                img_path = covers_psp .. romname_noExtension[1] .. ".png" --custom cover by app name
+                            elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                img_path = covers_psp .. romname_noExtension[1] .. ".png" --custom cover by app id
+                            else
+                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
+                                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                else
+                                    img_path = "app0:/DATA/noimg.png" --blank grey
+                                end
+                            end
 
-                if custom_path and System.doesFileExist(custom_path) then
-                    img_path = covers_psx .. file.name .. ".png" --custom cover by app name
-                elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                    img_path = covers_psx .. file.name .. ".png" --custom cover by app id
-                else
-                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+                            table.insert(files_table, 17, file.name_minus_ext)
+                            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+                            table.insert(files_table, 17, file.name_rom_url_encoded)
+                            table.insert(files_table, 17, file.name_rom_region)
+                            table.insert(files_table, 17, file.name_title_search)
+
+                            -- all games table
+                            table.insert(all_games_table, 2, file)
+                            file.app_type=2
+                            file.cover_path_online = onlineCoversPSP
+                            file.cover_path_local = covers_psp
+
+                        else
+                            --DEFAULT
+                            table.insert(folders_table, file)
+                            --table.insert(games_table, file)
+                            custom_path = covers_psx .. romname_noExtension[1] .. ".png"
+                            custom_path_id = covers_psx .. romname_noExtension[1] .. ".png"
+                            file.app_type=3
+
+                            table.insert(psx_table, file)
+
+                            if custom_path and System.doesFileExist(custom_path) then
+                                img_path = covers_psx .. file.name .. ".png" --custom cover by app name
+                            elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                img_path = covers_psx .. file.name .. ".png" --custom cover by app id
+                            else
+                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
+                                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                else
+                                    img_path = "app0:/DATA/noimg.png" --blank grey
+                                end
+                            end
+
+                            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+                            table.insert(files_table, 17, file.name_minus_ext)
+                            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+                            table.insert(files_table, 17, file.name_rom_url_encoded)
+                            table.insert(files_table, 17, file.name_rom_region)
+                            table.insert(files_table, 17, file.name_title_search)
+
+                            -- all games table
+                            table.insert(all_games_table, 3, file)
+                            file.app_type=3
+                            file.name_minus_ext = romname_noExtension[1]
+                            file.cover_path_online = onlineCoversPSX
+                            file.cover_path_local = covers_psx
+                        end
+
                     else
-                        img_path = "app0:/DATA/noimg.png" --blank grey
+                        -- OVERRIDE NOT FOUND
+                        table.insert(folders_table, file)
+                        --table.insert(games_table, file)
+                        custom_path = covers_psx .. romname_noExtension[1] .. ".png"
+                        custom_path_id = covers_psx .. romname_noExtension[1] .. ".png"
+                        file.app_type=3
+
+                        table.insert(psx_table, file)
+
+                        if custom_path and System.doesFileExist(custom_path) then
+                            img_path = covers_psx .. file.name .. ".png" --custom cover by app name
+                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                            img_path = covers_psx .. file.name .. ".png" --custom cover by app id
+                        else
+                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
+                                img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                            else
+                                img_path = "app0:/DATA/noimg.png" --blank grey
+                            end
+                        end
+
+                        table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+                        table.insert(files_table, 17, file.name_minus_ext)
+                        table.insert(files_table, 17, file.name_rom_minus_region_ext)
+                        table.insert(files_table, 17, file.name_rom_url_encoded)
+                        table.insert(files_table, 17, file.name_rom_region)
+                        table.insert(files_table, 17, file.name_title_search)
+
+                        -- all games table
+                        table.insert(all_games_table, 3, file)
+                        file.app_type=3
+                        file.name_minus_ext = romname_noExtension[1]
+                        file.cover_path_online = onlineCoversPSX
+                        file.cover_path_local = covers_psx
                     end
+
+                    --add blank icon to all
+                    file.icon = imgCoverTmp
+                    file.icon_path = img_path
+                    
+                    table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
+                    
+                    file.apptitle = romname_noRegion_noExtension[1]
+                    table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+                else
                 end
-
-                table.insert(files_table, 16, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-                table.insert(files_table, 16, file.name_rom_minus_ext)
-                table.insert(files_table, 16, file.name_rom_minus_region_ext)
-                table.insert(files_table, 16, file.name_rom_url_encoded)
-                table.insert(files_table, 16, file.name_rom_region)
-                table.insert(files_table, 16, file.name_title_search)
-
-                -- all games table
-                table.insert(all_games_table, 3, file)
-                file.app_type=3
-                file.xname_rom_minus_ext = romname_noExtension[1]
-                file.xname_rom_url_encoded = tostring(file.name)
-                file.xonlineCoversAll = onlineCoversPSX
-                file.xcovers_All = covers_psx
-
-                --add blank icon to all
-                file.icon = imgCoverTmp
-                file.icon_path = img_path
-                
-                table.insert(files_table, 16, file.icon) -- Increased for Retro (All systems + 1 for all view)
-                
-                file.apptitle = romname_noRegion_noExtension[1]
-                table.insert(files_table, 16, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
 
                 
             end
@@ -1116,8 +1636,11 @@ function listDirectory(dir)
     -- SCAN N64
     files_N64 = System.listDirectory(romFolder_N64)
     for i, file in pairs(files_N64) do
-    local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
-        if not file.directory then
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_N64 .. "/" .. file.name)
 
             romname_withExtension = file.name
             cleanRomNames()
@@ -1130,7 +1653,7 @@ function listDirectory(dir)
             custom_path_id = covers_N64 .. romname_noExtension[1] .. ".png"
             file.app_type=5
 
-            file.name_rom_minus_ext = romname_noExtension[1]
+            file.name_minus_ext = romname_noExtension[1]
             file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
             file.name_rom_url_encoded = romname_url_encoded[1]
             file.name_rom_region = romname_region[1]
@@ -1149,28 +1672,26 @@ function listDirectory(dir)
                 end
             end
 
-            table.insert(files_table, 13, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-            table.insert(files_table, 13, file.name_rom_minus_ext)
-            table.insert(files_table, 13, file.name_rom_minus_region_ext)
-            table.insert(files_table, 13, file.name_rom_url_encoded)
-            table.insert(files_table, 13, file.name_rom_region)
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
 
             -- all games table
             table.insert(all_games_table, 4, file)
             file.app_type=5
-            file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded = romname_url_encoded[1]
-            file.xonlineCoversAll = onlineCoversN64
-            file.xcovers_All = covers_N64
+            file.cover_path_online = onlineCoversN64
+            file.cover_path_local = covers_N64
 
             --add blank icon to all
             file.icon = imgCoverTmp
             file.icon_path = img_path
             
-            table.insert(files_table, 13, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
             
             file.apptitle = romname_noExtension[1]
-            table.insert(files_table, 13, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
 
         end
     end
@@ -1180,8 +1701,11 @@ function listDirectory(dir)
     -- SCAN SNES
     files_SNES = System.listDirectory(romFolder_SNES)
     for i, file in pairs(files_SNES) do
-    local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
-        if not file.directory then
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_SNES .. "/" .. file.name)
 
             romname_withExtension = file.name
             cleanRomNames()
@@ -1194,7 +1718,7 @@ function listDirectory(dir)
             custom_path_id = covers_SNES .. romname_noExtension[1] .. ".png"
             file.app_type=6
 
-            file.name_rom_minus_ext = romname_noExtension[1]
+            file.name_minus_ext = romname_noExtension[1]
             file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
             file.name_rom_url_encoded = romname_url_encoded[1]
             file.name_rom_region = romname_region[1]
@@ -1213,28 +1737,26 @@ function listDirectory(dir)
                 end
             end
 
-            table.insert(files_table, 13, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-            table.insert(files_table, 13, file.name_rom_minus_ext)
-            table.insert(files_table, 13, file.name_rom_minus_region_ext)
-            table.insert(files_table, 13, file.name_rom_url_encoded)
-            table.insert(files_table, 13, file.name_rom_region)
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
 
             -- all games table
             table.insert(all_games_table, 5, file)
             file.app_type=6
-            file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded = romname_url_encoded[1]
-            file.xonlineCoversAll = onlineCoversSNES
-            file.xcovers_All = covers_SNES
+            file.cover_path_online = onlineCoversSNES
+            file.cover_path_local = covers_SNES
 
             --add blank icon to all
             file.icon = imgCoverTmp
             file.icon_path = img_path
             
-            table.insert(files_table, 13, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
             
             file.apptitle = romname_noExtension[1]
-            table.insert(files_table, 13, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
 
         end
     end
@@ -1243,8 +1765,11 @@ function listDirectory(dir)
     -- SCAN NES
     files_NES = System.listDirectory(romFolder_NES)
     for i, file in pairs(files_NES) do
-    local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
-        if not file.directory then
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_NES .. "/" .. file.name)
 
             romname_withExtension = file.name
             cleanRomNames()
@@ -1257,7 +1782,7 @@ function listDirectory(dir)
             custom_path_id = covers_NES .. romname_noExtension[1] .. ".png"
             file.app_type=7
 
-            file.name_rom_minus_ext = romname_noExtension[1]
+            file.name_minus_ext = romname_noExtension[1]
             file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
             file.name_rom_url_encoded = romname_url_encoded[1]
             file.name_rom_region = romname_region[1]
@@ -1276,28 +1801,26 @@ function listDirectory(dir)
                 end
             end
 
-            table.insert(files_table, 13, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-            table.insert(files_table, 13, file.name_rom_minus_ext)
-            table.insert(files_table, 13, file.name_rom_minus_region_ext)
-            table.insert(files_table, 13, file.name_rom_url_encoded)
-            table.insert(files_table, 13, file.name_rom_region)
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
 
             -- all games table
             table.insert(all_games_table, 6, file)
             file.app_type=7
-            file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded = romname_url_encoded[1]
-            file.xonlineCoversAll = onlineCoversNES
-            file.xcovers_All = covers_NES
+            file.cover_path_online = onlineCoversNES
+            file.cover_path_local = covers_NES
 
             --add blank icon to all
             file.icon = imgCoverTmp
             file.icon_path = img_path
             
-            table.insert(files_table, 13, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
             
             file.apptitle = romname_noExtension[1]
-            table.insert(files_table, 13, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
 
         end
     end
@@ -1306,8 +1829,11 @@ function listDirectory(dir)
     -- SCAN GBA
     files_GBA = System.listDirectory(romFolder_GBA)
     for i, file in pairs(files_GBA) do
-    local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
-        if not file.directory then
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_GBA .. "/" .. file.name)
 
             romname_withExtension = file.name
             cleanRomNames()
@@ -1320,7 +1846,7 @@ function listDirectory(dir)
             custom_path_id = covers_GBA .. romname_noExtension[1] .. ".png"
             file.app_type=8
 
-            file.name_rom_minus_ext = romname_noExtension[1]
+            file.name_minus_ext = romname_noExtension[1]
             file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
             file.name_rom_url_encoded = romname_url_encoded[1]
             file.name_rom_region = romname_region[1]
@@ -1339,28 +1865,26 @@ function listDirectory(dir)
                 end
             end
 
-            table.insert(files_table, 13, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-            table.insert(files_table, 13, file.name_rom_minus_ext)
-            table.insert(files_table, 13, file.name_rom_minus_region_ext)
-            table.insert(files_table, 13, file.name_rom_url_encoded)
-            table.insert(files_table, 13, file.name_rom_region)
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
 
             -- all games table
             table.insert(all_games_table, 7, file)
             file.app_type=8
-            file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded = romname_url_encoded[1]
-            file.xonlineCoversAll = onlineCoversGBA
-            file.xcovers_All = covers_GBA
+            file.cover_path_online = onlineCoversGBA
+            file.cover_path_local = covers_GBA
 
             --add blank icon to all
             file.icon = imgCoverTmp
             file.icon_path = img_path
             
-            table.insert(files_table, 13, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
             
             file.apptitle = romname_noExtension[1]
-            table.insert(files_table, 13, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
 
         end
     end
@@ -1369,8 +1893,11 @@ function listDirectory(dir)
     -- SCAN GBC
     files_GBC = System.listDirectory(romFolder_GBC)
     for i, file in pairs(files_GBC) do
-    local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
-        if not file.directory then
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_GBC .. "/" .. file.name)
 
             romname_withExtension = file.name
             cleanRomNames()
@@ -1383,7 +1910,7 @@ function listDirectory(dir)
             custom_path_id = covers_GBC .. romname_noExtension[1] .. ".png"
             file.app_type=9
 
-            file.name_rom_minus_ext = romname_noExtension[1]
+            file.name_minus_ext = romname_noExtension[1]
             file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
             file.name_rom_url_encoded = romname_url_encoded[1]
             file.name_rom_region = romname_region[1]
@@ -1402,28 +1929,26 @@ function listDirectory(dir)
                 end
             end
 
-            table.insert(files_table, 13, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-            table.insert(files_table, 13, file.name_rom_minus_ext)
-            table.insert(files_table, 13, file.name_rom_minus_region_ext)
-            table.insert(files_table, 13, file.name_rom_url_encoded)
-            table.insert(files_table, 13, file.name_rom_region)
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
 
             -- all games table
             table.insert(all_games_table, 8, file)
             file.app_type=9
-            file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded = romname_url_encoded[1]
-            file.xonlineCoversAll = onlineCoversGBC
-            file.xcovers_All = covers_GBC
+            file.cover_path_online = onlineCoversGBC
+            file.cover_path_local = covers_GBC
 
             --add blank icon to all
             file.icon = imgCoverTmp
             file.icon_path = img_path
             
-            table.insert(files_table, 13, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
             
             file.apptitle = romname_noExtension[1]
-            table.insert(files_table, 13, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
 
         end
     end
@@ -1432,8 +1957,11 @@ function listDirectory(dir)
     -- SCAN GB
     files_GB = System.listDirectory(romFolder_GB)
     for i, file in pairs(files_GB) do
-    local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
-        if not file.directory then
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_GB .. "/" .. file.name)
 
             romname_withExtension = file.name
             cleanRomNames()
@@ -1446,7 +1974,7 @@ function listDirectory(dir)
             custom_path_id = covers_GB .. romname_noExtension[1] .. ".png"
             file.app_type=10
 
-            file.name_rom_minus_ext = romname_noExtension[1]
+            file.name_minus_ext = romname_noExtension[1]
             file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
             file.name_rom_url_encoded = romname_url_encoded[1]
             file.name_rom_region = romname_region[1]
@@ -1465,28 +1993,26 @@ function listDirectory(dir)
                 end
             end
 
-            table.insert(files_table, 13, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-            table.insert(files_table, 13, file.name_rom_minus_ext)
-            table.insert(files_table, 13, file.name_rom_minus_region_ext)
-            table.insert(files_table, 13, file.name_rom_url_encoded)
-            table.insert(files_table, 13, file.name_rom_region)
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
 
             -- all games table
             table.insert(all_games_table, 9, file)
             file.app_type=10
-            file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded = romname_url_encoded[1]
-            file.xonlineCoversAll = onlineCoversGB
-            file.xcovers_All = covers_GB
+            file.cover_path_online = onlineCoversGB
+            file.cover_path_local = covers_GB
 
             --add blank icon to all
             file.icon = imgCoverTmp
             file.icon_path = img_path
             
-            table.insert(files_table, 13, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
             
             file.apptitle = romname_noExtension[1]
-            table.insert(files_table, 13, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
 
         end
     end
@@ -1495,8 +2021,11 @@ function listDirectory(dir)
     -- SCAN MD
     files_MD = System.listDirectory(romFolder_MD)
     for i, file in pairs(files_MD) do
-    local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
-        if not file.directory then
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_MD .. "/" .. file.name)
 
             romname_withExtension = file.name
             cleanRomNames()
@@ -1509,7 +2038,7 @@ function listDirectory(dir)
             custom_path_id = covers_MD .. romname_noExtension[1] .. ".png"
             file.app_type=11
 
-            file.name_rom_minus_ext = romname_noExtension[1]
+            file.name_minus_ext = romname_noExtension[1]
             file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
             file.name_rom_url_encoded = romname_url_encoded[1]
             file.name_rom_region = romname_region[1]
@@ -1536,28 +2065,26 @@ function listDirectory(dir)
                 end
             end
 
-            table.insert(files_table, 13, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-            table.insert(files_table, 13, file.name_rom_minus_ext)
-            table.insert(files_table, 13, file.name_rom_minus_region_ext)
-            table.insert(files_table, 13, file.name_rom_url_encoded)
-            table.insert(files_table, 13, file.name_rom_region)
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
 
             -- all games table
             table.insert(all_games_table, file)
             file.app_type=11
-            file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded = romname_url_encoded[1]
-            file.xonlineCoversAll = onlineCoversMD
-            file.xcovers_All = covers_MD
+            file.cover_path_online = onlineCoversMD
+            file.cover_path_local = covers_MD
 
             --add blank icon to all
             file.icon = imgCoverTmp
             file.icon_path = img_path
             
-            table.insert(files_table, 13, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
             
             file.apptitle = romname_noExtension[1]
-            table.insert(files_table, 13, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
 
         end
     end
@@ -1566,8 +2093,11 @@ function listDirectory(dir)
     -- SCAN SMS
     files_SMS = System.listDirectory(romFolder_SMS)
     for i, file in pairs(files_SMS) do
-    local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
-        if not file.directory then
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_SMS .. "/" .. file.name)
 
             romname_withExtension = file.name
             cleanRomNames()
@@ -1580,7 +2110,7 @@ function listDirectory(dir)
             custom_path_id = covers_SMS .. romname_noExtension[1] .. ".png"
             file.app_type=12
 
-            file.name_rom_minus_ext = romname_noExtension[1]
+            file.name_minus_ext = romname_noExtension[1]
             file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
             file.name_rom_url_encoded = romname_url_encoded[1]
             file.name_rom_region = romname_region[1]
@@ -1599,28 +2129,26 @@ function listDirectory(dir)
                 end
             end
 
-            table.insert(files_table, 13, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-            table.insert(files_table, 13, file.name_rom_minus_ext)
-            table.insert(files_table, 13, file.name_rom_minus_region_ext)
-            table.insert(files_table, 13, file.name_rom_url_encoded)
-            table.insert(files_table, 13, file.name_rom_region)
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
 
             -- all games table
             table.insert(all_games_table, 11, file)
             file.app_type=12
-            file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded = romname_url_encoded[1]
-            file.xonlineCoversAll = onlineCoversSMS
-            file.xcovers_All = covers_SMS
+            file.cover_path_online = onlineCoversSMS
+            file.cover_path_local = covers_SMS
 
             --add blank icon to all
             file.icon = imgCoverTmp
             file.icon_path = img_path
             
-            table.insert(files_table, 13, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
             
             file.apptitle = romname_noExtension[1]
-            table.insert(files_table, 13, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
 
         end
     end
@@ -1629,8 +2157,11 @@ function listDirectory(dir)
     -- SCAN GG
     files_GG = System.listDirectory(romFolder_GG)
     for i, file in pairs(files_GG) do
-    local custom_path, custom_path_id, app_type, name_rom_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
-        if not file.directory then
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_GG .. "/" .. file.name)
 
             romname_withExtension = file.name
             cleanRomNames()
@@ -1643,7 +2174,7 @@ function listDirectory(dir)
             custom_path_id = covers_GG .. romname_noExtension[1] .. ".png"
             file.app_type=13
 
-            file.name_rom_minus_ext = romname_noExtension[1]
+            file.name_minus_ext = romname_noExtension[1]
             file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
             file.name_rom_url_encoded = romname_url_encoded[1]
             file.name_rom_region = romname_region[1]
@@ -1662,31 +2193,359 @@ function listDirectory(dir)
                 end
             end
 
-            table.insert(files_table, 13, file.app_type) -- Increased for Retro (All systems + 1 for all view)
-            table.insert(files_table, 13, file.name_rom_minus_ext)
-            table.insert(files_table, 13, file.name_rom_minus_region_ext)
-            table.insert(files_table, 13, file.name_rom_url_encoded)
-            table.insert(files_table, 13, file.name_rom_region)
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
 
             -- all games table
             table.insert(all_games_table, 12, file)
             file.app_type=13
-            file.xname_rom_minus_ext = romname_noExtension[1]
-            file.xname_rom_url_encoded = romname_url_encoded[1]
-            file.xonlineCoversAll = onlineCoversGG
-            file.xcovers_All = covers_GG
+            file.cover_path_online = onlineCoversGG
+            file.cover_path_local = covers_GG
 
             --add blank icon to all
             file.icon = imgCoverTmp
             file.icon_path = img_path
             
-            table.insert(files_table, 13, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
             
             file.apptitle = romname_noExtension[1]
-            table.insert(files_table, 13, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
 
         end
     end
+
+    -- SCAN MAME
+    if  System.doesDirExist(romFolder_MAME_2000) then
+
+        files_MAME = System.listDirectory(romFolder_MAME_2000)
+
+        -- LOOKUP TITLE ID: Load saved table of previously macthes titleID's for faster name lookup
+
+        if System.doesFileExist(user_DB_Folder .. "mame.lua") then
+            database_rename_MAME = user_DB_Folder .. "mame.lua"
+        else
+            database_rename_MAME = "app0:addons/mame.lua"
+        end
+
+        for i, file in pairs(files_MAME) do
+        local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
+            -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+                file.game_path = (romFolder_MAME_2000 .. "/" .. file.name)
+
+                romname_withExtension = file.name
+                romname_noExtension = {}
+                romname_noExtension[1] = romname_withExtension:match("(.+)%..+$")
+
+                    -- LOOKUP TITLE ID: Get game name based on titleID, search saved table of data, or full table of data if titleID not found
+
+                    -- Load previous matches
+                    mamedb = dofile(database_rename_MAME)
+
+                    -- Check if scanned titleID is a saved match
+                    mame_search = mamedb[romname_noExtension[1]]
+
+                    -- If no
+                    if mame_search == nil then
+
+                        -- Load the full database to find the new titleID
+                        mamedbfull = dofile("app0:addons/mame.lua")
+                        mame_search_full = mamedbfull[romname_noExtension[1]]
+
+                        -- If not found; use the folder name without adding a game name
+                        if mame_search_full == nil then
+                            title_full = romname_noExtension[1]
+
+                        -- If found; use the game name from the full database 
+                        else
+                            title_full = mamedbfull[romname_noExtension[1]].name
+                        end
+
+                    -- If found; use the game name from the saved match
+                    else
+                        title_full = mamedb[romname_noExtension[1]].name
+                    end
+
+                romname_noRegion_noExtension = {}
+                romname_noRegion_noExtension[1] = title_full:gsub('%b()', '')
+
+                -- Check if name contains parenthesis, if yes strip out to show as version
+                if string.find(title_full, "%(") then
+                    -- Remove all text except for within "()"
+                    romname_region_initial = {}
+                    romname_region_initial[1] = title_full:match("%((.+)%)")
+
+                    -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
+                    romname_region = {}
+                    romname_region[1] = romname_region_initial[1]:gsub("%) %(", ', ')
+                -- If no parenthesis, then add blank to prevent nil error
+                else
+                    romname_region[1] = " "
+                end
+
+                --end of function
+
+                info = romname_noRegion_noExtension[1]
+                app_title = romname_noRegion_noExtension[1]
+                
+                table.insert(folders_table, file)
+                --table.insert(games_table, file)
+                custom_path = covers_MAME .. romname_noExtension[1] .. ".png"
+                custom_path_id = covers_MAME .. romname_noExtension[1] .. ".png"
+                file.app_type=14
+
+                file.name_minus_ext = romname_noExtension[1]
+                file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+                file.name_rom_url_encoded = romname_noExtension[1]
+                file.name_rom_region = romname_region[1]
+                file.name_title_search = title_full
+                
+
+                table.insert(mame_table, file)
+
+                if custom_path and System.doesFileExist(custom_path) then
+                    img_path = covers_MAME .. romname_noExtension[1] .. ".png" --custom cover by app name
+                elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                    img_path = covers_MAME .. romname_noExtension[1] .. ".png" --custom cover by app id
+                else
+                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_mame.png") then
+                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_mame.png"  --app icon
+                    else
+                        img_path = "app0:/DATA/noimg.png" --blank grey
+                    end
+                end
+
+                table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+                table.insert(files_table, 17, file.name_minus_ext)
+                table.insert(files_table, 17, file.name_rom_minus_region_ext)
+                table.insert(files_table, 17, file.name_rom_url_encoded)
+                table.insert(files_table, 17, file.name_rom_region)
+                table.insert(files_table, 17, file.name_title_search)
+
+                -- all games table
+                table.insert(all_games_table, 13, file)
+                file.app_type=14
+                file.name_minus_ext = romname_noExtension[1]
+                file.cover_path_online = onlineCoversMAME
+                file.cover_path_local = covers_MAME
+
+                --add blank icon to all
+                file.icon = imgCoverTmp
+                file.icon_path = img_path
+                
+                table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
+                
+                file.apptitle = romname_noRegion_noExtension[1]
+                table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+
+                
+            end
+        end
+
+        -- LOOKUP TITLE ID: Delete old file and save new list of matches
+        if not System.doesFileExist(user_DB_Folder .. "mame.lua") then
+            CreateUserTitleTable_MAME()
+        else
+            System.deleteFile(user_DB_Folder .. "mame.lua")
+            CreateUserTitleTable_MAME()
+        end
+
+    end
+
+
+    -- SCAN AMIGA
+    files_AMIGA = System.listDirectory(romFolder_AMIGA)
+    for i, file in pairs(files_AMIGA) do
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_AMIGA .. "/" .. file.name)
+
+            romname_withExtension = file.name
+            cleanRomNames()
+            info = romname_noRegion_noExtension[1]
+            app_title = romname_noExtension[1]
+            
+            table.insert(folders_table, file)
+            --table.insert(games_table, file)
+            custom_path = covers_AMIGA .. romname_noExtension[1] .. ".png"
+            custom_path_id = covers_AMIGA .. romname_noExtension[1] .. ".png"
+            file.app_type=15
+
+            file.name_minus_ext = romname_noExtension[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
+
+            table.insert(amiga_table, file)
+
+            if custom_path and System.doesFileExist(custom_path) then
+                img_path = covers_AMIGA .. romname_noExtension[1] .. ".png" --custom cover by app name
+            elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                img_path = covers_AMIGA .. romname_noExtension[1] .. ".png" --custom cover by app id
+            else
+                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_amiga.png") then
+                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_amiga.png"  --app icon
+                else
+                    img_path = "app0:/DATA/noimg.png" --blank grey
+                end
+            end
+
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
+
+            -- all games table
+            table.insert(all_games_table, 14, file)
+            file.app_type=15
+            file.cover_path_online = onlineCoversAMIGA
+            file.cover_path_local = covers_AMIGA
+
+            --add blank icon to all
+            file.icon = imgCoverTmp
+            file.icon_path = img_path
+            
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            
+            file.apptitle = romname_noExtension[1]
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+
+        end
+    end
+
+    -- SCAN TG16
+    files_TG16 = System.listDirectory(romFolder_TG16)
+    for i, file in pairs(files_TG16) do
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_TG16 .. "/" .. file.name)
+
+            romname_withExtension = file.name
+            cleanRomNames()
+            info = romname_noRegion_noExtension[1]
+            app_title = romname_noExtension[1]
+            
+            table.insert(folders_table, file)
+            --table.insert(games_table, file)
+            custom_path = covers_TG16 .. romname_noExtension[1] .. ".png"
+            custom_path_id = covers_TG16 .. romname_noExtension[1] .. ".png"
+            file.app_type=16
+
+            file.name_minus_ext = romname_noExtension[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
+
+            table.insert(tg16_table, file)
+
+            if custom_path and System.doesFileExist(custom_path) then
+                img_path = covers_TG16 .. romname_noExtension[1] .. ".png" --custom cover by app name
+            elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                img_path = covers_TG16 .. romname_noExtension[1] .. ".png" --custom cover by app id
+            else
+                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_tg16.png") then
+                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_tg16.png"  --app icon
+                else
+                    img_path = "app0:/DATA/noimg.png" --blank grey
+                end
+            end
+
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
+
+            -- all games table
+            table.insert(all_games_table, 15, file)
+            file.app_type=16
+            file.cover_path_online = onlineCoversTG16
+            file.cover_path_local = covers_TG16
+
+            --add blank icon to all
+            file.icon = imgCoverTmp
+            file.icon_path = img_path
+            
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            
+            file.apptitle = romname_noExtension[1]
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+
+        end
+    end
+
+    -- SCAN PCE
+    files_PCE = System.listDirectory(romFolder_PCE)
+    for i, file in pairs(files_PCE) do
+    local custom_path, custom_path_id, app_type, name_minus_ext, name_rom_minus_region_ext, name_rom_url_encoded, name_rom_region = nil, nil, nil, nil, nil, nil, nil
+        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+        if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+            file.game_path = (romFolder_PCE .. "/" .. file.name)
+
+            romname_withExtension = file.name
+            cleanRomNames()
+            info = romname_noRegion_noExtension[1]
+            app_title = romname_noExtension[1]
+            
+            table.insert(folders_table, file)
+            --table.insert(games_table, file)
+            custom_path = covers_PCE .. romname_noExtension[1] .. ".png"
+            custom_path_id = covers_PCE .. romname_noExtension[1] .. ".png"
+            file.app_type=17
+
+            file.name_minus_ext = romname_noExtension[1]
+            file.name_rom_minus_region_ext = romname_noRegion_noExtension[1]
+            file.name_rom_url_encoded = romname_url_encoded[1]
+            file.name_rom_region = romname_region[1]
+
+            table.insert(pce_table, file)
+
+            if custom_path and System.doesFileExist(custom_path) then
+                img_path = covers_PCE .. romname_noExtension[1] .. ".png" --custom cover by app name
+            elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                img_path = covers_PCE .. romname_noExtension[1] .. ".png" --custom cover by app id
+            else
+                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_pce.png") then
+                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_pce.png"  --app icon
+                else
+                    img_path = "app0:/DATA/noimg.png" --blank grey
+                end
+            end
+
+            table.insert(files_table, 17, file.app_type) -- Increased for Retro (All systems + 1 for all view)
+            table.insert(files_table, 17, file.name_minus_ext)
+            table.insert(files_table, 17, file.name_rom_minus_region_ext)
+            table.insert(files_table, 17, file.name_rom_url_encoded)
+            table.insert(files_table, 17, file.name_rom_region)
+
+            -- all games table
+            table.insert(all_games_table, 16, file)
+            file.app_type=17
+            file.cover_path_online = onlineCoversPCE
+            file.cover_path_local = covers_PCE
+
+            --add blank icon to all
+            file.icon = imgCoverTmp
+            file.icon_path = img_path
+            
+            table.insert(files_table, 17, file.icon) -- Increased for Retro (All systems + 1 for all view)
+            
+            file.apptitle = romname_noExtension[1]
+            table.insert(files_table, 17, file.apptitle) -- Increased for Retro (All systems + 1 for all view)
+
+        end
+    end
+
 
 
     table.sort(files_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
@@ -1706,7 +2565,457 @@ function listDirectory(dir)
     table.sort(md_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(sms_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(gg_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(mame_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(amiga_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(tg16_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(pce_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     
+    return_table = TableConcat(folders_table, files_table)
+    
+    total_all = #files_table
+    total_games = #games_table
+    total_homebrews = #homebrews_table
+    
+    -- CACHE ALL TABLES - PRINT AND SAVE
+
+    -- If startup scan is off
+    if startupScan == 0 then
+        cache_all_tables()
+    else
+    end
+
+    return return_table
+end
+
+function import_cached_DB(dir)
+    dir = System.listDirectory(dir)
+    folders_table = {}
+    files_table = {}
+    games_table = {}
+    psp_table = {}
+    psx_table = {}
+    n64_table = {}
+    snes_table = {}
+    nes_table = {}
+    gba_table = {}
+    gbc_table = {}
+    gb_table = {}
+    md_table = {}
+    sms_table = {}
+    gg_table = {}
+    mame_table = {}
+    amiga_table = {}
+    tg16_table = {}
+    pce_table = {}
+    homebrews_table = {}
+    all_games_table = {}
+    
+    -- Import cached DB: games
+    if System.doesFileExist(db_Cache_Folder .. "db_games.lua") then
+        db_Cache_games = db_Cache_Folder .. "db_games.lua"
+
+        local db_games = {}
+        db_games = dofile(db_Cache_games)
+
+        for k, v in ipairs(db_games) do
+            table.insert(folders_table, v)
+            table.insert(games_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    --     -- Import cached DB: folders
+    -- if System.doesFileExist(db_Cache_Folder .. "db_folders.lua") then
+    --     db_Cache_folders = db_Cache_Folder .. "db_folders.lua"
+
+    --     local db_folders = {}
+    --     db_folders = dofile(db_Cache_folders)
+
+    --     for k, v in ipairs(db_folders) do
+    --         table.insert(folders_table, v)
+    --         table.insert(folders_table, v)
+
+    --         --add blank icon to all
+    --         v.icon = imgCoverTmp
+    --         v.icon_path = v.icon_path
+
+    --         v.apptitle = v.apptitle
+    --         table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+    --     end
+    -- end
+
+
+    -- Import cached DB: homebrew
+    if showHomebrews == 1 then
+        if System.doesFileExist(db_Cache_Folder .. "db_homebrews.lua") then
+            db_Cache_homebrews = db_Cache_Folder .. "db_homebrews.lua"
+
+            db_homebrews = dofile(db_Cache_homebrews)
+
+            for k, v in ipairs(db_homebrews) do
+                table.insert(folders_table, v)
+                table.insert(homebrews_table, v)
+                table.insert(all_games_table, v)
+
+                --add blank icon to all
+                v.icon = imgCoverTmp
+                v.icon_path = v.icon_path
+
+                v.apptitle = v.apptitle
+                table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+            end
+        end
+    else
+    end
+
+    -- Import cached DB: psp
+    if System.doesFileExist(db_Cache_Folder .. "db_psp.lua") then
+        db_Cache_psp = db_Cache_Folder .. "db_psp.lua"
+
+        db_psp = dofile(db_Cache_psp)
+
+        for k, v in ipairs(db_psp) do
+            table.insert(folders_table, v)
+            table.insert(psp_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: psx
+    if System.doesFileExist(db_Cache_Folder .. "db_psx.lua") then
+        db_Cache_psx = db_Cache_Folder .. "db_psx.lua"
+
+        db_psx = dofile(db_Cache_psx)
+
+        for k, v in ipairs(db_psx) do
+            table.insert(folders_table, v)
+            table.insert(psx_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: N64
+    if System.doesFileExist(db_Cache_Folder .. "db_n64.lua") then
+        db_Cache_n64 = db_Cache_Folder .. "db_n64.lua"
+        
+        db_n64 = dofile(db_Cache_n64)
+
+        for k, v in ipairs(db_n64) do
+            table.insert(folders_table, v)
+            table.insert(n64_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: snes
+    if System.doesFileExist(db_Cache_Folder .. "db_snes.lua") then
+        db_Cache_snes = db_Cache_Folder .. "db_snes.lua"
+
+        db_snes = dofile(db_Cache_snes)
+
+        for k, v in ipairs(db_snes) do
+            table.insert(folders_table, v)
+            table.insert(snes_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: nes
+    if System.doesFileExist(db_Cache_Folder .. "db_nes.lua") then
+        db_Cache_nes = db_Cache_Folder .. "db_nes.lua"
+
+        db_nes = dofile(db_Cache_nes)
+
+        for k, v in ipairs(db_nes) do
+            table.insert(folders_table, v)
+            table.insert(nes_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: gba
+    if System.doesFileExist(db_Cache_Folder .. "db_gba.lua") then
+        db_Cache_gba = db_Cache_Folder .. "db_gba.lua"
+
+        db_gba = dofile(db_Cache_gba)
+
+        for k, v in ipairs(db_gba) do
+            table.insert(folders_table, v)
+            table.insert(gba_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: gbc
+    if System.doesFileExist(db_Cache_Folder .. "db_gbc.lua") then
+        db_Cache_gbc = db_Cache_Folder .. "db_gbc.lua"
+
+        db_gbc = dofile(db_Cache_gbc)
+
+        for k, v in ipairs(db_gbc) do
+            table.insert(folders_table, v)
+            table.insert(gbc_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: gb
+    if System.doesFileExist(db_Cache_Folder .. "db_gb.lua") then
+        db_Cache_gb = db_Cache_Folder .. "db_gb.lua"
+
+        db_gb = dofile(db_Cache_gb)
+
+        for k, v in ipairs(db_gb) do
+            table.insert(folders_table, v)
+            table.insert(gb_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: md
+    if System.doesFileExist(db_Cache_Folder .. "db_md.lua") then
+        db_Cache_md = db_Cache_Folder .. "db_md.lua"
+
+        db_md = dofile(db_Cache_md)
+
+        for k, v in ipairs(db_md) do
+            table.insert(folders_table, v)
+            table.insert(md_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: sms
+    if System.doesFileExist(db_Cache_Folder .. "db_sms.lua") then
+        db_Cache_sms = db_Cache_Folder .. "db_sms.lua"
+
+        db_sms = dofile(db_Cache_sms)
+
+        for k, v in ipairs(db_sms) do
+            table.insert(folders_table, v)
+            table.insert(sms_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: gg
+    if System.doesFileExist(db_Cache_Folder .. "db_gg.lua") then
+        db_Cache_gg = db_Cache_Folder .. "db_gg.lua"
+
+        db_gg = dofile(db_Cache_gg)
+
+        for k, v in ipairs(db_gg) do
+            table.insert(folders_table, v)
+            table.insert(gg_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: mame
+    if System.doesFileExist(db_Cache_Folder .. "db_mame.lua") then
+        db_Cache_mame = db_Cache_Folder .. "db_mame.lua"
+
+        db_mame = dofile(db_Cache_mame)
+
+        for k, v in ipairs(db_mame) do
+            table.insert(folders_table, v)
+            table.insert(mame_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: amiga
+    if System.doesFileExist(db_Cache_Folder .. "db_amiga.lua") then
+        db_Cache_amiga = db_Cache_Folder .. "db_amiga.lua"
+
+        db_amiga = dofile(db_Cache_amiga)
+
+        for k, v in ipairs(db_amiga) do
+            table.insert(folders_table, v)
+            table.insert(amiga_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: tg16
+    if System.doesFileExist(db_Cache_Folder .. "db_tg16.lua") then
+        db_Cache_tg16 = db_Cache_Folder .. "db_tg16.lua"
+
+        db_tg16 = dofile(db_Cache_tg16)
+
+        for k, v in ipairs(db_tg16) do
+            table.insert(folders_table, v)
+            table.insert(tg16_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- Import cached DB: pce
+    if System.doesFileExist(db_Cache_Folder .. "db_pce.lua") then
+        db_Cache_pce = db_Cache_Folder .. "db_pce.lua"
+
+        db_pce = dofile(db_Cache_pce)
+
+        for k, v in ipairs(db_pce) do
+            table.insert(folders_table, v)
+            table.insert(pce_table, v)
+            table.insert(all_games_table, v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+                        
+            v.apptitle = v.apptitle
+            table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+        end
+    end
+
+    -- -- Import cached DB: all_games
+    -- if System.doesFileExist(db_Cache_Folder .. "db_all_games.lua") then
+    --     db_Cache_all_games = db_Cache_Folder .. "db_all_games.lua"
+
+    --     local db_all_games = {}
+    --     db_all_games = dofile(db_Cache_all_games)
+
+    --     for k, v in ipairs(db_all_games) do
+    --         table.insert(all_games_table, v)
+
+    --         --add blank icon to all
+    --         v.icon = imgCoverTmp
+    --         v.icon_path = v.icon_path
+
+    --         v.apptitle = v.apptitle
+    --         table.insert(files_table, 17, v.apptitle) -- Increased for Retro (All systems + 1 for all view)
+    --     end
+    -- end
+
+    table.sort(files_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(folders_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    
+    table.sort(games_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(homebrews_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(psp_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(psx_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+
+    table.sort(n64_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(snes_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(nes_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(gba_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(gbc_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(gb_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(md_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(sms_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(gg_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(mame_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(amiga_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(tg16_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(pce_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+
     return_table = TableConcat(folders_table, files_table)
     
     total_all = #files_table
@@ -1716,11 +3025,42 @@ function listDirectory(dir)
     return return_table
 end
 
+
 function loadImage(img_path)
     imgTmp = Graphics.loadImage(img_path)
 end
 
-files_table = listDirectory(System.currentDirectory())
+
+
+-- CHECK IF STARTUP SCAN IS ON
+
+if startupScan == 1 then
+    -- Startup scan is OFF
+
+    -- Scan folders and games
+    files_table = listDirectory(System.currentDirectory())
+else
+    -- Startup scan is ON
+
+    -- Check cache files before importing, does the folder exist?
+    if  System.doesDirExist(db_Cache_Folder) then
+
+        -- Folder exists - Count files
+        cache_file_count = System.listDirectory(db_Cache_Folder)
+        if #cache_file_count < 20 then -- 20 tables expected
+            -- Files missing - rescan
+            files_table = listDirectory(System.currentDirectory())
+        else
+            -- Files all pesent - Import Cached Database
+            files_table = import_cached_DB(System.currentDirectory())
+        end
+    else
+        -- Folder missing - rescan
+        files_table = listDirectory(System.currentDirectory())
+    end
+end
+
+
 
 function getAppSize(dir)
     local size = 0
@@ -1748,12 +3088,11 @@ function getRomSize()
 
     if size < 900000 then -- Guessed at number, seems fine
         app_size = size/1024
-        romsize = string.format("%02d", app_size) .. "Kb"
+        game_size = string.format("%02d", app_size) .. "Kb"
     else
         app_size = size/1024/1024
-        romsize = string.format("%02d", app_size) .. "Mb"
+        game_size = string.format("%02d", app_size) .. "Mb"
     end
-
 end
 
 
@@ -1766,7 +3105,8 @@ function GetInfoSelected()
                 pic_path = "ur0:/appmeta/" .. games_table[p].name .. "/pic0.png"
                 app_title = tostring(info.title)
                 apptype = games_table[p].app_type
-                appdir=working_dir .. "/" .. games_table[p].name
+                appdir = games_table[p].game_path
+                folder = games_table[p].directory
 
                 app_titleid = tostring(info.titleid)
                 app_version = tostring(info.version)
@@ -1782,7 +3122,8 @@ function GetInfoSelected()
                 pic_path = "ur0:/appmeta/" .. homebrews_table[p].name .. "/pic0.png"
                 app_title = tostring(info.title)
                 apptype = homebrews_table[p].app_type
-                appdir=working_dir .. "/" .. homebrews_table[p].name
+                appdir = homebrews_table[p].game_path
+                folder = homebrews_table[p].directory
 
                 app_titleid = tostring(info.titleid)
                 app_version = tostring(info.version)
@@ -1798,7 +3139,8 @@ function GetInfoSelected()
             pic_path = "-"
             app_title = tostring(psp_table[p].name_rom_minus_region_ext)
             apptype = psp_table[p].app_type
-            appdir=romFolder_PSP .. "/" .. psp_table[p].name_rom_minus_ext .. ".iso"
+            appdir = psp_table[p].game_path
+            folder = psp_table[p].directory
 
             app_titleid = tostring(psp_table[p].name)
             app_version = tostring(psp_table[p].name_rom_region)
@@ -1812,9 +3154,10 @@ function GetInfoSelected()
             pic_path = "-"
             app_title = tostring(psx_table[p].name_rom_minus_region_ext)
             apptype = psx_table[p].app_type
-            appdir=romFolder_PSX .. "/" .. psx_table[p].name
+            appdir = psx_table[p].game_path
+            folder = psx_table[p].directory
 
-            app_titleid = tostring(psx_table[p].name_rom_minus_ext)
+            app_titleid = tostring(psx_table[p].name_minus_ext)
             app_version = tostring(psx_table[p].name_rom_region)
         else
             app_title = "-"
@@ -1826,9 +3169,10 @@ function GetInfoSelected()
             pic_path = "-"
             app_title = tostring(n64_table[p].name_rom_minus_region_ext)
             apptype = n64_table[p].app_type
-            appdir=romFolder_N64 .. "/" .. n64_table[p].name
+            appdir = n64_table[p].game_path
+            folder = n64_table[p].directory
 
-            app_titleid = tostring(n64_table[p].name_rom_minus_ext)
+            app_titleid = tostring(n64_table[p].name_minus_ext)
             app_version = tostring(n64_table[p].name_rom_region)
         else
             app_title = "-"
@@ -1840,9 +3184,10 @@ function GetInfoSelected()
             pic_path = "-"
             app_title = tostring(snes_table[p].name_rom_minus_region_ext)
             apptype = snes_table[p].app_type
-            appdir=romFolder_SNES .. "/" .. snes_table[p].name
+            appdir = snes_table[p].game_path
+            folder = snes_table[p].directory
 
-            app_titleid = tostring(snes_table[p].name_rom_minus_ext)
+            app_titleid = tostring(snes_table[p].name_minus_ext)
             app_version = tostring(snes_table[p].name_rom_region)
         else
             app_title = "-"
@@ -1854,9 +3199,10 @@ function GetInfoSelected()
             pic_path = "-"
             app_title = tostring(nes_table[p].name_rom_minus_region_ext)
             apptype = nes_table[p].app_type
-            appdir=romFolder_NES .. "/" .. nes_table[p].name
+            appdir = nes_table[p].game_path
+            folder = nes_table[p].directory
 
-            app_titleid = tostring(nes_table[p].name_rom_minus_ext)
+            app_titleid = tostring(nes_table[p].name_minus_ext)
             app_version = tostring(nes_table[p].name_rom_region)
         else
             app_title = "-"
@@ -1868,9 +3214,10 @@ function GetInfoSelected()
             pic_path = "-"
             app_title = tostring(gba_table[p].name_rom_minus_region_ext)
             apptype = gba_table[p].app_type
-            appdir=romFolder_GBA .. "/" .. gba_table[p].name
+            appdir = gba_table[p].game_path
+            folder = gba_table[p].directory
 
-            app_titleid = tostring(gba_table[p].name_rom_minus_ext)
+            app_titleid = tostring(gba_table[p].name_minus_ext)
             app_version = tostring(gba_table[p].name_rom_region)
         else
             app_title = "-"
@@ -1882,9 +3229,10 @@ function GetInfoSelected()
             pic_path = "-"
             app_title = tostring(gbc_table[p].name_rom_minus_region_ext)
             apptype = gbc_table[p].app_type
-            appdir=romFolder_GBC .. "/" .. gbc_table[p].name
+            appdir = gbc_table[p].game_path
+            folder = gbc_table[p].directory
 
-            app_titleid = tostring(gbc_table[p].name_rom_minus_ext)
+            app_titleid = tostring(gbc_table[p].name_minus_ext)
             app_version = tostring(gbc_table[p].name_rom_region)
         else
             app_title = "-"
@@ -1896,9 +3244,10 @@ function GetInfoSelected()
             pic_path = "-"
             app_title = tostring(gb_table[p].name_rom_minus_region_ext)
             apptype = gb_table[p].app_type
-            appdir=romFolder_GB .. "/" .. gb_table[p].name
+            appdir = gb_table[p].game_path
+            folder = gb_table[p].directory
 
-            app_titleid = tostring(gb_table[p].name_rom_minus_ext)
+            app_titleid = tostring(gb_table[p].name_minus_ext)
             app_version = tostring(gb_table[p].name_rom_region)
         else
             app_title = "-"
@@ -1914,9 +3263,10 @@ function GetInfoSelected()
             pic_path = "-"
             app_title = tostring(md_table[p].name_rom_minus_region_ext)
             apptype = md_table[p].app_type
-            appdir=romFolder_MD .. "/" .. md_table[p].name
+            appdir = md_table[p].game_path
+            folder = md_table[p].directory
 
-            app_titleid = tostring(md_table[p].name_rom_minus_ext)
+            app_titleid = tostring(md_table[p].name_minus_ext)
             app_version = tostring(md_table[p].name_rom_region)
         else
             app_title = "-"
@@ -1928,9 +3278,10 @@ function GetInfoSelected()
             pic_path = "-"
             app_title = tostring(sms_table[p].name_rom_minus_region_ext)
             apptype = sms_table[p].app_type
-            appdir=romFolder_SMS .. "/" .. sms_table[p].name
+            appdir = sms_table[p].game_path
+            folder = sms_table[p].directory
 
-            app_titleid = tostring(sms_table[p].name_rom_minus_ext)
+            app_titleid = tostring(sms_table[p].name_minus_ext)
             app_version = tostring(sms_table[p].name_rom_region)
         else
             app_title = "-"
@@ -1942,10 +3293,71 @@ function GetInfoSelected()
             pic_path = "-"
             app_title = tostring(gg_table[p].name_rom_minus_region_ext)
             apptype = gg_table[p].app_type
-            appdir=romFolder_GG .. "/" .. gg_table[p].name
+            appdir = gg_table[p].game_path
+            folder = gg_table[p].directory
 
-            app_titleid = tostring(gg_table[p].name_rom_minus_ext)
+            app_titleid = tostring(gg_table[p].name_minus_ext)
             app_version = tostring(gg_table[p].name_rom_region)
+        else
+            app_title = "-"
+        end
+    elseif showCat == 14 then
+        if #mame_table > 0 then
+            info = mame_table[p].name
+            icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+            pic_path = "-"
+            app_title = tostring(mame_table[p].name_rom_minus_region_ext)
+            apptype = mame_table[p].app_type
+            appdir = mame_table[p].game_path
+            folder = mame_table[p].directory
+
+            app_titleid = tostring(mame_table[p].name_minus_ext)
+            app_version = tostring(mame_table[p].name_rom_region)
+        else
+            app_title = "-"
+        end
+    elseif showCat == 15 then
+        if #amiga_table > 0 then
+            info = amiga_table[p].name
+            icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
+            pic_path = "-"
+            app_title = tostring(amiga_table[p].name_rom_minus_region_ext)
+            apptype = amiga_table[p].app_type
+            appdir = amiga_table[p].game_path
+            folder = amiga_table[p].directory
+
+            app_titleid = tostring(amiga_table[p].name_minus_ext)
+            app_version = tostring(amiga_table[p].name_rom_region)
+        else
+            app_title = "-"
+        end
+    elseif showCat == 16 then
+        if #tg16_table > 0 then
+            info = tg16_table[p].name
+            icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
+            pic_path = "-"
+            app_title = tostring(tg16_table[p].name_rom_minus_region_ext)
+            apptype = tg16_table[p].app_type
+            appdir = tg16_table[p].game_path
+            folder = tg16_table[p].directory
+
+            app_titleid = tostring(tg16_table[p].name_minus_ext)
+            app_version = tostring(tg16_table[p].name_rom_region)
+        else
+            app_title = "-"
+        end
+    elseif showCat == 17 then
+        if #pce_table > 0 then
+            info = pce_table[p].name
+            icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
+            pic_path = "-"
+            app_title = tostring(pce_table[p].name_rom_minus_region_ext)
+            apptype = pce_table[p].app_type
+            appdir = pce_table[p].game_path
+            folder = pce_table[p].directory
+
+            app_titleid = tostring(pce_table[p].name_minus_ext)
+            app_version = tostring(pce_table[p].name_rom_region)
         else
             app_title = "-"
         end
@@ -1957,103 +3369,99 @@ function GetInfoSelected()
                 pic_path = "ur0:/appmeta/" .. files_table[p].name .. "/pic0.png"
                 app_title = tostring(info.title)
                 apptype = files_table[p].app_type
+                folder = files_table[p].directory
 
                 app_titleid = tostring(info.titleid)
                 app_version = tostring(info.version)
 
+                appdir = files_table[p].game_path
+
                 --appdir=working_dir .. "/" .. files_table[p].name
                 if apptype==1 then
-                    appdir=working_dir .. "/" .. files_table[p].name
+
                 elseif apptype==2 then
-                    appdir=romFolder_PSP .. "/" .. files_table[p].name_rom_minus_ext .. ".iso"
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_psp.png"
                     pic_path = "-" -- Set to nothing incase bubble with image installed
                 elseif apptype==3 then
-                    appdir=romFolder_PSX .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_psx.png"
                     pic_path = "-" -- Set to nothing incase bubble with image installed
                 elseif apptype==5 then -- N64
-                    appdir=romFolder_N64 .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_n64.png"
                 elseif apptype==6 then -- SNES
-                    appdir=romFolder_SNES .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_snes.png"
                 elseif apptype==7 then -- NES
-                    appdir=romFolder_NES .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_nes.png"
                 elseif apptype==8 then -- GBA
-                    appdir=romFolder_GBA .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gba.png"
                 elseif apptype==9 then -- GBC
-                    appdir=romFolder_GBC .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"
                 elseif apptype==10 then -- GB
-                    appdir=romFolder_GB .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"
                 elseif apptype==11 then -- MD
-                    appdir=romFolder_MD .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"
                 elseif apptype==12 then -- SMS
-                    appdir=romFolder_SMS .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
                 elseif apptype==13 then -- GG
-                    appdir=romFolder_GG .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
+                elseif apptype==14 then -- MAME
+                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+                elseif apptype==15 then -- AMIGA
+                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
+                elseif apptype==16 then -- TG16
+                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
+                elseif apptype==17 then -- PCE
+                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
                 else
-                    appdir=working_dir .. "/" .. files_table[p].name
                 end
 
             -- ROM files    
             else
-                info = tostring(files_table[p].name_rom_minus_ext)
+                info = tostring(files_table[p].name_minus_ext)
                 icon_path = "-"
                 pic_path = "-"
                 app_title = tostring(files_table[p].name_rom_minus_region_ext)
-                app_titleid = tostring(files_table[p].name_rom_minus_ext)
+                app_titleid = tostring(files_table[p].name_minus_ext)
                 apptype = files_table[p].app_type
+                folder = files_table[p].directory
 
                 app_version = tostring(files_table[p].name_rom_region)
 
+                appdir = files_table[p].game_path
+
                 --appdir=working_dir .. "/" .. files_table[p].name
                 if apptype==1 then
-                    appdir=working_dir .. "/" .. files_table[p].name
                 elseif apptype==2 then
-                    appdir=romFolder_PSP .. "/" .. files_table[p].name_rom_minus_ext .. ".iso"
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_psp.png"
                     app_titleid = files_table[p].name
-
                 elseif apptype==3 then
-                    appdir=romFolder_PSX .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_psx.png"
                 elseif apptype==5 then -- N64
-                    appdir=romFolder_N64 .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_n64.png"
                 elseif apptype==6 then -- SNES
-                    appdir=romFolder_SNES .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_snes.png"
                 elseif apptype==7 then -- NES
-                    appdir=romFolder_NES .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_nes.png"
                 elseif apptype==8 then -- GBA
-                    appdir=romFolder_GBA .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gba.png"
                 elseif apptype==9 then -- GBC
-                    appdir=romFolder_GBC .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"
                 elseif apptype==10 then -- GB
-                    appdir=romFolder_GB .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"
                 elseif apptype==11 then -- MD
-                    appdir=romFolder_MD .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"
                 elseif apptype==12 then -- SMS
-                    appdir=romFolder_SMS .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
                 elseif apptype==13 then -- GG
-                    appdir=romFolder_GG .. "/" .. files_table[p].name
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
+                elseif apptype==14 then -- MAME
+                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+                elseif apptype==15 then -- AMIGA
+                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
+                elseif apptype==16 then -- TG16
+                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
+                elseif apptype==17 then -- PCE
+                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
                 else
-                    appdir=working_dir .. "/" .. files_table[p].name
                 end
 
             end
@@ -2083,6 +3491,15 @@ function OverrideCategory()
         file:write(lines)
         file:close()
         
+        if startupScan == 0 then
+            -- Startup scan is ON
+            -- Scan folders and games
+            files_table = listDirectory(System.currentDirectory())
+            -- Import Cached Database
+            files_table = import_cached_DB(System.currentDirectory())
+        else
+        end
+
         --Reload
         FreeIcons()
         FreeMemory()
@@ -2090,6 +3507,45 @@ function OverrideCategory()
         dofile("app0:index.lua")
     end
 end
+
+
+function OverrideCategory_adrenaline()
+    if System.doesFileExist(cur_dir .. "/overrides.dat") then
+        local inf = assert(io.open(cur_dir .. "/overrides.dat", "rw"), "Failed to open overrides.dat")
+        local lines = ""
+        while(true) do
+            local line = inf:read("*line")
+            if not line then break end
+            
+            if not string.find(line, app_titleid .. "", 1) then
+                lines = lines .. line .. "\n"
+            end
+        end
+        if tmpappcat_adrenaline>0 then
+            lines = lines .. app_titleid .. "=P" .. tmpappcat_adrenaline .. "\n"
+        end
+        inf:close()
+        file = io.open(cur_dir .. "/overrides.dat", "w")
+        file:write(lines)
+        file:close()
+
+        if startupScan == 0 then
+            -- Startup scan is ON
+            -- Scan folders and games
+            files_table = listDirectory(System.currentDirectory())
+            -- Import Cached Database
+            files_table = import_cached_DB(System.currentDirectory())
+        else
+        end
+
+        --Reload
+        FreeIcons()
+        FreeMemory()
+        Network.term()
+        dofile("app0:index.lua")
+    end
+end
+
 
 function DownloadCovers()
     local txt = "Downloading covers..."
@@ -2104,7 +3560,7 @@ function DownloadCovers()
     
     if Network.isWifiEnabled() then
 
-        -- getCovers - 0 All, 1 PSV, 2 PSP, 3 PS1, 4 N64, 5 SNES, 6 NES, 7 GBA, 8 GBC, 9 GB, 10 MD, 11 SMS, 12 GG
+        -- getCovers - 0 All, 1 PSV, 2 PSP, 3 PS1, 4 N64, 5 SNES, 6 NES, 7 GBA, 8 GBC, 9 GB, 10 MD, 11 SMS, 12 GG, 13 MAME, 14 AMIGA, 15 TG16, 16 PCE
         
         -- scan ALL
         if  getCovers==0 and #all_games_table > 0 then -- Check getcover number against sytem
@@ -2119,7 +3575,7 @@ function DownloadCovers()
                     while app_idx <= #all_games_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(all_games_table[app_idx].xonlineCoversAll .. all_games_table[app_idx].xname_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. all_games_table[app_idx].xname_rom_minus_ext .. ".png")
+                            Network.downloadFileAsync(all_games_table[app_idx].cover_path_online .. all_games_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. all_games_table[app_idx].name_minus_ext .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -2129,26 +3585,26 @@ function DownloadCovers()
                             running = false
                         end
                         if running == false then
-                            if System.doesFileExist("ux0:/data/RetroFlow/" .. all_games_table[app_idx].xname_rom_minus_ext .. ".png") then
-                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. all_games_table[app_idx].xname_rom_minus_ext .. ".png", FREAD)
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. all_games_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. all_games_table[app_idx].name_minus_ext .. ".png", FREAD)
                                 size = System.sizeFile(tmpfile)
                                 if size < 1024 then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. all_games_table[app_idx].xname_rom_minus_ext .. ".png")
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. all_games_table[app_idx].name_minus_ext .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(all_games_table[app_idx].xcovers_All .. all_games_table[app_idx].xname_rom_minus_ext .. ".png") then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. all_games_table[app_idx].xname_rom_minus_ext .. ".png")
+                                elseif System.doesFileExist(all_games_table[app_idx].cover_path_local .. all_games_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. all_games_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. all_games_table[app_idx].xname_rom_minus_ext .. ".png", all_games_table[app_idx].xcovers_All .. all_games_table[app_idx].xname_rom_minus_ext .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. all_games_table[app_idx].name_minus_ext .. ".png", all_games_table[app_idx].cover_path_local .. all_games_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
                                     
                                 end
                                 System.closeFile(tmpfile)
                                 
                                 percent = (app_idx / #all_games_table) * 100
-                                txt = "Downloading all covers...\nCover " .. all_games_table[app_idx].xname_rom_minus_ext .. "\nFound " .. cvrfound .. " of " .. #all_games_table
+                                txt = "Downloading all covers...\nCover " .. all_games_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #all_games_table
                                 
                                 Graphics.initBlend()
                                 Graphics.termBlend()
@@ -2396,7 +3852,7 @@ function DownloadCovers()
                     while app_idx <= #n64_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversN64 .. n64_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. n64_table[app_idx].name_rom_minus_ext .. ".png")
+                            Network.downloadFileAsync(onlineCoversN64 .. n64_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. n64_table[app_idx].name_minus_ext .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -2406,26 +3862,26 @@ function DownloadCovers()
                             running = false
                         end
                         if running == false then
-                            if System.doesFileExist("ux0:/data/RetroFlow/" .. n64_table[app_idx].name_rom_minus_ext .. ".png") then
-                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. n64_table[app_idx].name_rom_minus_ext .. ".png", FREAD)
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. n64_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. n64_table[app_idx].name_minus_ext .. ".png", FREAD)
                                 size = System.sizeFile(tmpfile)
                                 if size < 1024 then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. n64_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. n64_table[app_idx].name_minus_ext .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_N64 .. n64_table[app_idx].name_rom_minus_ext .. ".png") then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. n64_table[app_idx].name_rom_minus_ext .. ".png")
+                                elseif System.doesFileExist(covers_N64 .. n64_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. n64_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. n64_table[app_idx].name_rom_minus_ext .. ".png", covers_N64 .. n64_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. n64_table[app_idx].name_minus_ext .. ".png", covers_N64 .. n64_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
                                     
                                 end
                                 System.closeFile(tmpfile)
                                 
                                 percent = (app_idx / #n64_table) * 100
-                                txt = "Downloading N64 covers...\nCover " .. n64_table[app_idx].name_rom_minus_ext .. "\nFound " .. cvrfound .. " of " .. #n64_table
+                                txt = "Downloading N64 covers...\nCover " .. n64_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #n64_table
                                 
                                 Graphics.initBlend()
                                 Graphics.termBlend()
@@ -2469,7 +3925,7 @@ function DownloadCovers()
                     while app_idx <= #snes_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversSNES .. snes_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. snes_table[app_idx].name_rom_minus_ext .. ".png")
+                            Network.downloadFileAsync(onlineCoversSNES .. snes_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. snes_table[app_idx].name_minus_ext .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -2479,25 +3935,25 @@ function DownloadCovers()
                             running = false
                         end
                         if running == false then
-                            if System.doesFileExist("ux0:/data/RetroFlow/" .. snes_table[app_idx].name_rom_minus_ext .. ".png") then
-                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. snes_table[app_idx].name_rom_minus_ext .. ".png", FREAD)
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. snes_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. snes_table[app_idx].name_minus_ext .. ".png", FREAD)
                                 size = System.sizeFile(tmpfile)
                                 if size < 1024 then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. snes_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. snes_table[app_idx].name_minus_ext .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_SNES .. snes_table[app_idx].name_rom_minus_ext .. ".png") then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. snes_table[app_idx].name_rom_minus_ext .. ".png")
+                                elseif System.doesFileExist(covers_SNES .. snes_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. snes_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. snes_table[app_idx].name_rom_minus_ext .. ".png", covers_SNES .. snes_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. snes_table[app_idx].name_minus_ext .. ".png", covers_SNES .. snes_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
                                 
                                 percent = (app_idx / #snes_table) * 100
-                                txt = "Downloading SNES covers...\nCover " .. snes_table[app_idx].name_rom_minus_ext .. "\nFound " .. cvrfound .. " of " .. #snes_table
+                                txt = "Downloading SNES covers...\nCover " .. snes_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #snes_table
                                 
                                 Graphics.initBlend()
                                 Graphics.termBlend()
@@ -2541,7 +3997,7 @@ function DownloadCovers()
                     while app_idx <= #nes_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversNES .. nes_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. nes_table[app_idx].name_rom_minus_ext .. ".png")
+                            Network.downloadFileAsync(onlineCoversNES .. nes_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. nes_table[app_idx].name_minus_ext .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -2551,25 +4007,25 @@ function DownloadCovers()
                             running = false
                         end
                         if running == false then
-                            if System.doesFileExist("ux0:/data/RetroFlow/" .. nes_table[app_idx].name_rom_minus_ext .. ".png") then
-                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. nes_table[app_idx].name_rom_minus_ext .. ".png", FREAD)
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. nes_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. nes_table[app_idx].name_minus_ext .. ".png", FREAD)
                                 size = System.sizeFile(tmpfile)
                                 if size < 1024 then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. nes_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. nes_table[app_idx].name_minus_ext .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_NES .. nes_table[app_idx].name_rom_minus_ext .. ".png") then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. nes_table[app_idx].name_rom_minus_ext .. ".png")
+                                elseif System.doesFileExist(covers_NES .. nes_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. nes_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. nes_table[app_idx].name_rom_minus_ext .. ".png", covers_NES .. nes_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. nes_table[app_idx].name_minus_ext .. ".png", covers_NES .. nes_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
                                 
                                 percent = (app_idx / #nes_table) * 100
-                                txt = "Downloading NES covers...\nCover " .. nes_table[app_idx].name_rom_minus_ext .. "\nFound " .. cvrfound .. " of " .. #nes_table
+                                txt = "Downloading NES covers...\nCover " .. nes_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #nes_table
                                 
                                 Graphics.initBlend()
                                 Graphics.termBlend()
@@ -2614,7 +4070,7 @@ function DownloadCovers()
                     while app_idx <= #gba_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversGBA .. gba_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. gba_table[app_idx].name_rom_minus_ext .. ".png")
+                            Network.downloadFileAsync(onlineCoversGBA .. gba_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. gba_table[app_idx].name_minus_ext .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -2624,25 +4080,25 @@ function DownloadCovers()
                             running = false
                         end
                         if running == false then
-                            if System.doesFileExist("ux0:/data/RetroFlow/" .. gba_table[app_idx].name_rom_minus_ext .. ".png") then
-                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. gba_table[app_idx].name_rom_minus_ext .. ".png", FREAD)
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. gba_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. gba_table[app_idx].name_minus_ext .. ".png", FREAD)
                                 size = System.sizeFile(tmpfile)
                                 if size < 1024 then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. gba_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. gba_table[app_idx].name_minus_ext .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_GBA .. gba_table[app_idx].name_rom_minus_ext .. ".png") then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. gba_table[app_idx].name_rom_minus_ext .. ".png")
+                                elseif System.doesFileExist(covers_GBA .. gba_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. gba_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. gba_table[app_idx].name_rom_minus_ext .. ".png", covers_GBA .. gba_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. gba_table[app_idx].name_minus_ext .. ".png", covers_GBA .. gba_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
                                 
                                 percent = (app_idx / #gba_table) * 100
-                                txt = "Downloading GBA covers...\nCover " .. gba_table[app_idx].name_rom_minus_ext .. "\nFound " .. cvrfound .. " of " .. #gba_table
+                                txt = "Downloading GBA covers...\nCover " .. gba_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #gba_table
                                 
                                 Graphics.initBlend()
                                 Graphics.termBlend()
@@ -2687,7 +4143,7 @@ function DownloadCovers()
                     while app_idx <= #gbc_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversGBC .. gbc_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_rom_minus_ext .. ".png")
+                            Network.downloadFileAsync(onlineCoversGBC .. gbc_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_minus_ext .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -2697,25 +4153,25 @@ function DownloadCovers()
                             running = false
                         end
                         if running == false then
-                            if System.doesFileExist("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_rom_minus_ext .. ".png") then
-                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_rom_minus_ext .. ".png", FREAD)
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_minus_ext .. ".png", FREAD)
                                 size = System.sizeFile(tmpfile)
                                 if size < 1024 then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_minus_ext .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_GBC .. gbc_table[app_idx].name_rom_minus_ext .. ".png") then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_rom_minus_ext .. ".png")
+                                elseif System.doesFileExist(covers_GBC .. gbc_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_rom_minus_ext .. ".png", covers_GBC .. gbc_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name_minus_ext .. ".png", covers_GBC .. gbc_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
                                 
                                 percent = (app_idx / #gbc_table) * 100
-                                txt = "Downloading GBC covers...\nCover " .. gbc_table[app_idx].name_rom_minus_ext .. "\nFound " .. cvrfound .. " of " .. #gbc_table
+                                txt = "Downloading GBC covers...\nCover " .. gbc_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #gbc_table
                                 
                                 Graphics.initBlend()
                                 Graphics.termBlend()
@@ -2760,7 +4216,7 @@ function DownloadCovers()
                     while app_idx <= #gb_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversGB .. gb_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. gb_table[app_idx].name_rom_minus_ext .. ".png")
+                            Network.downloadFileAsync(onlineCoversGB .. gb_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. gb_table[app_idx].name_minus_ext .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -2770,25 +4226,25 @@ function DownloadCovers()
                             running = false
                         end
                         if running == false then
-                            if System.doesFileExist("ux0:/data/RetroFlow/" .. gb_table[app_idx].name_rom_minus_ext .. ".png") then
-                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. gb_table[app_idx].name_rom_minus_ext .. ".png", FREAD)
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. gb_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. gb_table[app_idx].name_minus_ext .. ".png", FREAD)
                                 size = System.sizeFile(tmpfile)
                                 if size < 1024 then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. gb_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. gb_table[app_idx].name_minus_ext .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_GB .. gb_table[app_idx].name_rom_minus_ext .. ".png") then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. gb_table[app_idx].name_rom_minus_ext .. ".png")
+                                elseif System.doesFileExist(covers_GB .. gb_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. gb_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. gb_table[app_idx].name_rom_minus_ext .. ".png", covers_GB .. gb_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. gb_table[app_idx].name_minus_ext .. ".png", covers_GB .. gb_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
                                 
                                 percent = (app_idx / #gb_table) * 100
-                                txt = "Downloading GB covers...\nCover " .. gb_table[app_idx].name_rom_minus_ext .. "\nFound " .. cvrfound .. " of " .. #gb_table
+                                txt = "Downloading GB covers...\nCover " .. gb_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #gb_table
                                 
                                 Graphics.initBlend()
                                 Graphics.termBlend()
@@ -2832,7 +4288,7 @@ function DownloadCovers()
                     while app_idx <= #md_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversMD .. md_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. md_table[app_idx].name_rom_minus_ext .. ".png")
+                            Network.downloadFileAsync(onlineCoversMD .. md_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. md_table[app_idx].name_minus_ext .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -2842,25 +4298,25 @@ function DownloadCovers()
                             running = false
                         end
                         if running == false then
-                            if System.doesFileExist("ux0:/data/RetroFlow/" .. md_table[app_idx].name_rom_minus_ext .. ".png") then
-                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. md_table[app_idx].name_rom_minus_ext .. ".png", FREAD)
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. md_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. md_table[app_idx].name_minus_ext .. ".png", FREAD)
                                 size = System.sizeFile(tmpfile)
                                 if size < 1024 then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. md_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. md_table[app_idx].name_minus_ext .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_MD .. md_table[app_idx].name_rom_minus_ext .. ".png") then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. md_table[app_idx].name_rom_minus_ext .. ".png")
+                                elseif System.doesFileExist(covers_MD .. md_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. md_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. md_table[app_idx].name_rom_minus_ext .. ".png", covers_MD .. md_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. md_table[app_idx].name_minus_ext .. ".png", covers_MD .. md_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
                                 
                                 percent = (app_idx / #md_table) * 100
-                                txt = "Downloading MD covers...\nCover " .. md_table[app_idx].name_rom_minus_ext .. "\nFound " .. cvrfound .. " of " .. #md_table
+                                txt = "Downloading MD covers...\nCover " .. md_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #md_table
                                 
                                 Graphics.initBlend()
                                 Graphics.termBlend()
@@ -2904,7 +4360,7 @@ function DownloadCovers()
                     while app_idx <= #sms_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversSMS .. sms_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. sms_table[app_idx].name_rom_minus_ext .. ".png")
+                            Network.downloadFileAsync(onlineCoversSMS .. sms_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. sms_table[app_idx].name_minus_ext .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -2914,25 +4370,25 @@ function DownloadCovers()
                             running = false
                         end
                         if running == false then
-                            if System.doesFileExist("ux0:/data/RetroFlow/" .. sms_table[app_idx].name_rom_minus_ext .. ".png") then
-                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. sms_table[app_idx].name_rom_minus_ext .. ".png", FREAD)
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. sms_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. sms_table[app_idx].name_minus_ext .. ".png", FREAD)
                                 size = System.sizeFile(tmpfile)
                                 if size < 1024 then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. sms_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. sms_table[app_idx].name_minus_ext .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_SMS .. sms_table[app_idx].name_rom_minus_ext .. ".png") then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. sms_table[app_idx].name_rom_minus_ext .. ".png")
+                                elseif System.doesFileExist(covers_SMS .. sms_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. sms_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. sms_table[app_idx].name_rom_minus_ext .. ".png", covers_SMS .. sms_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. sms_table[app_idx].name_minus_ext .. ".png", covers_SMS .. sms_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
                                 
                                 percent = (app_idx / #sms_table) * 100
-                                txt = "Downloading SMS covers...\nCover " .. sms_table[app_idx].name_rom_minus_ext .. "\nFound " .. cvrfound .. " of " .. #sms_table
+                                txt = "Downloading SMS covers...\nCover " .. sms_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #sms_table
                                 
                                 Graphics.initBlend()
                                 Graphics.termBlend()
@@ -2976,7 +4432,7 @@ function DownloadCovers()
                     while app_idx <= #gg_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversGG .. gg_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. gg_table[app_idx].name_rom_minus_ext .. ".png")
+                            Network.downloadFileAsync(onlineCoversGG .. gg_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. gg_table[app_idx].name_minus_ext .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -2986,25 +4442,25 @@ function DownloadCovers()
                             running = false
                         end
                         if running == false then
-                            if System.doesFileExist("ux0:/data/RetroFlow/" .. gg_table[app_idx].name_rom_minus_ext .. ".png") then
-                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. gg_table[app_idx].name_rom_minus_ext .. ".png", FREAD)
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. gg_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. gg_table[app_idx].name_minus_ext .. ".png", FREAD)
                                 size = System.sizeFile(tmpfile)
                                 if size < 1024 then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. gg_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. gg_table[app_idx].name_minus_ext .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_GG .. gg_table[app_idx].name_rom_minus_ext .. ".png") then
-                                    System.deleteFile("ux0:/data/RetroFlow/" .. gg_table[app_idx].name_rom_minus_ext .. ".png")
+                                elseif System.doesFileExist(covers_GG .. gg_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. gg_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. gg_table[app_idx].name_rom_minus_ext .. ".png", covers_GG .. gg_table[app_idx].name_rom_minus_ext .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. gg_table[app_idx].name_minus_ext .. ".png", covers_GG .. gg_table[app_idx].name_minus_ext .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
                                 
                                 percent = (app_idx / #gg_table) * 100
-                                txt = "Downloading GG covers...\nCover " .. gg_table[app_idx].name_rom_minus_ext .. "\nFound " .. cvrfound .. " of " .. #gg_table
+                                txt = "Downloading GG covers...\nCover " .. gg_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #gg_table
                                 
                                 Graphics.initBlend()
                                 Graphics.termBlend()
@@ -3036,6 +4492,290 @@ function DownloadCovers()
         end
         -- END GG
 
+        --START MAME
+        -- scan MAME
+        if  getCovers==13 and #mame_table > 0 then -- Check getcover number against sytem
+            if status ~= RUNNING then
+                if scanComplete == false then
+                    System.setMessage("Downloading covers...", true)
+                    System.setMessageProgMsg(txt)
+                    
+                    while app_idx <= #mame_table do
+
+                        if System.getAsyncState() ~= 0 then
+                            Network.downloadFileAsync(onlineCoversMAME .. mame_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. mame_table[app_idx].name_minus_ext .. ".png")
+                            running = true
+                        end
+                        if System.getAsyncState() == 1 then
+                            Graphics.initBlend()
+                            Graphics.termBlend()
+                            Screen.flip()
+                            running = false
+                        end
+                        if running == false then
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. mame_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. mame_table[app_idx].name_minus_ext .. ".png", FREAD)
+                                size = System.sizeFile(tmpfile)
+                                if size < 1024 then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. mame_table[app_idx].name_minus_ext .. ".png")
+
+                                -- delete if already exists
+                                elseif System.doesFileExist(covers_MAME .. mame_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. mame_table[app_idx].name_minus_ext .. ".png")
+                                    cvrfound = cvrfound + 1
+
+                                else
+                                    System.rename("ux0:/data/RetroFlow/" .. mame_table[app_idx].name_minus_ext .. ".png", covers_MAME .. mame_table[app_idx].name_minus_ext .. ".png")
+                                    cvrfound = cvrfound + 1
+                                end
+                                System.closeFile(tmpfile)
+                                
+                                percent = (app_idx / #mame_table) * 100
+                                txt = "Downloading MAME covers...\nCover " .. mame_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #mame_table
+                                
+                                Graphics.initBlend()
+                                Graphics.termBlend()
+                                Screen.flip()
+                                app_idx = app_idx + 1
+                            end
+                        end
+                        
+                        if txt ~= old_txt then
+                            System.setMessageProgMsg(txt)
+                            old_txt = txt
+                        end
+                        if percent ~= old_percent then
+                            System.setMessageProgress(percent)
+                            old_percent = percent
+                        end
+                    end
+                    if app_idx >= #mame_table then
+                        System.closeMessage()
+                        scanComplete = true
+                    end
+                else
+                    FreeIcons()
+                    FreeMemory()
+                    Network.term()
+                    dofile("app0:index.lua")
+                end
+            end
+        end
+        -- END MAME
+
+        --START AMIGA
+        -- scan AMIGA
+        if  getCovers==14 and #amiga_table > 0 then -- Check getcover number against sytem
+            if status ~= RUNNING then
+                if scanComplete == false then
+                    System.setMessage("Downloading covers...", true)
+                    System.setMessageProgMsg(txt)
+                    
+                    while app_idx <= #amiga_table do
+
+                        if System.getAsyncState() ~= 0 then
+                            Network.downloadFileAsync(onlineCoversAMIGA .. amiga_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. amiga_table[app_idx].name_minus_ext .. ".png")
+                            running = true
+                        end
+                        if System.getAsyncState() == 1 then
+                            Graphics.initBlend()
+                            Graphics.termBlend()
+                            Screen.flip()
+                            running = false
+                        end
+                        if running == false then
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. amiga_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. amiga_table[app_idx].name_minus_ext .. ".png", FREAD)
+                                size = System.sizeFile(tmpfile)
+                                if size < 1024 then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. amiga_table[app_idx].name_minus_ext .. ".png")
+
+                                -- delete if already exists
+                                elseif System.doesFileExist(covers_AMIGA .. amiga_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. amiga_table[app_idx].name_minus_ext .. ".png")
+                                    cvrfound = cvrfound + 1
+
+                                else
+                                    System.rename("ux0:/data/RetroFlow/" .. amiga_table[app_idx].name_minus_ext .. ".png", covers_AMIGA .. amiga_table[app_idx].name_minus_ext .. ".png")
+                                    cvrfound = cvrfound + 1
+                                end
+                                System.closeFile(tmpfile)
+                                
+                                percent = (app_idx / #amiga_table) * 100
+                                txt = "Downloading AMIGA covers...\nCover " .. amiga_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #amiga_table
+                                
+                                Graphics.initBlend()
+                                Graphics.termBlend()
+                                Screen.flip()
+                                app_idx = app_idx + 1
+                            end
+                        end
+                        
+                        if txt ~= old_txt then
+                            System.setMessageProgMsg(txt)
+                            old_txt = txt
+                        end
+                        if percent ~= old_percent then
+                            System.setMessageProgress(percent)
+                            old_percent = percent
+                        end
+                    end
+                    if app_idx >= #amiga_table then
+                        System.closeMessage()
+                        scanComplete = true
+                    end
+                else
+                    FreeIcons()
+                    FreeMemory()
+                    Network.term()
+                    dofile("app0:index.lua")
+                end
+            end
+        end
+        -- END AMIGA
+
+        --START TG16
+        -- scan TG16
+        if  getCovers==15 and #tg16_table > 0 then -- Check getcover number against sytem
+            if status ~= RUNNING then
+                if scanComplete == false then
+                    System.setMessage("Downloading covers...", true)
+                    System.setMessageProgMsg(txt)
+                    
+                    while app_idx <= #tg16_table do
+
+                        if System.getAsyncState() ~= 0 then
+                            Network.downloadFileAsync(onlineCoversTG16 .. tg16_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. tg16_table[app_idx].name_minus_ext .. ".png")
+                            running = true
+                        end
+                        if System.getAsyncState() == 1 then
+                            Graphics.initBlend()
+                            Graphics.termBlend()
+                            Screen.flip()
+                            running = false
+                        end
+                        if running == false then
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. tg16_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. tg16_table[app_idx].name_minus_ext .. ".png", FREAD)
+                                size = System.sizeFile(tmpfile)
+                                if size < 1024 then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. tg16_table[app_idx].name_minus_ext .. ".png")
+
+                                -- delete if already exists
+                                elseif System.doesFileExist(covers_TG16 .. tg16_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. tg16_table[app_idx].name_minus_ext .. ".png")
+                                    cvrfound = cvrfound + 1
+
+                                else
+                                    System.rename("ux0:/data/RetroFlow/" .. tg16_table[app_idx].name_minus_ext .. ".png", covers_TG16 .. tg16_table[app_idx].name_minus_ext .. ".png")
+                                    cvrfound = cvrfound + 1
+                                end
+                                System.closeFile(tmpfile)
+                                
+                                percent = (app_idx / #tg16_table) * 100
+                                txt = "Downloading TG16 covers...\nCover " .. tg16_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #tg16_table
+                                
+                                Graphics.initBlend()
+                                Graphics.termBlend()
+                                Screen.flip()
+                                app_idx = app_idx + 1
+                            end
+                        end
+                        
+                        if txt ~= old_txt then
+                            System.setMessageProgMsg(txt)
+                            old_txt = txt
+                        end
+                        if percent ~= old_percent then
+                            System.setMessageProgress(percent)
+                            old_percent = percent
+                        end
+                    end
+                    if app_idx >= #tg16_table then
+                        System.closeMessage()
+                        scanComplete = true
+                    end
+                else
+                    FreeIcons()
+                    FreeMemory()
+                    Network.term()
+                    dofile("app0:index.lua")
+                end
+            end
+        end
+        -- END TG16
+
+        --START PCE
+        -- scan PCE
+        if  getCovers==16 and #pce_table > 0 then -- Check getcover number against sytem
+            if status ~= RUNNING then
+                if scanComplete == false then
+                    System.setMessage("Downloading covers...", true)
+                    System.setMessageProgMsg(txt)
+                    
+                    while app_idx <= #pce_table do
+
+                        if System.getAsyncState() ~= 0 then
+                            Network.downloadFileAsync(onlineCoversPCE .. pce_table[app_idx].name_rom_url_encoded .. ".png", "ux0:/data/RetroFlow/" .. pce_table[app_idx].name_minus_ext .. ".png")
+                            running = true
+                        end
+                        if System.getAsyncState() == 1 then
+                            Graphics.initBlend()
+                            Graphics.termBlend()
+                            Screen.flip()
+                            running = false
+                        end
+                        if running == false then
+                            if System.doesFileExist("ux0:/data/RetroFlow/" .. pce_table[app_idx].name_minus_ext .. ".png") then
+                                tmpfile = System.openFile("ux0:/data/RetroFlow/" .. pce_table[app_idx].name_minus_ext .. ".png", FREAD)
+                                size = System.sizeFile(tmpfile)
+                                if size < 1024 then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. pce_table[app_idx].name_minus_ext .. ".png")
+
+                                -- delete if already exists
+                                elseif System.doesFileExist(covers_PCE .. pce_table[app_idx].name_minus_ext .. ".png") then
+                                    System.deleteFile("ux0:/data/RetroFlow/" .. pce_table[app_idx].name_minus_ext .. ".png")
+                                    cvrfound = cvrfound + 1
+
+                                else
+                                    System.rename("ux0:/data/RetroFlow/" .. pce_table[app_idx].name_minus_ext .. ".png", covers_PCE .. pce_table[app_idx].name_minus_ext .. ".png")
+                                    cvrfound = cvrfound + 1
+                                end
+                                System.closeFile(tmpfile)
+                                
+                                percent = (app_idx / #pce_table) * 100
+                                txt = "Downloading PCE covers...\nCover " .. pce_table[app_idx].name_minus_ext .. "\nFound " .. cvrfound .. " of " .. #pce_table
+                                
+                                Graphics.initBlend()
+                                Graphics.termBlend()
+                                Screen.flip()
+                                app_idx = app_idx + 1
+                            end
+                        end
+                        
+                        if txt ~= old_txt then
+                            System.setMessageProgMsg(txt)
+                            old_txt = txt
+                        end
+                        if percent ~= old_percent then
+                            System.setMessageProgress(percent)
+                            old_percent = percent
+                        end
+                    end
+                    if app_idx >= #pce_table then
+                        System.closeMessage()
+                        scanComplete = true
+                    end
+                else
+                    FreeIcons()
+                    FreeMemory()
+                    Network.term()
+                    dofile("app0:index.lua")
+                end
+            end
+        end
+        -- END PCE
+
     else
         if status ~= RUNNING then
             System.setMessage("Internet Connection Required", false, BUTTON_OK)
@@ -3043,6 +4783,14 @@ function DownloadCovers()
         
     end
     gettingCovers = false
+
+    -- RESCAN ALL AND UPDATE CACHE
+
+    -- Scan folders and games
+    files_table = listDirectory(System.currentDirectory())
+    -- Import Cached Database
+    files_table = import_cached_DB(System.currentDirectory())
+
 end
 
 local function DrawCover(x, y, text, icon, sel, apptype)
@@ -3155,8 +4903,8 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverPSXNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxPSXNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==5 then
-            -- N64 Boxes
+        elseif apptype==5 or apptype==6 then
+            -- 5 N64 Boxes -- 6 SNES Boxes
             if setReflections == 1 then
                 Render.useTexture(modCoverN64, icon)
                 Render.drawModel(modCoverN64, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
@@ -3166,19 +4914,8 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverN64Noref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxN64Noref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==6 then
-            -- SNES Boxes
-            if setReflections == 1 then
-                Render.useTexture(modCoverSNES, icon)
-                Render.drawModel(modCoverSNES, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-                Render.drawModel(modBoxSNES, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-            else
-                Render.useTexture(modCoverSNESNoref, icon)
-                Render.drawModel(modCoverSNESNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-                Render.drawModel(modBoxSNESNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-            end
-        elseif apptype==7 then
-            -- NES Boxes
+        elseif apptype==7 or apptype==14 or apptype==15 or apptype==16 or apptype==17 then
+            -- 7 NES Boxes -- 14 MAME Boxes -- 15 AMIGA Boxes -- 16 TG16 Boxes -- 17 PCE Boxes
             if setReflections == 1 then
                 Render.useTexture(modCoverNES, icon)
                 Render.drawModel(modCoverNES, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
@@ -3188,8 +4925,8 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverNESNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxNESNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==8 then
-            -- GBA Boxes
+        elseif apptype==8 or apptype==9 or apptype==10 then
+            -- 8 GBA Boxes -- 9 GBC Boxes -- 10 GB Boxes
             if setReflections == 1 then
                 Render.useTexture(modCoverGB, icon)
                 Render.drawModel(modCoverGB, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
@@ -3199,52 +4936,8 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverGBNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxGBNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==9 then
-            -- GBC Boxes
-            if setReflections == 1 then
-                Render.useTexture(modCoverGB, icon)
-                Render.drawModel(modCoverGB, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-                Render.drawModel(modBoxGB, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-            else
-                Render.useTexture(modCoverGBNoref, icon)
-                Render.drawModel(modCoverGBNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-                Render.drawModel(modBoxGBNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-            end
-        elseif apptype==10 then
-            -- GB Boxes
-            if setReflections == 1 then
-                Render.useTexture(modCoverGB, icon)
-                Render.drawModel(modCoverGB, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-                Render.drawModel(modBoxGB, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-            else
-                Render.useTexture(modCoverGBNoref, icon)
-                Render.drawModel(modCoverGBNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-                Render.drawModel(modBoxGBNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-            end
-        elseif apptype==11 then
-            -- MD Boxes
-            if setReflections == 1 then
-                Render.useTexture(modCoverMD, icon)
-                Render.drawModel(modCoverMD, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-                Render.drawModel(modBoxMD, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-            else
-                Render.useTexture(modCoverMDNoref, icon)
-                Render.drawModel(modCoverMDNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-                Render.drawModel(modBoxMDNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-            end
-        elseif apptype==12 then
-            -- SMS Boxes
-            if setReflections == 1 then
-                Render.useTexture(modCoverMD, icon)
-                Render.drawModel(modCoverMD, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-                Render.drawModel(modBoxMD, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-            else
-                Render.useTexture(modCoverMDNoref, icon)
-                Render.drawModel(modCoverMDNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-                Render.drawModel(modBoxMDNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
-            end
-        elseif apptype==13 then
-            -- GG Boxes
+        elseif apptype==11 or apptype==12 or apptype==13 then
+            -- 11 MD Boxes -- 12 SMS Boxes -- 13 GG Boxes
             if setReflections == 1 then
                 Render.useTexture(modCoverMD, icon)
                 Render.drawModel(modCoverMD, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
@@ -3385,6 +5078,42 @@ function FreeIcons()
             v.ricon = nil
         end
     end
+    -- MAME
+    for k, v in pairs(mame_table) do
+        FileLoad[v] = nil
+        Threads.remove(v)
+        if v.ricon then
+            Graphics.freeImage(v.ricon)
+            v.ricon = nil
+        end
+    end
+    -- AMIGA
+    for k, v in pairs(amiga_table) do
+        FileLoad[v] = nil
+        Threads.remove(v)
+        if v.ricon then
+            Graphics.freeImage(v.ricon)
+            v.ricon = nil
+        end
+    end
+    -- TG16
+    for k, v in pairs(tg16_table) do
+        FileLoad[v] = nil
+        Threads.remove(v)
+        if v.ricon then
+            Graphics.freeImage(v.ricon)
+            v.ricon = nil
+        end
+    end
+    -- PCE
+    for k, v in pairs(pce_table) do
+        FileLoad[v] = nil
+        Threads.remove(v)
+        if v.ricon then
+            Graphics.freeImage(v.ricon)
+            v.ricon = nil
+        end
+    end
     -- Homebrew
     for k, v in pairs(homebrews_table) do
         FileLoad[v] = nil
@@ -3451,6 +5180,22 @@ function DownloadSingleCover()
         elseif apptype == 13 then
             coverspath = covers_GG
             onlineCoverspath = onlineCoversGG
+        --MAME
+        elseif apptype == 14 then
+            coverspath = covers_MAME
+            onlineCoverspath = onlineCoversMAME
+        --AMIGA
+        elseif apptype == 15 then
+            coverspath = covers_AMIGA
+            onlineCoverspath = onlineCoversAMIGA
+        --TG16
+        elseif apptype == 16 then
+            coverspath = covers_TG16
+            onlineCoverspath = onlineCoversTG16
+        --PCE
+        elseif apptype == 17 then
+            coverspath = covers_PCE
+            onlineCoverspath = onlineCoversPCE
         else
             coverspath = covers_psv
             onlineCoverspath = onlineCovers
@@ -3478,6 +5223,7 @@ function DownloadSingleCover()
                 if FileLoad[games_table[app_idx]] == true then
                     FileLoad[games_table[app_idx]] = nil
                     Threads.remove(games_table[app_idx])
+                    update_cached_table_games()
                 end
                 if games_table[app_idx].ricon then
                     games_table[app_idx].ricon = nil
@@ -3491,6 +5237,7 @@ function DownloadSingleCover()
                 if FileLoad[psp_table[app_idx]] == true then
                     FileLoad[psp_table[app_idx]] = nil
                     Threads.remove(psp_table[app_idx])
+                    update_cached_table_psp()
                 end
                 if psp_table[app_idx].ricon then
                     psp_table[app_idx].ricon = nil
@@ -3501,6 +5248,7 @@ function DownloadSingleCover()
                 if FileLoad[psx_table[app_idx]] == true then
                     FileLoad[psx_table[app_idx]] = nil
                     Threads.remove(psx_table[app_idx])
+                    update_cached_table_psx()
                 end
                 if psx_table[app_idx].ricon then
                     psx_table[app_idx].ricon = nil
@@ -3512,6 +5260,7 @@ function DownloadSingleCover()
                 if FileLoad[n64_table[app_idx]] == true then
                     FileLoad[n64_table[app_idx]] = nil
                     Threads.remove(n64_table[app_idx])
+                    update_cached_table_n64()
                 end
                 if n64_table[app_idx].ricon then
                     n64_table[app_idx].ricon = nil
@@ -3523,6 +5272,7 @@ function DownloadSingleCover()
                 if FileLoad[snes_table[app_idx]] == true then
                     FileLoad[snes_table[app_idx]] = nil
                     Threads.remove(snes_table[app_idx])
+                    update_cached_table_snes()
                 end
                 if snes_table[app_idx].ricon then
                     snes_table[app_idx].ricon = nil
@@ -3534,6 +5284,7 @@ function DownloadSingleCover()
                 if FileLoad[nes_table[app_idx]] == true then
                     FileLoad[nes_table[app_idx]] = nil
                     Threads.remove(nes_table[app_idx])
+                    update_cached_table_nes()
                 end
                 if nes_table[app_idx].ricon then
                     nes_table[app_idx].ricon = nil
@@ -3545,6 +5296,7 @@ function DownloadSingleCover()
                 if FileLoad[gba_table[app_idx]] == true then
                     FileLoad[gba_table[app_idx]] = nil
                     Threads.remove(gba_table[app_idx])
+                    update_cached_table_gba()
                 end
                 if gba_table[app_idx].ricon then
                     gba_table[app_idx].ricon = nil
@@ -3556,6 +5308,7 @@ function DownloadSingleCover()
                 if FileLoad[gbc_table[app_idx]] == true then
                     FileLoad[gbc_table[app_idx]] = nil
                     Threads.remove(gbc_table[app_idx])
+                    update_cached_table_gbc()
                 end
                 if gbc_table[app_idx].ricon then
                     gbc_table[app_idx].ricon = nil
@@ -3567,6 +5320,7 @@ function DownloadSingleCover()
                 if FileLoad[gb_table[app_idx]] == true then
                     FileLoad[gb_table[app_idx]] = nil
                     Threads.remove(gb_table[app_idx])
+                    update_cached_table_gb()
                 end
                 if gb_table[app_idx].ricon then
                     gb_table[app_idx].ricon = nil
@@ -3578,6 +5332,7 @@ function DownloadSingleCover()
                 if FileLoad[md_table[app_idx]] == true then
                     FileLoad[md_table[app_idx]] = nil
                     Threads.remove(md_table[app_idx])
+                    update_cached_table_md()
                 end
                 if md_table[app_idx].ricon then
                     md_table[app_idx].ricon = nil
@@ -3589,6 +5344,7 @@ function DownloadSingleCover()
                 if FileLoad[sms_table[app_idx]] == true then
                     FileLoad[sms_table[app_idx]] = nil
                     Threads.remove(sms_table[app_idx])
+                    update_cached_table_sms()
                 end
                 if sms_table[app_idx].ricon then
                     sms_table[app_idx].ricon = nil
@@ -3600,9 +5356,58 @@ function DownloadSingleCover()
                 if FileLoad[gg_table[app_idx]] == true then
                     FileLoad[gg_table[app_idx]] = nil
                     Threads.remove(gg_table[app_idx])
+                    update_cached_table_gg()
                 end
                 if gg_table[app_idx].ricon then
                     gg_table[app_idx].ricon = nil
+                end
+            -- MAME
+            elseif showCat == 14 then
+                --"mame_table"
+                mame_table[app_idx].icon_path=coverspath .. app_titleid .. ".png"
+                if FileLoad[mame_table[app_idx]] == true then
+                    FileLoad[mame_table[app_idx]] = nil
+                    Threads.remove(mame_table[app_idx])
+                    update_cached_table_mame()
+                end
+                if mame_table[app_idx].ricon then
+                    mame_table[app_idx].ricon = nil
+                end
+            -- AMIGA
+            elseif showCat == 15 then
+                --"amiga_table"
+                amiga_table[app_idx].icon_path=coverspath .. app_titleid .. ".png"
+                if FileLoad[amiga_table[app_idx]] == true then
+                    FileLoad[amiga_table[app_idx]] = nil
+                    Threads.remove(amiga_table[app_idx])
+                    update_cached_table_amiga()
+                end
+                if amiga_table[app_idx].ricon then
+                    amiga_table[app_idx].ricon = nil
+                end
+            -- TG16
+            elseif showCat == 16 then
+                --"tg16_table"
+                tg16_table[app_idx].icon_path=coverspath .. app_titleid .. ".png"
+                if FileLoad[tg16_table[app_idx]] == true then
+                    FileLoad[tg16_table[app_idx]] = nil
+                    Threads.remove(tg16_table[app_idx])
+                    update_cached_table_tg16()
+                end
+                if tg16_table[app_idx].ricon then
+                    tg16_table[app_idx].ricon = nil
+                end
+            -- PCE
+            elseif showCat == 17 then
+                --"pce_table"
+                pce_table[app_idx].icon_path=coverspath .. app_titleid .. ".png"
+                if FileLoad[pce_table[app_idx]] == true then
+                    FileLoad[pce_table[app_idx]] = nil
+                    Threads.remove(pce_table[app_idx])
+                    update_cached_table_pce()
+                end
+                if pce_table[app_idx].ricon then
+                    pce_table[app_idx].ricon = nil
                 end
 
             else
@@ -3611,6 +5416,7 @@ function DownloadSingleCover()
                 if FileLoad[files_table[app_idx]] == true then
                     FileLoad[files_table[app_idx]] = nil
                     Threads.remove(files_table[app_idx])
+                    update_cached_table_files()
                 end
                 if files_table[app_idx].ricon then
                     files_table[app_idx].ricon = nil
@@ -3724,6 +5530,14 @@ while true do
             Font.print(fnt22, 32, 34, lang_lines[40], white)--SMS
         elseif showCat == 13 then
             Font.print(fnt22, 32, 34, lang_lines[41], white)--GG
+        elseif showCat == 14 then
+            Font.print(fnt22, 32, 34, lang_lines[42], white)--MAME
+        elseif showCat == 15 then
+            Font.print(fnt22, 32, 34, lang_lines[43], white)--AMIGA
+        elseif showCat == 16 then
+            Font.print(fnt22, 32, 34, lang_lines[44], white)--TG16
+        elseif showCat == 17 then
+            Font.print(fnt22, 32, 34, lang_lines[45], white)--PCE
         else
             Font.print(fnt22, 32, 34, lang_lines[5], white)--ALL
         end
@@ -3888,6 +5702,7 @@ while true do
 
         --N64
         elseif showCat == 5 then
+
             for l, file in pairs(n64_table) do
                 if (l >= master_index) then
                     base_x = base_x + space
@@ -4210,6 +6025,150 @@ while true do
                 PrintCentered(fnt20, 480, 462, p .. " of " .. #gg_table, white, 20)-- Draw total items
             end
 
+        --MAME
+        elseif showCat == 14 then
+            for l, file in pairs(mame_table) do
+                if (l >= master_index) then
+                    base_x = base_x + space
+                end
+                if l > p-8 and base_x < 10 then
+                    if FileLoad[file] == nil then
+                        FileLoad[file] = true
+                        Threads.addTask(file, {
+                            Type = "ImageLoad",
+                            Path = file.icon_path,
+                            Table = file,
+                            Index = "ricon"
+                        })
+                    end
+                    if file.ricon ~= nil then
+                        DrawCover((targetX + l * space) - (#mame_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
+                    else
+                        DrawCover((targetX + l * space) - (#mame_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
+                    end
+                else
+                    if FileLoad[file] == true then
+                        FileLoad[file] = nil
+                        Threads.remove(file)
+                    end
+                    if file.ricon then
+                        Graphics.freeImage(file.ricon)
+                        file.ricon = nil
+                    end
+                end
+            end
+            if showView ~= 2 then
+                PrintCentered(fnt20, 480, 462, p .. " of " .. #mame_table, white, 20)-- Draw total items
+            end
+
+        --AMIGA
+        elseif showCat == 15 then
+            for l, file in pairs(amiga_table) do
+                if (l >= master_index) then
+                    base_x = base_x + space
+                end
+                if l > p-8 and base_x < 10 then
+                    if FileLoad[file] == nil then
+                        FileLoad[file] = true
+                        Threads.addTask(file, {
+                            Type = "ImageLoad",
+                            Path = file.icon_path,
+                            Table = file,
+                            Index = "ricon"
+                        })
+                    end
+                    if file.ricon ~= nil then
+                        DrawCover((targetX + l * space) - (#amiga_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
+                    else
+                        DrawCover((targetX + l * space) - (#amiga_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
+                    end
+                else
+                    if FileLoad[file] == true then
+                        FileLoad[file] = nil
+                        Threads.remove(file)
+                    end
+                    if file.ricon then
+                        Graphics.freeImage(file.ricon)
+                        file.ricon = nil
+                    end
+                end
+            end
+            if showView ~= 2 then
+                PrintCentered(fnt20, 480, 462, p .. " of " .. #amiga_table, white, 20)-- Draw total items
+            end
+
+        --TG16
+        elseif showCat == 16 then
+            for l, file in pairs(tg16_table) do
+                if (l >= master_index) then
+                    base_x = base_x + space
+                end
+                if l > p-8 and base_x < 10 then
+                    if FileLoad[file] == nil then
+                        FileLoad[file] = true
+                        Threads.addTask(file, {
+                            Type = "ImageLoad",
+                            Path = file.icon_path,
+                            Table = file,
+                            Index = "ricon"
+                        })
+                    end
+                    if file.ricon ~= nil then
+                        DrawCover((targetX + l * space) - (#tg16_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
+                    else
+                        DrawCover((targetX + l * space) - (#tg16_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
+                    end
+                else
+                    if FileLoad[file] == true then
+                        FileLoad[file] = nil
+                        Threads.remove(file)
+                    end
+                    if file.ricon then
+                        Graphics.freeImage(file.ricon)
+                        file.ricon = nil
+                    end
+                end
+            end
+            if showView ~= 2 then
+                PrintCentered(fnt20, 480, 462, p .. " of " .. #tg16_table, white, 20)-- Draw total items
+            end
+
+        --PCE
+        elseif showCat == 17 then
+            for l, file in pairs(pce_table) do
+                if (l >= master_index) then
+                    base_x = base_x + space
+                end
+                if l > p-8 and base_x < 10 then
+                    if FileLoad[file] == nil then
+                        FileLoad[file] = true
+                        Threads.addTask(file, {
+                            Type = "ImageLoad",
+                            Path = file.icon_path,
+                            Table = file,
+                            Index = "ricon"
+                        })
+                    end
+                    if file.ricon ~= nil then
+                        DrawCover((targetX + l * space) - (#pce_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
+                    else
+                        DrawCover((targetX + l * space) - (#pce_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
+                    end
+                else
+                    if FileLoad[file] == true then
+                        FileLoad[file] = nil
+                        Threads.remove(file)
+                    end
+                    if file.ricon then
+                        Graphics.freeImage(file.ricon)
+                        file.ricon = nil
+                    end
+                end
+            end
+            if showView ~= 2 then
+                PrintCentered(fnt20, 480, 462, p .. " of " .. #pce_table, white, 20)-- Draw total items
+            end
+
 
         else
 
@@ -4308,42 +6267,15 @@ while true do
                 Render.useTexture(modBackground, imgCustomBack)
             end
             
-            -- 0 Homebrew, 1 vita, 2 psp, 3 psx, 5 n64
-            if apptype == 1 then
+            
+            if folder == true then
                 app_size = getAppSize(appdir)/1024/1024
-            elseif apptype == 2 then
-                getRomSize()
-            elseif apptype == 3 then
-                app_size = getAppSize(appdir)/1024/1024
-            elseif apptype == 4 then
-                app_size = getAppSize(appdir)/1024/1024
-            elseif apptype == 5 then
-                getRomSize()
-            elseif apptype == 6 then
-                getRomSize()
-            elseif apptype == 7 then
-                getRomSize()
-            elseif apptype == 8 then
-                getRomSize()
-            elseif apptype == 9 then
-                getRomSize()
-            elseif apptype == 10 then
-                getRomSize()
-            elseif apptype == 11 then
-                getRomSize()
-            elseif apptype == 12 then
-                getRomSize()
-            elseif apptype == 13 then
-                getRomSize()
+                game_size = string.format("%02d", app_size) .. "Mb"
             else
-                app_size = getAppSize(appdir)/1024/1024
+                getRomSize()
             end
 
-            if apptype > 4 then
-                getRomSize()
-            else
-                app_size = getAppSize(appdir)/1024/1024
-            end
+
             
             menuY=0
             tmpappcat=0
@@ -4374,11 +6306,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, games_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, games_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, games_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, games_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, games_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, games_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, games_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, games_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, games_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, games_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, games_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, games_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, games_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, games_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, games_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, games_table[p].ricon)
@@ -4388,11 +6324,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, games_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, games_table[p].icon)
                 Render.useTexture(modCoverN64Noref, games_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, games_table[p].icon)
+                Render.useTexture(modCoverN64Noref, games_table[p].icon)
                 Render.useTexture(modCoverNESNoref, games_table[p].icon)
                 Render.useTexture(modCoverGBNoref, games_table[p].icon)
                 Render.useTexture(modCoverGBNoref, games_table[p].icon)
                 Render.useTexture(modCoverGBNoref, games_table[p].icon)
+                Render.useTexture(modCoverMDNoref, games_table[p].icon)
+                Render.useTexture(modCoverMDNoref, games_table[p].icon)
+                Render.useTexture(modCoverMDNoref, games_table[p].icon)
+                Render.useTexture(modCoverMDNoref, games_table[p].icon)
                 Render.useTexture(modCoverMDNoref, games_table[p].icon)
                 Render.useTexture(modCoverMDNoref, games_table[p].icon)
                 Render.useTexture(modCoverMDNoref, games_table[p].icon)
@@ -4405,11 +6345,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, homebrews_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, homebrews_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, homebrews_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, homebrews_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, homebrews_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, homebrews_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, homebrews_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, homebrews_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, homebrews_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, homebrews_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, homebrews_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, homebrews_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, homebrews_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, homebrews_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, homebrews_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, homebrews_table[p].ricon)
@@ -4419,11 +6363,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, homebrews_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, homebrews_table[p].icon)
                 Render.useTexture(modCoverN64Noref, homebrews_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, homebrews_table[p].icon)
+                Render.useTexture(modCoverN64Noref, homebrews_table[p].icon)
                 Render.useTexture(modCoverNESNoref, homebrews_table[p].icon)
                 Render.useTexture(modCoverGBNoref, homebrews_table[p].icon)
                 Render.useTexture(modCoverGBNoref, homebrews_table[p].icon)
                 Render.useTexture(modCoverGBNoref, homebrews_table[p].icon)
+                Render.useTexture(modCoverMDNoref, homebrews_table[p].icon)
+                Render.useTexture(modCoverMDNoref, homebrews_table[p].icon)
+                Render.useTexture(modCoverMDNoref, homebrews_table[p].icon)
+                Render.useTexture(modCoverMDNoref, homebrews_table[p].icon)
                 Render.useTexture(modCoverMDNoref, homebrews_table[p].icon)
                 Render.useTexture(modCoverMDNoref, homebrews_table[p].icon)
                 Render.useTexture(modCoverMDNoref, homebrews_table[p].icon)
@@ -4436,11 +6384,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, psp_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, psp_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, psp_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, psp_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, psp_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, psp_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, psp_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, psp_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, psp_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, psp_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, psp_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, psp_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, psp_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, psp_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, psp_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, psp_table[p].ricon)
@@ -4450,11 +6402,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, psp_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, psp_table[p].icon)
                 Render.useTexture(modCoverN64Noref, psp_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, psp_table[p].icon)
+                Render.useTexture(modCoverN64Noref, psp_table[p].icon)
                 Render.useTexture(modCoverNESNoref, psp_table[p].icon)
                 Render.useTexture(modCoverGBNoref, psp_table[p].icon)
                 Render.useTexture(modCoverGBNoref, psp_table[p].icon)
                 Render.useTexture(modCoverGBNoref, psp_table[p].icon)
+                Render.useTexture(modCoverMDNoref, psp_table[p].icon)
+                Render.useTexture(modCoverMDNoref, psp_table[p].icon)
+                Render.useTexture(modCoverMDNoref, psp_table[p].icon)
+                Render.useTexture(modCoverMDNoref, psp_table[p].icon)
                 Render.useTexture(modCoverMDNoref, psp_table[p].icon)
                 Render.useTexture(modCoverMDNoref, psp_table[p].icon)
                 Render.useTexture(modCoverMDNoref, psp_table[p].icon)
@@ -4467,11 +6423,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, psx_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, psx_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, psx_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, psx_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, psx_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, psx_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, psx_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, psx_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, psx_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, psx_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, psx_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, psx_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, psx_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, psx_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, psx_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, psx_table[p].ricon)
@@ -4481,11 +6441,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, psx_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, psx_table[p].icon)
                 Render.useTexture(modCoverN64Noref, psx_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, psx_table[p].icon)
+                Render.useTexture(modCoverN64Noref, psx_table[p].icon)
                 Render.useTexture(modCoverNESNoref, psx_table[p].icon)
                 Render.useTexture(modCoverGBNoref, psx_table[p].icon)
                 Render.useTexture(modCoverGBNoref, psx_table[p].icon)
                 Render.useTexture(modCoverGBNoref, psx_table[p].icon)
+                Render.useTexture(modCoverMDNoref, psx_table[p].icon)
+                Render.useTexture(modCoverMDNoref, psx_table[p].icon)
+                Render.useTexture(modCoverMDNoref, psx_table[p].icon)
+                Render.useTexture(modCoverMDNoref, psx_table[p].icon)
                 Render.useTexture(modCoverMDNoref, psx_table[p].icon)
                 Render.useTexture(modCoverMDNoref, psx_table[p].icon)
                 Render.useTexture(modCoverMDNoref, psx_table[p].icon)
@@ -4499,11 +6463,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, n64_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, n64_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, n64_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, n64_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, n64_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, n64_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, n64_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, n64_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, n64_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, n64_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, n64_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, n64_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, n64_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, n64_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, n64_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, n64_table[p].ricon)
@@ -4513,11 +6481,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, n64_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, n64_table[p].icon)
                 Render.useTexture(modCoverN64Noref, n64_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, n64_table[p].icon)
+                Render.useTexture(modCoverN64Noref, n64_table[p].icon)
                 Render.useTexture(modCoverNESNoref, n64_table[p].icon)
                 Render.useTexture(modCoverGBNoref, n64_table[p].icon)
                 Render.useTexture(modCoverGBNoref, n64_table[p].icon)
                 Render.useTexture(modCoverGBNoref, n64_table[p].icon)
+                Render.useTexture(modCoverMDNoref, n64_table[p].icon)
+                Render.useTexture(modCoverMDNoref, n64_table[p].icon)
+                Render.useTexture(modCoverMDNoref, n64_table[p].icon)
+                Render.useTexture(modCoverMDNoref, n64_table[p].icon)
                 Render.useTexture(modCoverMDNoref, n64_table[p].icon)
                 Render.useTexture(modCoverMDNoref, n64_table[p].icon)
                 Render.useTexture(modCoverMDNoref, n64_table[p].icon)
@@ -4531,11 +6503,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, snes_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, snes_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, snes_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, snes_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, snes_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, snes_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, snes_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, snes_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, snes_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, snes_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, snes_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, snes_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, snes_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, snes_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, snes_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, snes_table[p].ricon)
@@ -4545,11 +6521,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, snes_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, snes_table[p].icon)
                 Render.useTexture(modCoverN64Noref, snes_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, snes_table[p].icon)
+                Render.useTexture(modCoverN64Noref, snes_table[p].icon)
                 Render.useTexture(modCoverNESNoref, snes_table[p].icon)
                 Render.useTexture(modCoverGBNoref, snes_table[p].icon)
                 Render.useTexture(modCoverGBNoref, snes_table[p].icon)
                 Render.useTexture(modCoverGBNoref, snes_table[p].icon)
+                Render.useTexture(modCoverMDNoref, snes_table[p].icon)
+                Render.useTexture(modCoverMDNoref, snes_table[p].icon)
+                Render.useTexture(modCoverMDNoref, snes_table[p].icon)
+                Render.useTexture(modCoverMDNoref, snes_table[p].icon)
                 Render.useTexture(modCoverMDNoref, snes_table[p].icon)
                 Render.useTexture(modCoverMDNoref, snes_table[p].icon)
                 Render.useTexture(modCoverMDNoref, snes_table[p].icon)
@@ -4563,11 +6543,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, nes_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, nes_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, nes_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, nes_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, nes_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, nes_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, nes_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, nes_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, nes_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, nes_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, nes_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, nes_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, nes_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, nes_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, nes_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, nes_table[p].ricon)
@@ -4577,11 +6561,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, nes_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, nes_table[p].icon)
                 Render.useTexture(modCoverN64Noref, nes_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, nes_table[p].icon)
+                Render.useTexture(modCoverN64Noref, nes_table[p].icon)
                 Render.useTexture(modCoverNESNoref, nes_table[p].icon)
                 Render.useTexture(modCoverGBNoref, nes_table[p].icon)
                 Render.useTexture(modCoverGBNoref, nes_table[p].icon)
                 Render.useTexture(modCoverGBNoref, nes_table[p].icon)
+                Render.useTexture(modCoverMDNoref, nes_table[p].icon)
+                Render.useTexture(modCoverMDNoref, nes_table[p].icon)
+                Render.useTexture(modCoverMDNoref, nes_table[p].icon)
+                Render.useTexture(modCoverMDNoref, nes_table[p].icon)
                 Render.useTexture(modCoverMDNoref, nes_table[p].icon)
                 Render.useTexture(modCoverMDNoref, nes_table[p].icon)
                 Render.useTexture(modCoverMDNoref, nes_table[p].icon)
@@ -4595,11 +6583,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, gba_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, gba_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, gba_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, gba_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, gba_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, gba_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gba_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gba_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gba_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gba_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gba_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gba_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gba_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gba_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gba_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gba_table[p].ricon)
@@ -4609,11 +6601,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, gba_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, gba_table[p].icon)
                 Render.useTexture(modCoverN64Noref, gba_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, gba_table[p].icon)
+                Render.useTexture(modCoverN64Noref, gba_table[p].icon)
                 Render.useTexture(modCoverNESNoref, gba_table[p].icon)
                 Render.useTexture(modCoverGBNoref, gba_table[p].icon)
                 Render.useTexture(modCoverGBNoref, gba_table[p].icon)
                 Render.useTexture(modCoverGBNoref, gba_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gba_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gba_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gba_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gba_table[p].icon)
                 Render.useTexture(modCoverMDNoref, gba_table[p].icon)
                 Render.useTexture(modCoverMDNoref, gba_table[p].icon)
                 Render.useTexture(modCoverMDNoref, gba_table[p].icon)
@@ -4627,11 +6623,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, gbc_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, gbc_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, gbc_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, gbc_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, gbc_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, gbc_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gbc_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gbc_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gbc_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gbc_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gbc_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gbc_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gbc_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gbc_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gbc_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gbc_table[p].ricon)
@@ -4641,11 +6641,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, gbc_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, gbc_table[p].icon)
                 Render.useTexture(modCoverN64Noref, gbc_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, gbc_table[p].icon)
+                Render.useTexture(modCoverN64Noref, gbc_table[p].icon)
                 Render.useTexture(modCoverNESNoref, gbc_table[p].icon)
                 Render.useTexture(modCoverGBNoref, gbc_table[p].icon)
                 Render.useTexture(modCoverGBNoref, gbc_table[p].icon)
                 Render.useTexture(modCoverGBNoref, gbc_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gbc_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gbc_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gbc_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gbc_table[p].icon)
                 Render.useTexture(modCoverMDNoref, gbc_table[p].icon)
                 Render.useTexture(modCoverMDNoref, gbc_table[p].icon)
                 Render.useTexture(modCoverMDNoref, gbc_table[p].icon)
@@ -4659,11 +6663,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, gb_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, gb_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, gb_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, gb_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, gb_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, gb_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gb_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gb_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gb_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gb_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gb_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gb_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gb_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gb_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gb_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gb_table[p].ricon)
@@ -4673,11 +6681,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, gb_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, gb_table[p].icon)
                 Render.useTexture(modCoverN64Noref, gb_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, gb_table[p].icon)
+                Render.useTexture(modCoverN64Noref, gb_table[p].icon)
                 Render.useTexture(modCoverNESNoref, gb_table[p].icon)
                 Render.useTexture(modCoverGBNoref, gb_table[p].icon)
                 Render.useTexture(modCoverGBNoref, gb_table[p].icon)
                 Render.useTexture(modCoverGBNoref, gb_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gb_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gb_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gb_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gb_table[p].icon)
                 Render.useTexture(modCoverMDNoref, gb_table[p].icon)
                 Render.useTexture(modCoverMDNoref, gb_table[p].icon)
                 Render.useTexture(modCoverMDNoref, gb_table[p].icon)
@@ -4691,11 +6703,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, md_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, md_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, md_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, md_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, md_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, md_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, md_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, md_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, md_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, md_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, md_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, md_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, md_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, md_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, md_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, md_table[p].ricon)
@@ -4705,11 +6721,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, md_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, md_table[p].icon)
                 Render.useTexture(modCoverN64Noref, md_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, md_table[p].icon)
+                Render.useTexture(modCoverN64Noref, md_table[p].icon)
                 Render.useTexture(modCoverNESNoref, md_table[p].icon)
                 Render.useTexture(modCoverGBNoref, md_table[p].icon)
                 Render.useTexture(modCoverGBNoref, md_table[p].icon)
                 Render.useTexture(modCoverGBNoref, md_table[p].icon)
+                Render.useTexture(modCoverMDNoref, md_table[p].icon)
+                Render.useTexture(modCoverMDNoref, md_table[p].icon)
+                Render.useTexture(modCoverMDNoref, md_table[p].icon)
+                Render.useTexture(modCoverMDNoref, md_table[p].icon)
                 Render.useTexture(modCoverMDNoref, md_table[p].icon)
                 Render.useTexture(modCoverMDNoref, md_table[p].icon)
                 Render.useTexture(modCoverMDNoref, md_table[p].icon)
@@ -4723,11 +6743,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, sms_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, sms_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, sms_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, sms_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, sms_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, sms_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, sms_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, sms_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, sms_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, sms_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, sms_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, sms_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, sms_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, sms_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, sms_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, sms_table[p].ricon)
@@ -4737,11 +6761,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, sms_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, sms_table[p].icon)
                 Render.useTexture(modCoverN64Noref, sms_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, sms_table[p].icon)
+                Render.useTexture(modCoverN64Noref, sms_table[p].icon)
                 Render.useTexture(modCoverNESNoref, sms_table[p].icon)
                 Render.useTexture(modCoverGBNoref, sms_table[p].icon)
                 Render.useTexture(modCoverGBNoref, sms_table[p].icon)
                 Render.useTexture(modCoverGBNoref, sms_table[p].icon)
+                Render.useTexture(modCoverMDNoref, sms_table[p].icon)
+                Render.useTexture(modCoverMDNoref, sms_table[p].icon)
+                Render.useTexture(modCoverMDNoref, sms_table[p].icon)
+                Render.useTexture(modCoverMDNoref, sms_table[p].icon)
                 Render.useTexture(modCoverMDNoref, sms_table[p].icon)
                 Render.useTexture(modCoverMDNoref, sms_table[p].icon)
                 Render.useTexture(modCoverMDNoref, sms_table[p].icon)
@@ -4755,11 +6783,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, gg_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, gg_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, gg_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, gg_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, gg_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, gg_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gg_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gg_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, gg_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gg_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gg_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gg_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, gg_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gg_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gg_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, gg_table[p].ricon)
@@ -4769,7 +6801,7 @@ while true do
                 Render.useTexture(modCoverPSPNoref, gg_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, gg_table[p].icon)
                 Render.useTexture(modCoverN64Noref, gg_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, gg_table[p].icon)
+                Render.useTexture(modCoverN64Noref, gg_table[p].icon)
                 Render.useTexture(modCoverNESNoref, gg_table[p].icon)
                 Render.useTexture(modCoverGBNoref, gg_table[p].icon)
                 Render.useTexture(modCoverGBNoref, gg_table[p].icon)
@@ -4777,6 +6809,170 @@ while true do
                 Render.useTexture(modCoverMDNoref, gg_table[p].icon)
                 Render.useTexture(modCoverMDNoref, gg_table[p].icon)
                 Render.useTexture(modCoverMDNoref, gg_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gg_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gg_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gg_table[p].icon)
+                Render.useTexture(modCoverMDNoref, gg_table[p].icon)
+            end
+        --MAME
+        elseif showCat == 14 then
+            --Graphics.setImageFilters(mame_table[p].icon, FILTER_LINEAR, FILTER_LINEAR)
+            if mame_table[p].ricon ~= nil then
+                Render.useTexture(modCoverNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverHbrNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverPSPNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverPSXNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, mame_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, mame_table[p].ricon)
+                Render.useTexture(modCoverNESNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].ricon)
+            else 
+                Render.useTexture(modCoverNoref, mame_table[p].icon)
+                Render.useTexture(modCoverHbrNoref, mame_table[p].icon)
+                Render.useTexture(modCoverPSPNoref, mame_table[p].icon)
+                Render.useTexture(modCoverPSXNoref, mame_table[p].icon)
+                Render.useTexture(modCoverN64Noref, mame_table[p].icon)
+                Render.useTexture(modCoverN64Noref, mame_table[p].icon)
+                Render.useTexture(modCoverNESNoref, mame_table[p].icon)
+                Render.useTexture(modCoverGBNoref, mame_table[p].icon)
+                Render.useTexture(modCoverGBNoref, mame_table[p].icon)
+                Render.useTexture(modCoverGBNoref, mame_table[p].icon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].icon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].icon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].icon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].icon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].icon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].icon)
+                Render.useTexture(modCoverMDNoref, mame_table[p].icon)
+            end
+        --AMIGA
+        elseif showCat == 15 then
+            --Graphics.setImageFilters(amiga_table[p].icon, FILTER_LINEAR, FILTER_LINEAR)
+            if amiga_table[p].ricon ~= nil then
+                Render.useTexture(modCoverNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverHbrNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverPSPNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverPSXNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, amiga_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, amiga_table[p].ricon)
+                Render.useTexture(modCoverNESNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].ricon)
+            else 
+                Render.useTexture(modCoverNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverHbrNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverPSPNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverPSXNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverN64Noref, amiga_table[p].icon)
+                Render.useTexture(modCoverN64Noref, amiga_table[p].icon)
+                Render.useTexture(modCoverNESNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverGBNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverGBNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverGBNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].icon)
+                Render.useTexture(modCoverMDNoref, amiga_table[p].icon)
+            end
+        --TG16
+        elseif showCat == 16 then
+            --Graphics.setImageFilters(tg16_table[p].icon, FILTER_LINEAR, FILTER_LINEAR)
+            if tg16_table[p].ricon ~= nil then
+                Render.useTexture(modCoverNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverHbrNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverPSPNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverPSXNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, tg16_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, tg16_table[p].ricon)
+                Render.useTexture(modCoverNESNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].ricon)
+            else 
+                Render.useTexture(modCoverNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverHbrNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverPSPNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverPSXNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverN64Noref, tg16_table[p].icon)
+                Render.useTexture(modCoverN64Noref, tg16_table[p].icon)
+                Render.useTexture(modCoverNESNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverGBNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverGBNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverGBNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].icon)
+                Render.useTexture(modCoverMDNoref, tg16_table[p].icon)
+            end
+        --PCE
+        elseif showCat == 17 then
+            --Graphics.setImageFilters(pce_table[p].icon, FILTER_LINEAR, FILTER_LINEAR)
+            if pce_table[p].ricon ~= nil then
+                Render.useTexture(modCoverNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverHbrNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverPSPNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverPSXNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, pce_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, pce_table[p].ricon)
+                Render.useTexture(modCoverNESNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverGBNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].ricon)
+            else 
+                Render.useTexture(modCoverNoref, pce_table[p].icon)
+                Render.useTexture(modCoverHbrNoref, pce_table[p].icon)
+                Render.useTexture(modCoverPSPNoref, pce_table[p].icon)
+                Render.useTexture(modCoverPSXNoref, pce_table[p].icon)
+                Render.useTexture(modCoverN64Noref, pce_table[p].icon)
+                Render.useTexture(modCoverN64Noref, pce_table[p].icon)
+                Render.useTexture(modCoverNESNoref, pce_table[p].icon)
+                Render.useTexture(modCoverGBNoref, pce_table[p].icon)
+                Render.useTexture(modCoverGBNoref, pce_table[p].icon)
+                Render.useTexture(modCoverGBNoref, pce_table[p].icon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].icon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].icon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].icon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].icon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].icon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].icon)
+                Render.useTexture(modCoverMDNoref, pce_table[p].icon)
             end
 
         else
@@ -4787,11 +6983,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, files_table[p].ricon)
                 Render.useTexture(modCoverPSXNoref, files_table[p].ricon)
                 Render.useTexture(modCoverN64Noref, files_table[p].ricon)
-                Render.useTexture(modCoverSNESNoref, files_table[p].ricon)
+                Render.useTexture(modCoverN64Noref, files_table[p].ricon)
                 Render.useTexture(modCoverNESNoref, files_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, files_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, files_table[p].ricon)
                 Render.useTexture(modCoverGBNoref, files_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, files_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, files_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, files_table[p].ricon)
+                Render.useTexture(modCoverMDNoref, files_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, files_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, files_table[p].ricon)
                 Render.useTexture(modCoverMDNoref, files_table[p].ricon)
@@ -4801,11 +7001,15 @@ while true do
                 Render.useTexture(modCoverPSPNoref, files_table[p].icon)
                 Render.useTexture(modCoverPSXNoref, files_table[p].icon)
                 Render.useTexture(modCoverN64Noref, files_table[p].icon)
-                Render.useTexture(modCoverSNESNoref, files_table[p].icon)
+                Render.useTexture(modCoverN64Noref, files_table[p].icon)
                 Render.useTexture(modCoverNESNoref, files_table[p].icon)
                 Render.useTexture(modCoverGBNoref, files_table[p].icon)
                 Render.useTexture(modCoverGBNoref, files_table[p].icon)
                 Render.useTexture(modCoverGBNoref, files_table[p].icon)
+                Render.useTexture(modCoverMDNoref, files_table[p].icon)
+                Render.useTexture(modCoverMDNoref, files_table[p].icon)
+                Render.useTexture(modCoverMDNoref, files_table[p].icon)
+                Render.useTexture(modCoverMDNoref, files_table[p].icon)
                 Render.useTexture(modCoverMDNoref, files_table[p].icon)
                 Render.useTexture(modCoverMDNoref, files_table[p].icon)
                 Render.useTexture(modCoverMDNoref, files_table[p].icon)
@@ -4832,8 +7036,8 @@ while true do
             Render.drawModel(modBoxN64Noref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = "N64 Game"
         elseif apptype==6 then
-            Render.drawModel(modCoverSNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            Render.drawModel(modBoxSNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modCoverN64Noref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxN64Noref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = "SNES Game"
         elseif apptype==7 then
             Render.drawModel(modCoverNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
@@ -4863,6 +7067,22 @@ while true do
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = "GG Game"
+        elseif apptype==14 then
+            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = "MAME Game"
+        elseif apptype==15 then
+            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = "Amiga Game"
+        elseif apptype==16 then
+            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = "TurboGrafx-16 Game"
+        elseif apptype==17 then
+            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = "PC Engine Game"
         else
             Render.drawModel(modCoverHbrNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = "Homebrew"
@@ -4871,88 +7091,39 @@ while true do
         Font.print(fnt22, 50, 190, txtname, white)-- app name
 
 
-        -- 0 Homebrew, 1 vita, 2 psp, 3 psx, 5 n64
+        -- 0 Homebrew, 1 vita, 2 psp, 3 psx, 5+ Retro
 
-
-        if apptype == 0 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nApp ID: " .. app_titleid .. "\nVersion: " .. app_version .. "\nSize: " .. string.format("%02d", app_size) .. "Mb", white)-- Draw info
-        elseif apptype == 1 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nApp ID: " .. app_titleid .. "\nVersion: " .. app_version .. "\nSize: " .. string.format("%02d", app_size) .. "Mb", white)-- Draw info
-
-        elseif apptype == 2 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nApp ID: " .. app_titleid .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
-        
-        elseif apptype == 3 then -- PS1
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nApp ID: " .. app_titleid .. "\nVersion: " .. app_version .. "\nSize: " .. string.format("%02d", app_size) .. "Mb", white)-- Draw info
-        
-        elseif apptype == 4 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
-        elseif apptype == 5 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
-        elseif apptype == 6 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
-        elseif apptype == 7 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
-        elseif apptype == 8 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
-        elseif apptype == 9 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
-        elseif apptype == 10 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
-        elseif apptype == 11 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
-        elseif apptype == 12 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
-        elseif apptype == 13 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
+        if apptype == 0 or apptype == 1 or apptype == 2 or apptype == 3 then
+            Font.print(fnt22, 50, 240, tmpapptype .. "\nApp ID: " .. app_titleid .. "\nVersion: " .. app_version .. "\nSize: " .. game_size, white)-- Draw info
         else
-            Font.print(fnt22, 50, 240, tmpapptype .. "\nApp ID: " .. app_titleid .. "\nVersion: " .. app_version .. "\nSize: " .. string.format("%02d", app_size) .. "Mb", white)-- Draw info
+            Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. game_size, white)-- Draw info
         end
-
-        -- if apptype > 4 then
-        --     Font.print(fnt22, 50, 240, tmpapptype .. "\nVersion: " .. app_version .. "\nSize: " .. romsize, white)-- Draw info
-        -- else
-        --     Font.print(fnt22, 50, 240, tmpapptype .. "\nApp ID: " .. app_titleid .. "\nVersion: " .. app_version .. "\nSize: " .. string.format("%02d", app_size) .. "Mb", white)-- Draw info
-        -- end
-
-
 
 
         if tmpappcat==1 then
             tmpcatText = "PS Vita"
         elseif tmpappcat==2 then
-            tmpcatText = "Homebrew"
-        -- elseif tmpappcat==3 then
-        --     tmpcatText = "PS1"
-        -- elseif tmpappcat==4 then
-        --     tmpcatText = "Homebrew"
-        -- elseif tmpappcat==5 then
-        --     tmpcatText = "N64"
-        -- elseif tmpappcat==6 then
-        --     tmpcatText = "SNES"
-        -- elseif tmpappcat==7 then
-        --     tmpcatText = "NES"
-        -- elseif tmpappcat==8 then
-        --     tmpcatText = "GBA"
-        -- elseif tmpappcat==9 then
-        --     tmpcatText = "GBC"
-        -- elseif tmpappcat==10 then
-        --     tmpcatText = "GB"       
-        -- elseif tmpappcat==11 then
-        --     tmpcatText = "MD"
-        -- elseif tmpappcat==12 then
-        --     tmpcatText = "SMS"
-        -- elseif tmpappcat==13 then
-        --     tmpcatText = "GG"
+            tmpcatText = "Homebrew"           
         else
             tmpcatText = "Default"
         end
 
+
+        if tmpappcat_adrenaline==1 then
+            tmpcatText_adrenaline = "PS1"
+        elseif tmpappcat_adrenaline==2 then
+            tmpcatText_adrenaline = "PSP"            
+        else
+            tmpcatText_adrenaline = "Default"
+        end
+
         menuItems = 1
 
-        -- start Disable category override for retro
 
-        if apptype == 1 or apptype == 4 or apptype == 0 then
+        -- 0 Homebrew, 1 Vita, 2 PSP, 3 PSX, 5+ Retro
+
+        -- Vita and Homebrew
+        if apptype == 0 or apptype == 1 then -- start Disable category override for retro
             if menuY==1 then
                 Graphics.fillRect(24, 470, 350 + (menuY * 40), 430 + (menuY * 40), themeCol)-- selection two lines
             else
@@ -4961,16 +7132,34 @@ while true do
             Font.print(fnt22, 50, 352, "Download Cover", white)
             Font.print(fnt22, 50, 352+40, "Override Category: < " .. tmpcatText .. " >\n(Press X to apply Category)", white)
 
+        -- PSP or PS1 
+        elseif apptype == 2 or apptype == 3 then -- start Disable category override for retro
+       
+            -- Only allow folders to be moved
+            if folder == true then
+                if menuY==1 then
+                    Graphics.fillRect(24, 470, 350 + (menuY * 40), 430 + (menuY * 40), themeCol)-- selection two lines
+                else
+                    Graphics.fillRect(24, 470, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
+                end
+                Font.print(fnt22, 50, 352, "Download Cover", white)
+                Font.print(fnt22, 50, 352+40, "Override Category: < " .. tmpcatText_adrenaline .. " >\n(Press X to apply Category)", white)
+            else
+                if menuY==1 then                
+            else
+                Graphics.fillRect(24, 470, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
+                end
+                Font.print(fnt22, 50, 352, "Download Cover", white)
+            end
+
+        -- All other systems
         else
             if menuY==1 then                
             else
-                --                                             rh
                 Graphics.fillRect(24, 470, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
             end
             Font.print(fnt22, 50, 352, "Download Cover", white)
         end
-
-        
         
 
         status = System.getMessageState()
@@ -4983,8 +7172,13 @@ while true do
                         DownloadSingleCover()
                     end
                 elseif menuY == 1 then
-                    OverrideCategory()
+                    if apptype == 2 or apptype == 3 then
+                        OverrideCategory_adrenaline()
+                    else
+                        OverrideCategory()
+                    end
                 end
+
             elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
                 if menuY > 0 then
                     menuY = menuY - 1
@@ -4999,24 +7193,51 @@ while true do
                 end
             elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
                 if menuY==1 then
-                    if tmpappcat > 0 then
-                        tmpappcat = tmpappcat - 1
+
+                    -- PSP and PS1 override
+                    if apptype == 2 or apptype == 3 then
+                        if tmpappcat_adrenaline > 0 then
+                            tmpappcat_adrenaline = tmpappcat_adrenaline - 1
+                        else
+                            tmpappcat_adrenaline=2 -- Limited to 4 to prevent retro showing in override options
+                        end
+
+                    -- Vita and Homebrew override
                     else
-                        tmpappcat=2 -- Limited to 4 to prevent retro showing in override options
+                        if tmpappcat > 0 then
+                            tmpappcat = tmpappcat - 1
+                        else
+                            tmpappcat=2 -- Limited to 4 to prevent retro showing in override options
+                        end
                     end
+
                 end
             elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
                 if menuY==1 then
-                    if tmpappcat < 2 then  -- Limited to 4 to prevent retro showing in override options
-                        tmpappcat = tmpappcat + 1
-                    else
-                        tmpappcat=0
+
+                    -- PSP and PS1 override
+                    if apptype == 2 or apptype == 3 then
+                        if tmpappcat_adrenaline < 2 then  -- Limited to 2
+                            tmpappcat_adrenaline = tmpappcat_adrenaline + 1
+                        else
+                            tmpappcat_adrenaline=0
+                        end
+
+                    -- Vita and Homebrew override
+                    else 
+                        if tmpappcat < 2 then  -- Limited to 2
+                            tmpappcat = tmpappcat + 1
+                        else
+                            tmpappcat=0
+                        end
                     end
                 end
             end
         end
-        
-    elseif showMenu == 2 then
+
+
+            
+        elseif showMenu == 2 then
         
         -- SETTINGS
         -- Footer buttons and icons
@@ -5024,154 +7245,179 @@ while true do
         Font.print(fnt20, 900+28-(string.len(lang_lines[11])*10), 508, lang_lines[11], white)--Close
         Graphics.drawImage(750-(string.len(lang_lines[32])*10), 510, btnX)
         Font.print(fnt20, 750+28-(string.len(lang_lines[32])*10), 508, lang_lines[32], white)--Select
-        Graphics.fillRect(60, 900, 24, 470, darkalpha)
-        Font.print(fnt22, 84, 42, lang_lines[6], white)--SETTINGS
-        Graphics.drawLine(60, 900, 74, 74, white)
-        Graphics.fillRect(60, 900, 110 + (menuY * 40), 150 + (menuY * 40), themeCol)-- selection
+        Graphics.fillRect(60, 900, 24, 468, darkalpha)
+
+        Font.print(fnt22, 84, 32, lang_lines[6], white)--SETTINGS
+        Graphics.drawLine(60, 900, 66, 66, white)
+
+        Graphics.fillRect(60, 900, 66 + (menuY * 40), 106 + (menuY * 40), themeCol)-- selection
+
+        menuItems = 9
         
-        menuItems = 8
-        
-        Font.print(fnt22, 84, 112, lang_lines[14] .. ": ", white)--Startup Category
+        Font.print(fnt22, 84, 72, lang_lines[14] .. ": ", white)--Startup Category
         if startCategory == 0 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[5], white)--ALL
+            Font.print(fnt22, 125 + 260, 72, lang_lines[5], white)--ALL
         elseif startCategory == 1 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[1], white)--GAMES
+            Font.print(fnt22, 125 + 260, 72, lang_lines[1], white)--GAMES
         elseif startCategory == 2 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[2], white)--HOMEBREWS
+            Font.print(fnt22, 125 + 260, 72, lang_lines[2], white)--HOMEBREWS
         elseif startCategory == 3 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[3], white)--PSP
+            Font.print(fnt22, 125 + 260, 72, lang_lines[3], white)--PSP
         elseif startCategory == 4 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[4], white)--PSX
+            Font.print(fnt22, 125 + 260, 72, lang_lines[4], white)--PSX
         elseif startCategory == 5 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[33], white)--N64
+            Font.print(fnt22, 125 + 260, 72, lang_lines[33], white)--N64
         elseif startCategory == 6 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[34], white)--SNES
+            Font.print(fnt22, 125 + 260, 72, lang_lines[34], white)--SNES
         elseif startCategory == 7 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[35], white)--NES
+            Font.print(fnt22, 125 + 260, 72, lang_lines[35], white)--NES
         elseif startCategory == 8 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[36], white)--GBA
+            Font.print(fnt22, 125 + 260, 72, lang_lines[36], white)--GBA
         elseif startCategory == 9 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[37], white)--GBC
+            Font.print(fnt22, 125 + 260, 72, lang_lines[37], white)--GBC
         elseif startCategory == 10 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[38], white)--GB
+            Font.print(fnt22, 125 + 260, 72, lang_lines[38], white)--GB
         elseif startCategory == 11 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[39], white)--MD
+            Font.print(fnt22, 125 + 260, 72, lang_lines[39], white)--MD
         elseif startCategory == 12 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[40], white)--SMS
+            Font.print(fnt22, 125 + 260, 72, lang_lines[40], white)--SMS
         elseif startCategory == 13 then
-            Font.print(fnt22, 84 + 260, 112, lang_lines[41], white)--GG
+            Font.print(fnt22, 125 + 260, 72, lang_lines[41], white)--GG
+        elseif startCategory == 14 then
+            Font.print(fnt22, 125 + 260, 72, lang_lines[42], white)--MAME
+        elseif startCategory == 15 then
+            Font.print(fnt22, 125 + 260, 72, lang_lines[43], white)--AMIGA
+        elseif startCategory == 16 then
+            Font.print(fnt22, 125 + 260, 72, lang_lines[44], white)--TG16
+        elseif startCategory == 17 then
+            Font.print(fnt22, 125 + 260, 72, lang_lines[45], white)--PCE
         end
         
-        Font.print(fnt22, 84, 112 + 40, lang_lines[15] .. ": ", white)
+        Font.print(fnt22, 84, 72 + 40, lang_lines[15] .. ": ", white) -- REFLECTION
         if setReflections == 1 then
-            Font.print(fnt22, 84 + 260, 112 + 40, lang_lines[22], white)--ON
+            Font.print(fnt22, 125 + 260, 72 + 40, lang_lines[22], white)--ON
         else
-            Font.print(fnt22, 84 + 260, 112 + 40, lang_lines[23], white)--OFF
+            Font.print(fnt22, 125 + 260, 72 + 40, lang_lines[23], white)--OFF
         end
         
-        Font.print(fnt22, 84, 112 + 80, lang_lines[16] .. ": ", white)--SOUNDS
+        Font.print(fnt22, 84, 72 + 80, lang_lines[16] .. ": ", white)--SOUNDS
         if setSounds == 1 then
-            Font.print(fnt22, 84 + 260, 112 + 80, lang_lines[22], white)--ON
+            Font.print(fnt22, 125 + 260, 72 + 80, lang_lines[22], white)--ON
         else
-            Font.print(fnt22, 84 + 260, 112 + 80, lang_lines[23], white)--OFF
+            Font.print(fnt22, 125 + 260, 72 + 80, lang_lines[23], white)--OFF
         end
         
-        Font.print(fnt22, 84, 112 + 120,  lang_lines[17] .. ": ", white)
+        Font.print(fnt22, 84, 72 + 120,  lang_lines[17] .. ": ", white)
         if themeColor == 1 then
-            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[24], white)--Red
+            Font.print(fnt22, 125 + 260, 72 + 120, lang_lines[24], white)--Red
         elseif themeColor == 2 then
-            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[25], white)--Yellow
+            Font.print(fnt22, 125 + 260, 72 + 120, lang_lines[25], white)--Yellow
         elseif themeColor == 3 then
-            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[26], white)--Green
+            Font.print(fnt22, 125 + 260, 72 + 120, lang_lines[26], white)--Green
         elseif themeColor == 4 then
-            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[27], white)--Grey
+            Font.print(fnt22, 125 + 260, 72 + 120, lang_lines[27], white)--Grey
         elseif themeColor == 5 then
-            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[28], white)--Black
+            Font.print(fnt22, 125 + 260, 72 + 120, lang_lines[28], white)--Black
         elseif themeColor == 6 then
-            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[29], white)--Purple
+            Font.print(fnt22, 125 + 260, 72 + 120, lang_lines[29], white)--Purple
         elseif themeColor == 7 then
-            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[30], white)--Orange
+            Font.print(fnt22, 125 + 260, 72 + 120, lang_lines[30], white)--Orange
         else
-            Font.print(fnt22, 84 + 260, 112 + 120, lang_lines[31], white)--Blue
+            Font.print(fnt22, 125 + 260, 72 + 120, lang_lines[31], white)--Blue
         end
         
-        Font.print(fnt22, 84, 112 + 160,  lang_lines[18] .. ": ", white)
+        Font.print(fnt22, 84, 72 + 160,  lang_lines[18] .. ": ", white)
         if setBackground == 1 then
-            Font.print(fnt22, 84 + 260, 112 + 160, lang_lines[22], white)--ON
+            Font.print(fnt22, 125 + 260, 72 + 160, lang_lines[22], white)--ON
         else
-            Font.print(fnt22, 84 + 260, 112 + 160, lang_lines[23], white)--OFF
+            Font.print(fnt22, 120 + 260, 72 + 160, lang_lines[23], white)--OFF
         end
         
         if scanComplete == false then
             if getCovers == 1 then
-            Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[1] .. "  >", white)--Download Covers PS VITA
+            Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[1] .. "  >", white)--Download Covers PS VITA
             elseif getCovers == 2 then
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[3] .. "  >", white)--Download Covers PSP
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[3] .. "  >", white)--Download Covers PSP
             elseif getCovers == 3 then
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[4] .."  >", white)--Download Covers PSX
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[4] .."  >", white)--Download Covers PSX
             elseif getCovers == 4 then
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[33] .. "  >", white)--Download Covers N64
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[33] .. "  >", white)--Download Covers N64
             elseif getCovers == 5 then
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[34] .. "  >", white)--Download Covers SNES
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[34] .. "  >", white)--Download Covers SNES
             elseif getCovers == 6 then
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[35] .. "  >", white)--Download Covers NES
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[35] .. "  >", white)--Download Covers NES
             elseif getCovers == 7 then
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[36] .. "  >", white)--Download Covers GBA
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[36] .. "  >", white)--Download Covers GBA
             elseif getCovers == 8 then
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[37] .. "  >", white)--Download Covers GBC
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[37] .. "  >", white)--Download Covers GBC
             elseif getCovers == 9 then
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[38] .. "  >", white)--Download Covers GB
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[38] .. "  >", white)--Download Covers GB
             elseif getCovers == 10 then
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[39] .. "  >", white)--Download Covers MD
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[39] .. "  >", white)--Download Covers MD
             elseif getCovers == 11 then
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[40] .. "  >", white)--Download Covers SMS
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[40] .. "  >", white)--Download Covers SMS
             elseif getCovers == 12 then
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[41] .. "  >", white)--Download Covers GG                
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[41] .. "  >", white)--Download Covers GG
+            elseif getCovers == 13 then
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[42] .. "  >", white)--Download Covers MAME
+            elseif getCovers == 14 then
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[43] .. "  >", white)--Download Covers AMIGA
+            elseif getCovers == 15 then
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[44] .. "  >", white)--Download Covers TG16
+            elseif getCovers == 16 then
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[45] .. "  >", white)--Download Covers PCE       
             else
-                Font.print(fnt22, 84, 112 + 200, lang_lines[19] .. ":   <  " .. lang_lines[5] .. "  >", white)--Download Covers All
+                Font.print(fnt22, 84, 72 + 200, lang_lines[19] .. ":   <  " .. lang_lines[5] .. "  >", white)--Download Covers All
             end
         else
-            Font.print(fnt22, 84, 112 + 200,  lang_lines[20], white)--Reload Covers Database
+            Font.print(fnt22, 84, 72 + 200,  lang_lines[20], white)--Reload Covers Database
         end
         
-        Font.print(fnt22, 84, 112 + 240, lang_lines[21] .. ": ", white)--Language
+        Font.print(fnt22, 84, 72 + 240, lang_lines[21] .. ": ", white)--Language
         if setLanguage == 1 then
-            Font.print(fnt22, 84 + 260, 112 + 240, "English - American", white)
+            Font.print(fnt22, 125 + 260, 72 + 240, "English - American", white)
         elseif setLanguage == 2 then
-            Font.print(fnt22, 84 + 260, 112 + 240, "German", white)
+            Font.print(fnt22, 125 + 260, 72 + 240, "German", white)
         elseif setLanguage == 3 then
-            Font.print(fnt22, 84 + 260, 112 + 240, "French", white)
+            Font.print(fnt22, 125 + 260, 72 + 240, "French", white)
         elseif setLanguage == 4 then
-            Font.print(fnt22, 84 + 260, 112 + 240, "Italian", white)
+            Font.print(fnt22, 125 + 260, 72 + 240, "Italian", white)
         elseif setLanguage == 5 then
-            Font.print(fnt22, 84 + 260, 112 + 240, "Spanish", white)
+            Font.print(fnt22, 125 + 260, 72 + 240, "Spanish", white)
         elseif setLanguage == 6 then
-            Font.print(fnt22, 84 + 260, 112 + 240, "Portuguese", white)
+            Font.print(fnt22, 125 + 260, 72 + 240, "Portuguese", white)
         elseif setLanguage == 7 then
-            Font.print(fnt22, 84 + 260, 112 + 240, "Swedish", white)
+            Font.print(fnt22, 125 + 260, 72 + 240, "Swedish", white)
         elseif setLanguage == 8 then
-            Font.print(fnt22, 84 + 260, 112 + 240, "Russian", white)
+            Font.print(fnt22, 125 + 260, 72 + 240, "Russian", white)
         elseif setLanguage == 9 then
-            Font.print(fnt22, 84 + 260, 112 + 240, "Japanese", white)
+            Font.print(fnt22, 125 + 260, 72 + 240, "Japanese", white)
         else
-            Font.print(fnt22, 84 + 260, 112 + 240, "English", white)
+            Font.print(fnt22, 125 + 260, 72 + 240, "English", white)
         end
         
-        Font.print(fnt22, 84, 112 + 280, lang_lines[42], white)--Show Homebrews
+        Font.print(fnt22, 84, 72 + 280, lang_lines[46] .. ": ", white)--Show Homebrews
         if showHomebrews == 1 then
-            Font.print(fnt22, 84 + 260, 112 + 280, lang_lines[22], white)--ON
+            Font.print(fnt22, 125 + 260, 72 + 280, lang_lines[22], white)--ON
         else
-            Font.print(fnt22, 84 + 260, 112 + 280, lang_lines[23], white)--OFF
+            Font.print(fnt22, 125 + 260, 72 + 280, lang_lines[23], white)--OFF
         end
         
-        Font.print(fnt22, 84, 112 + 320, lang_lines[13], white)--About
+        Font.print(fnt22, 84, 72 + 320, lang_lines[47] .. ": ", white)--Scan on startup
+        if startupScan == 1 then
+            Font.print(fnt22, 125 + 260, 72 + 320, lang_lines[22], white)--ON
+        else
+            Font.print(fnt22, 125 + 260, 72 + 320, lang_lines[23], white)--OFF
+        end
+
+        Font.print(fnt22, 84, 72 + 360, lang_lines[13], white)--About
         
         status = System.getMessageState()
         if status ~= RUNNING then
             
             if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
                 if menuY == 0 then
-                    if startCategory < 13 then -- Increase to total count of systems
+                    if startCategory < 17 then -- Increase to total count of systems
                         startCategory = startCategory + 1
                     else
                         startCategory = 0
@@ -5226,18 +7472,38 @@ while true do
                 elseif menuY == 7 then
                     if showHomebrews == 1 then
                         showHomebrews = 0
+                        -- Import cache to update All games category
+                        files_table = import_cached_DB(System.currentDirectory())
+
+                        -- If currently on homebrew category view, move to Vita category to hide empty homebrew category
+                        if showCat == 2 then
+                            showCat = 1
+                        end
+
                     else
                         showHomebrews = 1
+                        -- Import cache to update All games category
+                        files_table = import_cached_DB(System.currentDirectory())
+
                     end
                 elseif menuY == 8 then
+                    if startupScan == 1 then
+                        startupScan = 0
+
+                        -- find me
+                        cache_all_tables()
+                    else
+                        startupScan = 1
+                    end
+                elseif menuY == 9 then
                     showMenu = 3
                     menuY = 0
                 end
                 
                 
                 --Save settings
-                local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
-                System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground .. setLanguage .. showView .. showHomebrews, 8)
+                local file_config = System.openFile(cur_dir .. "/settings.dat", FCREATE)
+                System.writeFile(file_config, setReflections .. setSounds .. themeColor .. setBackground .. setLanguage .. showView .. showHomebrews .. startupScan .. startCategory, 10)
                 System.closeFile(file_config)
             elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
                 if menuY > 0 then
@@ -5257,13 +7523,13 @@ while true do
                     if getCovers > 0 then
                         getCovers = getCovers - 1
                     else
-                        getCovers=12 -- Check getcover number against sytem
+                        getCovers=16 -- Check getcover number against sytem
                     end
                 end
             elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
                 --covers download selection
                 if menuY==5 then
-                    if getCovers < 12 then -- Check getcover number against sytem
+                    if getCovers < 16 then -- Check getcover number against sytem
                         getCovers = getCovers + 1
                     else
                         getCovers=0
@@ -5365,56 +7631,76 @@ while true do
                     System.launchApp(homebrews_table[p].name)
 
                 elseif showCat == 3 then
-                    rom_location = ("PATH=ms0:/ISO/" .. psp_table[p].name_rom_minus_ext .. ".iso")
+                    rom_location = (psp_table[p].launch_argument)
                     launch_Adrenaline()
 
                 elseif showCat == 4 then
-                    rom_location = ("PATH=ms0:/PSP/GAME/" .. psx_table[p].name .. "/EBOOT.PBP")
+                    rom_location = (psx_table[p].launch_argument)
                     launch_Adrenaline()
 
                 -- Start Retro    
                 elseif showCat == 5 then
-                    rom_location = (romFolder_N64 .. "/" .. n64_table[p].name)
+                    rom_location = (n64_table[p].game_path)
                     clean_launch_dir()
                     launch_DaedalusX64()
                 elseif showCat == 6 then
-                    rom_location = (romFolder_SNES .. "/" .. snes_table[p].name)
+                    rom_location = (snes_table[p].game_path)
                     core_name = core_SNES
                     clean_launch_dir()
                     launch_retroarch()
                 elseif showCat == 7 then
-                    rom_location = (romFolder_NES .. "/" .. nes_table[p].name)
+                    rom_location = (nes_table[p].game_path)
                     core_name = core_NES
                     clean_launch_dir()
                     launch_retroarch()
                 elseif showCat == 8 then
-                    rom_location = (romFolder_GBA .. "/" .. gba_table[p].name)
+                    rom_location = (gba_table[p].game_path)
                     core_name = core_GBA
                     clean_launch_dir()
                     launch_retroarch()
                 elseif showCat == 9 then
-                    rom_location = (romFolder_GBC .. "/" .. gbc_table[p].name)
+                    rom_location = (gbc_table[p].game_path)
                     core_name = core_GBC
                     clean_launch_dir()
                     launch_retroarch()
                 elseif showCat == 10 then
-                    rom_location = (romFolder_GB .. "/" .. gb_table[p].name)
+                    rom_location = (gb_table[p].game_path)
                     core_name = core_GB
                     clean_launch_dir()
                     launch_retroarch()    
                 elseif showCat == 11 then
-                    rom_location = (romFolder_MD .. "/" .. md_table[p].name)
+                    rom_location = (md_table[p].game_path)
                     core_name = core_MD
                     clean_launch_dir()
                     launch_retroarch()
                 elseif showCat == 12 then
-                    rom_location = (romFolder_SMS .. "/" .. sms_table[p].name)
+                    rom_location = (sms_table[p].game_path)
                     core_name = core_SMS
                     clean_launch_dir()
                     launch_retroarch()
                 elseif showCat == 13 then
-                    rom_location = (romFolder_GG .. "/" .. gg_table[p].name)
+                    rom_location = (gg_table[p].game_path)
                     core_name = core_GG
+                    clean_launch_dir()
+                    launch_retroarch()
+                elseif showCat == 14 then
+                    rom_location = (mame_table[p].game_path)
+                    core_name = core_MAME
+                    clean_launch_dir()
+                    launch_retroarch()
+                elseif showCat == 15 then
+                    rom_location = (amiga_table[p].game_path)
+                    core_name = core_AMIGA
+                    clean_launch_dir()
+                    launch_retroarch()
+                elseif showCat == 16 then
+                    rom_location = (tg16_table[p].game_path)
+                    core_name = core_TG16
+                    clean_launch_dir()
+                    launch_retroarch()
+                elseif showCat == 17 then
+                    rom_location = (pce_table[p].game_path)
+                    core_name = core_PCE
                     clean_launch_dir()
                     launch_retroarch()
 
@@ -5425,11 +7711,11 @@ while true do
                         System.launchApp(files_table[p].name)
 
                     elseif apptype == 2 then
-                        rom_location = ("PATH=ms0:/ISO/" .. psp_table[p].name_rom_minus_ext .. ".iso")
+                        rom_location = (psp_table[p].launch_argument)
                         launch_Adrenaline()
 
                     elseif apptype == 3 then
-                        rom_location = ("PATH=ms0:/PSP/GAME/" .. psx_table[p].name .. "/EBOOT.PBP")
+                        rom_location = (psx_table[p].launch_argument)
                         launch_Adrenaline()
 
                     elseif apptype == 4 then
@@ -5437,55 +7723,79 @@ while true do
 
                     -- Start Retro    
                     elseif apptype == 5 then
-                        rom_location = (romFolder_N64 .. "/" .. files_table[p].name)
+                        rom_location = (files_table[p].game_path)
                         clean_launch_dir()
                         launch_DaedalusX64()
 
                     elseif apptype == 6 then
-                        rom_location = (romFolder_SNES .. "/" .. files_table[p].name)
+                        rom_location = (files_table[p].game_path)
                         core_name = core_SNES
                         clean_launch_dir()
                         launch_retroarch()
 
                     elseif apptype == 7 then
-                        rom_location = (romFolder_NES .. "/" .. files_table[p].name)
+                        rom_location = (files_table[p].game_path)
                         core_name = core_NES
                         clean_launch_dir()
                         launch_retroarch()
 
                     elseif apptype == 8 then
-                        rom_location = (romFolder_GBA .. "/" .. files_table[p].name)
+                        rom_location = (files_table[p].game_path)
                         core_name = core_GBA
                         clean_launch_dir()
                         launch_retroarch()
 
                     elseif apptype == 9 then
-                        rom_location = (romFolder_GBC .. "/" .. files_table[p].name)
+                        rom_location = (files_table[p].game_path)
                         core_name = core_GBC
                         clean_launch_dir()
                         launch_retroarch()
 
                     elseif apptype == 10 then
-                        rom_location = (romFolder_GB .. "/" .. files_table[p].name)
+                        rom_location = (files_table[p].game_path)
                         core_name = core_GB
                         clean_launch_dir()
                         launch_retroarch()
                         
                     elseif apptype == 11 then
-                        rom_location = (romFolder_MD .. "/" .. files_table[p].name)
+                        rom_location = (files_table[p].game_path)
                         core_name = core_MD
                         clean_launch_dir()
                         launch_retroarch()
 
                     elseif apptype == 12 then
-                        rom_location = (romFolder_SMS .. "/" .. files_table[p].name)
+                        rom_location = (files_table[p].game_path)
                         core_name = core_SMS
                         clean_launch_dir()
                         launch_retroarch()
 
                     elseif apptype == 13 then
-                        rom_location = (romFolder_GG .. "/" .. files_table[p].name)
+                        rom_location = (files_table[p].game_path)
                         core_name = core_GG
+                        clean_launch_dir()
+                        launch_retroarch()
+
+                    elseif apptype == 14 then
+                        rom_location = (files_table[p].game_path)
+                        core_name = core_MAME
+                        clean_launch_dir()
+                        launch_retroarch()
+
+                    elseif apptype == 15 then
+                        rom_location = (files_table[p].game_path)
+                        core_name = core_AMIGA
+                        clean_launch_dir()
+                        launch_retroarch()
+
+                    elseif apptype == 16 then
+                        rom_location = (files_table[p].game_path)
+                        core_name = core_TG16
+                        clean_launch_dir()
+                        launch_retroarch()
+
+                    elseif apptype == 17 then
+                        rom_location = (files_table[p].game_path)
+                        core_name = core_PCE
                         clean_launch_dir()
                         launch_retroarch()
 
@@ -5508,7 +7818,7 @@ while true do
             end
         elseif (Controls.check(pad, SCE_CTRL_SQUARE) and not Controls.check(oldpad, SCE_CTRL_SQUARE)) then
             -- CATEGORY
-            if showCat < 13 then -- Increase to match category count
+            if showCat < 17 then -- Increase to match category count
                 if showCat==1 and showHomebrews==0 then
                     showCat = 3
                 else
@@ -5518,7 +7828,7 @@ while true do
                 showCat = 0
             end
 
-            -- Start skip empty retro categories
+            -- Start skip empty categories
             if showCat == 3 then
                 curTotal = #psp_table
                 if #psp_table == 0 then
@@ -5582,6 +7892,30 @@ while true do
             if showCat == 13 then
                 curTotal = #gg_table
                 if #gg_table == 0 then
+                    showCat = 14
+                end
+            end
+            if showCat == 14 then
+                curTotal = #mame_table
+                if #mame_table == 0 then
+                    showCat = 15
+                end
+            end
+            if showCat == 15 then
+                curTotal = #amiga_table
+                if #amiga_table == 0 then
+                    showCat = 16
+                end
+            end
+            if showCat == 16 then
+                curTotal = #tg16_table
+                if #tg16_table == 0 then
+                    showCat = 17
+                end
+            end
+            if showCat == 17 then
+                curTotal = #pce_table
+                if #pce_table == 0 then
                     showCat = 0
                 end
             end
@@ -5601,8 +7935,9 @@ while true do
             end
             menuY = 0
             startCovers = false
-            local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
-            System.writeFile(file_config, startCategory .. setReflections .. setSounds .. themeColor .. setBackground .. setLanguage .. showView .. showHomebrews, 8)
+            local file_config = System.openFile(cur_dir .. "/settings.dat", FCREATE)
+            System.writeFile(file_config, setReflections .. setSounds .. themeColor .. setBackground .. setLanguage .. showView .. showHomebrews .. startCategory, 9)
+            -- System.writeFile(file_config, setReflections .. setSounds .. themeColor .. setBackground .. setLanguage .. showView .. showHomebrews, 8)
             System.closeFile(file_config)
         elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
             if setSounds == 1 then
@@ -5787,6 +8122,30 @@ while true do
     elseif showCat == 13 then
         curTotal = #gg_table
         if #gg_table == 0 then
+            p = 0
+            master_index = p
+        end
+    elseif showCat == 14 then
+        curTotal = #mame_table
+        if #mame_table == 0 then
+            p = 0
+            master_index = p
+        end
+    elseif showCat == 15 then
+        curTotal = #amiga_table
+        if #amiga_table == 0 then
+            p = 0
+            master_index = p
+        end
+    elseif showCat == 16 then
+        curTotal = #tg16_table
+        if #tg16_table == 0 then
+            p = 0
+            master_index = p
+        end
+    elseif showCat == 17 then
+        curTotal = #pce_table
+        if #pce_table == 0 then
             p = 0
             master_index = p
         end

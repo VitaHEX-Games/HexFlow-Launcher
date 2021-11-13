@@ -99,7 +99,7 @@ function Threads.addTask(UniqueKey, T)
         Table = T.Table,
         Index = T.Index,
         Path = T.Path,
-        Retry = 3,
+        Retry = 1,
         UniqueKey = UniqueKey
     }
     Queue[#Queue + 1] = newTask

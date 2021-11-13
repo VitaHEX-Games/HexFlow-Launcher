@@ -14,7 +14,7 @@ Display and launch your retro games and homebrews in style.
 Launching a game or app from **RetroFlow Launcher** will close the launcher automaticaly without asking.
 
 ### Supported systems:
-PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear.
+PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear, PC Engine, TurboGrafx-16, MAME 2000.
 
 [DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases) is required for N64 games. [RetroArch](https://www.retroarch.com/index.php?page=platforms) is required for other retro systems. [Adrenaline](https://github.com/TheOfficialFloW/Adrenaline) is required for Playstation and PSP games.
 
@@ -85,8 +85,8 @@ To download cover images, press start, then choose which covers you would like t
 ### Repatch
 Potential issue with repatch / repatch_4 plugins in the tai config. May cause the Vita to shutdown. Try disabling these if you encounter an issue.
 
-### PSP homebrew sorter / categories lite
-Potential issue with PSP homebrew sorter / PSP categories lite, if you're experiencing please try without these.
+### PSP Categories lite
+Unsupported, if you're experiencing please try without the plugin.
 
 # RetroFlow FAQ's
 
@@ -161,6 +161,7 @@ The result should look like this:
     Cars 2 (US) [UCUS-98766].iso
 
 RetroFlow uses the ID to match artwork, and tidies the rest of the filename to display in the app.
+CSO files are also supported, and should be named as above.
 
 ## Playstation
 For PSX2PSP, game folder name must match with the GameID. For example:
