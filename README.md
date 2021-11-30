@@ -35,7 +35,7 @@ Renaming is needed for cover matching. RetroFlow will look for a title ID in the
 
 #### Windows users:
 
-Please rename PSP ISO files using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
+Please rename PSP ISO and CSO files using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
 
     %NAME% (%REGION%) [%ID%]
 
@@ -43,6 +43,7 @@ The result should look like this:
 
     Cars 2 (US) [UCUS-98766].iso
 
+Games can also be named with just the title ID like so: "UCUS98766.iso" but this isn't recommended.
 
 #### Mac users:
 See the FAQ's section for a guide on [renaming on a mac](https://github.com/jimbob4000/RetroFlow-Launcher#im-on-a-mac-how-do-i-rename-psp-games).
@@ -53,12 +54,12 @@ More information on PSP and Playstation after the FAQ's section.
 
 ### 3. Check your PS1 and PSP are in the right folders
 
-PS1 games should be saved here:
+PS1 and PSP games with eboot files should be saved here:
 
     ux0:pspemu/PSP/GAME/
 
 
-PSP games should be saved here: 
+PSP ISO and CSO games should be saved here: 
 
     ux0:pspemu/ISO/
 
@@ -78,6 +79,11 @@ It's important that your roms are named using the no-intro file naming conventio
 ### 5. Download covers
 
 To download cover images, press start, then choose which covers you would like to download. 
+
+
+# Issues loading games with Adrenaline?
+
+Please try installing [Adrenaline Bubble Manager](https://github.com/ONElua/AdrenalineBubbleManager/releases) to check bubbles load okay, or try installing [AdrBubbleBooterInstaller](https://vitadb.rinnegatamante.it/#/info/307).
 
 
 # Possible incompatabilities
@@ -152,7 +158,7 @@ RetroFlow uses the game ID's for Playstation and PSP for cover matching.
 Please use the guides below.
 
 ## PSP
-For PSP ISO files please rename using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
+For PSP ISO and CSO files please rename using Leecherman's [PSP ISO Renamer tool](https://sites.google.com/site/theleecherman/PSPISORenamer) using the following parameters:
 
     %NAME% (%REGION%) [%ID%]
 
@@ -170,8 +176,6 @@ For PSX2PSP, game folder name must match with the GameID. For example:
 
 Games will need to be in a EBOOT format, see here for information on [how to convert PSX Disc Images to EBOOT for PSP](https://www.cfwaifu.com/psx2psp/).
 RetroFlow also uses the ID to lookup the name of the game.
-
-
 
 
 
@@ -254,6 +258,8 @@ Russian - @_novff
 Portuguese - @nighto
 
 Japanese - @iGlitch
+
+Chinese - @acd13141
 
 
 ### Polite notice
