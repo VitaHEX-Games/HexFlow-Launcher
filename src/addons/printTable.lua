@@ -1,5 +1,26 @@
 local db_Cache_Folder = "ux0:/data/RetroFlow/CACHE/"
 
+local db_Cached_File_files = (db_Cache_Folder .. "db_files.lua")
+local db_Cached_File_folders = (db_Cache_Folder .. "db_folders.lua")
+local db_Cached_File_games = (db_Cache_Folder .. "db_games.lua")
+local db_Cached_File_homebrews = (db_Cache_Folder .. "db_homebrews.lua")
+local db_Cached_File_psp = (db_Cache_Folder .. "db_psp.lua")
+local db_Cached_File_psx = (db_Cache_Folder .. "db_psx.lua")
+local db_Cached_File_n64 = (db_Cache_Folder .. "db_n64.lua")
+local db_Cached_File_snes = (db_Cache_Folder .. "db_snes.lua")
+local db_Cached_File_nes = (db_Cache_Folder .. "db_nes.lua")
+local db_Cached_File_gba = (db_Cache_Folder .. "db_gba.lua")
+local db_Cached_File_gbc = (db_Cache_Folder .. "db_gbc.lua")
+local db_Cached_File_gb = (db_Cache_Folder .. "db_gb.lua")
+local db_Cached_File_md = (db_Cache_Folder .. "db_md.lua")
+local db_Cached_File_sms = (db_Cache_Folder .. "db_sms.lua")
+local db_Cached_File_gg = (db_Cache_Folder .. "db_gg.lua")
+local db_Cached_File_mame = (db_Cache_Folder .. "db_mame.lua")
+local db_Cached_File_amiga = (db_Cache_Folder .. "db_amiga.lua")
+local db_Cached_File_tg16 = (db_Cache_Folder .. "db_tg16.lua")
+local db_Cached_File_pce = (db_Cache_Folder .. "db_pce.lua")
+local db_Cached_File_all_games = (db_Cache_Folder .. "db_all_games.lua")
+
 
 -- PRINT ALL TABLES AT ONCE
 function print_tables()
@@ -7,29 +28,28 @@ function print_tables()
     -- Create directories - Database Cache
     System.createDirectory(db_Cache_Folder)
 
+    -- Delete old files
+    if System.doesFileExist(db_Cache_Folder .. "db_files.lua") then     System.deleteFile(db_Cache_Folder .. "db_files.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_folders.lua") then   System.deleteFile(db_Cache_Folder .. "db_folders.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_games.lua") then     System.deleteFile(db_Cache_Folder .. "db_games.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_homebrews.lua") then System.deleteFile(db_Cache_Folder .. "db_homebrews.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_psp.lua") then       System.deleteFile(db_Cache_Folder .. "db_psp.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_psx.lua") then       System.deleteFile(db_Cache_Folder .. "db_psx.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_snes.lua") then      System.deleteFile(db_Cache_Folder .. "db_snes.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_nes.lua") then       System.deleteFile(db_Cache_Folder .. "db_nes.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_gba.lua") then       System.deleteFile(db_Cache_Folder .. "db_gba.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_gbc.lua") then       System.deleteFile(db_Cache_Folder .. "db_gbc.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_gb.lua") then        System.deleteFile(db_Cache_Folder .. "db_gb.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_md.lua") then        System.deleteFile(db_Cache_Folder .. "db_md.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_sms.lua") then       System.deleteFile(db_Cache_Folder .. "db_sms.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_gg.lua") then        System.deleteFile(db_Cache_Folder .. "db_gg.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_mame.lua") then      System.deleteFile(db_Cache_Folder .. "db_mame.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_amiga.lua") then     System.deleteFile(db_Cache_Folder .. "db_amiga.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_tg16.lua") then      System.deleteFile(db_Cache_Folder .. "db_tg16.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_pce.lua") then       System.deleteFile(db_Cache_Folder .. "db_pce.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_all_games.lua") then System.deleteFile(db_Cache_Folder .. "db_all_games.lua") else end
+
     -- START CREATE DATABASE CACHE
-
-    local db_Cached_File_files = (db_Cache_Folder .. "db_files.lua")
-    local db_Cached_File_folders = (db_Cache_Folder .. "db_folders.lua")
-    local db_Cached_File_games = (db_Cache_Folder .. "db_games.lua")
-    local db_Cached_File_homebrews = (db_Cache_Folder .. "db_homebrews.lua")
-    local db_Cached_File_psp = (db_Cache_Folder .. "db_psp.lua")
-    local db_Cached_File_psx = (db_Cache_Folder .. "db_psx.lua")
-    local db_Cached_File_n64 = (db_Cache_Folder .. "db_n64.lua")
-    local db_Cached_File_snes = (db_Cache_Folder .. "db_snes.lua")
-    local db_Cached_File_nes = (db_Cache_Folder .. "db_nes.lua")
-    local db_Cached_File_gba = (db_Cache_Folder .. "db_gba.lua")
-    local db_Cached_File_gbc = (db_Cache_Folder .. "db_gbc.lua")
-    local db_Cached_File_gb = (db_Cache_Folder .. "db_gb.lua")
-    local db_Cached_File_md = (db_Cache_Folder .. "db_md.lua")
-    local db_Cached_File_sms = (db_Cache_Folder .. "db_sms.lua")
-    local db_Cached_File_gg = (db_Cache_Folder .. "db_gg.lua")
-    local db_Cached_File_mame = (db_Cache_Folder .. "db_mame.lua")
-    local db_Cached_File_amiga = (db_Cache_Folder .. "db_amiga.lua")
-    local db_Cached_File_tg16 = (db_Cache_Folder .. "db_tg16.lua")
-    local db_Cached_File_pce = (db_Cache_Folder .. "db_pce.lua")
-    local db_Cached_File_all_games = (db_Cache_Folder .. "db_all_games.lua")
-
 
     local db_files = assert(io.open(db_Cached_File_files, "w"))
     printTable(files_table, db_files)
@@ -120,6 +140,7 @@ end
 
 function print_table_files()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_files.lua") then System.deleteFile(db_Cache_Folder .. "db_files.lua") else end
     local db_Cached_File_files = (db_Cache_Folder .. "db_files.lua")
     local db_files = assert(io.open(db_Cached_File_files, "w"))
     printTable(files_table, db_files)
@@ -128,6 +149,7 @@ end
 
 function print_table_folders()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_folders.lua") then System.deleteFile(db_Cache_Folder .. "db_folders.lua") else end
     local db_Cached_File_folders = (db_Cache_Folder .. "db_folders.lua")
     local db_folders = assert(io.open(db_Cached_File_folders, "w"))
     printTable(folders_table, db_folders)
@@ -136,6 +158,7 @@ end
 
 function print_table_games()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_games.lua") then System.deleteFile(db_Cache_Folder .. "db_games.lua") else end    
     local db_Cached_File_games = (db_Cache_Folder .. "db_games.lua")
     local db_games = assert(io.open(db_Cached_File_games, "w"))
     printTable(games_table, db_games)
@@ -144,6 +167,7 @@ end
 
 function print_table_homebrews()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_homebrews.lua") then System.deleteFile(db_Cache_Folder .. "db_homebrews.lua") else end    
     local db_Cached_File_homebrews = (db_Cache_Folder .. "db_homebrews.lua")
     local db_homebrews = assert(io.open(db_Cached_File_homebrews, "w"))
     printTable(homebrews_table, db_homebrews)
@@ -152,6 +176,7 @@ end
 
 function print_table_psp()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_psp.lua") then System.deleteFile(db_Cache_Folder .. "db_psp.lua") else end    
     local db_Cached_File_psp = (db_Cache_Folder .. "db_psp.lua")
     local db_psp = assert(io.open(db_Cached_File_psp, "w"))
     printTable(psp_table, db_psp)
@@ -160,6 +185,7 @@ end
 
 function print_table_psx()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_psx.lua") then System.deleteFile(db_Cache_Folder .. "db_psx.lua") else end    
     local db_Cached_File_psx = (db_Cache_Folder .. "db_psx.lua")
     local db_psx = assert(io.open(db_Cached_File_psx, "w"))
     printTable(psx_table, db_psx)
@@ -168,6 +194,7 @@ end
 
 function print_table_n64()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_n64.lua") then System.deleteFile(db_Cache_Folder .. "db_n64.lua") else end    
     local db_Cached_File_n64 = (db_Cache_Folder .. "db_n64.lua")
     local db_n64 = assert(io.open(db_Cached_File_n64, "w"))
     printTable(n64_table, db_n64)
@@ -176,6 +203,7 @@ end
 
 function print_table_snes()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_snes.lua") then System.deleteFile(db_Cache_Folder .. "db_snes.lua") else end    
     local db_Cached_File_snes = (db_Cache_Folder .. "db_snes.lua")
     local db_snes = assert(io.open(db_Cached_File_snes, "w"))
     printTable(snes_table, db_snes)
@@ -184,6 +212,7 @@ end
 
 function print_table_nes()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_nes.lua") then System.deleteFile(db_Cache_Folder .. "db_nes.lua") else end    
     local db_Cached_File_nes = (db_Cache_Folder .. "db_nes.lua")
     local db_nes = assert(io.open(db_Cached_File_nes, "w"))
     printTable(nes_table, db_nes)
@@ -192,6 +221,7 @@ end
 
 function print_table_gba()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_gba.lua") then System.deleteFile(db_Cache_Folder .. "db_gba.lua") else end    
     local db_Cached_File_gba = (db_Cache_Folder .. "db_gba.lua")
     local db_gba = assert(io.open(db_Cached_File_gba, "w"))
     printTable(gba_table, db_gba)
@@ -200,6 +230,7 @@ end
 
 function print_table_gbc()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_gbc.lua") then System.deleteFile(db_Cache_Folder .. "db_gbc.lua") else end    
     local db_Cached_File_gbc = (db_Cache_Folder .. "db_gbc.lua")
     local db_gbc = assert(io.open(db_Cached_File_gbc, "w"))
     printTable(gbc_table, db_gbc)
@@ -208,6 +239,7 @@ end
 
 function print_table_gb()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_gb.lua") then System.deleteFile(db_Cache_Folder .. "db_gb.lua") else end    
     local db_Cached_File_gb = (db_Cache_Folder .. "db_gb.lua")
     local db_gb = assert(io.open(db_Cached_File_gb, "w"))
     printTable(gb_table, db_gb)
@@ -216,6 +248,7 @@ end
 
 function print_table_md()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_md.lua") then System.deleteFile(db_Cache_Folder .. "db_md.lua") else end    
     local db_Cached_File_md = (db_Cache_Folder .. "db_md.lua")
     local db_md = assert(io.open(db_Cached_File_md, "w"))
     printTable(md_table, db_md)
@@ -224,6 +257,7 @@ end
 
 function print_table_sms()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_sms.lua") then System.deleteFile(db_Cache_Folder .. "db_sms.lua") else end    
     local db_Cached_File_sms = (db_Cache_Folder .. "db_sms.lua")
     local db_sms = assert(io.open(db_Cached_File_sms, "w"))
     printTable(sms_table, db_sms)
@@ -232,6 +266,7 @@ end
 
 function print_table_gg()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_gg.lua") then System.deleteFile(db_Cache_Folder .. "db_gg.lua") else end    
     local db_Cached_File_gg = (db_Cache_Folder .. "db_gg.lua")
     local db_gg = assert(io.open(db_Cached_File_gg, "w"))
     printTable(gg_table, db_gg)
@@ -240,6 +275,7 @@ end
 
 function print_table_mame()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_mame.lua") then System.deleteFile(db_Cache_Folder .. "db_mame.lua") else end    
     local db_Cached_File_mame = (db_Cache_Folder .. "db_mame.lua")
     local db_mame = assert(io.open(db_Cached_File_mame, "w"))
     printTable(mame_table, db_mame)
@@ -248,6 +284,7 @@ end
 
 function print_table_amiga()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_amiga.lua") then System.deleteFile(db_Cache_Folder .. "db_amiga.lua") else end    
     local db_Cached_File_amiga = (db_Cache_Folder .. "db_amiga.lua")
     local db_amiga = assert(io.open(db_Cached_File_amiga, "w"))
     printTable(amiga_table, db_amiga)
@@ -256,6 +293,7 @@ end
 
 function print_table_tg16()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_tg16.lua") then System.deleteFile(db_Cache_Folder .. "db_tg16.lua") else end    
     local db_Cached_File_tg16 = (db_Cache_Folder .. "db_tg16.lua")
     local db_tg16 = assert(io.open(db_Cached_File_tg16, "w"))
     printTable(tg16_table, db_tg16)
@@ -264,6 +302,7 @@ end
 
 function print_table_pce()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_pce.lua") then System.deleteFile(db_Cache_Folder .. "db_pce.lua") else end    
     local db_Cached_File_pce = (db_Cache_Folder .. "db_pce.lua")
     local db_pce = assert(io.open(db_Cached_File_pce, "w"))
     printTable(pce_table, db_pce)
@@ -272,6 +311,7 @@ end
 
 function print_table_all_games()
     -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_all_games.lua") then System.deleteFile(db_Cache_Folder .. "db_all_games.lua") else end    
     local db_Cached_File_all_games = (db_Cache_Folder .. "db_all_games.lua")
     local db_all_games = assert(io.open(db_Cached_File_all_games, "w"))
     printTable(all_games_table, db_all_games)
