@@ -39,7 +39,7 @@ Please rename PSP ISO and CSO files using Leecherman's [PSP ISO Renamer tool](ht
 
     %NAME% (%REGION%) [%ID%]
 
-The result should look like this:
+The result should look like this (please notice the square brackets):
 
     Cars 2 (US) [UCUS-98766].iso
 
