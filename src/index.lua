@@ -4,7 +4,7 @@
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "3.1"
+local appversion = "3.2"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -15,28 +15,26 @@ end
 
 
 Network.init()
-local onlineCovers = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/PSVita/"
-local onlineCoversPSP = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/PSP/"
-local onlineCoversPSX = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/PS1/"
 
-local onlineCoversN64 = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/N64/Covers/"
-local onlineCoversSNES = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/SNES/Covers/"
-local onlineCoversNES = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/NES/Covers/"
-
-local onlineCoversGBA = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GBA/Covers/"
-local onlineCoversGBC = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GBC/Covers/"
-local onlineCoversGB = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GB/Covers/"
-
-local onlineCoversMD = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MD/Covers/"
-local onlineCoversSMS = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/SMS/Covers/"
-local onlineCoversGG = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GG/Covers/"
-
-local onlineCoversMAME = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MAME/Covers/"
-local onlineCoversAMIGA = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/AMIGA/Covers/"
-local onlineCoversTG16 = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/TG16/Covers/"
-
-local onlineCoversPCE = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/PCE/Covers/"
-
+local onlineCoverPathSystem = {
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/PSVita/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/PSP/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/PS1/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/HOMEBREW/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/N64/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/SNES/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/NES/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GBA/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GBC/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GB/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MD/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/SMS/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GG/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MAME/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/AMIGA/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/TG16/Covers/",
+    "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/PCE/Covers/",
+}
 
 Sound.init()
 local click = Sound.open("app0:/DATA/click2.wav")
@@ -55,24 +53,34 @@ Graphics.setImageFilters(imgFloor, FILTER_LINEAR, FILTER_LINEAR)
 
 
 local cur_dir = "ux0:/data/RetroFlow/"
-local covers_psv = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Vita/"
-local covers_psp = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/"
-local covers_psx = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation/"
 
-local covers_N64 = "ux0:/data/RetroFlow/COVERS/Nintendo - Nintendo 64/"
-local covers_SNES = "ux0:/data/RetroFlow/COVERS/Nintendo - Super Nintendo Entertainment System/"
-local covers_NES = "ux0:/data/RetroFlow/COVERS/Nintendo - Nintendo Entertainment System/"
-local covers_GBA = "ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy Advance/"
-local covers_GBC = "ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy Color/"
-local covers_GB = "ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy/"
-local covers_MD = "ux0:/data/RetroFlow/COVERS/Sega - Mega Drive - Genesis/"
-local covers_SMS = "ux0:/data/RetroFlow/COVERS/Sega - Master System - Mark III/"
-local covers_GG = "ux0:/data/RetroFlow/COVERS/Sega - Game Gear/"
-local covers_MAME = "ux0:/data/RetroFlow/COVERS/MAME/"
-local covers_AMIGA = "ux0:/data/RetroFlow/COVERS/Commodore - Amiga/"
-local covers_TG16 = "ux0:/data/RetroFlow/COVERS/NEC - TurboGrafx 16/"
-local covers_PCE = "ux0:/data/RetroFlow/COVERS/NEC - PC Engine/"
+local localCoverPath = {
+    "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Vita/",
+    "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/",
+    "ux0:/data/RetroFlow/COVERS/Sony - PlayStation/",
+    "ux0:/data/RetroFlow/COVERS/Homebrew/",
+    "ux0:/data/RetroFlow/COVERS/Nintendo - Nintendo 64/",
+    "ux0:/data/RetroFlow/COVERS/Nintendo - Super Nintendo Entertainment System/",
+    "ux0:/data/RetroFlow/COVERS/Nintendo - Nintendo Entertainment System/",
+    "ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy Advance/",
+    "ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy Color/",
+    "ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy/",
+    "ux0:/data/RetroFlow/COVERS/Sega - Mega Drive - Genesis/",
+    "ux0:/data/RetroFlow/COVERS/Sega - Master System - Mark III/",
+    "ux0:/data/RetroFlow/COVERS/Sega - Game Gear/",
+    "ux0:/data/RetroFlow/COVERS/MAME/",
+    "ux0:/data/RetroFlow/COVERS/Commodore - Amiga/",
+    "ux0:/data/RetroFlow/COVERS/NEC - TurboGrafx 16/",
+    "ux0:/data/RetroFlow/COVERS/NEC - PC Engine/",
+}
 
+System.createDirectory("ux0:/data/RetroFlow/")
+System.createDirectory("ux0:/data/RetroFlow/COVERS/")
+
+-- Create directories - Covers
+for directories = 1, 17 do
+   System.createDirectory(localCoverPath[directories])
+end
 
 -- Tidy up legacy COVER folder structure to a more standard naming convention
 if System.doesDirExist(cur_dir .. "COVERS/PSVITA")  then System.rename(cur_dir .. "COVERS/PSVITA",  cur_dir .. "COVERS/Sony - PlayStation Vita") end
@@ -88,27 +96,6 @@ if System.doesDirExist(cur_dir .. "COVERS/MD")      then System.rename(cur_dir .
 if System.doesDirExist(cur_dir .. "COVERS/SMS")     then System.rename(cur_dir .. "COVERS/SMS",     cur_dir .. "COVERS/Sega - Master System - Mark III") end
 if System.doesDirExist(cur_dir .. "COVERS/GG")      then System.rename(cur_dir .. "COVERS/GG",      cur_dir .. "COVERS/Sega - Game Gear") end
 
-
--- Create directories - Covers
-System.createDirectory("ux0:/data/RetroFlow/")
-System.createDirectory("ux0:/data/RetroFlow/COVERS/")
-System.createDirectory(covers_psv)
-System.createDirectory(covers_psp)
-System.createDirectory(covers_psx)
-
-System.createDirectory(covers_N64)
-System.createDirectory(covers_SNES)
-System.createDirectory(covers_NES)
-System.createDirectory(covers_GBA)
-System.createDirectory(covers_GBC)
-System.createDirectory(covers_GB)
-System.createDirectory(covers_MD)
-System.createDirectory(covers_SMS)
-System.createDirectory(covers_GG)
-System.createDirectory(covers_MAME)
-System.createDirectory(covers_AMIGA)
-System.createDirectory(covers_TG16)
-System.createDirectory(covers_PCE)
 
 -- ROM Folders
 local romFolder = "ux0:/data/RetroFlow/ROMS/"
@@ -251,6 +238,126 @@ Font.setPixelSizes(fnt20, 20)
 Font.setPixelSizes(fnt22, 22)
 Font.setPixelSizes(fnt25, 25)
 Font.setPixelSizes(fnt35, 35)
+
+local cache_file_count_expected = 20
+
+function count_cache_and_reload()
+    cache_file_count = System.listDirectory(db_Cache_Folder)
+    if #cache_file_count < cache_file_count_expected then -- 20 tables expected
+        -- Files missing - rescan
+        cache_all_tables()
+        files_table = import_cached_DB(System.currentDirectory())
+    else
+        files_table = import_cached_DB(System.currentDirectory())
+    end
+end
+
+-- PRINT TABLE FUNCTIONS
+
+function cache_all_tables()
+    dofile("app0:addons/printTable.lua")
+    print_tables()
+end
+
+function update_cached_table_files()
+    dofile("app0:addons/printTable.lua")
+    print_table_files()
+end
+
+function update_cached_table_folders()
+    dofile("app0:addons/printTable.lua")
+    print_table_folders()
+end
+
+function update_cached_table_games()
+    dofile("app0:addons/printTable.lua")
+    print_table_games()
+end
+
+function update_cached_table_homebrews()
+    dofile("app0:addons/printTable.lua")
+    print_table_homebrews()
+end
+
+function update_cached_table_psp()
+    dofile("app0:addons/printTable.lua")
+    print_table_psp()
+end
+
+function update_cached_table_psx()
+    dofile("app0:addons/printTable.lua")
+    print_table_psx()
+end
+
+function update_cached_table_n64()
+    dofile("app0:addons/printTable.lua")
+    print_table_n64()
+end
+
+function update_cached_table_snes()
+    dofile("app0:addons/printTable.lua")
+    print_table_snes()
+end
+
+function update_cached_table_nes()
+    dofile("app0:addons/printTable.lua")
+    print_table_nes()
+end
+
+function update_cached_table_gba()
+    dofile("app0:addons/printTable.lua")
+    print_table_gba()
+end
+
+function update_cached_table_gbc()
+    dofile("app0:addons/printTable.lua")
+    print_table_gbc()
+end
+
+function update_cached_table_gb()
+    dofile("app0:addons/printTable.lua")
+    print_table_gb()
+end
+
+function update_cached_table_md()
+    dofile("app0:addons/printTable.lua")
+    print_table_md()
+end
+
+function update_cached_table_sms()
+    dofile("app0:addons/printTable.lua")
+    print_table_sms()
+end
+
+function update_cached_table_gg()
+    dofile("app0:addons/printTable.lua")
+    print_table_gg()
+end
+
+function update_cached_table_mame()
+    dofile("app0:addons/printTable.lua")
+    print_table_mame()
+end
+
+function update_cached_table_amiga()
+    dofile("app0:addons/printTable.lua")
+    print_table_amiga()
+end
+
+function update_cached_table_tg16()
+    dofile("app0:addons/printTable.lua")
+    print_table_tg16()
+end
+
+function update_cached_table_pce()
+    dofile("app0:addons/printTable.lua")
+    print_table_pce()
+end
+
+function update_cached_table_all_games()
+    dofile("app0:addons/printTable.lua")
+    print_table_all_games()
+end
 
 
 local menuX = 0
@@ -764,115 +871,6 @@ function CreateUserTitleTable_MAME()
 end
 
 
--- PRINT TABLE FUNCTIONS
-
-function cache_all_tables()
-    dofile("app0:addons/printTable.lua")
-    print_tables()
-end
-
-function update_cached_table_files()
-    dofile("app0:addons/printTable.lua")
-    print_table_files()
-end
-
-function update_cached_table_folders()
-    dofile("app0:addons/printTable.lua")
-    print_table_folders()
-end
-
-function update_cached_table_games()
-    dofile("app0:addons/printTable.lua")
-    print_table_games()
-end
-
-function update_cached_table_homebrews()
-    dofile("app0:addons/printTable.lua")
-    print_table_homebrews()
-end
-
-function update_cached_table_psp()
-    dofile("app0:addons/printTable.lua")
-    print_table_psp()
-end
-
-function update_cached_table_psx()
-    dofile("app0:addons/printTable.lua")
-    print_table_psx()
-end
-
-function update_cached_table_n64()
-    dofile("app0:addons/printTable.lua")
-    print_table_n64()
-end
-
-function update_cached_table_snes()
-    dofile("app0:addons/printTable.lua")
-    print_table_snes()
-end
-
-function update_cached_table_nes()
-    dofile("app0:addons/printTable.lua")
-    print_table_nes()
-end
-
-function update_cached_table_gba()
-    dofile("app0:addons/printTable.lua")
-    print_table_gba()
-end
-
-function update_cached_table_gbc()
-    dofile("app0:addons/printTable.lua")
-    print_table_gbc()
-end
-
-function update_cached_table_gb()
-    dofile("app0:addons/printTable.lua")
-    print_table_gb()
-end
-
-function update_cached_table_md()
-    dofile("app0:addons/printTable.lua")
-    print_table_md()
-end
-
-function update_cached_table_sms()
-    dofile("app0:addons/printTable.lua")
-    print_table_sms()
-end
-
-function update_cached_table_gg()
-    dofile("app0:addons/printTable.lua")
-    print_table_gg()
-end
-
-function update_cached_table_mame()
-    dofile("app0:addons/printTable.lua")
-    print_table_mame()
-end
-
-function update_cached_table_amiga()
-    dofile("app0:addons/printTable.lua")
-    print_table_amiga()
-end
-
-function update_cached_table_tg16()
-    dofile("app0:addons/printTable.lua")
-    print_table_tg16()
-end
-
-function update_cached_table_pce()
-    dofile("app0:addons/printTable.lua")
-    print_table_pce()
-end
-
-function update_cached_table_all_games()
-    dofile("app0:addons/printTable.lua")
-    print_table_all_games()
-end
-
-
-
 function listDirectory(dir)
     dir = System.listDirectory(dir)
     folders_table = {}
@@ -910,6 +908,8 @@ function listDirectory(dir)
 
     for i, file in pairs(dir) do
     local custom_path, custom_path_id, app_type = nil, nil, nil
+
+
         if file.directory
             and not string.match(file.name, "RETROFLOW") -- Don't index Retroflow
             and not string.match(file.name, "RETROLNCR") -- Don't index Retroflow Adrenaline Launcher
@@ -934,6 +934,18 @@ function listDirectory(dir)
             file.name_title_search = file.name
             file.apptitle = app_title
 
+            local custom_path = {
+                localCoverPath[1] .. app_title .. ".png",
+                localCoverPath[2] .. app_title .. ".png",
+                localCoverPath[3] .. app_title .. ".png",
+                localCoverPath[4] .. app_title .. ".png"
+            }
+            local custom_path_id = {
+                localCoverPath[1] .. file.name .. ".png",
+                localCoverPath[2] .. file.name .. ".png",
+                localCoverPath[3] .. file.name .. ".png",
+                localCoverPath[4] .. file.name .. ".png"
+            }
 
             if string.match(file.name, "PCS") and not string.match(file.name, "PCSI") then
                 
@@ -951,16 +963,13 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=1
 
-                        custom_path = covers_psv .. app_title .. ".png"
-                        custom_path_id = covers_psv .. file.name .. ".png"
+                        file.cover_path_online = onlineCoverPathSystem[1]
+                        file.cover_path_local = localCoverPath[1]
 
-                        file.cover_path_online = onlineCovers
-                        file.cover_path_local = covers_psv
-
-                        if custom_path and System.doesFileExist(custom_path) then
-                            img_path = custom_path --custom cover by app name
-                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = custom_path_id --custom cover by app id
+                        if custom_path[1] and System.doesFileExist(custom_path[1]) then
+                            img_path = custom_path[1] --custom cover by app name
+                        elseif custom_path_id[1] and System.doesFileExist(custom_path_id[1]) then
+                            img_path = custom_path_id[1] --custom cover by app id
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
@@ -977,16 +986,13 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=2
 
-                        custom_path = covers_psp .. app_title .. ".png"
-                        custom_path_id = covers_psp .. file.name .. ".png"
+                        file.cover_path_online = onlineCoverPathSystem[2]
+                        file.cover_path_local = localCoverPath[2]
 
-                        file.cover_path_online = onlineCoversPSP
-                        file.cover_path_local = covers_psp
-
-                        if custom_path and System.doesFileExist(custom_path) then
-                            img_path = covers_psp .. file.name .. ".png" --custom cover by app name
-                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = covers_psp .. file.name .. ".png" --custom cover by app id
+                        if custom_path[2] and System.doesFileExist(custom_path[2]) then
+                            img_path = custom_path[2] --custom cover by app name
+                        elseif custom_path_id[2] and System.doesFileExist(custom_path_id[2]) then
+                            img_path = custom_path_id[2] --custom cover by app id
                         else
                             if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
                                 img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
@@ -1003,16 +1009,13 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=3
 
-                        custom_path = covers_psx .. app_title .. ".png"
-                        custom_path_id = covers_psx .. file.name .. ".png"
+                        file.cover_path_online = onlineCoverPathSystem[3]
+                        file.cover_path_local = localCoverPath[3]
 
-                        file.cover_path_online = onlineCoversPSX
-                        file.cover_path_local = covers_psx
-
-                        if custom_path and System.doesFileExist(custom_path) then
-                            img_path = covers_psx .. file.name .. ".png" --custom cover by app name
-                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = covers_psx .. file.name .. ".png" --custom cover by app id
+                        if custom_path[3] and System.doesFileExist(custom_path[3]) then
+                            img_path = custom_path[3] --custom cover by app name
+                        elseif custom_path_id[3] and System.doesFileExist(custom_path_id[3]) then
+                            img_path = custom_path_id[3] --custom cover by app id
                         else
                             if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
                                 img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
@@ -1030,16 +1033,13 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=0
 
-                        -- custom_path = covers_psv .. app_title .. ".png"
-                        -- custom_path_id = covers_psv .. file.name .. ".png"
+                        file.cover_path_online = onlineCoverPathSystem[4]
+                        file.cover_path_local = localCoverPath[4]
 
-                        file.cover_path_online = onlineCovers
-                        file.cover_path_local = covers_psv
-
-                        if custom_path and System.doesFileExist(custom_path) then
-                            img_path = custom_path --custom cover by app name
-                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = custom_path_id --custom cover by app id
+                        if custom_path[4] and System.doesFileExist(custom_path[4]) then
+                            img_path = custom_path[4] --custom cover by app name
+                        elseif custom_path_id[4] and System.doesFileExist(custom_path_id[4]) then
+                            img_path = custom_path_id[4] --custom cover by app id
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
@@ -1056,16 +1056,13 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=1
 
-                        custom_path = covers_psv .. app_title .. ".png"
-                        custom_path_id = covers_psv .. file.name .. ".png"
+                        file.cover_path_local = localCoverPath[1]
+                        file.cover_path_online = onlineCoverPathSystem[1]
 
-                        file.cover_path_local = covers_psv
-                        file.cover_path_online = onlineCovers
-
-                        if custom_path and System.doesFileExist(custom_path) then
-                            img_path = custom_path --custom cover by app name
-                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = custom_path_id --custom cover by app id
+                        if custom_path[1] and System.doesFileExist(custom_path[1]) then
+                            img_path = custom_path[1] --custom cover by app name
+                        elseif custom_path_id[1] and System.doesFileExist(custom_path_id[1]) then
+                            img_path = custom_path_id[1] --custom cover by app id
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
@@ -1084,16 +1081,13 @@ function listDirectory(dir)
                     table.insert(all_games_table, 1, file)
                     file.app_type=1
 
-                    custom_path = covers_psv .. app_title .. ".png"
-                    custom_path_id = covers_psv .. file.name .. ".png"
+                    file.cover_path_online = onlineCoverPathSystem[1]
+                    file.cover_path_local = localCoverPath[1]
 
-                    file.cover_path_online = onlineCovers
-                    file.cover_path_local = covers_psv
-
-                    if custom_path and System.doesFileExist(custom_path) then
-                        img_path = custom_path --custom cover by app name
-                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                        img_path = custom_path_id --custom cover by app id
+                    if custom_path[1] and System.doesFileExist(custom_path[1]) then
+                        img_path = custom_path[1] --custom cover by app name
+                    elseif custom_path_id[1] and System.doesFileExist(custom_path_id[1]) then
+                        img_path = custom_path_id[1] --custom cover by app id
                     else
                         if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                             img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
@@ -1109,13 +1103,13 @@ function listDirectory(dir)
 
                 -- Scan Homebrews 
                     -- Hide homebrews from All Category
-                    if showHomebrews == 1 then -- If show Homebrews is true then scan
+                    if showHomebrews == 0 then -- If show Homebrews is OFF
 
                         -- Commented out to avoid duplicating homebrew
                         -- table.insert(folders_table, file)
                         -- file.app_type=0
 
-                    else -- If show Homebrews is false
+                    else -- If show Homebrews is ON
                         --Check for Vita override and include those games
                         if System.doesFileExist(cur_dir .. "/overrides.dat") then
                             --0 default, 1 vita, 2 psp, 3 psx, 4 homebrew
@@ -1125,12 +1119,12 @@ function listDirectory(dir)
                                 file.app_type=0
 
                                 file.cover_path_online = onlineCover
-                                file.cover_path_local = covers_psv
+                                file.cover_path_local = localCoverPath[1]
 
-                                if custom_path and System.doesFileExist(custom_path) then
-                                    img_path = custom_path --custom cover by app name
-                                elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                    img_path = custom_path_id --custom cover by app id
+                                if custom_path[4] and System.doesFileExist(custom_path[4]) then
+                                    img_path = custom_path[4] --custom cover by app name
+                                elseif custom_path_id[4] and System.doesFileExist(custom_path_id[4]) then
+                                    img_path = custom_path_id[4] --custom cover by app id
                                 else
                                     if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                         img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
@@ -1156,24 +1150,13 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=1
 
-                        custom_path = covers_psv .. app_title .. ".png"
-                        custom_path_id = covers_psv .. file.name .. ".png"
+                        file.cover_path_online = onlineCoverPathSystem[1]
+                        file.cover_path_local = localCoverPath[1]
 
-                        file.cover_path_online = onlineCovers
-                        file.cover_path_local = covers_psv
-
-                        if custom_path and System.doesFileExist(custom_path) then
-                            img_path = custom_path --custom cover by app name
-                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = custom_path_id --custom cover by app id
-                        -- else
-                        --     if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
-                        --         img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"  --app icon
-                        --     else
-                        --         img_path = "app0:/DATA/noimg.png" --blank grey
-                        --     end
-                        -- end
-
+                        if custom_path[1] and System.doesFileExist(custom_path[1]) then
+                            img_path = custom_path[1] --custom cover by app name
+                        elseif custom_path_id[1] and System.doesFileExist(custom_path_id[1]) then
+                            img_path = custom_path_id[1] --custom cover by app id
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
@@ -1190,16 +1173,13 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=2
 
-                        custom_path = covers_psp .. app_title .. ".png"
-                        custom_path_id = covers_psp .. file.name .. ".png"
+                        file.cover_path_online = onlineCoverPathSystem[2]
+                        file.cover_path_local = localCoverPath[2]
 
-                        file.cover_path_online = onlineCoversPSP
-                        file.cover_path_local = covers_psp
-
-                        if custom_path and System.doesFileExist(custom_path) then
-                            img_path = covers_psp .. file.name .. ".png" --custom cover by app name
-                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = covers_psp .. file.name .. ".png" --custom cover by app id
+                        if custom_path[2] and System.doesFileExist(custom_path[2]) then
+                            img_path = custom_path[2] --custom cover by app name
+                        elseif custom_path_id[2] and System.doesFileExist(custom_path_id[2]) then
+                            img_path = custom_path_id[2] --custom cover by app id
                         else
                             if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
                                 img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
@@ -1216,16 +1196,13 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=3
 
-                        custom_path = covers_psx .. app_title .. ".png"
-                        custom_path_id = covers_psx .. file.name .. ".png"
+                        file.cover_path_online = onlineCoverPathSystem[3]
+                        file.cover_path_local = localCoverPath[3]
 
-                        file.cover_path_online = onlineCoversPSX
-                        file.cover_path_local = covers_psx
-
-                        if custom_path and System.doesFileExist(custom_path) then
-                            img_path = covers_psx .. file.name .. ".png" --custom cover by app name
-                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = covers_psx .. file.name .. ".png" --custom cover by app id
+                        if custom_path[3] and System.doesFileExist(custom_path[3]) then
+                            img_path = custom_path[3] --custom cover by app name
+                        elseif custom_path_id[3] and System.doesFileExist(custom_path_id[3]) then
+                            img_path = custom_path_id[3] --custom cover by app id
                         else
                             if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
                                 img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
@@ -1243,16 +1220,13 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=0
 
-                        -- custom_path = covers_psv .. app_title .. ".png"
-                        -- custom_path_id = covers_psv .. file.name .. ".png"
+                        file.cover_path_online = onlineCoverPathSystem[4]
+                        file.cover_path_local = localCoverPath[4]
 
-                        file.cover_path_online = onlineCovers
-                        file.cover_path_local = covers_psv
-
-                        if custom_path and System.doesFileExist(custom_path) then
-                            img_path = custom_path --custom cover by app name
-                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = custom_path_id --custom cover by app id
+                        if custom_path[4] and System.doesFileExist(custom_path[4]) then
+                            img_path = custom_path[4] --custom cover by app name
+                        elseif custom_path_id[4] and System.doesFileExist(custom_path_id[4]) then
+                            img_path = custom_path_id[4] --custom cover by app id
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
@@ -1269,16 +1243,13 @@ function listDirectory(dir)
                         table.insert(all_games_table, 1, file)
                         file.app_type=0
 
-                        -- custom_path = covers_psv .. app_title .. ".png"
-                        -- custom_path_id = covers_psv .. file.name .. ".png"
+                        file.cover_path_online = onlineCoverPathSystem[4]
+                        file.cover_path_local = localCoverPath[4]
 
-                        file.cover_path_online = onlineCovers
-                        file.cover_path_local = covers_psv
-
-                        if custom_path and System.doesFileExist(custom_path) then
-                            img_path = custom_path --custom cover by app name
-                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = custom_path_id --custom cover by app id
+                        if custom_path[4] and System.doesFileExist(custom_path[4]) then
+                            img_path = custom_path[4] --custom cover by app name
+                        elseif custom_path_id[4] and System.doesFileExist(custom_path_id[4]) then
+                            img_path = custom_path_id[4] --custom cover by app id
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
@@ -1296,16 +1267,13 @@ function listDirectory(dir)
                     table.insert(all_games_table, 1, file)
                     file.app_type=0
 
-                    -- custom_path = covers_psv .. app_title .. ".png"
-                    -- custom_path_id = covers_psv .. file.name .. ".png"
+                    file.cover_path_online = onlineCoverPathSystem[4]
+                    file.cover_path_local = localCoverPath[4]
 
-                    file.cover_path_online = onlineCovers
-                    file.cover_path_local = covers_psv
-
-                    if custom_path and System.doesFileExist(custom_path) then
-                        img_path = custom_path --custom cover by app name
-                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                        img_path = custom_path_id --custom cover by app id
+                    if custom_path[4] and System.doesFileExist(custom_path[4]) then
+                        img_path = custom_path[4] --custom cover by app name
+                    elseif custom_path_id[4] and System.doesFileExist(custom_path_id[4]) then
+                        img_path = custom_path_id[4] --custom cover by app id
                     else
                         if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                             img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
@@ -1369,9 +1337,8 @@ function listDirectory(dir)
                         cleanRomNamesPSP()
 
                         info = romname_noRegion_noExtension
-                        app_title = romname_noRegion_noExtension
-                        custom_path = covers_psp .. titleID_noHyphen .. ".png"
-                        custom_path_id = covers_psp .. titleID_noHyphen .. ".png"
+                        app_title = romname_noRegion_noExtension_notitleid
+                        
 
                         file.filename = file.name
                         file.name = titleID_noHyphen
@@ -1380,6 +1347,9 @@ function listDirectory(dir)
                         file.version = romname_region
                         file.name_title_search = titleID_noHyphen
                         file.apptitle = romname_noRegion_noExtension_notitleid
+
+                        custom_path = localCoverPath[2] .. romname_noRegion_noExtension_notitleid .. ".png"
+                        custom_path_id = localCoverPath[2] .. titleID_noHyphen .. ".png"
 
                     else
                     -- No spaces, it's probably a title ID, so scan the database
@@ -1451,6 +1421,19 @@ function listDirectory(dir)
 
                     -- OVERRIDES START
 
+                    local custom_path = {
+                        localCoverPath[1] .. app_title .. ".png",
+                        localCoverPath[2] .. app_title .. ".png",
+                        localCoverPath[3] .. app_title .. ".png",
+                        localCoverPath[4] .. app_title .. ".png"
+                    }
+                    local custom_path_id = {
+                        localCoverPath[1] .. file.name .. ".png",
+                        localCoverPath[2] .. file.name .. ".png",
+                        localCoverPath[3] .. file.name .. ".png",
+                        localCoverPath[4] .. file.name .. ".png"
+                    }
+
                     if System.doesFileExist(cur_dir .. "/overrides.dat") then
                         --String:   1 vita, 2 psp, 3 psx, 4 homebrew
                         --App_type: 1 vita, 2 psp, 3 psx, 0 homebrew                         
@@ -1463,16 +1446,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 2, file)
                             file.app_type=1
 
-                            custom_path = covers_psv .. file.name .. ".png"
-                            custom_path_id = covers_psv .. file.name .. ".png"
+                            custom_path = localCoverPath[1] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[1] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCovers
-                            file.cover_path_local = covers_psv
+                            file.cover_path_online = onlineCoverPathSystem[1]
+                            file.cover_path_local = localCoverPath[1]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psv .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psv .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"  --app icon
@@ -1489,16 +1472,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 2, file)
                             file.app_type=2
 
-                            custom_path = covers_psp .. file.name .. ".png"
-                            custom_path_id = covers_psp .. file.name .. ".png"
+                            custom_path = localCoverPath[2] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[2] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCoversPSP
-                            file.cover_path_local = covers_psp
+                            file.cover_path_online = onlineCoverPathSystem[2]
+                            file.cover_path_local = localCoverPath[2]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psp .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psp .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
@@ -1515,16 +1498,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 2, file)
                             file.app_type=3
 
-                            custom_path = covers_psx .. file.name .. ".png"
-                            custom_path_id = covers_psx .. file.name .. ".png"
+                            custom_path = localCoverPath[3] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[3] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCoversPSX
-                            file.cover_path_local = covers_psx
+                            file.cover_path_online = onlineCoverPathSystem[3]
+                            file.cover_path_local = localCoverPath[3]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psx .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psx .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
@@ -1541,19 +1524,19 @@ function listDirectory(dir)
                             table.insert(all_games_table, 2, file)
                             file.app_type=0
 
-                            custom_path = covers_psv .. file.name .. ".png"
-                            custom_path_id = covers_psv .. file.name .. ".png"
+                            custom_path = "ux0:/data/RetroFlow/COVERS/Homebrew/" .. app_title .. ".png"
+                            custom_path_id = localCoverPath[4] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCovers
-                            file.cover_path_local = covers_psv
+                            file.cover_path_online = onlineCoverPathSystem[4]
+                            file.cover_path_local = localCoverPath[4]
 
                             if custom_path and System.doesFileExist(custom_path) then
                                 img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                 img_path = custom_path_id --custom cover by app id
                             else
-                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_homebrew.png") then
-                                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_homebrew.png"  --app icon
+                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_homebrew.png") then
+                                    img_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"  --app icon
                                 else
                                     img_path = "app0:/DATA/noimg.png" --blank grey
                                 end
@@ -1567,16 +1550,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 2, file)
                             file.app_type=2
 
-                            custom_path = covers_psp .. file.name .. ".png"
-                            custom_path_id = covers_psp .. file.name .. ".png"
+                            custom_path = localCoverPath[2] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[2] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCoversPSP
-                            file.cover_path_local = covers_psp
+                            file.cover_path_online = onlineCoverPathSystem[2]
+                            file.cover_path_local = localCoverPath[2]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psp .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psp .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
@@ -1595,16 +1578,16 @@ function listDirectory(dir)
                         table.insert(all_games_table, 2, file)
                         file.app_type=2
 
-                        custom_path = covers_psp .. file.name .. ".png"
-                        custom_path_id = covers_psp .. file.name .. ".png"
+                        custom_path = localCoverPath[2] .. app_title .. ".png"
+                        custom_path_id = localCoverPath[2] .. file.name .. ".png"
 
-                        file.cover_path_online = onlineCoversPSP
-                        file.cover_path_local = covers_psp
+                        file.cover_path_online = onlineCoverPathSystem[2]
+                        file.cover_path_local = localCoverPath[2]
 
                         if custom_path and System.doesFileExist(custom_path) then
-                            img_path = covers_psp .. file.name .. ".png" --custom cover by app name
+                            img_path = custom_path --custom cover by app name
                         elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = covers_psp .. file.name .. ".png" --custom cover by app id
+                            img_path = custom_path_id --custom cover by app id
                         else
                             if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
                                 img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
@@ -1758,16 +1741,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 2, file)
                             file.app_type=1
 
-                            custom_path = covers_psv .. file.name .. ".png"
-                            custom_path_id = covers_psv .. file.name .. ".png"
+                            custom_path = localCoverPath[1] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[1] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCovers
-                            file.cover_path_local = covers_psv
+                            file.cover_path_online = onlineCoverPathSystem[1]
+                            file.cover_path_local = localCoverPath[1]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psv .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psv .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"  --app icon
@@ -1784,16 +1767,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 2, file)
                             file.app_type=2
 
-                            custom_path = covers_psp .. file.name .. ".png"
-                            custom_path_id = covers_psp .. file.name .. ".png"
+                            custom_path = localCoverPath[2] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[2] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCoversPSP
-                            file.cover_path_local = covers_psp
+                            file.cover_path_online = onlineCoverPathSystem[2]
+                            file.cover_path_local = localCoverPath[2]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psp .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psp .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
@@ -1810,16 +1793,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 2, file)
                             file.app_type=3
 
-                            custom_path = covers_psx .. file.name .. ".png"
-                            custom_path_id = covers_psx .. file.name .. ".png"
+                            custom_path = localCoverPath[3] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[3] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCoversPSX
-                            file.cover_path_local = covers_psx
+                            file.cover_path_online = onlineCoverPathSystem[3]
+                            file.cover_path_local = localCoverPath[3]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psx .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psx .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
@@ -1836,19 +1819,19 @@ function listDirectory(dir)
                             table.insert(all_games_table, 2, file)
                             file.app_type=0
 
-                            custom_path = covers_psv .. file.name .. ".png"
-                            custom_path_id = covers_psv .. file.name .. ".png"
+                            custom_path = localCoverPath[4] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[4] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCovers
-                            file.cover_path_local = covers_psv
+                            file.cover_path_online = onlineCoverPathSystem[4]
+                            file.cover_path_local = localCoverPath[4]
 
                             if custom_path and System.doesFileExist(custom_path) then
                                 img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                 img_path = custom_path_id --custom cover by app id
                             else
-                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_homebrew.png") then
-                                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_homebrew.png"  --app icon
+                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_homebrew.png") then
+                                    img_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"  --app icon
                                 else
                                     img_path = "app0:/DATA/noimg.png" --blank grey
                                 end
@@ -1862,16 +1845,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 2, file)
                             file.app_type=2
 
-                            custom_path = covers_psp .. file.name .. ".png"
-                            custom_path_id = covers_psp .. file.name .. ".png"
+                            custom_path = localCoverPath[2] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[2] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCoversPSP
-                            file.cover_path_local = covers_psp
+                            file.cover_path_online = onlineCoverPathSystem[2]
+                            file.cover_path_local = localCoverPath[2]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psp .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psp .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
@@ -1890,16 +1873,16 @@ function listDirectory(dir)
                         table.insert(all_games_table, 2, file)
                         file.app_type=2
 
-                        custom_path = covers_psp .. file.name .. ".png"
-                        custom_path_id = covers_psp .. file.name .. ".png"
+                        custom_path = localCoverPath[2] .. app_title .. ".png"
+                        custom_path_id = localCoverPath[2] .. file.name .. ".png"
 
-                        file.cover_path_online = onlineCoversPSP
-                        file.cover_path_local = covers_psp
+                        file.cover_path_online = onlineCoverPathSystem[2]
+                        file.cover_path_local = localCoverPath[2]
 
                         if custom_path and System.doesFileExist(custom_path) then
-                            img_path = covers_psp .. file.name .. ".png" --custom cover by app name
+                            img_path = custom_path --custom cover by app name
                         elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = covers_psp .. file.name .. ".png" --custom cover by app id
+                            img_path = custom_path_id --custom cover by app id
                         else
                             if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
                                 img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
@@ -2054,16 +2037,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 3, file)
                             file.app_type=1
 
-                            custom_path = covers_psv .. file.name .. ".png"
-                            custom_path_id = covers_psv .. file.name .. ".png"
+                            custom_path = localCoverPath[1] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[1] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCovers
-                            file.cover_path_local = covers_psv
+                            file.cover_path_online = onlineCoverPathSystem[1]
+                            file.cover_path_local = localCoverPath[1]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psv .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psv .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"  --app icon
@@ -2080,16 +2063,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 3, file)
                             file.app_type=2
 
-                            custom_path = covers_psp .. file.name .. ".png"
-                            custom_path_id = covers_psp .. file.name .. ".png"
+                            custom_path = localCoverPath[2] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[2] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCoversPSP
-                            file.cover_path_local = covers_psp
+                            file.cover_path_online = onlineCoverPathSystem[2]
+                            file.cover_path_local = localCoverPath[2]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psp .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psp .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
@@ -2106,16 +2089,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 3, file)
                             file.app_type=3
 
-                            custom_path = covers_psx .. file.name .. ".png"
-                            custom_path_id = covers_psx .. file.name .. ".png"
+                            custom_path = localCoverPath[3] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[3] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCoversPSX
-                            file.cover_path_local = covers_psx
+                            file.cover_path_online = onlineCoverPathSystem[3]
+                            file.cover_path_local = localCoverPath[3]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psx .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psx .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
@@ -2132,19 +2115,19 @@ function listDirectory(dir)
                             table.insert(all_games_table, 3, file)
                             file.app_type=0
 
-                            custom_path = covers_psv .. file.name .. ".png"
-                            custom_path_id = covers_psv .. file.name .. ".png"
+                            custom_path = localCoverPath[4] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[4] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCovers
-                            file.cover_path_local = covers_psv
+                            file.cover_path_online = onlineCoverPathSystem[4]
+                            file.cover_path_local = localCoverPath[4]
 
                             if custom_path and System.doesFileExist(custom_path) then
                                 img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                 img_path = custom_path_id --custom cover by app id
                             else
-                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_homebrew.png") then
-                                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_homebrew.png"  --app icon
+                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_homebrew.png") then
+                                    img_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"  --app icon
                                 else
                                     img_path = "app0:/DATA/noimg.png" --blank grey
                                 end
@@ -2158,16 +2141,16 @@ function listDirectory(dir)
                             table.insert(all_games_table, 3, file)
                             file.app_type=3
 
-                            custom_path = covers_psx .. file.name .. ".png"
-                            custom_path_id = covers_psx .. file.name .. ".png"
+                            custom_path = localCoverPath[3] .. app_title .. ".png"
+                            custom_path_id = localCoverPath[3] .. file.name .. ".png"
 
-                            file.cover_path_online = onlineCoversPSX
-                            file.cover_path_local = covers_psx
+                            file.cover_path_online = onlineCoverPathSystem[3]
+                            file.cover_path_local = localCoverPath[3]
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = covers_psx .. file.name .. ".png" --custom cover by app name
+                                img_path = custom_path --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = covers_psx .. file.name .. ".png" --custom cover by app id
+                                img_path = custom_path_id --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
                                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
@@ -2186,16 +2169,16 @@ function listDirectory(dir)
                         table.insert(all_games_table, 3, file)
                         file.app_type=3
 
-                        custom_path = covers_psx .. file.name .. ".png"
-                        custom_path_id = covers_psx .. file.name .. ".png"
+                        custom_path = localCoverPath[3] .. app_title .. ".png"
+                        custom_path_id = localCoverPath[3] .. file.name .. ".png"
 
-                        file.cover_path_online = onlineCoversPSX
-                        file.cover_path_local = covers_psx
+                        file.cover_path_online = onlineCoverPathSystem[3]
+                        file.cover_path_local = localCoverPath[3]
                         
                         if custom_path and System.doesFileExist(custom_path) then
-                            img_path = covers_psx .. file.name .. ".png" --custom cover by app name
+                            img_path = localCoverPath[3] .. file.name .. ".png" --custom cover by app name
                         elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = covers_psx .. file.name .. ".png" --custom cover by app id
+                            img_path = localCoverPath[3] .. file.name .. ".png" --custom cover by app id
                         else
                             if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
                                 img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
@@ -2252,8 +2235,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_N64 .. romname_noExtension .. ".png"
-            custom_path_id = covers_N64 .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[5] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[5] .. romname_noExtension .. ".png"
             file.app_type=5
 
             file.filename = file.name
@@ -2265,9 +2248,9 @@ function listDirectory(dir)
             table.insert(n64_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_N64 .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[5] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_N64 .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[5] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_n64.png") then
                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_n64.png"  --app icon
@@ -2285,8 +2268,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 4, file)
             file.app_type=5
-            file.cover_path_online = onlineCoversN64
-            file.cover_path_local = covers_N64
+            file.cover_path_online = onlineCoverPathSystem[5]
+            file.cover_path_local = localCoverPath[5]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -2318,8 +2301,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_SNES .. romname_noExtension .. ".png"
-            custom_path_id = covers_SNES .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[6] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[6] .. romname_noExtension .. ".png"
             file.app_type=6
 
             file.filename = file.name
@@ -2331,9 +2314,9 @@ function listDirectory(dir)
             table.insert(snes_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_SNES .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[6] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_SNES .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[6] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_snes.png") then
                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_snes.png"  --app icon
@@ -2351,8 +2334,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 5, file)
             file.app_type=6
-            file.cover_path_online = onlineCoversSNES
-            file.cover_path_local = covers_SNES
+            file.cover_path_online = onlineCoverPathSystem[6]
+            file.cover_path_local = localCoverPath[6]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -2383,8 +2366,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_NES .. romname_noExtension .. ".png"
-            custom_path_id = covers_NES .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[7] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[7] .. romname_noExtension .. ".png"
             file.app_type=7
 
             file.filename = file.name
@@ -2396,9 +2379,9 @@ function listDirectory(dir)
             table.insert(nes_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_NES .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[7] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_NES .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[7] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_nes.png") then
                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_nes.png"  --app icon
@@ -2416,8 +2399,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 6, file)
             file.app_type=7
-            file.cover_path_online = onlineCoversNES
-            file.cover_path_local = covers_NES
+            file.cover_path_online = onlineCoverPathSystem[7]
+            file.cover_path_local = localCoverPath[7]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -2448,8 +2431,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_GBA .. romname_noExtension .. ".png"
-            custom_path_id = covers_GBA .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[8] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[8] .. romname_noExtension .. ".png"
             file.app_type=8
 
             file.filename = file.name
@@ -2461,9 +2444,9 @@ function listDirectory(dir)
             table.insert(gba_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_GBA .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[8] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_GBA .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[8] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_gba.png") then
                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_gba.png"  --app icon
@@ -2481,8 +2464,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 7, file)
             file.app_type=8
-            file.cover_path_online = onlineCoversGBA
-            file.cover_path_local = covers_GBA
+            file.cover_path_online = onlineCoverPathSystem[8]
+            file.cover_path_local = localCoverPath[8]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -2513,8 +2496,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_GBC .. romname_noExtension .. ".png"
-            custom_path_id = covers_GBC .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[9] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[9] .. romname_noExtension .. ".png"
             file.app_type=9
 
             file.filename = file.name
@@ -2526,9 +2509,9 @@ function listDirectory(dir)
             table.insert(gbc_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_GBC .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[9] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_GBC .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[9] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_gbc.png") then
                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_gbc.png"  --app icon
@@ -2546,8 +2529,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 8, file)
             file.app_type=9
-            file.cover_path_online = onlineCoversGBC
-            file.cover_path_local = covers_GBC
+            file.cover_path_online = onlineCoverPathSystem[9]
+            file.cover_path_local = localCoverPath[9]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -2578,8 +2561,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_GB .. romname_noExtension .. ".png"
-            custom_path_id = covers_GB .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[10] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[10] .. romname_noExtension .. ".png"
             file.app_type=10
 
             file.filename = file.name
@@ -2591,9 +2574,9 @@ function listDirectory(dir)
             table.insert(gb_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_GB .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[10] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_GB .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[10] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_gb.png") then
                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_gb.png"  --app icon
@@ -2611,8 +2594,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 9, file)
             file.app_type=10
-            file.cover_path_online = onlineCoversGB
-            file.cover_path_local = covers_GB
+            file.cover_path_online = onlineCoverPathSystem[10]
+            file.cover_path_local = localCoverPath[10]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -2643,8 +2626,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_MD .. romname_noExtension .. ".png"
-            custom_path_id = covers_MD .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[11] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[11] .. romname_noExtension .. ".png"
             file.app_type=11
 
             file.filename = file.name
@@ -2656,9 +2639,9 @@ function listDirectory(dir)
             table.insert(md_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_MD .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[11] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_MD .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[11] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if setLanguage == 1 then
                     if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_md_usa.png") then
@@ -2684,8 +2667,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 10, file)
             file.app_type=11
-            file.cover_path_online = onlineCoversMD
-            file.cover_path_local = covers_MD
+            file.cover_path_online = onlineCoverPathSystem[11]
+            file.cover_path_local = localCoverPath[11]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -2716,8 +2699,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_SMS .. romname_noExtension .. ".png"
-            custom_path_id = covers_SMS .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[12] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[12] .. romname_noExtension .. ".png"
             file.app_type=12
 
             file.filename = file.name
@@ -2729,9 +2712,9 @@ function listDirectory(dir)
             table.insert(sms_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_SMS .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[12] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_SMS .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[12] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_sms.png") then
                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_sms.png"  --app icon
@@ -2749,8 +2732,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 11, file)
             file.app_type=12
-            file.cover_path_online = onlineCoversSMS
-            file.cover_path_local = covers_SMS
+            file.cover_path_online = onlineCoverPathSystem[12]
+            file.cover_path_local = localCoverPath[12]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -2781,8 +2764,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_GG .. romname_noExtension .. ".png"
-            custom_path_id = covers_GG .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[13] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[13] .. romname_noExtension .. ".png"
             file.app_type=13
 
             file.filename = file.name
@@ -2794,9 +2777,9 @@ function listDirectory(dir)
             table.insert(gg_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_GG .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[13] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_GG .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[13] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_gg.png") then
                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_gg.png"  --app icon
@@ -2814,8 +2797,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 12, file)
             file.app_type=13
-            file.cover_path_online = onlineCoversGG
-            file.cover_path_local = covers_GG
+            file.cover_path_online = onlineCoverPathSystem[13]
+            file.cover_path_local = localCoverPath[13]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -2909,8 +2892,8 @@ function listDirectory(dir)
                 
                 table.insert(folders_table, file)
                 --table.insert(games_table, file)
-                custom_path = covers_MAME .. romname_noExtension .. ".png"
-                custom_path_id = covers_MAME .. romname_noExtension .. ".png"
+                custom_path = localCoverPath[14] .. romname_noExtension .. ".png"
+                custom_path_id = localCoverPath[14] .. romname_noExtension .. ".png"
                 file.app_type=14
 
                 file.filename = file.name
@@ -2924,9 +2907,9 @@ function listDirectory(dir)
                 table.insert(mame_table, file)
 
                 if custom_path and System.doesFileExist(custom_path) then
-                    img_path = covers_MAME .. romname_noExtension .. ".png" --custom cover by app name
+                    img_path = localCoverPath[14] .. romname_noExtension .. ".png" --custom cover by app name
                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                    img_path = covers_MAME .. romname_noExtension .. ".png" --custom cover by app id
+                    img_path = localCoverPath[14] .. romname_noExtension .. ".png" --custom cover by app id
                 else
                     if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_mame.png") then
                         img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_mame.png"  --app icon
@@ -2948,8 +2931,8 @@ function listDirectory(dir)
 
                 file.filename = file.name
                 file.name = romname_noExtension
-                file.cover_path_online = onlineCoversMAME
-                file.cover_path_local = covers_MAME
+                file.cover_path_online = onlineCoverPathSystem[14]
+                file.cover_path_local = localCoverPath[14]
 
                 --add blank icon to all
                 file.icon = imgCoverTmp
@@ -2991,8 +2974,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_AMIGA .. romname_noExtension .. ".png"
-            custom_path_id = covers_AMIGA .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[15] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[15] .. romname_noExtension .. ".png"
             file.app_type=15
 
             file.filename = file.name
@@ -3004,9 +2987,9 @@ function listDirectory(dir)
             table.insert(amiga_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_AMIGA .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[15] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_AMIGA .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[15] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_amiga.png") then
                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_amiga.png"  --app icon
@@ -3024,8 +3007,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 14, file)
             file.app_type=15
-            file.cover_path_online = onlineCoversAMIGA
-            file.cover_path_local = covers_AMIGA
+            file.cover_path_online = onlineCoverPathSystem[15]
+            file.cover_path_local = localCoverPath[15]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -3055,8 +3038,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_TG16 .. romname_noExtension .. ".png"
-            custom_path_id = covers_TG16 .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[16] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[16] .. romname_noExtension .. ".png"
             file.app_type=16
 
             file.filename = file.name
@@ -3068,9 +3051,9 @@ function listDirectory(dir)
             table.insert(tg16_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_TG16 .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[16] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_TG16 .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[16] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_tg16.png") then
                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_tg16.png"  --app icon
@@ -3088,8 +3071,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 15, file)
             file.app_type=16
-            file.cover_path_online = onlineCoversTG16
-            file.cover_path_local = covers_TG16
+            file.cover_path_online = onlineCoverPathSystem[16]
+            file.cover_path_local = localCoverPath[16]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -3119,8 +3102,8 @@ function listDirectory(dir)
             
             table.insert(folders_table, file)
             --table.insert(games_table, file)
-            custom_path = covers_PCE .. romname_noExtension .. ".png"
-            custom_path_id = covers_PCE .. romname_noExtension .. ".png"
+            custom_path = localCoverPath[17] .. romname_noExtension .. ".png"
+            custom_path_id = localCoverPath[17] .. romname_noExtension .. ".png"
             file.app_type=17
 
             file.filename = file.name
@@ -3132,9 +3115,9 @@ function listDirectory(dir)
             table.insert(pce_table, file)
 
             if custom_path and System.doesFileExist(custom_path) then
-                img_path = covers_PCE .. romname_noExtension .. ".png" --custom cover by app name
+                img_path = localCoverPath[17] .. romname_noExtension .. ".png" --custom cover by app name
             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                img_path = covers_PCE .. romname_noExtension .. ".png" --custom cover by app id
+                img_path = localCoverPath[17] .. romname_noExtension .. ".png" --custom cover by app id
             else
                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_pce.png") then
                     img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_pce.png"  --app icon
@@ -3152,8 +3135,8 @@ function listDirectory(dir)
             -- all games table
             table.insert(all_games_table, 16, file)
             file.app_type=17
-            file.cover_path_online = onlineCoversPCE
-            file.cover_path_local = covers_PCE
+            file.cover_path_online = onlineCoverPathSystem[17]
+            file.cover_path_local = localCoverPath[17]
 
             --add blank icon to all
             file.icon = imgCoverTmp
@@ -3200,13 +3183,7 @@ function listDirectory(dir)
     total_homebrews = #homebrews_table
     
     -- CACHE ALL TABLES - PRINT AND SAVE
-
-    -- If startup scan is off
-    -- 0 Off, 1 On
-    if startupScan == 0 then
-        cache_all_tables()
-    else
-    end
+    cache_all_tables()
 
     return return_table
 end
@@ -3673,7 +3650,7 @@ else
 
         -- Folder exists - Count files
         cache_file_count = System.listDirectory(db_Cache_Folder)
-        if #cache_file_count < 20 then -- 20 tables expected
+        if #cache_file_count < cache_file_count_expected then -- 20 tables expected
             -- Files missing - rescan
             files_table = listDirectory(System.currentDirectory())
         else
@@ -3747,12 +3724,13 @@ function GetInfoSelected()
     elseif showCat == 2 then
         if #homebrews_table > 0 then
             info = homebrews_table[p].name
+            icon_path = homebrews_table[p].icon_path
 
-            if string.match (homebrews_table[p].game_path, "ux0:/pspemu") then
-                icon_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"
-            else
-                icon_path = "ur0:/appmeta/" .. homebrews_table[p].name .. "/icon0.png"
-            end
+            -- if string.match (homebrews_table[p].icon_path, "ux0:/pspemu") then
+            --     icon_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"
+            -- else
+            --     icon_path = homebrews_table[p].icon_path
+            -- end
 
             pic_path = "ur0:/appmeta/" .. homebrews_table[p].name .. "/pic0.png"
             app_title = homebrews_table[p].title
@@ -4006,11 +3984,19 @@ function GetInfoSelected()
             app_titleid = files_table[p].name
             app_version = files_table[p].version
 
-            if System.doesFileExist(working_dir .. "/" .. files_table[p].name .. "/sce_sys/param.sfo") then
+            -- Vita
+            if System.doesFileExist(working_dir .. "/" .. files_table[p].name .. "/sce_sys/param.sfo") and apptype==1 then
                 icon_path = "ur0:/appmeta/" .. files_table[p].name .. "/icon0.png"
                 pic_path = "ur0:/appmeta/" .. files_table[p].name .. "/pic0.png"
+
+            -- Homebrew 
+            elseif System.doesFileExist(working_dir .. "/" .. files_table[p].name .. "/sce_sys/param.sfo") and apptype==0 then
+                icon_path = files_table[p].icon_path
+                pic_path = ""
             else
                 pic_path = "-"
+                icon_path = files_table[p].icon_path
+
                 if apptype==1 then
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_psv.png"
                 elseif apptype==2 then
@@ -4044,7 +4030,7 @@ function GetInfoSelected()
                 elseif apptype==17 then -- PCE
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
                 else
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"
+                    icon_path = files_table[p].icon_path
                 end
 
             end
@@ -4212,7 +4198,7 @@ function DownloadCovers()
                     
                     while app_idx <= #games_table do
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCovers .. games_table[app_idx].name .. ".png", "ux0:/data/RetroFlow/" .. games_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[1] .. games_table[app_idx].name .. ".png", "ux0:/data/RetroFlow/" .. games_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -4229,12 +4215,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. games_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_psv .. games_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[1] .. games_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. games_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. games_table[app_idx].name .. ".png", covers_psv .. games_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. games_table[app_idx].name .. ".png", localCoverPath[1] .. games_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 end
@@ -4293,7 +4279,7 @@ function DownloadCovers()
                     
                     while app_idx <= #psp_table do
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversPSP .. psp_table[app_idx].name .. ".png", "ux0:/data/RetroFlow/" .. psp_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[2] .. psp_table[app_idx].name .. ".png", "ux0:/data/RetroFlow/" .. psp_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -4310,12 +4296,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. psp_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_psp .. psp_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[2] .. psp_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. psp_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. psp_table[app_idx].name .. ".png", covers_psp .. psp_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. psp_table[app_idx].name .. ".png", localCoverPath[2] .. psp_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 end
@@ -4373,7 +4359,7 @@ function DownloadCovers()
                     
                     while app_idx <= #psx_table do
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversPSX .. psx_table[app_idx].name .. ".png", "ux0:/data/RetroFlow/" .. psx_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[3] .. psx_table[app_idx].name .. ".png", "ux0:/data/RetroFlow/" .. psx_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -4390,12 +4376,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. psx_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_psx .. psx_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[3] .. psx_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. psx_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. psx_table[app_idx].name .. ".png", covers_psx .. psx_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. psx_table[app_idx].name .. ".png", localCoverPath[3] .. psx_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -4456,7 +4442,7 @@ function DownloadCovers()
                     while app_idx <= #n64_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversN64 .. n64_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. n64_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[5] .. n64_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. n64_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -4473,12 +4459,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. n64_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_N64 .. n64_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[5] .. n64_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. n64_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. n64_table[app_idx].name .. ".png", covers_N64 .. n64_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. n64_table[app_idx].name .. ".png", localCoverPath[5] .. n64_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                     
                                 end
@@ -4540,7 +4526,7 @@ function DownloadCovers()
                     while app_idx <= #snes_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversSNES .. snes_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. snes_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[6] .. snes_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. snes_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -4557,12 +4543,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. snes_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_SNES .. snes_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[6] .. snes_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. snes_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. snes_table[app_idx].name .. ".png", covers_SNES .. snes_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. snes_table[app_idx].name .. ".png", localCoverPath[6] .. snes_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -4623,7 +4609,7 @@ function DownloadCovers()
                     while app_idx <= #nes_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversNES .. nes_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. nes_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[7] .. nes_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. nes_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -4640,12 +4626,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. nes_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_NES .. nes_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[7] .. nes_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. nes_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. nes_table[app_idx].name .. ".png", covers_NES .. nes_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. nes_table[app_idx].name .. ".png", localCoverPath[7] .. nes_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -4707,7 +4693,7 @@ function DownloadCovers()
                     while app_idx <= #gba_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversGBA .. gba_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. gba_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[8] .. gba_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. gba_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -4724,12 +4710,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. gba_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_GBA .. gba_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[8] .. gba_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. gba_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. gba_table[app_idx].name .. ".png", covers_GBA .. gba_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. gba_table[app_idx].name .. ".png", localCoverPath[8] .. gba_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -4791,7 +4777,7 @@ function DownloadCovers()
                     while app_idx <= #gbc_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversGBC .. gbc_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. gbc_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[9] .. gbc_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. gbc_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -4808,12 +4794,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_GBC .. gbc_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[9] .. gbc_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name .. ".png", covers_GBC .. gbc_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. gbc_table[app_idx].name .. ".png", localCoverPath[9] .. gbc_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -4875,7 +4861,7 @@ function DownloadCovers()
                     while app_idx <= #gb_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversGB .. gb_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. gb_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[10] .. gb_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. gb_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -4892,12 +4878,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. gb_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_GB .. gb_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[10] .. gb_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. gb_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. gb_table[app_idx].name .. ".png", covers_GB .. gb_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. gb_table[app_idx].name .. ".png", localCoverPath[10] .. gb_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -4958,7 +4944,7 @@ function DownloadCovers()
                     while app_idx <= #md_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversMD .. md_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. md_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[11] .. md_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. md_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -4975,12 +4961,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. md_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_MD .. md_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[11] .. md_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. md_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. md_table[app_idx].name .. ".png", covers_MD .. md_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. md_table[app_idx].name .. ".png", localCoverPath[11] .. md_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -5041,7 +5027,7 @@ function DownloadCovers()
                     while app_idx <= #sms_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversSMS .. sms_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. sms_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[12] .. sms_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. sms_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -5058,12 +5044,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. sms_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_SMS .. sms_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[12] .. sms_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. sms_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. sms_table[app_idx].name .. ".png", covers_SMS .. sms_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. sms_table[app_idx].name .. ".png", localCoverPath[12] .. sms_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -5124,7 +5110,7 @@ function DownloadCovers()
                     while app_idx <= #gg_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversGG .. gg_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. gg_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[13] .. gg_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. gg_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -5141,12 +5127,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. gg_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_GG .. gg_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[13] .. gg_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. gg_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. gg_table[app_idx].name .. ".png", covers_GG .. gg_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. gg_table[app_idx].name .. ".png", localCoverPath[13] .. gg_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -5206,7 +5192,7 @@ function DownloadCovers()
                     while app_idx <= #mame_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversMAME .. mame_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. mame_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[14] .. mame_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. mame_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -5223,12 +5209,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. mame_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_MAME .. mame_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[14] .. mame_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. mame_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. mame_table[app_idx].name .. ".png", covers_MAME .. mame_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. mame_table[app_idx].name .. ".png", localCoverPath[14] .. mame_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -5288,7 +5274,7 @@ function DownloadCovers()
                     while app_idx <= #amiga_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversAMIGA .. amiga_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. amiga_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[15] .. amiga_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. amiga_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -5305,12 +5291,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. amiga_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_AMIGA .. amiga_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[15] .. amiga_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. amiga_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. amiga_table[app_idx].name .. ".png", covers_AMIGA .. amiga_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. amiga_table[app_idx].name .. ".png", localCoverPath[15] .. amiga_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -5369,7 +5355,7 @@ function DownloadCovers()
                     while app_idx <= #tg16_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversTG16 .. tg16_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. tg16_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[16] .. tg16_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. tg16_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -5386,12 +5372,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. tg16_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_TG16 .. tg16_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[16] .. tg16_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. tg16_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. tg16_table[app_idx].name .. ".png", covers_TG16 .. tg16_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. tg16_table[app_idx].name .. ".png", localCoverPath[16] .. tg16_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -5450,7 +5436,7 @@ function DownloadCovers()
                     while app_idx <= #pce_table do
 
                         if System.getAsyncState() ~= 0 then
-                            Network.downloadFileAsync(onlineCoversPCE .. pce_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. pce_table[app_idx].name .. ".png")
+                            Network.downloadFileAsync(onlineCoverPathSystem[17] .. pce_table[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. pce_table[app_idx].name .. ".png")
                             running = true
                         end
                         if System.getAsyncState() == 1 then
@@ -5467,12 +5453,12 @@ function DownloadCovers()
                                     System.deleteFile("ux0:/data/RetroFlow/" .. pce_table[app_idx].name .. ".png")
 
                                 -- delete if already exists
-                                elseif System.doesFileExist(covers_PCE .. pce_table[app_idx].name .. ".png") then
+                                elseif System.doesFileExist(localCoverPath[17] .. pce_table[app_idx].name .. ".png") then
                                     System.deleteFile("ux0:/data/RetroFlow/" .. pce_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
 
                                 else
-                                    System.rename("ux0:/data/RetroFlow/" .. pce_table[app_idx].name .. ".png", covers_PCE .. pce_table[app_idx].name .. ".png")
+                                    System.rename("ux0:/data/RetroFlow/" .. pce_table[app_idx].name .. ".png", localCoverPath[17] .. pce_table[app_idx].name .. ".png")
                                     cvrfound = cvrfound + 1
                                 end
                                 System.closeFile(tmpfile)
@@ -5880,69 +5866,69 @@ function DownloadSingleCover()
     
     if Network.isWifiEnabled() then
         if apptype == 1 then
-            coverspath = covers_psv
-            onlineCoverspath = onlineCovers
+            coverspath = localCoverPath[1]
+            onlineCoverspath = onlineCoverPathSystem[1]
         elseif apptype == 2 then
-            coverspath = covers_psp
-            onlineCoverspath = onlineCoversPSP
+            coverspath = localCoverPath[2]
+            onlineCoverspath = onlineCoverPathSystem[2]
         elseif apptype == 3 then
-            coverspath = covers_psx
-            onlineCoverspath = onlineCoversPSX
+            coverspath = localCoverPath[3]
+            onlineCoverspath = onlineCoverPathSystem[3]
         --N64
         elseif apptype == 5 then
-            coverspath = covers_N64
-            onlineCoverspath = onlineCoversN64
+            coverspath = localCoverPath[5]
+            onlineCoverspath = onlineCoverPathSystem[5]
         --SNES
         elseif apptype == 6 then
-            coverspath = covers_SNES
-            onlineCoverspath = onlineCoversSNES
+            coverspath = localCoverPath[6]
+            onlineCoverspath = onlineCoverPathSystem[6]
         --NES
         elseif apptype == 7 then
-            coverspath = covers_NES
-            onlineCoverspath = onlineCoversNES
+            coverspath = localCoverPath[7]
+            onlineCoverspath = onlineCoverPathSystem[7]
         --GBA
         elseif apptype == 8 then
-            coverspath = covers_GBA
-            onlineCoverspath = onlineCoversGBA
+            coverspath = localCoverPath[8]
+            onlineCoverspath = onlineCoverPathSystem[8]
         --GBC
         elseif apptype == 9 then
-            coverspath = covers_GBC
-            onlineCoverspath = onlineCoversGBC
+            coverspath = localCoverPath[9]
+            onlineCoverspath = onlineCoverPathSystem[9]
         --GB
         elseif apptype == 10 then
-            coverspath = covers_GB
-            onlineCoverspath = onlineCoversGB
+            coverspath = localCoverPath[10]
+            onlineCoverspath = onlineCoverPathSystem[10]
         --MD
         elseif apptype == 11 then
-            coverspath = covers_MD
-            onlineCoverspath = onlineCoversMD
+            coverspath = localCoverPath[11]
+            onlineCoverspath = onlineCoverPathSystem[11]
         --SMS
         elseif apptype == 12 then
-            coverspath = covers_SMS
-            onlineCoverspath = onlineCoversSMS
+            coverspath = localCoverPath[12]
+            onlineCoverspath = onlineCoverPathSystem[12]
         --GG
         elseif apptype == 13 then
-            coverspath = covers_GG
-            onlineCoverspath = onlineCoversGG
+            coverspath = localCoverPath[13]
+            onlineCoverspath = onlineCoverPathSystem[13]
         --MAME
         elseif apptype == 14 then
-            coverspath = covers_MAME
-            onlineCoverspath = onlineCoversMAME
+            coverspath = localCoverPath[14]
+            onlineCoverspath = onlineCoverPathSystem[14]
         --AMIGA
         elseif apptype == 15 then
-            coverspath = covers_AMIGA
-            onlineCoverspath = onlineCoversAMIGA
+            coverspath = localCoverPath[15]
+            onlineCoverspath = onlineCoverPathSystem[15]
         --TG16
         elseif apptype == 16 then
-            coverspath = covers_TG16
-            onlineCoverspath = onlineCoversTG16
+            coverspath = localCoverPath[16]
+            onlineCoverspath = onlineCoverPathSystem[16]
         --PCE
         elseif apptype == 17 then
-            coverspath = covers_PCE
-            onlineCoverspath = onlineCoversPCE
+            coverspath = localCoverPath[17]
+            onlineCoverspath = onlineCoverPathSystem[17]
         else
-            coverspath = covers_psv
-            onlineCoverspath = onlineCovers
+            coverspath = localCoverPath[1]
+            onlineCoverspath = onlineCoverPathSystem[1]
         end
 
 
@@ -6934,43 +6920,88 @@ while true do
             end
 
 
-        else
+        
 
             --ALL
-            for l, file in pairs(files_table) do
-                if (l >= master_index) then
-                    base_x = base_x + space
-                end
-                if l > p-8 and base_x < 10 then
-                    if FileLoad[file] == nil then
-                        FileLoad[file] = true
-                        Threads.addTask(file, {
-                            Type = "ImageLoad",
-                            Path = file.icon_path,
-                            Table = file,
-                            Index = "ricon"
-                        })
+
+            elseif showHomebrews == 1 then -- ON
+                for l, file in pairs(files_table) do
+                    if (l >= master_index) then
+                        base_x = base_x + space
                     end
-                    if file.ricon ~= nil then
-                        DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
+                    if l > p-8 and base_x < 10 then
+                        if FileLoad[file] == nil then
+                            FileLoad[file] = true
+                            Threads.addTask(file, {
+                                Type = "ImageLoad",
+                                Path = file.icon_path,
+                                Table = file,
+                                Index = "ricon"
+                            })
+                        end
+                        if file.ricon ~= nil then
+                            DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
+                        else
+                            DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
+                        end
                     else
-                        DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
-                    end
-                else
-                    if FileLoad[file] == true then
-                        FileLoad[file] = nil
-                        Threads.remove(file)
-                    end
-                    if file.ricon then
-                        Graphics.freeImage(file.ricon)
-                        file.ricon = nil
+                        if FileLoad[file] == true then
+                            FileLoad[file] = nil
+                            Threads.remove(file)
+                        end
+                        if file.ricon then
+                            Graphics.freeImage(file.ricon)
+                            file.ricon = nil
+                        end
                     end
                 end
-            end
-            if showView ~= 2 then
-                PrintCentered(fnt20, 480, 462, p .. " " .. lang_lines[61] .. #files_table, white, 20)-- Draw total items
-                --                                         of
-            end
+                if showView ~= 2 then
+                    PrintCentered(fnt20, 480, 462, p .. " " .. lang_lines[61] .. #files_table, white, 20)-- Draw total items
+                    --                                         of
+                end
+
+
+            else -- Show homebew is off
+                homebrew_count = tonumber(#homebrews_table)
+
+                for l, file in pairs(files_table) do
+                    if not string.match (files_table[p].app_type, "0") then
+                        if (l >= master_index) then
+                            base_x = base_x + space
+                        end
+                        if l > p-8 and base_x < 10 then
+                            if FileLoad[file] == nil then
+                                FileLoad[file] = true
+                                Threads.addTask(file, {
+                                    Type = "ImageLoad",
+                                    Path = file.icon_path,
+                                    Table = file,
+                                    Index = "ricon"
+                                })
+                            end
+                            if file.ricon ~= nil then
+                                DrawCover((targetX + l * space) - (#files_table-homebrew_count * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
+                            else
+                                DrawCover((targetX + l * space) - (#files_table-homebrew_count * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
+                            end
+                        else
+                            if FileLoad[file] == true then
+                                FileLoad[file] = nil
+                                Threads.remove(file)
+                            end
+                            if file.ricon then
+                                Graphics.freeImage(file.ricon)
+                                file.ricon = nil
+                            end
+                        end
+                    else
+                    end
+                end
+                if showView ~= 2 then
+                    PrintCentered(fnt20, 480, 462, p .. " " .. lang_lines[61] .. #files_table-homebrew_count, white, 20)-- Draw total items
+                    --                                         of
+                end
+
         end
         
         
@@ -7056,8 +7087,21 @@ while true do
             prevRot = prevRot - 0.04
         end
         
-        Graphics.drawImage(50, 50, iconTmp)-- icon
         
+        -- Rescale icon images to 128px x 128px
+
+        -- Get sizes
+        original_w = Graphics.getImageWidth(iconTmp)
+        original_h = Graphics.getImageHeight(iconTmp)
+
+        -- Calculate ratio size to use
+        if original_w == 128 then ratio_w = 1.0 else ratio_w = 128 / original_w end
+        if original_h == 128 then ratio_h = 1.0 else ratio_h = 128 / original_h end
+
+        -- Draw resized image  
+        Graphics.drawScaleImage(50, 50, iconTmp, ratio_w, ratio_h)
+
+
         txtname = string.sub(app_title, 1, 32) .. "\n" .. string.sub(app_title, 33)
         
         -- Set cover image
@@ -8059,7 +8103,7 @@ while true do
         if setBackground == 1 then
             Font.print(fnt22, 125 + 260, 72 + 160, lang_lines[22], white)--ON
         else
-            Font.print(fnt22, 125 + 260, 72 + 160, lang_lines[23], white)--OFF
+            Font.print(fnt22, 120 + 260, 72 + 160, lang_lines[23], white)--OFF
         end
         
         if scanComplete == false then
@@ -8143,12 +8187,7 @@ while true do
         if startupScan == 1 then
             Font.print(fnt22, 125 + 260, 72 + 320, lang_lines[22], white)--ON
         else
-            -- Chinese language fix
-            if setLanguage == 10 then
-                Font.print(fnt22, 117 + 260, 72 + 320, lang_lines[23], white)--OFF
-            else
-                Font.print(fnt22, 125 + 260, 72 + 320, lang_lines[23], white)--OFF
-            end
+            Font.print(fnt22, 125 + 260, 72 + 320, lang_lines[23], white)--OFF
         end
 
         -- Chinese language fix
@@ -8219,9 +8258,7 @@ while true do
                     if showHomebrews == 1 then
                         showHomebrews = 0
                         -- Import cache to update All games category
-                        cache_all_tables()
-                        -- Import Cached Database
-                        files_table = import_cached_DB(System.currentDirectory())
+                        count_cache_and_reload()
 
                         -- If currently on homebrew category view, move to Vita category to hide empty homebrew category
                         if showCat == 2 then
@@ -8231,19 +8268,18 @@ while true do
                     else
                         showHomebrews = 1
                         -- Import cache to update All games category
-                        files_table = listDirectory(System.currentDirectory())
-                        -- Import Cached Database
-                        files_table = import_cached_DB(System.currentDirectory())
+                        count_cache_and_reload()
 
                     end
                 elseif menuY == 8 then
                     if startupScan == 1 then -- 0 Off, 1 On
                         startupScan = 0
-
-                        -- find me
-                        cache_all_tables()
+                        -- Print to Cache folder
+                        count_cache_and_reload()
                     else
                         startupScan = 1
+                        count_cache_and_reload()
+
                     end
                 elseif menuY == 9 then
                     showMenu = 3
@@ -8711,8 +8747,12 @@ while true do
             menuY = 0
             startCovers = false
             local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
-            System.writeFile(file_config, setReflections .. setSounds .. themeColor .. setBackground .. setLanguage .. showView .. showHomebrews .. startCategory, 9)
-            System.closeFile(file_config)
+            settings = {}
+            local settings = "Reflections=" .. setReflections .. " " .. "\nSounds=" .. setSounds .. " " .. "\nColor=" .. themeColor .. " " .. "\nBackground=" .. setBackground .. " " .. "\nLanguage=" .. setLanguage .. " " .. "\nView=" .. showView .. " " .. "\nHomebrews=" .. showHomebrews .. " " .. "\nScan=" .. startupScan .. " " .. "\nCategory=" .. startCategory
+            file_settings = io.open(cur_dir .. "/config.dat", "w")
+            file_settings:write(settings)
+            file_settings:close()
+
         elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
             if setSounds == 1 then
                 Sound.play(click, NO_LOOP)

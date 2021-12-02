@@ -183,7 +183,7 @@ RetroFlow also uses the ID to lookup the name of the game.
 
 Place your custom covers in "_ux0:/data/RetroFlow/COVERS/_"
 
-Cover images must be in **png** format. For Vita, PSP and PSX games the The cover image file name must match the **App ID** or the **App Name** of each app. For roms the cover image name should match the **Rom Name** i.e. "Game Name (USA).png". The recommended resolution for Vita covers is 250x320px. [Sample image](https://live.staticflickr.com/7176/6885249717_738e8ee187_n.jpg)
+Cover images must be in **png** format. For Vita, PSP, PSX games and Homebrew the The cover image file name must match the **Game ID** or the **Game Name** of each app. For roms the cover image name should match the **Rom Name** i.e. "Game Name (USA).png". The recommended resolution for Vita covers is 250x320px. [Sample image](https://live.staticflickr.com/7176/6885249717_738e8ee187_n.jpg)
 
 ### Download Covers and Backgrounds
 
