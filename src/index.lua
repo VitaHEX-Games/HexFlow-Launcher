@@ -655,11 +655,14 @@ function cleanRomNamesPSP()
     romname_noExtension = {}
     romname_noExtension = romname_withExtension:match("(.+)%..+$")
 
+    romname_noExtension_notitleid = {}
+    romname_noExtension_notitleid = romname_noExtension:gsub(' %b[]', '')
+
     -- remove space before parenthesis " (" then letters and numbers "(.*)"
     romname_noRegion_noExtension = {}
     romname_noRegion_noExtension = romname_noExtension:gsub(" %(", "%("):gsub('%b()', '')
 
-    romname_noRegion_noExtension_noTitleID = {}
+    romname_noRegion_noExtension_notitleid = {}
     romname_noRegion_noExtension_notitleid = romname_noRegion_noExtension:gsub(" %[", "%["):gsub('%b[]', '') -- game without [ULUS-0000]
 
     titleID_withHyphen = {}
@@ -1346,7 +1349,7 @@ function listDirectory(dir)
                         file.title = romname_noRegion_noExtension_notitleid
                         file.name_online = titleID_noHyphen
                         file.version = romname_region
-                        file.name_title_search = titleID_noHyphen
+                        file.name_title_search = romname_noExtension_notitleid
                         file.apptitle = romname_noRegion_noExtension_notitleid
 
                         custom_path = localCoverPath[2] .. romname_noRegion_noExtension_notitleid .. ".png"
@@ -1414,7 +1417,7 @@ function listDirectory(dir)
                         file.title = romname_noRegion_noExtension
                         file.name_online = file.name
                         file.version = romname_region
-                        file.name_title_search = romname_noRegion_noExtension
+                        file.name_title_search = title
                         file.apptitle = romname_noRegion_noExtension
 
                     end
