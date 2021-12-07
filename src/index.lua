@@ -4,7 +4,7 @@
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "3.2"
+local appversion = "3.3"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -3903,7 +3903,7 @@ function GetInfoSelected()
             info = gg_table[p].name
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
             pic_path = "-"
-            app_title = gb_table[p].title
+            app_title = gg_table[p].title
             apptype = gg_table[p].app_type
             appdir = gg_table[p].game_path
             folder = gg_table[p].directory
@@ -6920,15 +6920,15 @@ while true do
             end
 
 
-        
+        else
 
             --ALL
+            for l, file in pairs(files_table) do
+                if (l >= master_index) then
+                    base_x = base_x + space
+                end
 
-            elseif showHomebrews == 1 then -- ON
-                for l, file in pairs(files_table) do
-                    if (l >= master_index) then
-                        base_x = base_x + space
-                    end
+                if showHomebrews == 1 then -- ON
                     if l > p-8 and base_x < 10 then
                         if FileLoad[file] == nil then
                             FileLoad[file] = true
@@ -6954,54 +6954,44 @@ while true do
                             file.ricon = nil
                         end
                     end
-                end
-                if showView ~= 2 then
-                    PrintCentered(fnt20, 480, 462, p .. " " .. lang_lines[61] .. #files_table, white, 20)-- Draw total items
-                    --                                         of
-                end
-
-
-            else -- Show homebew is off
-                homebrew_count = tonumber(#homebrews_table)
-
-                for l, file in pairs(files_table) do
-                    if not string.match (files_table[p].app_type, "0") then
-                        if (l >= master_index) then
-                            base_x = base_x + space
+                else
+                    local homebrew_count = tonumber(#homebrews_table)
+                    local file_count = #files_table - homebrew_count
+                    if l > p-8 and base_x < 10 then
+                        if FileLoad[file] == nil then
+                            FileLoad[file] = true
+                            Threads.addTask(file, {
+                                Type = "ImageLoad",
+                                Path = file.icon_path,
+                                Table = file,
+                                Index = "ricon"
+                            })
                         end
-                        if l > p-8 and base_x < 10 then
-                            if FileLoad[file] == nil then
-                                FileLoad[file] = true
-                                Threads.addTask(file, {
-                                    Type = "ImageLoad",
-                                    Path = file.icon_path,
-                                    Table = file,
-                                    Index = "ricon"
-                                })
-                            end
-                            if file.ricon ~= nil then
-                                DrawCover((targetX + l * space) - (#files_table-homebrew_count * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
-                            else
-                                DrawCover((targetX + l * space) - (#files_table-homebrew_count * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
-                            end
+                        if file.ricon ~= nil then
+                            DrawCover((targetX + l * space) - (file_count * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
                         else
-                            if FileLoad[file] == true then
-                                FileLoad[file] = nil
-                                Threads.remove(file)
-                            end
-                            if file.ricon then
-                                Graphics.freeImage(file.ricon)
-                                file.ricon = nil
-                            end
+                            DrawCover((targetX + l * space) - (file_count * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
                         end
                     else
+                        if FileLoad[file] == true then
+                            FileLoad[file] = nil
+                            Threads.remove(file)
+                        end
+                        if file.ricon then
+                            Graphics.freeImage(file.ricon)
+                            file.ricon = nil
+                        end
                     end
                 end
-                if showView ~= 2 then
-                    PrintCentered(fnt20, 480, 462, p .. " " .. lang_lines[61] .. #files_table-homebrew_count, white, 20)-- Draw total items
-                    --                                         of
-                end
 
+
+
+
+            end
+            if showView ~= 2 then
+                PrintCentered(fnt20, 480, 462, p .. " " .. lang_lines[61] .. #files_table, white, 20)-- Draw total items
+                --                                         of
+            end
         end
         
         
