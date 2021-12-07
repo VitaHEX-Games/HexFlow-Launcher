@@ -1101,41 +1101,42 @@ function listDirectory(dir)
 
             else
 
-                -- Scan Homebrews 
-                    -- Hide homebrews from All Category
-                    if showHomebrews == 0 then -- If show Homebrews is OFF
+                -- Commented out to avoid duplicating homebrew
+                -- -- Scan Homebrews 
+                --     -- Hide homebrews from All Category
+                --     if showHomebrews == 0 then -- If show Homebrews is OFF
 
-                        -- Commented out to avoid duplicating homebrew
-                        -- table.insert(folders_table, file)
-                        -- file.app_type=0
+                --         -- Commented out to avoid duplicating homebrew
+                --         -- table.insert(folders_table, file)
+                --         -- file.app_type=0
 
-                    else -- If show Homebrews is ON
-                        --Check for Vita override and include those games
-                        if System.doesFileExist(cur_dir .. "/overrides.dat") then
-                            --0 default, 1 vita, 2 psp, 3 psx, 4 homebrew
-                            if string.match(str, file.name .. "=1") then
-                                table.insert(folders_table, file)
-                                table.insert(all_games_table, 1, file)
-                                file.app_type=0
+                --     else -- If show Homebrews is ON
+                --         --Check for Vita override and include those games
+                --         if System.doesFileExist(cur_dir .. "/overrides.dat") then
+                --             --0 default, 1 vita, 2 psp, 3 psx, 4 homebrew
+                --             if string.match(str, file.name .. "=1") then
+                --                 table.insert(folders_table, file)
+                --                 table.insert(all_games_table, 1, file)
+                --                 file.app_type=0
 
-                                file.cover_path_online = onlineCover
-                                file.cover_path_local = localCoverPath[1]
+                --                 file.cover_path_online = onlineCover
+                --                 file.cover_path_local = localCoverPath[1]
 
-                                if custom_path[4] and System.doesFileExist(custom_path[4]) then
-                                    img_path = custom_path[4] --custom cover by app name
-                                elseif custom_path_id[4] and System.doesFileExist(custom_path_id[4]) then
-                                    img_path = custom_path_id[4] --custom cover by app id
-                                else
-                                    if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
-                                        img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
-                                    else
-                                        img_path = "app0:/DATA/noimg.png" --blank grey
-                                    end
-                                end
+                --                 if custom_path[4] and System.doesFileExist(custom_path[4]) then
+                --                     img_path = custom_path[4] --custom cover by app name
+                --                 elseif custom_path_id[4] and System.doesFileExist(custom_path_id[4]) then
+                --                     img_path = custom_path_id[4] --custom cover by app id
+                --                 else
+                --                     if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
+                --                         img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
+                --                     else
+                --                         img_path = "app0:/DATA/noimg.png" --blank grey
+                --                     end
+                --                 end
 
-                            end
-                        end
-                    end
+                --             end
+                --         end
+                --     end
                 
                 
             --CHECK FOR OVERRIDDEN CATEGORY of HOMEBREW game
@@ -6928,64 +6929,31 @@ while true do
                     base_x = base_x + space
                 end
 
-                if showHomebrews == 1 then -- ON
-                    if l > p-8 and base_x < 10 then
-                        if FileLoad[file] == nil then
-                            FileLoad[file] = true
-                            Threads.addTask(file, {
-                                Type = "ImageLoad",
-                                Path = file.icon_path,
-                                Table = file,
-                                Index = "ricon"
-                            })
-                        end
-                        if file.ricon ~= nil then
-                            DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
-                        else
-                            DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
-                        end
+                if l > p-8 and base_x < 10 then
+                    if FileLoad[file] == nil then
+                        FileLoad[file] = true
+                        Threads.addTask(file, {
+                            Type = "ImageLoad",
+                            Path = file.icon_path,
+                            Table = file,
+                            Index = "ricon"
+                        })
+                    end
+                    if file.ricon ~= nil then
+                        DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
                     else
-                        if FileLoad[file] == true then
-                            FileLoad[file] = nil
-                            Threads.remove(file)
-                        end
-                        if file.ricon then
-                            Graphics.freeImage(file.ricon)
-                            file.ricon = nil
-                        end
+                        DrawCover((targetX + l * space) - (#files_table * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
                     end
                 else
-                    local homebrew_count = tonumber(#homebrews_table)
-                    local file_count = #files_table - homebrew_count
-                    if l > p-8 and base_x < 10 then
-                        if FileLoad[file] == nil then
-                            FileLoad[file] = true
-                            Threads.addTask(file, {
-                                Type = "ImageLoad",
-                                Path = file.icon_path,
-                                Table = file,
-                                Index = "ricon"
-                            })
-                        end
-                        if file.ricon ~= nil then
-                            DrawCover((targetX + l * space) - (file_count * space + space), -0.6, file.name, file.ricon, base_x, file.app_type)--draw visible covers only
-                        else
-                            DrawCover((targetX + l * space) - (file_count * space + space), -0.6, file.name, file.icon, base_x, file.app_type)--draw visible covers only
-                        end
-                    else
-                        if FileLoad[file] == true then
-                            FileLoad[file] = nil
-                            Threads.remove(file)
-                        end
-                        if file.ricon then
-                            Graphics.freeImage(file.ricon)
-                            file.ricon = nil
-                        end
+                    if FileLoad[file] == true then
+                        FileLoad[file] = nil
+                        Threads.remove(file)
+                    end
+                    if file.ricon then
+                        Graphics.freeImage(file.ricon)
+                        file.ricon = nil
                     end
                 end
-
-
-
 
             end
             if showView ~= 2 then
