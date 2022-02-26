@@ -8,13 +8,16 @@ This is a modded version of [HexFlow Launcher](https://github.com/VitaHEX-Games/
 This version includes categories for retro games which can be launched without bubbles for RetroArch and DaedalusX64.
 Playstation and PSP games can also be launched without having to create bubbles for every game!
 
+This version also has categories for favorites and recently played games.
+
 Display and launch your retro games and homebrews in style.  
 **RetroFlow Launcher** features a 3d user interface to display your games with their box art and supports many customization options like custom covers and backgrounds.
 
 Launching a game or app from **RetroFlow Launcher** will close the launcher automaticaly without asking.
 
+
 ### Supported systems:
-PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear, PC Engine, TurboGrafx-16, MAME 2000.
+PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear, PC Engine, PC Engine CD, TurboGrafx-16, TurboGrafx-CD, MAME 2000 and Neo Geo Pocket Color.
 
 [DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases) is required for N64 games. [RetroArch](https://www.retroarch.com/index.php?page=platforms) is required for other retro systems. [Adrenaline](https://github.com/TheOfficialFloW/Adrenaline) is required for Playstation and PSP games.
 
@@ -127,6 +130,9 @@ It's recommended that your roms are named using the no-intro file naming convent
 ### Some systems aren't showing?
 Empty collections are hidden by default, once you add some games into the roms folder, they will appear.
 
+### PC Engine CD and TurboGrafx-CD still aren't showing
+RetroFlow will look for '.cue' files for these CD systems. Please make sure all the games are loose with the system's rom folder with .cue files.
+
 ### Can I change the Mega Drive name to Genesis?
 Sure; changing your language to 'English - American' will change the 'Mega Drive' name and logo to 'Genesis'.
 
@@ -138,6 +144,8 @@ To change the core for an entire system, search for "Retroarch Cores" in the fil
     ux0:/app/RETROFLOW/index.lua
 
 The RetroArch core files can be found here: "ux0:/app/RETROVITA/"
+
+
 
 ### Can I change the rom folder locations?
 The locations have been setup to keep things simple, if you would like to change the locations, search for "ROM Folders" in the 'index.lua' file below and edit accordingly.
@@ -213,7 +221,7 @@ Navigate your library using the **DPad** or the **Left Stick** or with the **Tou
 
 **Square**: Change Category
 
-**Triangle**: Game Details
+**Triangle**: Game Details/Add or remove favorites
 
 **Circle**: Change View/Cancel
 
@@ -260,6 +268,8 @@ Portuguese - @nighto
 Japanese - @iGlitch
 
 Chinese - @acd13141
+
+Polish - @SK00RUPA
 
 
 ### Polite notice
