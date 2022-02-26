@@ -18,11 +18,14 @@ local db_Cached_File_gg = (db_Cache_Folder .. "db_gg.lua")
 local db_Cached_File_mame = (db_Cache_Folder .. "db_mame.lua")
 local db_Cached_File_amiga = (db_Cache_Folder .. "db_amiga.lua")
 local db_Cached_File_tg16 = (db_Cache_Folder .. "db_tg16.lua")
+local db_Cached_File_tgcd = (db_Cache_Folder .. "db_tgcd.lua")
 local db_Cached_File_pce = (db_Cache_Folder .. "db_pce.lua")
+local db_Cached_File_pcecd = (db_Cache_Folder .. "db_pcecd.lua")
+local db_Cached_File_ngpc = (db_Cache_Folder .. "db_ngpc.lua")
 local db_Cached_File_all_games = (db_Cache_Folder .. "db_all_games.lua")
+-- local db_Cached_File_favorites = (db_Cache_Folder .. "db_favorites.lua")
 
-
--- PRINT ALL TABLES AT ONCE
+-- PRINT ALL TABLES AT ONCE 
 function print_tables()
 
     -- Create directories - Database Cache
@@ -46,8 +49,12 @@ function print_tables()
     if System.doesFileExist(db_Cache_Folder .. "db_mame.lua") then      System.deleteFile(db_Cache_Folder .. "db_mame.lua") else end
     if System.doesFileExist(db_Cache_Folder .. "db_amiga.lua") then     System.deleteFile(db_Cache_Folder .. "db_amiga.lua") else end
     if System.doesFileExist(db_Cache_Folder .. "db_tg16.lua") then      System.deleteFile(db_Cache_Folder .. "db_tg16.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_tgcd.lua") then      System.deleteFile(db_Cache_Folder .. "db_tgcd.lua") else end
     if System.doesFileExist(db_Cache_Folder .. "db_pce.lua") then       System.deleteFile(db_Cache_Folder .. "db_pce.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_pcecd.lua") then       System.deleteFile(db_Cache_Folder .. "db_pcecd.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_ngpc.lua") then       System.deleteFile(db_Cache_Folder .. "db_ngpc.lua") else end
     if System.doesFileExist(db_Cache_Folder .. "db_all_games.lua") then System.deleteFile(db_Cache_Folder .. "db_all_games.lua") else end
+    -- if System.doesFileExist(db_Cache_Folder .. "db_favorites.lua") then System.deleteFile(db_Cache_Folder .. "db_favorites.lua") else end
 
     -- START CREATE DATABASE CACHE
 
@@ -123,13 +130,29 @@ function print_tables()
     printTable(tg16_table, db_tg16)
     db_tg16:close()
 
+    local db_tgcd = assert(io.open(db_Cached_File_tgcd, "w"))
+    printTable(tgcd_table, db_tgcd)
+    db_tgcd:close()
+
     local db_pce = assert(io.open(db_Cached_File_pce, "w"))
     printTable(pce_table, db_pce)
     db_pce:close()
 
+    local db_pcecd = assert(io.open(db_Cached_File_pcecd, "w"))
+    printTable(pcecd_table, db_pcecd)
+    db_pcecd:close()
+
+    local db_ngpc = assert(io.open(db_Cached_File_ngpc, "w"))
+    printTable(ngpc_table, db_ngpc)
+    db_ngpc:close()
+
     local db_all_games = assert(io.open(db_Cached_File_all_games, "w"))
     printTable(all_games_table, db_all_games)
     db_all_games:close()
+
+    -- local db_favorites = assert(io.open(db_Cached_File_favorites, "w"))
+    -- printTable(favorites_table, db_favorites)
+    -- db_favorites:close()
 
     -- END CREATE DATABASE CACHE
 
@@ -300,6 +323,15 @@ function print_table_tg16()
     db_tg16:close()
 end
 
+function print_table_tgcd()
+    -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_tgcd.lua") then System.deleteFile(db_Cache_Folder .. "db_tgcd.lua") else end    
+    local db_Cached_File_tgcd = (db_Cache_Folder .. "db_tgcd.lua")
+    local db_tgcd = assert(io.open(db_Cached_File_tgcd, "w"))
+    printTable(tgcd_table, db_tgcd)
+    db_tgcd:close()
+end
+
 function print_table_pce()
     -- Create directories - Database Cache
     if System.doesFileExist(db_Cache_Folder .. "db_pce.lua") then System.deleteFile(db_Cache_Folder .. "db_pce.lua") else end    
@@ -307,6 +339,24 @@ function print_table_pce()
     local db_pce = assert(io.open(db_Cached_File_pce, "w"))
     printTable(pce_table, db_pce)
     db_pce:close()
+end
+
+function print_table_pcecd()
+    -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_pcecd.lua") then System.deleteFile(db_Cache_Folder .. "db_pcecd.lua") else end    
+    local db_Cached_File_pcecd = (db_Cache_Folder .. "db_pcecd.lua")
+    local db_pcecd = assert(io.open(db_Cached_File_pcecd, "w"))
+    printTable(pcecd_table, db_pcecd)
+    db_pcecd:close()
+end
+
+function print_table_ngpc()
+    -- Create directories - Database Cache
+    if System.doesFileExist(db_Cache_Folder .. "db_ngpc.lua") then System.deleteFile(db_Cache_Folder .. "db_ngpc.lua") else end    
+    local db_Cached_File_ngpc = (db_Cache_Folder .. "db_ngpc.lua")
+    local db_ngpc = assert(io.open(db_Cached_File_ngpc, "w"))
+    printTable(ngpc_table, db_ngpc)
+    db_ngpc:close()
 end
 
 function print_table_all_games()
@@ -318,6 +368,34 @@ function print_table_all_games()
     db_all_games:close()
 end
 
+-- function print_table_favorites()
+--     -- Create directories - Database Cache
+--     if System.doesFileExist(db_Cache_Folder .. "db_favorites.lua") then System.deleteFile(db_Cache_Folder .. "db_favorites.lua") else end    
+--     local db_Cached_File_favorites = (db_Cache_Folder .. "db_favorites.lua")
+--     local db_favorites = assert(io.open(db_Cached_File_favorites, "w"))
+--     printTable(favorites_table, db_favorites)
+--     db_favorites:close()
+-- end
+
+function print_table_recently_played()
+    local db_Cached_File_recently_played = "ux0:/data/RetroFlow/recently_played.lua"
+
+    -- Create directories - Database Cache
+    if System.doesFileExist(db_Cached_File_recently_played) then System.deleteFile(db_Cached_File_recently_played) else end
+    local db_recently_played = assert(io.open(db_Cached_File_recently_played, "w"))
+    printTable(recently_played_table, db_recently_played)
+    db_recently_played:close()
+end
+
+function print_table_recently_played_pre_launch()
+    local db_Cached_File_recently_played = "ux0:/data/RetroFlow/recently_played.lua"
+
+    -- Create directories - Database Cache
+    if System.doesFileExist(db_Cached_File_recently_played) then System.deleteFile(db_Cached_File_recently_played) else end
+    local db_recently_played = assert(io.open(db_Cached_File_recently_played, "w"))
+    printTable(recently_played_pre_launch_table, db_recently_played)
+    db_recently_played:close()
+end
 
 -- MAIN PRINT FUNCTION
 
