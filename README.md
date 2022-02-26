@@ -75,6 +75,8 @@ Once it's finshed loading; close RetroFlow and copy your favourite retro games i
 
     ux0:/data/RetroFlow/ROMS/
 
+For PC Engine CD and TurboGrafx-CD RetroFlow will look for '.cue' files for these CD systems. Please make sure all the games are loose with the system's rom folder with .cue files.
+
 **Tip:**
 It's important that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , otherwise cover images won't be found.
 
