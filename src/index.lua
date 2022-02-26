@@ -189,7 +189,7 @@ local core_PCECD = "app0:/mednafen_pce_fast_libretro.self"
 local core_NGPC = "app0:/mednafen_ngp_libretro.self"
 
 -- Launcher App Directory
-local launch_dir = "ux0:/rePatch/RETROFDV1/"
+local launch_dir = "ux0:/rePatch/RETROFLOW/"
 local launch_dir_adr = "ux0:/app/RETROLNCR/"
 local launch_app_adr = "RETROLNCR"
 
