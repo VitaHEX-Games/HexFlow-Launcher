@@ -1,4 +1,6 @@
 ﻿
+
+
 # RetroFlow-Launcher
 [![](https://github.com/jimbob4000/RetroFlow-Launcher/raw/main/Media/main_screen.png "main_screen")](https://github.com/jimbob4000/RetroFlow-Launcher/blob/main/Media/main_screen.png)
 
@@ -17,7 +19,8 @@ Launching a game or app from **RetroFlow Launcher** will close the launcher auto
 
 
 ### Supported systems:
-PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear, PC Engine, PC Engine CD, TurboGrafx-16, TurboGrafx-CD, MAME 2000 and Neo Geo Pocket Color.
+PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega CD, Sega 32X, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear, PC Engine, PC Engine CD, TurboGrafx-16, TurboGrafx-CD, Commodore Amiga, Commodore 64, WonderSwan, WonderSwan Color, MSX, MSX2, ZX Spectrum, Atari Lynx, Atari 600, Atari 5200, Atari 7800, ColecoVision, Vectrex, FBA 2012, MAME 2003 Plus, MAME 2000, Neo Geo (FBA 2012) and Neo Geo Pocket Color.
+
 
 [DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases) is required for N64 games. [RetroArch](https://www.retroarch.com/index.php?page=platforms) is required for other retro systems. [Adrenaline](https://github.com/TheOfficialFloW/Adrenaline) is required for Playstation and PSP games.
 
@@ -66,6 +69,7 @@ PSP ISO and CSO games should be saved here:
 
     ux0:pspemu/ISO/
 
+uma0 can also be used.
 
 ### 4. Add your retro games to RetroFlow
 
@@ -81,14 +85,15 @@ For PC Engine CD and TurboGrafx-CD RetroFlow will look for '.cue' files for thes
 It's important that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , otherwise cover images won't be found.
 
 
-### 5. Download covers
+### 5. Download covers & backgrounds
 
-To download cover images, press start, then choose which covers you would like to download. 
+To download cover images, press start, then choose which covers or backgrounds you would like to download. 
 
 
 # Issues loading games with Adrenaline?
 
-Please try installing [Adrenaline Bubble Manager](https://github.com/ONElua/AdrenalineBubbleManager/releases) to check bubbles load okay, or try installing [AdrBubbleBooterInstaller](https://vitadb.rinnegatamante.it/#/info/307).
+Please try installing [AdrBubbleBooterInstaller](https://vitadb.rinnegatamante.it/#/info/307).
+Or try installing [Adrenaline Bubble Manager](https://github.com/ONElua/AdrenalineBubbleManager/releases) to check bubbles load okay.
 
 
 # Possible incompatabilities
@@ -132,9 +137,6 @@ It's recommended that your roms are named using the no-intro file naming convent
 ### Some systems aren't showing?
 Empty collections are hidden by default, once you add some games into the roms folder, they will appear.
 
-### PC Engine CD and TurboGrafx-CD still aren't showing
-RetroFlow will look for '.cue' files for these CD systems. Please make sure all the games are loose with the system's rom folder with .cue files.
-
 ### Can I change the Mega Drive name to Genesis?
 Sure; changing your language to 'English - American' will change the 'Mega Drive' name and logo to 'Genesis'.
 
@@ -150,16 +152,7 @@ The RetroArch core files can be found here: "ux0:/app/RETROVITA/"
 
 
 ### Can I change the rom folder locations?
-The locations have been setup to keep things simple, if you would like to change the locations, search for "ROM Folders" in the 'index.lua' file below and edit accordingly.
-
-    ux0:/app/RETROFLOW/index.lua
-
-For example, to use the ux0 roms folder, the start of the section would look like
-
-    -- ROM Folders
-    local romFolder = "ux0:/Roms/"
-    local romFolder_N64 = romFolder .. "Nintendo - Nintendo 64"
-
+No, sorry.
 
 
 # Adding PSP and Playstation games
@@ -189,21 +182,24 @@ RetroFlow also uses the ID to lookup the name of the game.
 
 
 
-# Custom Covers
+# Custom Game Covers & Game Backgrounds
 
-Place your custom covers in "_ux0:/data/RetroFlow/COVERS/_"
+Place your custom covers in the game system's here "_ux0:/data/RetroFlow/COVERS/_"
 
-Cover images must be in **png** format. For Vita, PSP, PSX games and Homebrew the The cover image file name must match the **Game ID** or the **Game Name** of each app. For roms the cover image name should match the **Rom Name** i.e. "Game Name (USA).png". The recommended resolution for Vita covers is 250x320px. [Sample image](https://live.staticflickr.com/7176/6885249717_738e8ee187_n.jpg)
+Place your custom game backgrounds in the game system's here "_ux0:/data/RetroFlow/BACKGROUNDS/_"
+
+Cover and background images must be in **png** format. For Vita, PSP, PSX games and Homebrew the The cover image file name must match the **Game ID** or the **Game Name** of each app. For roms the cover image name should match the **Rom Name** i.e. "Game Name (USA).png". The recommended resolution for Vita covers is 250x320px. [Sample image](https://live.staticflickr.com/7176/6885249717_738e8ee187_n.jpg)
 
 ### Download Covers and Backgrounds
 
-From v0.3 covers can be downloaded automatically from the settings menu (Start button). You can also download covers and backgrounds manually from the link below. A big thanks to **astuermer** for his contribution.
+Covers and game backgrounds can be downloaded automatically from the artwork section of the settings menu (Start button). You can also download covers manually from the link below. A big thanks to **astuermer** for his contribution.
 
 [https://github.com/andiweli/hexflow-covers](https://github.com/andiweli/hexflow-covers)
 
-### Custom Background
+### Custom Backgrounds
 
-Place your **Background.png** or **Background.jpg** image in "_ux0:/data/RetroFlow/_" (recomended resolution 1280x720px or less). Some custom backgrounds are available [HERE](https://github.com/andiweli/hexflow-covers/tree/main/Backgrounds)
+Place your image in "_ux0:/data/RetroFlow/WALLPAPER_" (recomended resolution 1280x720px or less). Some custom backgrounds are available [HERE](https://github.com/andiweli/hexflow-covers/tree/main/Backgrounds)
+You can change your background within the app by going to the settings menu > theme > custom background.
 
 ### Custom Music
 
@@ -217,6 +213,8 @@ If you want to auto-launch **RetroFlow Launcher** every time your PS Vita boots 
 
 Navigate your library using the **DPad** or the **Left Stick** or with the **Touch Screen**.
 
+**DPad Up**: Skip to favorites category
+
 **R/L triggers**: Skip 5 items
 
 **Cross**: Select/Launch game/app
@@ -228,6 +226,8 @@ Navigate your library using the **DPad** or the **Left Stick** or with the **Tou
 **Circle**: Change View/Cancel
 
 **Start**: Settings menu
+
+**Select**: Search
 
 
 
@@ -263,7 +263,7 @@ Spanish - @kodyna91
 
 Italian - @TheheroGAC
 
-Russian - @_novff
+Russian - @\_novff
 
 Portuguese - @nighto
 
