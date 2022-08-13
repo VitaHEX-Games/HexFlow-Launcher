@@ -7261,9 +7261,9 @@ function DownloadSingleCover()
         elseif apptype == 3 then
             coverspath = SystemsToScan[4].localCoverPath
             onlineCoverspath = SystemsToScan[4].onlineCoverPathSystem
-        elseif apptype == 4 then
-            coverspath = SystemsToScan[1].localCoverPath
-            onlineCoverspath = SystemsToScan[1].onlineCoverPathSystem
+        elseif apptype == 0 then
+            coverspath = SystemsToScan[2].localCoverPath
+            onlineCoverspath = SystemsToScan[2].onlineCoverPathSystem
         else
             coverspath = SystemsToScan[apptype].localCoverPath
             onlineCoverspath = SystemsToScan[apptype].onlineCoverPathSystem
@@ -7394,9 +7394,9 @@ function DownloadSingleSnap()
         elseif apptype == 3 then
             snapPath = SystemsToScan[4].localSnapPath
             onlineSnapPath = SystemsToScan[4].onlineSnapPathSystem
-        elseif apptype == 4 then
-            snapPath = SystemsToScan[1].localSnapPath
-            onlineSnapPath = SystemsToScan[1].onlineSnapPathSystem
+        elseif apptype == 0 then
+            snapPath = SystemsToScan[2].localSnapPath
+            onlineSnapPath = SystemsToScan[2].onlineSnapPathSystem
         else
             snapPath = SystemsToScan[apptype].localSnapPath
             onlineSnapPath = SystemsToScan[apptype].onlineSnapPathSystem
