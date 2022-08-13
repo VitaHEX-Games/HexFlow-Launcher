@@ -1450,7 +1450,6 @@ function xAppNumTableLookup(AppTypeNum)
     if AppTypeNum == 1 then return games_table
     elseif AppTypeNum == 2 then  return psp_table
     elseif AppTypeNum == 3 then  return psx_table
-    elseif AppTypeNum == 4 then  return psx_table
     elseif AppTypeNum == 5 then  return n64_table
     elseif AppTypeNum == 6 then  return snes_table
     elseif AppTypeNum == 7 then  return nes_table
