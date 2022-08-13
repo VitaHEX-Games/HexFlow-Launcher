@@ -9969,6 +9969,7 @@ while true do
                 if hasTyped==false then
                     Keyboard.start(lang_lines.Search, "", 512, TYPE_DEFAULT, MODE_TEXT)
                     hasTyped=true
+                end
             else
             end
         elseif (Controls.check(pad, SCE_CTRL_SQUARE) and not Controls.check(oldpad, SCE_CTRL_SQUARE)) then
