@@ -6,7 +6,7 @@
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "3.6"
+local appversion = "3.6.1"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -8502,16 +8502,24 @@ while true do
                 SaveSettings()
 
             elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
-                if menuY > 0 then
-                    menuY = menuY - 1
-                    else
-                    menuY=menuItems
+                state = Keyboard.getState()
+                if state ~= RUNNING then
+                    if menuY > 0 then
+                        menuY = menuY - 1
+                        else
+                        menuY=menuItems
+                    end
+                else
                 end
             elseif (Controls.check(pad, SCE_CTRL_DOWN)) and not (Controls.check(oldpad, SCE_CTRL_DOWN)) then
-                if menuY < menuItems then
-                    menuY = menuY + 1
-                    else
-                    menuY=0
+                state = Keyboard.getState()
+                if state ~= RUNNING then
+                    if menuY < menuItems then
+                        menuY = menuY + 1
+                        else
+                        menuY=0
+                    end
+                else
                 end
             end
         end
@@ -9631,427 +9639,445 @@ while true do
         
         -- Navigation Buttons
         if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
-            if gettingCovers == false and app_title~="-" then
-                FreeMemory()
-                AddtoRecentlyPlayed()
-                update_cached_table_recently_played_pre_launch()
+            state = Keyboard.getState()
+            if state ~= RUNNING then
+                if gettingCovers == false and app_title~="-" then
+                    FreeMemory()
+                    AddtoRecentlyPlayed()
+                    update_cached_table_recently_played_pre_launch()
 
-                if showCat == 1 then
-                    if string.match (games_table[p].game_path, "pspemu") then
-                        rom_location = tostring(games_table[p].launch_argument)
-                        launch_Adrenaline()
-                    else
-                        System.launchApp(games_table[p].name)
-                    end
-
-                elseif showCat == 2 then
-                    if string.match (homebrews_table[p].game_path, "pspemu") then
-                        rom_location = tostring(homebrews_table[p].launch_argument)
-                        launch_Adrenaline()
-                    else
-                        System.launchApp(homebrews_table[p].name)
-                    end
-
-                    -- launch command for system apps
-                    -- System.executeUri(homebrews_table[p].uri_scheme)
-
-                elseif showCat == 3 then
-                    if string.match (psp_table[p].game_path, "pspemu") then
-                        rom_location = tostring(psp_table[p].launch_argument)
-                        launch_Adrenaline()
-                    else
-                        System.launchApp(psp_table[p].name)
-                    end
-
-                elseif showCat == 4 then
-                    if string.match (psx_table[p].game_path, "pspemu") then
-                        rom_location = tostring(psx_table[p].launch_argument)
-                        launch_Adrenaline()
-                    else
-                        System.launchApp(psx_table[p].name)
-                    end
-
-                -- Start Retro    
-                elseif showCat == 5 then rom_location = (n64_table[p].game_path) launch_DaedalusX64()
-                elseif showCat == 6 then rom_location = (snes_table[p].game_path) launch_retroarch(core.SNES)
-                elseif showCat == 7 then rom_location = (nes_table[p].game_path) launch_retroarch(core.NES)
-                elseif showCat == 8 then rom_location = (gba_table[p].game_path) launch_retroarch(core.GBA)
-                elseif showCat == 9 then rom_location = (gbc_table[p].game_path) launch_retroarch(core.GBC)
-                elseif showCat == 10 then rom_location = (gb_table[p].game_path) launch_retroarch(core.GB)
-                elseif showCat == 11 then rom_location = (sega_cd_table[p].game_path) launch_retroarch(core.SEGA_CD) 
-                elseif showCat == 12 then rom_location = (s32x_table[p].game_path) launch_retroarch(core.s32X) 
-                elseif showCat == 13 then rom_location = (md_table[p].game_path) launch_retroarch(core.MD)
-                elseif showCat == 14 then rom_location = (sms_table[p].game_path) launch_retroarch(core.SMS)
-                elseif showCat == 15 then rom_location = (gg_table[p].game_path) launch_retroarch(core.GG)
-                elseif showCat == 16 then rom_location = (tg16_table[p].game_path) launch_retroarch(core.TG16)
-                elseif showCat == 17 then rom_location = (tgcd_table[p].game_path) launch_retroarch(core.TGCD)
-                elseif showCat == 18 then rom_location = (pce_table[p].game_path) launch_retroarch(core.PCE)
-                elseif showCat == 19 then rom_location = (pcecd_table[p].game_path) launch_retroarch(core.PCECD)
-                elseif showCat == 20 then rom_location = (amiga_table[p].game_path) launch_retroarch(core.AMIGA)
-                elseif showCat == 21 then rom_location = (c64_table[p].game_path) launch_retroarch(core.C64)
-                elseif showCat == 22 then rom_location = (wswan_col_table[p].game_path) launch_retroarch(core.WSWAN_COL)
-                elseif showCat == 23 then rom_location = (wswan_table[p].game_path) launch_retroarch(core.WSWAN)
-                elseif showCat == 24 then rom_location = (msx2_table[p].game_path) launch_retroarch(core.MSX2)
-                elseif showCat == 25 then rom_location = (msx1_table[p].game_path) launch_retroarch(core.MSX1)
-                elseif showCat == 26 then rom_location = (zxs_table[p].game_path) launch_retroarch(core.ZXS)
-                elseif showCat == 27 then rom_location = (atari_7800_table[p].game_path) launch_retroarch(core.ATARI_7800)
-                elseif showCat == 28 then rom_location = (atari_5200_table[p].game_path) launch_retroarch(core.ATARI_5200)
-                elseif showCat == 29 then rom_location = (atari_2600_table[p].game_path) launch_retroarch(core.ATARI_2600)
-                elseif showCat == 30 then rom_location = (atari_lynx_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
-                elseif showCat == 31 then rom_location = (colecovision_table[p].game_path) launch_retroarch(core.COLECOVISION)
-                elseif showCat == 32 then rom_location = (vectrex_table[p].game_path) launch_retroarch(core.VECTREX)
-                elseif showCat == 33 then rom_location = (fba_table[p].game_path) launch_retroarch(core.FBA)
-                elseif showCat == 34 then rom_location = (mame_2003_plus_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
-                elseif showCat == 35 then rom_location = (mame_2000_table[p].game_path) launch_retroarch(core.MAME_2000)
-                elseif showCat == 36 then rom_location = (neogeo_table[p].game_path) launch_retroarch(core.NEOGEO)
-                elseif showCat == 37 then rom_location = (ngpc_table[p].game_path) launch_retroarch(core.NGPC)
-
-                elseif showCat == 38 then
-                    if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
-                        if string.match (fav_count[p].game_path, "pspemu") then
-                            rom_location = tostring(fav_count[p].launch_argument)
+                    if showCat == 1 then
+                        if string.match (games_table[p].game_path, "pspemu") then
+                            rom_location = tostring(games_table[p].launch_argument)
                             launch_Adrenaline()
                         else
-                            System.launchApp(fav_count[p].name)
+                            System.launchApp(games_table[p].name)
+                        end
+
+                    elseif showCat == 2 then
+                        if string.match (homebrews_table[p].game_path, "pspemu") then
+                            rom_location = tostring(homebrews_table[p].launch_argument)
+                            launch_Adrenaline()
+                        else
+                            System.launchApp(homebrews_table[p].name)
+                        end
+
+                        -- launch command for system apps
+                        -- System.executeUri(homebrews_table[p].uri_scheme)
+
+                    elseif showCat == 3 then
+                        if string.match (psp_table[p].game_path, "pspemu") then
+                            rom_location = tostring(psp_table[p].launch_argument)
+                            launch_Adrenaline()
+                        else
+                            System.launchApp(psp_table[p].name)
+                        end
+
+                    elseif showCat == 4 then
+                        if string.match (psx_table[p].game_path, "pspemu") then
+                            rom_location = tostring(psx_table[p].launch_argument)
+                            launch_Adrenaline()
+                        else
+                            System.launchApp(psx_table[p].name)
                         end
 
                     -- Start Retro    
-                    elseif apptype == 5 then rom_location = (fav_count[p].game_path) launch_DaedalusX64()
-                    elseif apptype == 6 then rom_location = (fav_count[p].game_path) launch_retroarch(core.SNES)
-                    elseif apptype == 7 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NES)
-                    elseif apptype == 8 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GBA)
-                    elseif apptype == 9 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GBC)
-                    elseif apptype == 10 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GB)
-                    elseif apptype == 11 then rom_location = (fav_count[p].game_path) launch_retroarch(core.SEGA_CD) 
-                    elseif apptype == 12 then rom_location = (fav_count[p].game_path) launch_retroarch(core.s32X) 
-                    elseif apptype == 13 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MD)
-                    elseif apptype == 14 then rom_location = (fav_count[p].game_path) launch_retroarch(core.SMS)
-                    elseif apptype == 15 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GG)
-                    elseif apptype == 16 then rom_location = (fav_count[p].game_path) launch_retroarch(core.TG16)
-                    elseif apptype == 17 then rom_location = (fav_count[p].game_path) launch_retroarch(core.TGCD)
-                    elseif apptype == 18 then rom_location = (fav_count[p].game_path) launch_retroarch(core.PCE)
-                    elseif apptype == 19 then rom_location = (fav_count[p].game_path) launch_retroarch(core.PCECD)
-                    elseif apptype == 20 then rom_location = (fav_count[p].game_path) launch_retroarch(core.AMIGA)
-                    elseif apptype == 21 then rom_location = (fav_count[p].game_path) launch_retroarch(core.C64)
-                    elseif apptype == 22 then rom_location = (fav_count[p].game_path) launch_retroarch(core.WSWAN_COL)
-                    elseif apptype == 23 then rom_location = (fav_count[p].game_path) launch_retroarch(core.WSWAN)
-                    elseif apptype == 24 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MSX2)
-                    elseif apptype == 25 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MSX1)
-                    elseif apptype == 26 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ZXS)
-                    elseif apptype == 27 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_7800)
-                    elseif apptype == 28 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_5200)
-                    elseif apptype == 29 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_2600)
-                    elseif apptype == 30 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_LYNX)
-                    elseif apptype == 31 then rom_location = (fav_count[p].game_path) launch_retroarch(core.COLECOVISION)
-                    elseif apptype == 32 then rom_location = (fav_count[p].game_path) launch_retroarch(core.VECTREX)
-                    elseif apptype == 33 then rom_location = (fav_count[p].game_path) launch_retroarch(core.FBA)
-                    elseif apptype == 34 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
-                    elseif apptype == 35 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MAME_2000)
-                    elseif apptype == 36 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NEOGEO)
-                    elseif apptype == 37 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NGPC)
+                    elseif showCat == 5 then rom_location = (n64_table[p].game_path) launch_DaedalusX64()
+                    elseif showCat == 6 then rom_location = (snes_table[p].game_path) launch_retroarch(core.SNES)
+                    elseif showCat == 7 then rom_location = (nes_table[p].game_path) launch_retroarch(core.NES)
+                    elseif showCat == 8 then rom_location = (gba_table[p].game_path) launch_retroarch(core.GBA)
+                    elseif showCat == 9 then rom_location = (gbc_table[p].game_path) launch_retroarch(core.GBC)
+                    elseif showCat == 10 then rom_location = (gb_table[p].game_path) launch_retroarch(core.GB)
+                    elseif showCat == 11 then rom_location = (sega_cd_table[p].game_path) launch_retroarch(core.SEGA_CD) 
+                    elseif showCat == 12 then rom_location = (s32x_table[p].game_path) launch_retroarch(core.s32X) 
+                    elseif showCat == 13 then rom_location = (md_table[p].game_path) launch_retroarch(core.MD)
+                    elseif showCat == 14 then rom_location = (sms_table[p].game_path) launch_retroarch(core.SMS)
+                    elseif showCat == 15 then rom_location = (gg_table[p].game_path) launch_retroarch(core.GG)
+                    elseif showCat == 16 then rom_location = (tg16_table[p].game_path) launch_retroarch(core.TG16)
+                    elseif showCat == 17 then rom_location = (tgcd_table[p].game_path) launch_retroarch(core.TGCD)
+                    elseif showCat == 18 then rom_location = (pce_table[p].game_path) launch_retroarch(core.PCE)
+                    elseif showCat == 19 then rom_location = (pcecd_table[p].game_path) launch_retroarch(core.PCECD)
+                    elseif showCat == 20 then rom_location = (amiga_table[p].game_path) launch_retroarch(core.AMIGA)
+                    elseif showCat == 21 then rom_location = (c64_table[p].game_path) launch_retroarch(core.C64)
+                    elseif showCat == 22 then rom_location = (wswan_col_table[p].game_path) launch_retroarch(core.WSWAN_COL)
+                    elseif showCat == 23 then rom_location = (wswan_table[p].game_path) launch_retroarch(core.WSWAN)
+                    elseif showCat == 24 then rom_location = (msx2_table[p].game_path) launch_retroarch(core.MSX2)
+                    elseif showCat == 25 then rom_location = (msx1_table[p].game_path) launch_retroarch(core.MSX1)
+                    elseif showCat == 26 then rom_location = (zxs_table[p].game_path) launch_retroarch(core.ZXS)
+                    elseif showCat == 27 then rom_location = (atari_7800_table[p].game_path) launch_retroarch(core.ATARI_7800)
+                    elseif showCat == 28 then rom_location = (atari_5200_table[p].game_path) launch_retroarch(core.ATARI_5200)
+                    elseif showCat == 29 then rom_location = (atari_2600_table[p].game_path) launch_retroarch(core.ATARI_2600)
+                    elseif showCat == 30 then rom_location = (atari_lynx_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
+                    elseif showCat == 31 then rom_location = (colecovision_table[p].game_path) launch_retroarch(core.COLECOVISION)
+                    elseif showCat == 32 then rom_location = (vectrex_table[p].game_path) launch_retroarch(core.VECTREX)
+                    elseif showCat == 33 then rom_location = (fba_table[p].game_path) launch_retroarch(core.FBA)
+                    elseif showCat == 34 then rom_location = (mame_2003_plus_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
+                    elseif showCat == 35 then rom_location = (mame_2000_table[p].game_path) launch_retroarch(core.MAME_2000)
+                    elseif showCat == 36 then rom_location = (neogeo_table[p].game_path) launch_retroarch(core.NEOGEO)
+                    elseif showCat == 37 then rom_location = (ngpc_table[p].game_path) launch_retroarch(core.NGPC)
+
+                    elseif showCat == 38 then
+                        if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
+                            if string.match (fav_count[p].game_path, "pspemu") then
+                                rom_location = tostring(fav_count[p].launch_argument)
+                                launch_Adrenaline()
+                            else
+                                System.launchApp(fav_count[p].name)
+                            end
+
+                        -- Start Retro    
+                        elseif apptype == 5 then rom_location = (fav_count[p].game_path) launch_DaedalusX64()
+                        elseif apptype == 6 then rom_location = (fav_count[p].game_path) launch_retroarch(core.SNES)
+                        elseif apptype == 7 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NES)
+                        elseif apptype == 8 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GBA)
+                        elseif apptype == 9 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GBC)
+                        elseif apptype == 10 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GB)
+                        elseif apptype == 11 then rom_location = (fav_count[p].game_path) launch_retroarch(core.SEGA_CD) 
+                        elseif apptype == 12 then rom_location = (fav_count[p].game_path) launch_retroarch(core.s32X) 
+                        elseif apptype == 13 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MD)
+                        elseif apptype == 14 then rom_location = (fav_count[p].game_path) launch_retroarch(core.SMS)
+                        elseif apptype == 15 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GG)
+                        elseif apptype == 16 then rom_location = (fav_count[p].game_path) launch_retroarch(core.TG16)
+                        elseif apptype == 17 then rom_location = (fav_count[p].game_path) launch_retroarch(core.TGCD)
+                        elseif apptype == 18 then rom_location = (fav_count[p].game_path) launch_retroarch(core.PCE)
+                        elseif apptype == 19 then rom_location = (fav_count[p].game_path) launch_retroarch(core.PCECD)
+                        elseif apptype == 20 then rom_location = (fav_count[p].game_path) launch_retroarch(core.AMIGA)
+                        elseif apptype == 21 then rom_location = (fav_count[p].game_path) launch_retroarch(core.C64)
+                        elseif apptype == 22 then rom_location = (fav_count[p].game_path) launch_retroarch(core.WSWAN_COL)
+                        elseif apptype == 23 then rom_location = (fav_count[p].game_path) launch_retroarch(core.WSWAN)
+                        elseif apptype == 24 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MSX2)
+                        elseif apptype == 25 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MSX1)
+                        elseif apptype == 26 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ZXS)
+                        elseif apptype == 27 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_7800)
+                        elseif apptype == 28 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_5200)
+                        elseif apptype == 29 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_2600)
+                        elseif apptype == 30 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_LYNX)
+                        elseif apptype == 31 then rom_location = (fav_count[p].game_path) launch_retroarch(core.COLECOVISION)
+                        elseif apptype == 32 then rom_location = (fav_count[p].game_path) launch_retroarch(core.VECTREX)
+                        elseif apptype == 33 then rom_location = (fav_count[p].game_path) launch_retroarch(core.FBA)
+                        elseif apptype == 34 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
+                        elseif apptype == 35 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MAME_2000)
+                        elseif apptype == 36 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NEOGEO)
+                        elseif apptype == 37 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NGPC)
+                        else
+                            -- Homebrew
+                            if string.match (fav_count[p].game_path, "pspemu") then
+                                rom_location = (fav_count[p].launch_argument)
+                                launch_Adrenaline()
+                            else
+                                System.launchApp(fav_count[p].name)
+                            end
+
+                            appdir=working_dir .. "/" .. fav_count[p].name
+                        end
+
+                    elseif showCat == 39 then
+                        if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
+                            if string.match (recently_played_table[p].game_path, "pspemu") then
+                                rom_location = tostring(recently_played_table[p].launch_argument)
+                                launch_Adrenaline()
+                            else
+                                System.launchApp(recently_played_table[p].name)
+                            end
+
+                        -- Start Retro    
+                        elseif apptype == 5 then rom_location = (recently_played_table[p].game_path) launch_DaedalusX64()
+                        elseif apptype == 6 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.SNES)
+                        elseif apptype == 7 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NES)
+                        elseif apptype == 8 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GBA)
+                        elseif apptype == 9 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GBC)
+                        elseif apptype == 10 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GB)
+                        elseif apptype == 11 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.SEGA_CD) 
+                        elseif apptype == 12 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.s32X) 
+                        elseif apptype == 13 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MD)
+                        elseif apptype == 14 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.SMS)
+                        elseif apptype == 15 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GG)
+                        elseif apptype == 16 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.TG16)
+                        elseif apptype == 17 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.TGCD)
+                        elseif apptype == 18 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.PCE)
+                        elseif apptype == 19 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.PCECD)
+                        elseif apptype == 20 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.AMIGA)
+                        elseif apptype == 21 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.C64)
+                        elseif apptype == 22 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.WSWAN_COL)
+                        elseif apptype == 23 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.WSWAN)
+                        elseif apptype == 24 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MSX2)
+                        elseif apptype == 25 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MSX1)
+                        elseif apptype == 26 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ZXS)
+                        elseif apptype == 27 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_7800)
+                        elseif apptype == 28 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_5200)
+                        elseif apptype == 29 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_2600)
+                        elseif apptype == 30 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
+                        elseif apptype == 31 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.COLECOVISION)
+                        elseif apptype == 32 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.VECTREX)
+                        elseif apptype == 33 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.FBA)
+                        elseif apptype == 34 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
+                        elseif apptype == 35 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MAME_2000)
+                        elseif apptype == 36 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NEOGEO)
+                        elseif apptype == 37 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NGPC)
+                        else
+                            -- Homebrew
+                            if string.match (recently_played_table[p].game_path, "pspemu") then
+                                rom_location = (recently_played_table[p].launch_argument)
+                                launch_Adrenaline()
+                            else
+                                System.launchApp(recently_played_table[p].name)
+                            end
+
+                            appdir=working_dir .. "/" .. recently_played_table[p].name
+                        end
+
+                    
+                    elseif showCat == 40 then
+                        if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
+                            if string.match (search_results_table[p].game_path, "pspemu") then
+                                rom_location = tostring(search_results_table[p].launch_argument)
+                                launch_Adrenaline()
+                            else
+                                System.launchApp(search_results_table[p].name)
+                            end
+
+                        -- Start Retro    
+                        elseif apptype == 5 then rom_location = (search_results_table[p].game_path) launch_DaedalusX64()
+                        elseif apptype == 6 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.SNES)
+                        elseif apptype == 7 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NES)
+                        elseif apptype == 8 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GBA)
+                        elseif apptype == 9 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GBC)
+                        elseif apptype == 10 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GB)
+                        elseif apptype == 11 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.SEGA_CD) 
+                        elseif apptype == 12 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.s32X) 
+                        elseif apptype == 13 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MD)
+                        elseif apptype == 14 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.SMS)
+                        elseif apptype == 15 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GG)
+                        elseif apptype == 16 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.TG16)
+                        elseif apptype == 17 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.TGCD)
+                        elseif apptype == 18 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.PCE)
+                        elseif apptype == 19 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.PCECD)
+                        elseif apptype == 20 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.AMIGA)
+                        elseif apptype == 21 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.C64)
+                        elseif apptype == 22 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.WSWAN_COL)
+                        elseif apptype == 23 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.WSWAN)
+                        elseif apptype == 24 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MSX2)
+                        elseif apptype == 25 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MSX1)
+                        elseif apptype == 26 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ZXS)
+                        elseif apptype == 27 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_7800)
+                        elseif apptype == 28 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_5200)
+                        elseif apptype == 29 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_2600)
+                        elseif apptype == 30 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
+                        elseif apptype == 31 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.COLECOVISION)
+                        elseif apptype == 32 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.VECTREX)
+                        elseif apptype == 33 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.FBA)
+                        elseif apptype == 34 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
+                        elseif apptype == 35 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MAME_2000)
+                        elseif apptype == 36 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NEOGEO)
+                        elseif apptype == 37 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NGPC)
+                        else
+                            -- Homebrew
+                            if string.match (search_results_table[p].game_path, "pspemu") then
+                                rom_location = (search_results_table[p].launch_argument)
+                                launch_Adrenaline()
+                            else
+                                System.launchApp(search_results_table[p].name)
+                            end
+
+                            appdir=working_dir .. "/" .. search_results_table[p].name
+                        end
+
+                    -- End Retro 
                     else
-                        -- Homebrew
-                        if string.match (fav_count[p].game_path, "pspemu") then
-                            rom_location = (fav_count[p].launch_argument)
-                            launch_Adrenaline()
-                        else
-                            System.launchApp(fav_count[p].name)
-                        end
 
-                        appdir=working_dir .. "/" .. fav_count[p].name
+                        if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
+                            if string.match (files_table[p].game_path, "pspemu") then
+                                rom_location = tostring(files_table[p].launch_argument)
+                                launch_Adrenaline()
+                            else
+                                System.launchApp(files_table[p].name)
+                            end
+
+                        -- Start Retro    
+                        elseif apptype == 5 then rom_location = (files_table[p].game_path) launch_DaedalusX64()
+                        elseif apptype == 6 then rom_location = (files_table[p].game_path) launch_retroarch(core.SNES)
+                        elseif apptype == 7 then rom_location = (files_table[p].game_path) launch_retroarch(core.NES)
+                        elseif apptype == 8 then rom_location = (files_table[p].game_path) launch_retroarch(core.GBA)
+                        elseif apptype == 9 then rom_location = (files_table[p].game_path) launch_retroarch(core.GBC)
+                        elseif apptype == 10 then rom_location = (files_table[p].game_path) launch_retroarch(core.GB)
+                        elseif apptype == 11 then rom_location = (files_table[p].game_path) launch_retroarch(core.SEGA_CD) 
+                        elseif apptype == 12 then rom_location = (files_table[p].game_path) launch_retroarch(core.s32X) 
+                        elseif apptype == 13 then rom_location = (files_table[p].game_path) launch_retroarch(core.MD)
+                        elseif apptype == 14 then rom_location = (files_table[p].game_path) launch_retroarch(core.SMS)
+                        elseif apptype == 15 then rom_location = (files_table[p].game_path) launch_retroarch(core.GG)
+                        elseif apptype == 16 then rom_location = (files_table[p].game_path) launch_retroarch(core.TG16)
+                        elseif apptype == 17 then rom_location = (files_table[p].game_path) launch_retroarch(core.TGCD)
+                        elseif apptype == 18 then rom_location = (files_table[p].game_path) launch_retroarch(core.PCE)
+                        elseif apptype == 19 then rom_location = (files_table[p].game_path) launch_retroarch(core.PCECD)
+                        elseif apptype == 20 then rom_location = (files_table[p].game_path) launch_retroarch(core.AMIGA)
+                        elseif apptype == 21 then rom_location = (files_table[p].game_path) launch_retroarch(core.C64)
+                        elseif apptype == 22 then rom_location = (files_table[p].game_path) launch_retroarch(core.WSWAN_COL)
+                        elseif apptype == 23 then rom_location = (files_table[p].game_path) launch_retroarch(core.WSWAN)
+                        elseif apptype == 24 then rom_location = (files_table[p].game_path) launch_retroarch(core.MSX2)
+                        elseif apptype == 25 then rom_location = (files_table[p].game_path) launch_retroarch(core.MSX1)
+                        elseif apptype == 26 then rom_location = (files_table[p].game_path) launch_retroarch(core.ZXS)
+                        elseif apptype == 27 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_7800)
+                        elseif apptype == 28 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_5200)
+                        elseif apptype == 29 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_2600)
+                        elseif apptype == 30 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
+                        elseif apptype == 31 then rom_location = (files_table[p].game_path) launch_retroarch(core.COLECOVISION)
+                        elseif apptype == 32 then rom_location = (files_table[p].game_path) launch_retroarch(core.VECTREX)
+                        elseif apptype == 33 then rom_location = (files_table[p].game_path) launch_retroarch(core.FBA)
+                        elseif apptype == 34 then rom_location = (files_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
+                        elseif apptype == 35 then rom_location = (files_table[p].game_path) launch_retroarch(core.MAME_2000)
+                        elseif apptype == 36 then rom_location = (files_table[p].game_path) launch_retroarch(core.NEOGEO)
+                        elseif apptype == 37 then rom_location = (files_table[p].game_path) launch_retroarch(core.NGPC)
+                        else
+                            -- Homebrew
+                            if string.match (files_table[p].game_path, "pspemu") then
+                                rom_location = (files_table[p].launch_argument)
+                                launch_Adrenaline()
+                            else
+                                System.launchApp(files_table[p].name)
+                            end
+
+                            appdir=working_dir .. "/" .. files_table[p].name
+                        end
                     end
-
-                elseif showCat == 39 then
-                    if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
-                        if string.match (recently_played_table[p].game_path, "pspemu") then
-                            rom_location = tostring(recently_played_table[p].launch_argument)
-                            launch_Adrenaline()
-                        else
-                            System.launchApp(recently_played_table[p].name)
-                        end
-
-                    -- Start Retro    
-                    elseif apptype == 5 then rom_location = (recently_played_table[p].game_path) launch_DaedalusX64()
-                    elseif apptype == 6 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.SNES)
-                    elseif apptype == 7 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NES)
-                    elseif apptype == 8 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GBA)
-                    elseif apptype == 9 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GBC)
-                    elseif apptype == 10 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GB)
-                    elseif apptype == 11 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.SEGA_CD) 
-                    elseif apptype == 12 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.s32X) 
-                    elseif apptype == 13 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MD)
-                    elseif apptype == 14 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.SMS)
-                    elseif apptype == 15 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GG)
-                    elseif apptype == 16 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.TG16)
-                    elseif apptype == 17 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.TGCD)
-                    elseif apptype == 18 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.PCE)
-                    elseif apptype == 19 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.PCECD)
-                    elseif apptype == 20 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.AMIGA)
-                    elseif apptype == 21 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.C64)
-                    elseif apptype == 22 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.WSWAN_COL)
-                    elseif apptype == 23 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.WSWAN)
-                    elseif apptype == 24 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MSX2)
-                    elseif apptype == 25 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MSX1)
-                    elseif apptype == 26 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ZXS)
-                    elseif apptype == 27 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_7800)
-                    elseif apptype == 28 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_5200)
-                    elseif apptype == 29 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_2600)
-                    elseif apptype == 30 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
-                    elseif apptype == 31 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.COLECOVISION)
-                    elseif apptype == 32 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.VECTREX)
-                    elseif apptype == 33 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.FBA)
-                    elseif apptype == 34 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
-                    elseif apptype == 35 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MAME_2000)
-                    elseif apptype == 36 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NEOGEO)
-                    elseif apptype == 37 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NGPC)
-                    else
-                        -- Homebrew
-                        if string.match (recently_played_table[p].game_path, "pspemu") then
-                            rom_location = (recently_played_table[p].launch_argument)
-                            launch_Adrenaline()
-                        else
-                            System.launchApp(recently_played_table[p].name)
-                        end
-
-                        appdir=working_dir .. "/" .. recently_played_table[p].name
-                    end
-
-                
-                elseif showCat == 40 then
-                    if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
-                        if string.match (search_results_table[p].game_path, "pspemu") then
-                            rom_location = tostring(search_results_table[p].launch_argument)
-                            launch_Adrenaline()
-                        else
-                            System.launchApp(search_results_table[p].name)
-                        end
-
-                    -- Start Retro    
-                    elseif apptype == 5 then rom_location = (search_results_table[p].game_path) launch_DaedalusX64()
-                    elseif apptype == 6 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.SNES)
-                    elseif apptype == 7 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NES)
-                    elseif apptype == 8 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GBA)
-                    elseif apptype == 9 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GBC)
-                    elseif apptype == 10 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GB)
-                    elseif apptype == 11 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.SEGA_CD) 
-                    elseif apptype == 12 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.s32X) 
-                    elseif apptype == 13 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MD)
-                    elseif apptype == 14 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.SMS)
-                    elseif apptype == 15 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GG)
-                    elseif apptype == 16 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.TG16)
-                    elseif apptype == 17 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.TGCD)
-                    elseif apptype == 18 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.PCE)
-                    elseif apptype == 19 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.PCECD)
-                    elseif apptype == 20 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.AMIGA)
-                    elseif apptype == 21 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.C64)
-                    elseif apptype == 22 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.WSWAN_COL)
-                    elseif apptype == 23 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.WSWAN)
-                    elseif apptype == 24 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MSX2)
-                    elseif apptype == 25 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MSX1)
-                    elseif apptype == 26 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ZXS)
-                    elseif apptype == 27 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_7800)
-                    elseif apptype == 28 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_5200)
-                    elseif apptype == 29 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_2600)
-                    elseif apptype == 30 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
-                    elseif apptype == 31 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.COLECOVISION)
-                    elseif apptype == 32 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.VECTREX)
-                    elseif apptype == 33 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.FBA)
-                    elseif apptype == 34 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
-                    elseif apptype == 35 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MAME_2000)
-                    elseif apptype == 36 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NEOGEO)
-                    elseif apptype == 37 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NGPC)
-                    else
-                        -- Homebrew
-                        if string.match (search_results_table[p].game_path, "pspemu") then
-                            rom_location = (search_results_table[p].launch_argument)
-                            launch_Adrenaline()
-                        else
-                            System.launchApp(search_results_table[p].name)
-                        end
-
-                        appdir=working_dir .. "/" .. search_results_table[p].name
-                    end
-
-                -- End Retro 
-                else
-
-                    if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
-                        if string.match (files_table[p].game_path, "pspemu") then
-                            rom_location = tostring(files_table[p].launch_argument)
-                            launch_Adrenaline()
-                        else
-                            System.launchApp(files_table[p].name)
-                        end
-
-                    -- Start Retro    
-                    elseif apptype == 5 then rom_location = (files_table[p].game_path) launch_DaedalusX64()
-                    elseif apptype == 6 then rom_location = (files_table[p].game_path) launch_retroarch(core.SNES)
-                    elseif apptype == 7 then rom_location = (files_table[p].game_path) launch_retroarch(core.NES)
-                    elseif apptype == 8 then rom_location = (files_table[p].game_path) launch_retroarch(core.GBA)
-                    elseif apptype == 9 then rom_location = (files_table[p].game_path) launch_retroarch(core.GBC)
-                    elseif apptype == 10 then rom_location = (files_table[p].game_path) launch_retroarch(core.GB)
-                    elseif apptype == 11 then rom_location = (files_table[p].game_path) launch_retroarch(core.SEGA_CD) 
-                    elseif apptype == 12 then rom_location = (files_table[p].game_path) launch_retroarch(core.s32X) 
-                    elseif apptype == 13 then rom_location = (files_table[p].game_path) launch_retroarch(core.MD)
-                    elseif apptype == 14 then rom_location = (files_table[p].game_path) launch_retroarch(core.SMS)
-                    elseif apptype == 15 then rom_location = (files_table[p].game_path) launch_retroarch(core.GG)
-                    elseif apptype == 16 then rom_location = (files_table[p].game_path) launch_retroarch(core.TG16)
-                    elseif apptype == 17 then rom_location = (files_table[p].game_path) launch_retroarch(core.TGCD)
-                    elseif apptype == 18 then rom_location = (files_table[p].game_path) launch_retroarch(core.PCE)
-                    elseif apptype == 19 then rom_location = (files_table[p].game_path) launch_retroarch(core.PCECD)
-                    elseif apptype == 20 then rom_location = (files_table[p].game_path) launch_retroarch(core.AMIGA)
-                    elseif apptype == 21 then rom_location = (files_table[p].game_path) launch_retroarch(core.C64)
-                    elseif apptype == 22 then rom_location = (files_table[p].game_path) launch_retroarch(core.WSWAN_COL)
-                    elseif apptype == 23 then rom_location = (files_table[p].game_path) launch_retroarch(core.WSWAN)
-                    elseif apptype == 24 then rom_location = (files_table[p].game_path) launch_retroarch(core.MSX2)
-                    elseif apptype == 25 then rom_location = (files_table[p].game_path) launch_retroarch(core.MSX1)
-                    elseif apptype == 26 then rom_location = (files_table[p].game_path) launch_retroarch(core.ZXS)
-                    elseif apptype == 27 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_7800)
-                    elseif apptype == 28 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_5200)
-                    elseif apptype == 29 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_2600)
-                    elseif apptype == 30 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
-                    elseif apptype == 31 then rom_location = (files_table[p].game_path) launch_retroarch(core.COLECOVISION)
-                    elseif apptype == 32 then rom_location = (files_table[p].game_path) launch_retroarch(core.VECTREX)
-                    elseif apptype == 33 then rom_location = (files_table[p].game_path) launch_retroarch(core.FBA)
-                    elseif apptype == 34 then rom_location = (files_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
-                    elseif apptype == 35 then rom_location = (files_table[p].game_path) launch_retroarch(core.MAME_2000)
-                    elseif apptype == 36 then rom_location = (files_table[p].game_path) launch_retroarch(core.NEOGEO)
-                    elseif apptype == 37 then rom_location = (files_table[p].game_path) launch_retroarch(core.NGPC)
-                    else
-                        -- Homebrew
-                        if string.match (files_table[p].game_path, "pspemu") then
-                            rom_location = (files_table[p].launch_argument)
-                            launch_Adrenaline()
-                        else
-                            System.launchApp(files_table[p].name)
-                        end
-
-                        appdir=working_dir .. "/" .. files_table[p].name
-                    end
+                    System.exit()
                 end
-                System.exit()
+            else
             end
         elseif (Controls.check(pad, SCE_CTRL_TRIANGLE) and not Controls.check(oldpad, SCE_CTRL_TRIANGLE)) then
-            if showMenu == 0 and app_title~="-" then
-                prvRotY = 0
-                GetInfoSelected() -- Credit to BlackSheepBoy69 - get all info when triangle pressed
-                showMenu = 1
+            state = Keyboard.getState()
+            if state ~= RUNNING then
+                if showMenu == 0 and app_title~="-" then
+                    prvRotY = 0
+                    GetInfoSelected() -- Credit to BlackSheepBoy69 - get all info when triangle pressed
+                    showMenu = 1
+                end
+            else
             end
         elseif (Controls.check(pad, SCE_CTRL_START) and not Controls.check(oldpad, SCE_CTRL_START)) then
-            if showMenu == 0 then
-                showMenu = 2
+            state = Keyboard.getState()
+            if state ~= RUNNING then
+                if showMenu == 0 then
+                    showMenu = 2
+                end
+            else
             end
         -- Select button - Games screen
         elseif (Controls.check(pad, SCE_CTRL_SELECT) and not Controls.check(oldpad, SCE_CTRL_SELECT)) then
-            -- Search
-            if hasTyped==false then
-                Keyboard.start(lang_lines.Search, "", 512, TYPE_DEFAULT, MODE_TEXT)
-                hasTyped=true
+            state = Keyboard.getState()
+            if state ~= RUNNING then
+                -- Search
+                if hasTyped==false then
+                    Keyboard.start(lang_lines.Search, "", 512, TYPE_DEFAULT, MODE_TEXT)
+                    hasTyped=true
+            else
             end
         elseif (Controls.check(pad, SCE_CTRL_SQUARE) and not Controls.check(oldpad, SCE_CTRL_SQUARE)) then
-            -- CATEGORY
+            state = Keyboard.getState()
+            if state ~= RUNNING then
+                -- CATEGORY
+                if showCat < count_of_categories then
+                    -- Skip All category if disabled
+                    if showCat==0 and showAll==0 then 
+                        showCat = 1
+                    -- Skip Homebrews category if disabled
+                    elseif showCat==1 and showHomebrews==0 then
+                        showCat = 3
+                    else
+                        showCat = showCat + 1
+                    end
 
-            if showCat < count_of_categories then
-                -- Skip All category if disabled
-                if showCat==0 and showAll==0 then 
-                    showCat = 1
-                -- Skip Homebrews category if disabled
-                elseif showCat==1 and showHomebrews==0 then
-                    showCat = 3
-                else
-                    showCat = showCat + 1
+                -- Commented out as all category skipping wasn't being honored after searching 
+                -- else
+                --     showCat = 0 
                 end
 
-            -- Commented out as all category skipping wasn't being honored after searching 
-            -- else
-            --     showCat = 0 
-            end
-
-            -- Start skip empty categories
-            if showCat == 3 then curTotal =     #psp_table              if #psp_table == 0 then             showCat = 4 end end
-            if showCat == 4 then curTotal =     #psx_table              if #psx_table == 0 then             showCat = 5 end end
-            if showCat == 5 then curTotal =     #n64_table              if #n64_table == 0 then             showCat = 6 end end
-            if showCat == 6 then curTotal =     #snes_table             if #snes_table == 0 then            showCat = 7 end end
-            if showCat == 7 then curTotal =     #nes_table              if #nes_table == 0 then             showCat = 8 end end
-            if showCat == 8 then curTotal =     #gba_table              if #gba_table == 0 then             showCat = 9 end end
-            if showCat == 9 then curTotal =     #gbc_table              if #gbc_table == 0 then             showCat = 10 end end
-            if showCat == 10 then curTotal =    #gb_table               if #gb_table == 0 then              showCat = 11 end end
-            if showCat == 11 then curTotal =    #sega_cd_table          if #sega_cd_table == 0 then         showCat = 12 end end
-            if showCat == 12 then curTotal =    #s32x_table             if #s32x_table == 0 then            showCat = 13 end end
-            if showCat == 13 then curTotal =    #md_table               if #md_table == 0 then              showCat = 14 end end
-            if showCat == 14 then curTotal =    #sms_table              if #sms_table == 0 then             showCat = 15 end end
-            if showCat == 15 then curTotal =    #gg_table               if #gg_table == 0 then              showCat = 16 end end
-            if showCat == 16 then curTotal =    #tg16_table             if #tg16_table == 0 then            showCat = 17 end end
-            if showCat == 17 then curTotal =    #tgcd_table             if #tgcd_table == 0 then            showCat = 18 end end
-            if showCat == 18 then curTotal =    #pce_table              if #pce_table == 0 then             showCat = 19 end end
-            if showCat == 19 then curTotal =    #pcecd_table            if #pcecd_table == 0 then           showCat = 20 end end
-            if showCat == 20 then curTotal =    #amiga_table            if #amiga_table == 0 then           showCat = 21 end end
-            if showCat == 21 then curTotal =    #c64_table              if #c64_table == 0 then             showCat = 22 end end
-            if showCat == 22 then curTotal =    #wswan_col_table        if #wswan_col_table == 0 then       showCat = 23 end end
-            if showCat == 23 then curTotal =    #wswan_table            if #wswan_table == 0 then           showCat = 24 end end
-            if showCat == 24 then curTotal =    #msx2_table             if #msx2_table == 0 then            showCat = 25 end end
-            if showCat == 25 then curTotal =    #msx1_table             if #msx1_table == 0 then            showCat = 26 end end
-            if showCat == 26 then curTotal =    #zxs_table              if #zxs_table == 0 then             showCat = 27 end end
-            if showCat == 27 then curTotal =    #atari_7800_table       if #atari_7800_table == 0 then      showCat = 28 end end
-            if showCat == 28 then curTotal =    #atari_5200_table       if #atari_5200_table == 0 then      showCat = 29 end end
-            if showCat == 29 then curTotal =    #atari_2600_table       if #atari_2600_table == 0 then      showCat = 30 end end
-            if showCat == 30 then curTotal =    #atari_lynx_table       if #atari_lynx_table == 0 then      showCat = 31 end end
-            if showCat == 31 then curTotal =    #colecovision_table     if #colecovision_table == 0 then    showCat = 32 end end
-            if showCat == 32 then curTotal =    #vectrex_table          if #vectrex_table == 0 then         showCat = 33 end end
-            if showCat == 33 then curTotal =    #fba_table              if #fba_table == 0 then             showCat = 34 end end
-            if showCat == 34 then curTotal =    #mame_2003_plus_table   if #mame_2003_plus_table == 0 then  showCat = 35 end end
-            if showCat == 35 then curTotal =    #mame_2000_table        if #mame_2000_table == 0 then       showCat = 36 end end
-            if showCat == 36 then curTotal =    #neogeo_table           if #neogeo_table == 0 then          showCat = 37 end end
-            if showCat == 37 then curTotal =    #ngpc_table             if #ngpc_table == 0 then            showCat = 38 end end
-            if showCat == 38 then
-                -- count favorites
-                local fav_count = {}
-                for l, file in pairs(files_table) do
-                    if showHomebrews == 0 then
-                        -- ignore homebrew apps
-                        if file.app_type > 0 then
+                -- Start skip empty categories
+                if showCat == 3 then curTotal =     #psp_table              if #psp_table == 0 then             showCat = 4 end end
+                if showCat == 4 then curTotal =     #psx_table              if #psx_table == 0 then             showCat = 5 end end
+                if showCat == 5 then curTotal =     #n64_table              if #n64_table == 0 then             showCat = 6 end end
+                if showCat == 6 then curTotal =     #snes_table             if #snes_table == 0 then            showCat = 7 end end
+                if showCat == 7 then curTotal =     #nes_table              if #nes_table == 0 then             showCat = 8 end end
+                if showCat == 8 then curTotal =     #gba_table              if #gba_table == 0 then             showCat = 9 end end
+                if showCat == 9 then curTotal =     #gbc_table              if #gbc_table == 0 then             showCat = 10 end end
+                if showCat == 10 then curTotal =    #gb_table               if #gb_table == 0 then              showCat = 11 end end
+                if showCat == 11 then curTotal =    #sega_cd_table          if #sega_cd_table == 0 then         showCat = 12 end end
+                if showCat == 12 then curTotal =    #s32x_table             if #s32x_table == 0 then            showCat = 13 end end
+                if showCat == 13 then curTotal =    #md_table               if #md_table == 0 then              showCat = 14 end end
+                if showCat == 14 then curTotal =    #sms_table              if #sms_table == 0 then             showCat = 15 end end
+                if showCat == 15 then curTotal =    #gg_table               if #gg_table == 0 then              showCat = 16 end end
+                if showCat == 16 then curTotal =    #tg16_table             if #tg16_table == 0 then            showCat = 17 end end
+                if showCat == 17 then curTotal =    #tgcd_table             if #tgcd_table == 0 then            showCat = 18 end end
+                if showCat == 18 then curTotal =    #pce_table              if #pce_table == 0 then             showCat = 19 end end
+                if showCat == 19 then curTotal =    #pcecd_table            if #pcecd_table == 0 then           showCat = 20 end end
+                if showCat == 20 then curTotal =    #amiga_table            if #amiga_table == 0 then           showCat = 21 end end
+                if showCat == 21 then curTotal =    #c64_table              if #c64_table == 0 then             showCat = 22 end end
+                if showCat == 22 then curTotal =    #wswan_col_table        if #wswan_col_table == 0 then       showCat = 23 end end
+                if showCat == 23 then curTotal =    #wswan_table            if #wswan_table == 0 then           showCat = 24 end end
+                if showCat == 24 then curTotal =    #msx2_table             if #msx2_table == 0 then            showCat = 25 end end
+                if showCat == 25 then curTotal =    #msx1_table             if #msx1_table == 0 then            showCat = 26 end end
+                if showCat == 26 then curTotal =    #zxs_table              if #zxs_table == 0 then             showCat = 27 end end
+                if showCat == 27 then curTotal =    #atari_7800_table       if #atari_7800_table == 0 then      showCat = 28 end end
+                if showCat == 28 then curTotal =    #atari_5200_table       if #atari_5200_table == 0 then      showCat = 29 end end
+                if showCat == 29 then curTotal =    #atari_2600_table       if #atari_2600_table == 0 then      showCat = 30 end end
+                if showCat == 30 then curTotal =    #atari_lynx_table       if #atari_lynx_table == 0 then      showCat = 31 end end
+                if showCat == 31 then curTotal =    #colecovision_table     if #colecovision_table == 0 then    showCat = 32 end end
+                if showCat == 32 then curTotal =    #vectrex_table          if #vectrex_table == 0 then         showCat = 33 end end
+                if showCat == 33 then curTotal =    #fba_table              if #fba_table == 0 then             showCat = 34 end end
+                if showCat == 34 then curTotal =    #mame_2003_plus_table   if #mame_2003_plus_table == 0 then  showCat = 35 end end
+                if showCat == 35 then curTotal =    #mame_2000_table        if #mame_2000_table == 0 then       showCat = 36 end end
+                if showCat == 36 then curTotal =    #neogeo_table           if #neogeo_table == 0 then          showCat = 37 end end
+                if showCat == 37 then curTotal =    #ngpc_table             if #ngpc_table == 0 then            showCat = 38 end end
+                if showCat == 38 then
+                    -- count favorites
+                    local fav_count = {}
+                    for l, file in pairs(files_table) do
+                        if showHomebrews == 0 then
+                            -- ignore homebrew apps
+                            if file.app_type > 0 then
+                                if file.favourite==true then
+                                    table.insert(fav_count, file)
+                                end
+                            else
+                            end
+                        else
                             if file.favourite==true then
                                 table.insert(fav_count, file)
                             end
-                        else
-                        end
-                    else
-                        if file.favourite==true then
-                            table.insert(fav_count, file)
                         end
                     end
+                    curTotal = #fav_count
+                    if #fav_count == 0 then showCat = 39
+                    end
                 end
-                curTotal = #fav_count
-                if #fav_count == 0 then showCat = 39
+                if showCat == 39 then 
+                    curTotal = #recently_played_table
+                    if #recently_played_table == 0 then showCat = 40
+                    end
                 end
-            end
-            if showCat == 39 then 
-                curTotal = #recently_played_table
-                if #recently_played_table == 0 then showCat = 40
+                
+                if showCat == 40 then
+                    curTotal = #search_results_table   
+                    if #search_results_table == 0 and showAll==1 then 
+                        showCat = 0
+                    elseif #search_results_table == 0 and showAll==0 then
+                        showCat = 1
+                    elseif #search_results_table > 0 and showAll==1 then
+                        showCat = 0
+                    elseif #search_results_table > 0 and showAll==0 then
+                        showCat = 1
+                    else
+                        showCat = 0
+                    end
                 end
-            end
-            
-            if showCat == 40 then
-                curTotal = #search_results_table   
-                if #search_results_table == 0 and showAll==1 then 
-                    showCat = 0
-                elseif #search_results_table == 0 and showAll==0 then
-                    showCat = 1
-                elseif #search_results_table > 0 and showAll==1 then
-                    showCat = 0
-                elseif #search_results_table > 0 and showAll==0 then
-                    showCat = 1
-                else
-                    showCat = 0
-                end
-            end
 
-            hideBoxes = 8
-            p = 1
-            master_index = p
-            startCovers = false
-            GetNameAndAppTypeSelected()
-            FreeIcons()
+                hideBoxes = 8
+                p = 1
+                master_index = p
+                startCovers = false
+                GetInfoSelected()
+                FreeIcons()
+            else
+            end
         elseif (Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE)) then
             -- VIEW
             
@@ -10072,64 +10098,84 @@ while true do
             end
 
         elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
-            if setSounds == 1 then
-                Sound.play(click, NO_LOOP)
-            end
-            p = p - 1
-            
-            if p > 0 then
-                GetNameAndAppTypeSelected()
-            end
-            
-            if (p <= master_index) then
-                master_index = p
+            state = Keyboard.getState()
+            if state ~= RUNNING then
+                if setSounds == 1 then
+                    Sound.play(click, NO_LOOP)
+                end
+                p = p - 1
+                
+                if p > 0 then
+                    GetNameAndAppTypeSelected()
+                end
+                
+                if (p <= master_index) then
+                    master_index = p
+                end
+            else
             end
         elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
-            if setSounds == 1 then
-                Sound.play(click, NO_LOOP)
-            end
-            p = p + 1
-            
-            if p <= curTotal then
-                GetNameAndAppTypeSelected()
-            end
-            
-            if (p >= master_index) then
-                master_index = p
+            state = Keyboard.getState()
+            if state ~= RUNNING then
+                if setSounds == 1 then
+                    Sound.play(click, NO_LOOP)
+                end
+                p = p + 1
+                
+                if p <= curTotal then
+                    GetNameAndAppTypeSelected()
+                end
+                
+                if (p >= master_index) then
+                    master_index = p
+                end
+            else
             end
         elseif (Controls.check(pad, SCE_CTRL_LTRIGGER)) and not (Controls.check(oldpad, SCE_CTRL_LTRIGGER)) then
-            if setSounds == 1 then
-                Sound.play(click, NO_LOOP)
-            end
-            p = p - 5 
-            
-            if p > 0 then
-                GetNameAndAppTypeSelected()
-            end
-            
-            if (p <= master_index) then
-                master_index = p
+            state = Keyboard.getState()
+            if state ~= RUNNING then
+                if setSounds == 1 then
+                    Sound.play(click, NO_LOOP)
+                end
+                p = p - 5 
+                
+                if p > 0 then
+                    GetNameAndAppTypeSelected()
+                end
+                
+                if (p <= master_index) then
+                    master_index = p
+                end
+            else
             end
         elseif (Controls.check(pad, SCE_CTRL_RTRIGGER)) and not (Controls.check(oldpad, SCE_CTRL_RTRIGGER)) then
-            if setSounds == 1 then
-                Sound.play(click, NO_LOOP)
-            end
-            p = p + 5 
-            
-            if p <= curTotal then
-                GetNameAndAppTypeSelected()
-            end
-            
-            if (p >= master_index) then
-                master_index = p
+            state = Keyboard.getState()
+            if state ~= RUNNING then
+                if setSounds == 1 then
+                    Sound.play(click, NO_LOOP)
+                end
+                p = p + 5 
+                
+                if p <= curTotal then
+                    GetNameAndAppTypeSelected()
+                end
+                
+                if (p >= master_index) then
+                    master_index = p
+                end
+            else
             end
         elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
-            -- Skip to favorites
-            if showCat == 38 then
+            state = Keyboard.getState()
+            if state ~= RUNNING then
+                -- Skip to favorites
+                if showCat == 38 then
+                else
+                    showCat = 38
+                    p = 1
+                    master_index = p
+                end
             else
-                showCat = 38
-                p = 1
-                master_index = p
             end
         end
         
