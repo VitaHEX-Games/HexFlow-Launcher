@@ -5,7 +5,7 @@
 # RetroFlow-Launcher
 [![](https://github.com/jimbob4000/RetroFlow-Launcher/raw/main/Media/main_screen.png "main_screen")](https://github.com/jimbob4000/RetroFlow-Launcher/blob/main/Media/main_screen.png)
 
-**Project archived:** RetroFlow is no longer in active development.
+<!--- **Project archived:** RetroFlow is no longer in active development. --->
 
 # About
 This is a modded version of [HexFlow Launcher](https://github.com/VitaHEX-Games/HexFlow-Launcher); a 3d coverflow like launcher for PS Vita.
@@ -87,8 +87,14 @@ For PC Engine CD and TurboGrafx-CD RetroFlow will look for '.cue' files for thes
 **Tip:**
 It's important that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , otherwise cover images won't be found.
 
+### 5. Turn on startup scan to find them
 
-### 5. Download covers & backgrounds
+Press 'Start' and go to 'Scan Settings', turn on 'Startup scan'.
+Your retro games should now appear when you restart the app.
+'Startup scan' can be turned off once you have finished adding your games, the app will startup faster when it's turned off.
+
+
+### 6. Download covers & backgrounds
 
 To download cover images, press start, then choose which covers or backgrounds you would like to download. 
 
@@ -255,6 +261,7 @@ Developed with [Lua Player Plus](http://rinnegatamante.github.io/lpp-vita/) by *
 
 **Leecherman** for his work on AdrBubbleBooter and the [PSP ISO Renamer](https://sites.google.com/site/theleecherman/PSPISORenamer)
 
+**BlackSheepBoy69** for sharing tips and code from [HexFlow Launcher Unofficial Custom](https://github.com/BlackSheepBoy69/HexFlow-Launcher-Unofficial-Custom)
 
 ### Translations
 
