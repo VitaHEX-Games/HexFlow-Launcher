@@ -918,7 +918,7 @@ showCat = startCategory
 if System.doesFileExist(cur_dir .. "/Music.mp3") then
     sndMusic = Sound.open(cur_dir .. "/Music.mp3")
     if setSounds == 1 then
-        Sound.play(sndMusic, LOOP)
+        Sound.play(sndMusic, true) -- Changed from LOOP to true (HexFlow & RetroFlow use different eboot files)
     end
 end
 
@@ -8323,10 +8323,14 @@ while true do
             elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
                 if menuY==0 then
                     -- Image downloads - cover or background
-                    if tmpimagecat > 0 then
-                        tmpimagecat = tmpimagecat - 1
+                    if apptype == 0 or apptype == 1 then
+                        tmpimagecat=0
                     else
-                        tmpimagecat=1
+                        if tmpimagecat > 0 then
+                            tmpimagecat = tmpimagecat - 1
+                        else
+                            tmpimagecat=1
+                        end
                     end
                 end
 
@@ -8341,10 +8345,14 @@ while true do
             elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
                 if menuY==0 then
                     -- Image downloads - cover or background
-                    if tmpimagecat > 0 then
-                        tmpimagecat = tmpimagecat - 1
+                    if apptype == 0 or apptype == 1 then
+                        tmpimagecat=0
                     else
-                        tmpimagecat=1
+                        if tmpimagecat > 0 then
+                            tmpimagecat = tmpimagecat - 1
+                        else
+                            tmpimagecat=1
+                        end
                     end
                 end
 
@@ -8953,7 +8961,7 @@ while true do
                         setSounds = 1
                         if System.doesFileExist(cur_dir .. "/Music.mp3") then
                             if not Sound.isPlaying(sndMusic) then
-                                Sound.play(sndMusic, LOOP)
+                                Sound.play(sndMusic, true) -- Changed from LOOP to true (HexFlow & RetroFlow use different eboot files)
                             end
                         end
                     end            
@@ -9640,7 +9648,9 @@ while true do
         -- Navigation Buttons
         if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
             state = Keyboard.getState()
-            if state ~= RUNNING then
+            messagestate = System.getMessageState() -- Check if message active - RetroFlow Adrenaline Launcher needs to be installed
+
+            if state ~= RUNNING and messagestate ~= RUNNING then
                 if gettingCovers == false and app_title~="-" then
                     FreeMemory()
                     AddtoRecentlyPlayed()
