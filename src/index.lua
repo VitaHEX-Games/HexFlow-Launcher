@@ -6,7 +6,7 @@
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "3.6.1"
+local appversion = "3.6.103"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -628,7 +628,7 @@ GBA = "app0:/gpsp_libretro.self",
 GBC = "app0:/gambatte_libretro.self",
 GB = "app0:/gambatte_libretro.self",
 SEGA_CD = "app0:/genesis_plus_gx_libretro.self",
-s32X = "app0:/genesis_plus_gx_libretro.self",
+s32X = "app0:/picodrive_libretro.self",
 MD = "app0:/genesis_plus_gx_libretro.self",
 SMS = "app0:/smsplus_libretro.self",
 GG = "app0:/smsplus_libretro.self",
@@ -1502,7 +1502,7 @@ function cleanRomNames()
     romname_url_encoded = romname_noExtension:gsub("%s+", '%%%%20')
 
     -- Check if name contains parenthesis, if yes strip out to show as version
-    if string.find(romname_noExtension, "%(") then
+    if string.find(romname_noExtension, "%(") and string.find(romname_noExtension, "%)") then
         -- Remove all text except for within "()"
         romname_region_initial = {}
         romname_region_initial = romname_noExtension:match("%((.+)%)")
@@ -1545,7 +1545,7 @@ function cleanRomNamesPSP()
     romname_url_encoded = tostring(titleID_noHyphen)
 
     -- Check if name contains parenthesis, if yes strip out to show as version
-    if string.find(romname_noExtension, "%(") then
+    if string.find(romname_noExtension, "%(") and string.find(romname_noExtension, "%)") then
         -- Remove all text except for within "()"
         romname_region_initial = {}
         romname_region_initial = romname_noExtension:match("%((.+)%)")
@@ -2502,7 +2502,7 @@ function listDirectory(dir)
                             romname_noRegion_noExtension = title:gsub(" %(", "%("):gsub('%b()', '')
 
                             -- Check if name contains parenthesis, if yes strip out to show as version
-                            if string.find(title, "%(") then
+                            if string.find(title, "%(") and string.find(title, "%)") then
                                 -- Remove all text except for within "()"
                                 romname_region_initial = {}
                                 romname_region_initial = title:match("%((.+)%)")
@@ -2816,7 +2816,7 @@ function listDirectory(dir)
                         romname_noRegion_noExtension = title:gsub(" %(", "%("):gsub('%b()', '')
 
                         -- Check if name contains parenthesis, if yes strip out to show as version
-                        if string.find(title, "%(") then
+                        if string.find(title, "%(") and string.find(title, "%)") then
                             -- Remove all text except for within "()"
                             romname_region_initial = {}
                             romname_region_initial = title:match("%((.+)%)")
@@ -3129,7 +3129,7 @@ function listDirectory(dir)
                             romname_noRegion_noExtension = title:gsub(" %(", "%("):gsub('%b()', ''):gsub(" %[", "%["):gsub('%b[]', '')
 
                             -- Check if name contains parenthesis, if yes strip out to show as version
-                            if string.find(title, "%(") then
+                            if string.find(title, "%(") and string.find(title, "%)") then
                                 -- Remove all text except for within "()"
                                 romname_region_initial = {}
                                 romname_region_initial = title:match("%((.+)%)")
@@ -3666,7 +3666,7 @@ function listDirectory(dir)
                 romname_noRegion_noExtension = title:gsub('%b()', '')
 
                 -- Check if name contains parenthesis, if yes strip out to show as version
-                if string.find(title, "%(") then
+                if string.find(title, "%(") and string.find(title, "%)") then
                     -- Remove all text except for within "()"
                     romname_region_initial = {}
                     romname_region_initial = title:match("%((.+)%)")
@@ -3973,7 +3973,7 @@ function ScanAdrenalineDirectoryOnly()
                             romname_noRegion_noExtension = title:gsub(" %(", "%("):gsub('%b()', '')
 
                             -- Check if name contains parenthesis, if yes strip out to show as version
-                            if string.find(title, "%(") then
+                            if string.find(title, "%(") and string.find(title, "%)") then
                                 -- Remove all text except for within "()"
                                 romname_region_initial = {}
                                 romname_region_initial = title:match("%((.+)%)")
@@ -4287,7 +4287,7 @@ function ScanAdrenalineDirectoryOnly()
                         romname_noRegion_noExtension = title:gsub(" %(", "%("):gsub('%b()', '')
 
                         -- Check if name contains parenthesis, if yes strip out to show as version
-                        if string.find(title, "%(") then
+                        if string.find(title, "%(") and string.find(title, "%)") then
                             -- Remove all text except for within "()"
                             romname_region_initial = {}
                             romname_region_initial = title:match("%((.+)%)")
@@ -4600,7 +4600,7 @@ function ScanAdrenalineDirectoryOnly()
                             romname_noRegion_noExtension = title:gsub(" %(", "%("):gsub('%b()', ''):gsub(" %[", "%["):gsub('%b[]', '')
 
                             -- Check if name contains parenthesis, if yes strip out to show as version
-                            if string.find(title, "%(") then
+                            if string.find(title, "%(") and string.find(title, "%)") then
                                 -- Remove all text except for within "()"
                                 romname_region_initial = {}
                                 romname_region_initial = title:match("%((.+)%)")
