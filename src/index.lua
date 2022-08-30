@@ -6,7 +6,7 @@
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "3.6.2"
+local appversion = "3.6.2" -- 3.6.204
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -5117,6 +5117,7 @@ function GetNameAndAppTypeSelected() -- Credit to BlackSheepBoy69 - This gives a
         app_title = xCatLookup(showCat)[p].apptitle
         apptype = xCatLookup(showCat)[p].app_type -- needed for launching games from mixed categories
         filename = xCatLookup(showCat)[p].filename -- needed for adding to recent
+        info = xCatLookup(showCat)[p].name -- added to fix error removing favs
     else
         app_title = "-"
     end
@@ -7807,6 +7808,7 @@ while true do
                 end
             end
             drawCategory (fav_count)
+            GetNameAndAppTypeSelected() -- Added to refresh names as games removed from fav cat whilst on fav cat
         elseif showCat == 39 then drawCategory (recently_played_table)
         elseif showCat == 40 then drawCategory (search_results_table)
         else drawCategory (files_table)
@@ -8756,14 +8758,17 @@ while true do
                         showHomebrews = 0
                         -- Import cache to update All games category
                         count_cache_and_reload()
+                        GetInfoSelected()
                         -- If currently on homebrew category view, move to Vita category to hide empty homebrew category
                         if showCat == 2 then
                             showCat = 1
+                            GetInfoSelected()
                         end
                     else
                         showHomebrews = 1
                         -- Import cache to update All games category
                         count_cache_and_reload()
+                        GetInfoSelected()
                     end
 
                 elseif menuY == 3 then -- #3 Recently Played
@@ -10179,13 +10184,41 @@ while true do
         elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
             state = Keyboard.getState()
             if state ~= RUNNING then
-                -- Skip to favorites
-                if showCat == 38 then
-                else
-                    showCat = 38
-                    p = 1
-                    master_index = p
+
+                -- Press Up to skip to favourites
+
+                -- Check if there are favourites first
+                fav_count = {}
+                for l, file in pairs(files_table) do
+                    if showHomebrews == 0 then
+                        -- ignore homebrew apps
+                        if file.app_type > 0 then
+                            if file.favourite==true then
+                                table.insert(fav_count, file)
+                            end
+                        else
+                        end
+                    else
+                        if file.favourite==true then
+                            table.insert(fav_count, file)
+                        end
+                    end
                 end
+
+                -- Favourites found
+                if #fav_count > 0 then
+                    -- Skip to favorites
+                    if showCat == 38 then
+                    else
+                        showCat = 38
+                        p = 1
+                        master_index = p
+                        GetNameAndAppTypeSelected()
+                    end
+                else
+                -- No favourites, do nothing
+                end
+
             else
             end
         end
@@ -10368,12 +10401,12 @@ while true do
             master_index = p -- 0
         end
         startCovers = false
-        GetNameAndAppTypeSelected()
+        GetInfoSelected()
     elseif p > curTotal then
         p = 1
         master_index = p
         startCovers = false
-        GetNameAndAppTypeSelected()
+        GetInfoSelected()
     end
     
     -- Refreshing screen and oldpad
