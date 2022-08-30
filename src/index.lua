@@ -6,7 +6,7 @@
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "3.6.2" -- 3.6.204
+local appversion = "3.6.2.04"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
