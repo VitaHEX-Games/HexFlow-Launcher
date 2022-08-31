@@ -1380,8 +1380,11 @@ end
 
 
 function FreeMemory()
-    if System.doesFileExist(cur_dir .. "/Music.mp3") then
-        Sound.close(sndMusic)
+    if setMusic == 1 then
+        if System.doesFileExist(cur_dir .. "/Music.ogg") or System.doesFileExist(cur_dir .. "/Music.mp3") then
+            Sound.close(sndMusic)
+        else
+        end
     end
     Sound.close(click)
     Graphics.freeImage(imgCoverTmp)
