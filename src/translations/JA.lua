@@ -22,6 +22,7 @@ return {
 ["Custom_Background_colon"] = "バックグラウンド画像 : ",
 ["Reflection_Effect_colon"] = "反射結果 : ",
 ["Sounds_colon"] = "サウンド : ",
+["Music_colon"] = "音楽 : ",
 ["Theme_Color_colon"] = "テーマの色 : ",
 ["Red"] = "赤",
 ["Yellow"] = "黄",

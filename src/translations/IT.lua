@@ -22,6 +22,7 @@ return {
 ["Custom_Background_colon"] = "Sfondo Personalizzato: ",
 ["Reflection_Effect_colon"] = "Effetto di riflessione: ",
 ["Sounds_colon"] = "Suono: ",
+["Music_colon"] = "Musica: ",
 ["Theme_Color_colon"] = "Colore del Tema: ",
 ["Red"] = "Rosso",
 ["Yellow"] = "Giallo",

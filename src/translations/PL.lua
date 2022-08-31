@@ -22,6 +22,7 @@ return {
 ["Custom_Background_colon"] = "Niestandardowe tło: ",
 ["Reflection_Effect_colon"] = "Efekt odbicia: ",
 ["Sounds_colon"] = "Dźwięki: ",
+["Music_colon"] = "Muzyka: ",
 ["Theme_Color_colon"] = "Kolor motywu: ",
 ["Red"] = "Czerwony",
 ["Yellow"] = "Żółty",

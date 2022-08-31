@@ -22,6 +22,7 @@ return {
 ["Custom_Background_colon"] = "Egna bakgrunder: ",
 ["Reflection_Effect_colon"] = "Reflektionseffekt: ",
 ["Sounds_colon"] = "Ljud: ",
+["Music_colon"] = "Musik: ",
 ["Theme_Color_colon"] = "Temafärg: ",
 ["Red"] = "Röd",
 ["Yellow"] = "Gul",

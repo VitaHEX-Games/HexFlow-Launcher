@@ -6,7 +6,7 @@
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "3.6.2.04"
+local appversion = "3.6.2.06"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -856,6 +856,7 @@ local curTotal = 1
 local startCategory = 1
 local setReflections = 1
 local setSounds = 1
+local setMusic = 1
 local themeColor = 0 -- 0 blue, 1 red, 2 yellow, 3 green, 4 grey, 5 black, 6 purple, 7 darkpurple, 8 orange
 local menuItems = 3
 local setBackground = 1
@@ -870,7 +871,7 @@ local Game_Backgrounds = 1 -- On
 function SaveSettings()
     local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
     settings = {}
-    local settings = "Reflections=" .. setReflections .. " " .. "\nSounds=" .. setSounds .. " " .. "\nColor=" .. themeColor .. " " .. "\nBackground=" .. setBackground .. " " .. "\nLanguage=" .. setLanguage .. " " .. "\nView=" .. showView .. " " .. "\nHomebrews=" .. showHomebrews .. " " .. "\nScan=" .. startupScan .. " " .. "\nCategory=" .. startCategory .. " " .. "\nRecent=" .. showRecentlyPlayed .. " " .. "\nAll=" .. showAll .. " " .. "\nAdrenaline_rom_location=" .. Adrenaline_roms.. " " .. "\nGame_Backgrounds=" .. Game_Backgrounds
+    local settings = "Reflections=" .. setReflections .. " " .. "\nSounds=" .. setSounds .. " " .. "\nColor=" .. themeColor .. " " .. "\nBackground=" .. setBackground .. " " .. "\nLanguage=" .. setLanguage .. " " .. "\nView=" .. showView .. " " .. "\nHomebrews=" .. showHomebrews .. " " .. "\nScan=" .. startupScan .. " " .. "\nCategory=" .. startCategory .. " " .. "\nRecent=" .. showRecentlyPlayed .. " " .. "\nAll=" .. showAll .. " " .. "\nAdrenaline_rom_location=" .. Adrenaline_roms .. " " .. "\nGame_Backgrounds=" .. Game_Backgrounds .. " " .. "\nMusic=" .. setMusic
     file_settings = io.open(cur_dir .. "/config.dat", "w")
     file_settings:write(settings)
     file_settings:close()
@@ -904,6 +905,7 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
     local getAll = settingValue[11]; if getAll ~= nil then showAll = getAll end
     local getAdrenaline_rom_location = settingValue[12]; if getAdrenaline_rom_location ~= nil then Adrenaline_roms = getAdrenaline_rom_location end
     local getGame_Backgrounds = settingValue[13]; if getGame_Backgrounds ~= nil then Game_Backgrounds = getGame_Backgrounds end
+    local getMusic = settingValue[14]; if getMusic ~= nil then setMusic = getMusic end
     selectedwall = setBackground
 
 else
@@ -915,9 +917,15 @@ showCat = startCategory
 
 
 -- Custom Music
-if System.doesFileExist(cur_dir .. "/Music.mp3") then
+-- Use ogg if found, if not found use mp3
+if System.doesFileExist(cur_dir .. "/Music.ogg") then
+    sndMusic = Sound.open(cur_dir .. "/Music.ogg")
+    if setMusic == 1 then
+        Sound.play(sndMusic, true) -- Changed from LOOP to true (HexFlow & RetroFlow use different eboot files)
+    end
+elseif System.doesFileExist(cur_dir .. "/Music.mp3") then
     sndMusic = Sound.open(cur_dir .. "/Music.mp3")
-    if setSounds == 1 then
+    if setMusic == 1 then
         Sound.play(sndMusic, true) -- Changed from LOOP to true (HexFlow & RetroFlow use different eboot files)
     end
 end
@@ -985,6 +993,7 @@ local lang_default =
 ["Custom_Background_colon"] = "Custom Background: ",
 ["Reflection_Effect_colon"] = "Reflection Effect: ",
 ["Sounds_colon"] = "Sounds: ",
+["Music_colon"] = "Music: ",
 ["Theme_Color_colon"] = "Theme Color: ",
 ["Red"] = "Red",
 ["Yellow"] = "Yellow",
@@ -8843,7 +8852,7 @@ while true do
         Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
 
 
-        menuItems = 4
+        menuItems = 5
 
         -- MENU 4 / #0 Back
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
@@ -8914,6 +8923,18 @@ while true do
             end
         end
 
+        -- MENU 4 / #5 MUSIC
+        Font.print(fnt22, setting_x, setting_y5, lang_lines.Music_colon, white)--SOUNDS
+        if setMusic == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y5, lang_lines.On, white)--ON
+        else
+            if setLanguage == 10 then -- Chinese language fix
+                Font.print(fnt22, setting_x_offset - 8, setting_y5, lang_lines.Off, white)--OFF
+            else
+                Font.print(fnt22, setting_x_offset, setting_y5, lang_lines.Off, white)--OFF
+            end
+        end
+
         -- MENU 4 - FUNCTIONS
         status = System.getMessageState()
         if status ~= RUNNING then
@@ -8957,17 +8978,25 @@ while true do
                 elseif menuY == 4 then -- #4 Sounds
                     if setSounds == 1 then
                         setSounds = 0
-                        if System.doesFileExist(cur_dir .. "/Music.mp3") then
+                    else
+                        setSounds = 1
+                    end            
+                elseif menuY == 5 then -- #5 Music
+                    if setMusic == 1 then
+                        setMusic = 0
+                        if System.doesFileExist(cur_dir .. "/Music.ogg") or System.doesFileExist(cur_dir .. "/Music.mp3") then
                             if Sound.isPlaying(sndMusic) then
-                                Sound.pause(sndMusic)
+                                Sound.close(sndMusic)
                             end
                         end
                     else
-                        setSounds = 1
-                        if System.doesFileExist(cur_dir .. "/Music.mp3") then
-                            if not Sound.isPlaying(sndMusic) then
-                                Sound.play(sndMusic, true) -- Changed from LOOP to true (HexFlow & RetroFlow use different eboot files)
-                            end
+                        setMusic = 1
+                        if System.doesFileExist(cur_dir .. "/Music.ogg") then
+                            sndMusic = Sound.open(cur_dir .. "/Music.ogg")
+                            Sound.play(sndMusic, true) -- Changed from LOOP to true (HexFlow & RetroFlow use different eboot files)
+                        elseif System.doesFileExist(cur_dir .. "/Music.mp3") then
+                            sndMusic = Sound.open(cur_dir .. "/Music.mp3")
+                            Sound.play(sndMusic, true) -- Changed from LOOP to true (HexFlow & RetroFlow use different eboot files)
                         end
                     end            
                 end

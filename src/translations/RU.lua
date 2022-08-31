@@ -22,6 +22,7 @@ return {
 ["Custom_Background_colon"] = "Собственный Фон: ",
 ["Reflection_Effect_colon"] = "Эффект Отражения: ",
 ["Sounds_colon"] = "Звуки: ",
+["Music_colon"] = "Музыка: ",
 ["Theme_Color_colon"] = "Цвет Темы: ",
 ["Red"] = "Красный",
 ["Yellow"] = "Желтый",

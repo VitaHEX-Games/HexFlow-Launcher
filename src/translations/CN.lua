@@ -22,6 +22,7 @@ return {
 ["Custom_Background_colon"] = "自定義背景 : ",
 ["Reflection_Effect_colon"] = "反射效果 : ",
 ["Sounds_colon"] = "音效 : ",
+["Music_colon"] = "音乐 : ",
 ["Theme_Color_colon"] = "主題顏色 : ",
 ["Red"] = "紅色",
 ["Yellow"] = "黃色",

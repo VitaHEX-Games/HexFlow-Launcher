@@ -22,6 +22,7 @@ return {
 ["Custom_Background_colon"] = "Fondos personalizados: ",
 ["Reflection_Effect_colon"] = "Efecto reflejo: ",
 ["Sounds_colon"] = "Sonidos: ",
+["Music_colon"] = "Música: ",
 ["Theme_Color_colon"] = "Color de Estilo: ",
 ["Red"] = "Rojo",
 ["Yellow"] = "Amarillo",
