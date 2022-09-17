@@ -10,7 +10,7 @@
 # About
 This is a modded version of [HexFlow Launcher](https://github.com/VitaHEX-Games/HexFlow-Launcher); a 3d coverflow like launcher for PS Vita.
 
-This version includes categories for retro games which can be launched without bubbles for RetroArch and DaedalusX64.
+This version includes categories for retro games which can be launched without bubbles for RetroArch, DaedalusX64 and Flycast.
 Playstation and PSP games can also be launched without having to create bubbles for every game!
 
 This version also has categories for favorites and recently played games.
@@ -22,10 +22,16 @@ Launching a game or app from **RetroFlow Launcher** will close the launcher auto
 
 
 ### Supported systems:
-PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega CD, Sega 32X, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear, PC Engine, PC Engine CD, TurboGrafx-16, TurboGrafx-CD, Commodore Amiga, Commodore 64, WonderSwan, WonderSwan Color, MSX, MSX2, ZX Spectrum, Atari Lynx, Atari 600, Atari 5200, Atari 7800, ColecoVision, Vectrex, FBA 2012, MAME 2003 Plus, MAME 2000, Neo Geo (FBA 2012) and Neo Geo Pocket Color.
+PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Dreamcast, Sega CD, Sega 32X, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear, PC Engine, PC Engine CD, TurboGrafx-16, TurboGrafx-CD, Commodore Amiga, Commodore 64, WonderSwan, WonderSwan Color, MSX, MSX2, ZX Spectrum, Atari Lynx, Atari 600, Atari 5200, Atari 7800, ColecoVision, Vectrex, FBA 2012, MAME 2003 Plus, MAME 2000, Neo Geo (FBA 2012) and Neo Geo Pocket Color.
 
 
-[DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases) is required for N64 games. [RetroArch](https://www.retroarch.com/index.php?page=platforms) is required for other retro systems. [Adrenaline](https://github.com/TheOfficialFloW/Adrenaline) is required for Playstation and PSP games.
+[DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases) is required for N64 games. 
+
+[RetroArch](https://www.retroarch.com/index.php?page=platforms) is required for other retro systems. 
+
+[Adrenaline](https://github.com/TheOfficialFloW/Adrenaline) is required for Playstation and PSP games.
+
+[Flycast](https://www.psx-place.com/threads/release-flycast-vita-v-1-0-3-sega-dreamcast-emulator-for-psvita-pstv.38180/) is required to play Dreamcast games. Also see the [compatability list](https://flycast.rinnegatamante.it)  as not all games are playable yet.
 
 
 
@@ -76,6 +82,7 @@ uma0 can also be used.
 
 ### 4. Add your retro games to RetroFlow
 
+**Option 1 - Use the default folders:**
 Launch RetroFlow for the first time, RetroFlow will create the folders where you can save your games.
 
 Once it's finshed loading; close RetroFlow and copy your favourite retro games into the relevant subfolders below:
@@ -84,12 +91,21 @@ Once it's finshed loading; close RetroFlow and copy your favourite retro games i
 
 For PC Engine CD and TurboGrafx-CD RetroFlow will look for '.cue' files for these CD systems. Please make sure all the games are loose with the system's rom folder with .cue files.
 
+For Dreamcast '.gdi' and '.cdi' games are supported.
+
+**Option 2 - Use your own  game folders:**
+If you don't want to save your games in the RetroFlow data folder, you can use your own directories.
+
+Go to 'Scan settings' and then 'Edit game directories' to change the path to game folders.
+
+Once you are done, select 'Rescan' to find the games.
+
 **Tip:**
 It's important that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , otherwise cover images won't be found.
 
-### 5. Turn on startup scan to find them
+### 5. Rescan to find your games
 
-Press 'Start' and go to 'Scan Settings', turn on 'Startup scan'.
+Press 'Start' and go to 'Scan Settings', then select 'Rescan'
 Your retro games should now appear when you restart the app.
 'Startup scan' can be turned off once you have finished adding your games, the app will startup faster when it's turned off.
 
@@ -140,8 +156,11 @@ Yes; RetroFlow is seperate, it uses different folders and a different title ID.
 ### Do I need to create bubbles for games?
 No; RetroFlow doesn't need bubbles for games.
 
-### How should I name my games so covers are found?
+### Missing artwork - How should I name my games so covers are found?
 It's recommended that your roms are named using the no-intro file naming convention, e.g. "Game Name (USA)" , these names are used to match with cover images.
+
+You can manually download artwork, or rename your games to match the filenames in the [covers repo](https://github.com/jimbob4000/hexflow-covers). 
+
 
 ### Some systems aren't showing?
 Empty collections are hidden by default, once you add some games into the roms folder, they will appear.
@@ -161,7 +180,8 @@ The RetroArch core files can be found here: "ux0:/app/RETROVITA/"
 
 
 ### Can I change the rom folder locations?
-No, sorry.
+Yes, from version 4.0 onwards.
+Go to 'Scan settings' and then 'Edit game directories' to change the path to game folders.
 
 
 # Adding PSP and Playstation games
@@ -203,7 +223,7 @@ Cover and background images must be in **png** format. For Vita, PSP, PSX games 
 
 Covers and game backgrounds can be downloaded automatically from the artwork section of the settings menu (Start button). You can also download covers manually from the link below. A big thanks to **astuermer** for his contribution.
 
-[https://github.com/andiweli/hexflow-covers](https://github.com/andiweli/hexflow-covers)
+[https://github.com/jimbob4000/hexflow-covers](https://github.com/jimbob4000/hexflow-covers)
 
 ### Custom Backgrounds
 
@@ -212,7 +232,7 @@ You can change your background within the app by going to the settings menu > th
 
 ### Custom Music
 
-Place your **Music.mp3** file in "_ux0:data/RetroFlow/_" (music will play automatically when the "Sounds" option is enabled)
+Place your **Music.ogg** or **Music.mp3** file in "_ux0:data/RetroFlow/_" (music will play automatically when the "Sounds" option is enabled)
 
 ## AutoBoot
 
@@ -228,7 +248,7 @@ Navigate your library using the **DPad** or the **Left Stick** or with the **Tou
 
 **Cross**: Select/Launch game/app
 
-**Square**: Change Category
+**Square**: Change Category/Rename game
 
 **Triangle**: Game Details/Add or remove favorites
 
