@@ -48,6 +48,7 @@ return {
 ["Game_Boy_Advance"] = "Game Boy Advance",
 ["Game_Boy_Color"] = "Game Boy Color",
 ["Game_Boy"] = "Game Boy",
+["Sega_Dreamcast"] = "Sega Dreamcast",
 ["Sega_Mega_Drive"] = "Sega Mega Drive",
 ["Sega_Master_System"] = "Sega Master System",
 ["Sega_Game_Gear"] = "Sega Game Gear",
@@ -104,6 +105,7 @@ return {
 ["Downloading_GBA_covers"] = "Téléchargement de GBA les jaquettes",
 ["Downloading_GBC_covers"] = "Téléchargement de GBC les jaquettes",
 ["Downloading_GB_covers"] = "Téléchargement de GB les jaquettes",
+["Downloading_DC_covers"] = "Téléchargement de DC les jaquettes",
 ["Downloading_MD_covers"] = "Téléchargement de MD les jaquettes",
 ["Downloading_SMS_covers"] = "Téléchargement de SMS les jaquettes",
 ["Downloading_GG_covers"] = "Téléchargement de GG les jaquettes",
@@ -143,6 +145,7 @@ return {
 ["Downloading_GBA_backgrounds"] = "Téléchargement d'arrière-plans GBA",
 ["Downloading_GBC_backgrounds"] = "Téléchargement d'arrière-plans GBC",
 ["Downloading_GB_backgrounds"] = "Téléchargement d'arrière-plans GB",
+["Downloading_DC_backgrounds"] = "Téléchargement d'arrière-plans DC",
 ["Downloading_MD_backgrounds"] = "Téléchargement d'arrière-plans MD",
 ["Downloading_SMS_backgrounds"] = "Téléchargement d'arrière-plans SMS",
 ["Downloading_GG_backgrounds"] = "Téléchargement d'arrière-plans GG",
@@ -181,6 +184,7 @@ return {
 ["Press_X_to_apply_Category"] = "Catégorie de remplacement",
 ["Default"] = "Système par défaut",
 ["Favorite"] = "Favori",
+["Rename"] = "Renommer",
 ["PS_Vita_Game"] = "Jeu PS Vita",
 ["Homebrew"] = "Homebrew",
 ["PSP_Game"] = "Jeu PSP",
@@ -191,6 +195,7 @@ return {
 ["GBA_Game"] = "Jeu Game Boy Advance",
 ["GBC_Game"] = "Jeu Game Boy Color",
 ["GB_Game"] = "Jeu Game Boy",
+["DC_Game"] = "Jeu Sega Dreamcast",
 ["MD_Game"] = "Jeu Sega Mega Drive",
 ["SMS_Game"] = "Jeu Sega Master System",
 ["GG_Game"] = "Jeu Sega Game Gear",
@@ -238,4 +243,12 @@ return {
 ["Back_Chevron"] = "<  Retour",
 ["Theme"] = "Thème",
 ["Game_backgounds_colon"] = "Arrière-plans de jeu : ",
+
+-- Game directories
+["Edit_game_directories"] = "Modifier les répertoires de jeux...",
+["Game_directories"] = "Répertoires de jeux",
+["Use_this_directory"] = "Utilisez ce répertoire",
+["Rescan"] = "Rafraîchir",
+["Back"] = "Retour",
+
 }

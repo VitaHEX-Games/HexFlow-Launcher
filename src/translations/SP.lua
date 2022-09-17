@@ -48,6 +48,7 @@ return {
 ["Game_Boy_Advance"] = "Game Boy Advance",
 ["Game_Boy_Color"] = "Game Boy Color",
 ["Game_Boy"] = "Game Boy",
+["Sega_Dreamcast"] = "Sega Dreamcast",
 ["Sega_Mega_Drive"] = "Sega Mega Drive",
 ["Sega_Master_System"] = "Sega Master System",
 ["Sega_Game_Gear"] = "Sega Game Gear",
@@ -104,6 +105,7 @@ return {
 ["Downloading_GBA_covers"] = "Descargando GBA portadas",
 ["Downloading_GBC_covers"] = "Descargando GBC portadas",
 ["Downloading_GB_covers"] = "Descargando GB portadas",
+["Downloading_DC_covers"] = "Descargando DC portadas",
 ["Downloading_MD_covers"] = "Descargando MD portadas",
 ["Downloading_SMS_covers"] = "Descargando SMS portadas",
 ["Downloading_GG_covers"] = "Descargando GG portadas",
@@ -143,6 +145,7 @@ return {
 ["Downloading_GBA_backgrounds"] = "Descargar fondos de GBA",
 ["Downloading_GBC_backgrounds"] = "Descargar fondos de GBC",
 ["Downloading_GB_backgrounds"] = "Descargar fondos de GB",
+["Downloading_DC_backgrounds"] = "Descargar fondos de DC",
 ["Downloading_MD_backgrounds"] = "Descargar fondos de MD",
 ["Downloading_SMS_backgrounds"] = "Descargar fondos de SMS",
 ["Downloading_GG_backgrounds"] = "Descargar fondos de GG",
@@ -181,6 +184,7 @@ return {
 ["Press_X_to_apply_Category"] = "Presione X para aplicar la categoría",
 ["Default"] = "Predeterminada",
 ["Favorite"] = "Favorito",
+["Rename"] = "Rebautizar",
 ["PS_Vita_Game"] = "Juego de PS Vita",
 ["Homebrew"] = "Homebrew",
 ["PSP_Game"] = "Juego de PSP",
@@ -191,6 +195,7 @@ return {
 ["GBA_Game"] = "Juego de Game Boy Advance",
 ["GBC_Game"] = "Juego de Game Boy Color",
 ["GB_Game"] = "Juego de Game Boy",
+["DC_Game"] = "Juego de Sega Dreamcast",
 ["MD_Game"] = "Juego de Sega Mega Drive",
 ["SMS_Game"] = "Juego de Sega Master System",
 ["GG_Game"] = "Juego de Sega Game Gear",
@@ -238,4 +243,12 @@ return {
 ["Back_Chevron"] = "<  Atrás",
 ["Theme"] = "Tema",
 ["Game_backgounds_colon"] = "Fondos del juego: ",
+
+-- Game directories
+["Edit_game_directories"] = "Editar directorios de juegos...",
+["Game_directories"] = "Directorios de juegos",
+["Use_this_directory"] = "Usa este directorio",
+["Rescan"] = "Actualizar",
+["Back"] = "Atrás",
+
 }

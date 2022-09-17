@@ -14,6 +14,7 @@ local db_Cached_File_nes = (db_Cache_Folder .. "db_nes.lua")
 local db_Cached_File_gba = (db_Cache_Folder .. "db_gba.lua")
 local db_Cached_File_gbc = (db_Cache_Folder .. "db_gbc.lua")
 local db_Cached_File_gb = (db_Cache_Folder .. "db_gb.lua")
+local db_Cached_File_dreamcast = (db_Cache_Folder .. "db_dreamcast.lua")
 local db_Cached_File_sega_cd = (db_Cache_Folder .. "db_sega_cd.lua")
 local db_Cached_File_32x = (db_Cache_Folder .. "db_32x.lua")
 local db_Cached_File_md = (db_Cache_Folder .. "db_md.lua")
@@ -43,11 +44,8 @@ local db_Cached_File_neogeo = (db_Cache_Folder .. "db_neogeo.lua")
 local db_Cached_File_ngpc = (db_Cache_Folder .. "db_ngpc.lua")
 -- local db_Cached_File_favorites = (db_Cache_Folder .. "db_favorites.lua")
 
--- PRINT ALL TABLES AT ONCE 
-function print_tables()
 
-    -- Create directories - Database Cache
-    System.createDirectory(db_Cache_Folder)
+function delete_tables()
 
     -- Delete old files
     if System.doesFileExist(db_Cache_Folder .. "db_files.lua") then     System.deleteFile(db_Cache_Folder .. "db_files.lua") else end
@@ -64,6 +62,7 @@ function print_tables()
     if System.doesFileExist(db_Cache_Folder .. "db_gba.lua") then     System.deleteFile(db_Cache_Folder .. "db_gba.lua") else end
     if System.doesFileExist(db_Cache_Folder .. "db_gbc.lua") then     System.deleteFile(db_Cache_Folder .. "db_gbc.lua") else end
     if System.doesFileExist(db_Cache_Folder .. "db_gb.lua") then     System.deleteFile(db_Cache_Folder .. "db_gb.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_dreamcast.lua") then     System.deleteFile(db_Cache_Folder .. "db_dreamcast.lua") else end
     if System.doesFileExist(db_Cache_Folder .. "db_sega_cd.lua") then     System.deleteFile(db_Cache_Folder .. "db_sega_cd.lua") else end
     if System.doesFileExist(db_Cache_Folder .. "db_32x.lua") then     System.deleteFile(db_Cache_Folder .. "db_32x.lua") else end
     if System.doesFileExist(db_Cache_Folder .. "db_md.lua") then     System.deleteFile(db_Cache_Folder .. "db_md.lua") else end
@@ -91,10 +90,17 @@ function print_tables()
     if System.doesFileExist(db_Cache_Folder .. "db_mame_2000.lua") then     System.deleteFile(db_Cache_Folder .. "db_mame_2000.lua") else end
     if System.doesFileExist(db_Cache_Folder .. "db_neogeo.lua") then     System.deleteFile(db_Cache_Folder .. "db_neogeo.lua") else end
     if System.doesFileExist(db_Cache_Folder .. "db_ngpc.lua") then     System.deleteFile(db_Cache_Folder .. "db_ngpc.lua") else end
+end
 
+-- PRINT ALL TABLES AT ONCE 
+function print_tables()
+
+    -- Create directories - Database Cache
+    System.createDirectory(db_Cache_Folder)
+
+    -- Delete old files
+    delete_tables()
     
-    -- if System.doesFileExist(db_Cache_Folder .. "db_favorites.lua") then System.deleteFile(db_Cache_Folder .. "db_favorites.lua") else end
-
     -- START CREATE DATABASE CACHE
 
     local db_files = assert(io.open(db_Cached_File_files, "w"))
@@ -144,6 +150,10 @@ function print_tables()
     local db_gb = assert(io.open(db_Cached_File_gb, "w"))
     printTable(gb_table, db_gb)
     db_gb:close()
+
+    local db_dreamcast = assert(io.open(db_Cached_File_dreamcast, "w"))
+    printTable(dreamcast_table, db_dreamcast)
+    db_dreamcast:close()
 
     local db_sega_cd = assert(io.open(db_Cached_File_sega_cd, "w"))
     printTable(sega_cd_table, db_sega_cd)
@@ -292,6 +302,27 @@ function print_table_recently_played_pre_launch()
     local db_recently_played = assert(io.open(db_Cached_File_recently_played, "w"))
     printTable(recently_played_pre_launch_table, db_recently_played)
     db_recently_played:close()
+end
+
+function print_table_renamed_games()
+    local db_Cached_File_renamed_games = "ux0:/data/RetroFlow/renamed_games.lua"
+
+    -- Create directories - Database Cache
+    if System.doesFileExist(db_Cached_File_renamed_games) then System.deleteFile(db_Cached_File_renamed_games) else end
+    local db_renamed_games = assert(io.open(db_Cached_File_renamed_games, "w"))
+    printTable(renamed_games_table, db_renamed_games)
+    db_renamed_games:close()
+end
+
+function print_table_rom_dirs(def_table_name)
+    local db_Cached_File_rom_directories = "ux0:/data/RetroFlow/rom_directories.lua"
+
+    -- Create directories - Database Cache
+    if System.doesFileExist(db_Cached_File_rom_directories) then System.deleteFile(db_Cached_File_rom_directories) else end
+    local db_rom_directories = assert(io.open(db_Cached_File_rom_directories, "w"))
+    table.sort((def_table_name), function(a, b) return (a.v:lower() < b.v:lower()) end)
+    printTable((def_table_name), db_rom_directories)
+    db_rom_directories:close()
 end
 
 -- MAIN PRINT FUNCTION

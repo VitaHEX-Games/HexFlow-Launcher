@@ -48,6 +48,7 @@ return {
 ["Game_Boy_Advance"] = "Game Boy Advance",
 ["Game_Boy_Color"] = "Game Boy Color",
 ["Game_Boy"] = "Game Boy",
+["Sega_Dreamcast"] = "Sega Dreamcast",
 ["Sega_Mega_Drive"] = "Sega Mega Drive",
 ["Sega_Master_System"] = "Sega Master System",
 ["Sega_Game_Gear"] = "Sega Game Gear",
@@ -104,6 +105,7 @@ return {
 ["Downloading_GBA_covers"] = "Baixando capa GBA",
 ["Downloading_GBC_covers"] = "Baixando capa GBC",
 ["Downloading_GB_covers"] = "Baixando capa GB",
+["Downloading_DC_covers"] = "Baixando capa DC",
 ["Downloading_MD_covers"] = "Baixando capa MD",
 ["Downloading_SMS_covers"] = "Baixando capa SMS",
 ["Downloading_GG_covers"] = "Baixando capa GG",
@@ -143,6 +145,7 @@ return {
 ["Downloading_GBA_backgrounds"] = "Baixando fundos do GBA",
 ["Downloading_GBC_backgrounds"] = "Baixando fundos do GBC",
 ["Downloading_GB_backgrounds"] = "Baixando fundos do GB",
+["Downloading_DC_backgrounds"] = "Baixando fundos do DC",
 ["Downloading_MD_backgrounds"] = "Baixando fundos do MD",
 ["Downloading_SMS_backgrounds"] = "Baixando fundos do SMS",
 ["Downloading_GG_backgrounds"] = "Baixando fundos do GG",
@@ -181,6 +184,7 @@ return {
 ["Press_X_to_apply_Category"] = "Pressione X para aplicar a categoria",
 ["Default"] = "Padrões",
 ["Favorite"] = "Favorito",
+["Rename"] = "Renomear",
 ["PS_Vita_Game"] = "Jogo PS Vita",
 ["Homebrew"] = "Homebrew",
 ["PSP_Game"] = "Jogo PSP",
@@ -191,6 +195,7 @@ return {
 ["GBA_Game"] = "Jogo Game Boy Advance",
 ["GBC_Game"] = "Jogo Game Boy Color",
 ["GB_Game"] = "Jogo Game Boy",
+["DC_Game"] = "Jogo Sega Dreamcast",
 ["MD_Game"] = "Jogo Sega Mega Drive",
 ["SMS_Game"] = "Jogo Sega Master System",
 ["GG_Game"] = "Jogo Sega Game Gear",
@@ -238,4 +243,12 @@ return {
 ["Back_Chevron"] = "<  Voltar",
 ["Theme"] = "Tema",
 ["Game_backgounds_colon"] = "Fundos do jogo: ",
+
+-- Game directories
+["Edit_game_directories"] = "Editar diretórios de jogos...",
+["Game_directories"] = "Diretórios de jogos",
+["Use_this_directory"] = "Use este diretório",
+["Rescan"] = "Recarregar",
+["Back"] = "Voltar",
+
 }

@@ -48,6 +48,7 @@ return {
 ["Game_Boy_Advance"] = "Game Boy Advance",
 ["Game_Boy_Color"] = "Game Boy Color",
 ["Game_Boy"] = "Game Boy",
+["Sega_Dreamcast"] = "Sega Dreamcast",
 ["Sega_Mega_Drive"] = "Sega Mega Drive",
 ["Sega_Master_System"] = "Sega Master System",
 ["Sega_Game_Gear"] = "Sega Game Gear",
@@ -104,6 +105,7 @@ return {
 ["Downloading_GBA_covers"] = "GBAカバーのダウンロード",
 ["Downloading_GBC_covers"] = "GBCカバーのダウンロード",
 ["Downloading_GB_covers"] = "GBカバーのダウンロード",
+["Downloading_DC_covers"] = "DCカバーのダウンロード",
 ["Downloading_MD_covers"] = "MDカバーのダウンロード",
 ["Downloading_SMS_covers"] = "SMSカバーのダウンロード",
 ["Downloading_GG_covers"] = "GGカバーのダウンロード",
@@ -143,6 +145,7 @@ return {
 ["Downloading_GBA_backgrounds"] = "GBAの背景をダウンロードする",
 ["Downloading_GBC_backgrounds"] = "GBCの背景をダウンロードする",
 ["Downloading_GB_backgrounds"] = "GBの背景をダウンロードする",
+["Downloading_DC_backgrounds"] = "DCの背景をダウンロードする",
 ["Downloading_MD_backgrounds"] = "MDの背景をダウンロードする",
 ["Downloading_SMS_backgrounds"] = "SMSの背景をダウンロードする",
 ["Downloading_GG_backgrounds"] = "GGの背景をダウンロードする",
@@ -181,6 +184,7 @@ return {
 ["Press_X_to_apply_Category"] = "Xを押してカテゴリを適用します",
 ["Default"] = "既定",
 ["Favorite"] = "お気に入り",
+["Rename"] = "名前を変更",
 ["PS_Vita_Game"] = "PSVitaゲーム",
 ["Homebrew"] = "Homebrew",
 ["PSP_Game"] = "PSPゲーム",
@@ -191,6 +195,7 @@ return {
 ["GBA_Game"] = "Game Boy Advanceゲーム",
 ["GBC_Game"] = "Game Boy Colorゲーム",
 ["GB_Game"] = "Game Boyゲーム",
+["DC_Game"] = "Sega Dreamcastゲーム",
 ["MD_Game"] = "Sega Mega Driveゲーム",
 ["SMS_Game"] = "Sega Master Systemゲーム",
 ["GG_Game"] = "Sega Game Gearゲーム",
@@ -238,4 +243,12 @@ return {
 ["Back_Chevron"] = "<  後ろ",
 ["Theme"] = "テーマ",
 ["Game_backgounds_colon"] = "ゲームの背景 : ",
+
+-- Game directories
+["Edit_game_directories"] = "ゲームディレクトリの編集 ...",
+["Game_directories"] = "ゲームディレクトリ",
+["Use_this_directory"] = "このディレクトリを使用",
+["Rescan"] = "再スキャン",
+["Back"] = "後ろ",
+
 }

@@ -48,6 +48,7 @@ return {
 ["Game_Boy_Advance"] = "Game Boy Advance",
 ["Game_Boy_Color"] = "Game Boy Color",
 ["Game_Boy"] = "Game Boy",
+["Sega_Dreamcast"] = "Sega Dreamcast",
 ["Sega_Mega_Drive"] = "Sega Mega Drive",
 ["Sega_Master_System"] = "Sega Master System",
 ["Sega_Game_Gear"] = "Sega Game Gear",
@@ -104,6 +105,7 @@ return {
 ["Downloading_GBA_covers"] = "GBA Cover herunterladen",
 ["Downloading_GBC_covers"] = "GBC Cover herunterladen",
 ["Downloading_GB_covers"] = "GB Cover herunterladen",
+["Downloading_DC_covers"] = "DC Cover herunterladen",
 ["Downloading_MD_covers"] = "MD Cover herunterladen",
 ["Downloading_SMS_covers"] = "SMS Cover herunterladen",
 ["Downloading_GG_covers"] = "GG Cover herunterladen",
@@ -143,6 +145,7 @@ return {
 ["Downloading_GBA_backgrounds"] = "Herunterladen von GBA-Hintergründen",
 ["Downloading_GBC_backgrounds"] = "Herunterladen von GBC-Hintergründen",
 ["Downloading_GB_backgrounds"] = "Herunterladen von GB-Hintergründen",
+["Downloading_DC_backgrounds"] = "Herunterladen von DC-Hintergründen",
 ["Downloading_MD_backgrounds"] = "Herunterladen von MD-Hintergründen",
 ["Downloading_SMS_backgrounds"] = "Herunterladen von SMS-Hintergründen",
 ["Downloading_GG_backgrounds"] = "Herunterladen von GG-Hintergründen",
@@ -181,6 +184,7 @@ return {
 ["Press_X_to_apply_Category"] = "Drücken Sie X, um zu speichern",
 ["Default"] = "Standard",
 ["Favorite"] = "Favorit",
+["Rename"] = "Umbenennen",
 ["PS_Vita_Game"] = "PS Vita Spiel",
 ["Homebrew"] = "Homebrew",
 ["PSP_Game"] = "PSP Spiel",
@@ -191,6 +195,7 @@ return {
 ["GBA_Game"] = "Game Boy Advance Spiel",
 ["GBC_Game"] = "Game Boy Color Spiel",
 ["GB_Game"] = "Game Boy Spiel",
+["DC_Game"] = "Sega Dreamcast Spiel",
 ["MD_Game"] = "Sega Mega Drive Spiel",
 ["SMS_Game"] = "Sega Master System Spiel",
 ["GG_Game"] = "Sega Game Gear Spiel",
@@ -238,4 +243,12 @@ return {
 ["Back_Chevron"] = "<  Zurück",
 ["Theme"] = "Aussehen",
 ["Game_backgounds_colon"] = "Spielhintergründe: ",
+
+-- Game directories
+["Edit_game_directories"] = "Spielverzeichnisse festlegen ...",
+["Game_directories"] = "Spielverzeichnisse",
+["Use_this_directory"] = "Verwenden Sie dieses Verzeichnis",
+["Rescan"] = "Neu laden",
+["Back"] = "Zurück",
+
 }

@@ -6,7 +6,7 @@
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "3.6.2.06"
+local appversion = "4.0"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -16,7 +16,7 @@ function System.currentDirectory(dir)
 end
 
 
-local romDir = "ux0:/data/RetroFlow/ROMS/"
+local romsMainDir = "ux0:/data/RetroFlow/ROMS/"
 local covDir = "ux0:/data/RetroFlow/COVERS/"
 local snapDir = "ux0:/data/RetroFlow/BACKGROUNDS/"
 
@@ -24,6 +24,86 @@ local snapDir = "ux0:/data/RetroFlow/BACKGROUNDS/"
 if System.doesDirExist("ux0:/data/RetroFlow/COVERS/MAME") then System.rename("ux0:/data/RetroFlow/COVERS/MAME", "ux0:/data/RetroFlow/COVERS/MAME 2000") end
 if System.doesDirExist("ux0:/data/RetroFlow/ROMS/MAME 2000") then System.rename("ux0:/data/RetroFlow/ROMS/MAME 2000", "ux0:/data/RetroFlow/ROMS/MAME 2000") end
 
+
+-- Default system rom folders
+romDir_Default =
+{
+["Atari_2600"] = "ux0:/data/RetroFlow/ROMS/Atari - 2600",
+["Atari_5200"] = "ux0:/data/RetroFlow/ROMS/Atari - 5200",
+["Atari_7800"] = "ux0:/data/RetroFlow/ROMS/Atari - 7800",
+["Atari_Lynx"] = "ux0:/data/RetroFlow/ROMS/Atari - Lynx",
+["WonderSwan"] = "ux0:/data/RetroFlow/ROMS/Bandai - WonderSwan",
+["WonderSwan_Color"] = "ux0:/data/RetroFlow/ROMS/Bandai - WonderSwan Color",
+["ColecoVision"] = "ux0:/data/RetroFlow/ROMS/Coleco - ColecoVision",
+["Commodore_64"] = "ux0:/data/RetroFlow/ROMS/Commodore - 64",
+["Amiga"] = "ux0:/data/RetroFlow/ROMS/Commodore - Amiga",
+["FBA_2012"] = "ux0:/data/RetroFlow/ROMS/FBA 2012",
+["Vectrex"] = "ux0:/data/RetroFlow/ROMS/GCE - Vectrex",
+["MAME_2000"] = "ux0:/data/RetroFlow/ROMS/MAME 2000",
+["MAME_2003Plus"] = "ux0:/data/RetroFlow/ROMS/MAME 2003 Plus",
+["MSX"] = "ux0:/data/RetroFlow/ROMS/Microsoft - MSX",
+["MSX2"] = "ux0:/data/RetroFlow/ROMS/Microsoft - MSX2",
+["PC_Engine"] = "ux0:/data/RetroFlow/ROMS/NEC - PC Engine",
+["PC_Engine_CD"] = "ux0:/data/RetroFlow/ROMS/NEC - PC Engine CD",
+["TurboGrafx_16"] = "ux0:/data/RetroFlow/ROMS/NEC - TurboGrafx 16",
+["TurboGrafx_CD"] = "ux0:/data/RetroFlow/ROMS/NEC - TurboGrafx CD",
+["Game_Boy"] = "ux0:/data/RetroFlow/ROMS/Nintendo - Game Boy",
+["Game_Boy_Advance"] = "ux0:/data/RetroFlow/ROMS/Nintendo - Game Boy Advance",
+["Game_Boy_Color"] = "ux0:/data/RetroFlow/ROMS/Nintendo - Game Boy Color",
+["Nintendo_64"] = "ux0:/data/RetroFlow/ROMS/Nintendo - Nintendo 64",
+["Nintendo_Entertainment_System"] = "ux0:/data/RetroFlow/ROMS/Nintendo - Nintendo Entertainment System",
+["Super_Nintendo"] = "ux0:/data/RetroFlow/ROMS/Nintendo - Super Nintendo Entertainment System",
+["Sega_32X"] = "ux0:/data/RetroFlow/ROMS/Sega - 32X",
+["Sega_Dreamcast"] = "ux0:/data/RetroFlow/ROMS/Sega - Dreamcast",
+["Sega_Game_Gear"] = "ux0:/data/RetroFlow/ROMS/Sega - Game Gear",
+["Sega_Master_System"] = "ux0:/data/RetroFlow/ROMS/Sega - Master System - Mark III",
+["Sega_Mega_Drive"] = "ux0:/data/RetroFlow/ROMS/Sega - Mega Drive - Genesis",
+["Sega_CD"] = "ux0:/data/RetroFlow/ROMS/Sega - Mega-CD - Sega CD",
+["ZX_Spectrum"] = "ux0:/data/RetroFlow/ROMS/Sinclair - ZX Spectrum",
+["Neo_Geo"] = "ux0:/data/RetroFlow/ROMS/SNK - Neo Geo - FBA 2012",
+["Neo_Geo_Pocket_Color"] = "ux0:/data/RetroFlow/ROMS/SNK - Neo Geo Pocket Color",
+}
+
+-- Create directory: Main
+local cur_dir = "ux0:/data/RetroFlow/"
+System.createDirectory("ux0:/data/RetroFlow/")
+
+function print_table_rom_dirs(def_table_name)
+    dofile("app0:addons/printTable.lua")
+    print_table_rom_dirs((def_table_name))
+end
+
+-- Create directory: Roms
+System.createDirectory(romsMainDir)
+
+-- Create default rom sub folders
+for k, v in pairs(romDir_Default) do
+    System.createDirectory(tostring(v))
+end
+
+-- Save a copy of the default locations to an lua file so it can be customised later
+if not System.doesFileExist("ux0:/data/RetroFlow/rom_directories.lua") then
+    print_table_rom_dirs(romDir_Default)
+end
+
+if System.doesFileExist("ux0:/data/RetroFlow/rom_directories.lua") then
+    db_romdir = "ux0:/data/RetroFlow/rom_directories.lua"
+    romUserDir = {}
+    romUserDir = dofile(db_romdir)
+else
+    romUserDir = {}
+    romUserDir = romDir_Default
+end
+
+    -- if System.doesFileExist("app0:/translations/" .. lang) then
+    --     langfile = {}
+    --     langfile = "app0:/translations/" .. lang
+    --     -- lang_lines = {}
+    --     lang_lines = dofile(langfile)
+    -- else
+    --     -- If missing use default EN table
+    --     lang_lines = lang_default
+    -- end
 
 SystemsToScan =
 {
@@ -70,7 +150,7 @@ SystemsToScan =
         ["user_db_file"] = "db_psx.lua",
         -- ["romFolder"] = "",
         ["localCoverPath"] = covDir .. "Sony - PlayStation" .. "/",
-        ["localSnapPath"] = snapDir .. "Sony - PlayStation Portable" .. "/",
+        ["localSnapPath"] = snapDir .. "Sony - PlayStation" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/PS1/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/PS1/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_psx.png",
@@ -80,7 +160,7 @@ SystemsToScan =
         ["apptype"] = 5,
         ["table"] = "n64_table",
         ["user_db_file"] = "db_n64.lua",
-        ["romFolder"] = romDir ..  "Nintendo - Nintendo 64",
+        ["romFolder"] = romUserDir.Nintendo_64,
         ["localCoverPath"] = covDir .. "Nintendo - Nintendo 64" .. "/",
         ["localSnapPath"] = snapDir .. "Nintendo - Nintendo 64" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/N64/Covers/",
@@ -92,7 +172,7 @@ SystemsToScan =
         ["apptype"] = 6,
         ["table"] = "snes_table",
         ["user_db_file"] = "db_snes.lua",
-        ["romFolder"] = romDir .. "Nintendo - Super Nintendo Entertainment System",
+        ["romFolder"] = romUserDir.Super_Nintendo,
         ["localCoverPath"] = covDir .. "Nintendo - Super Nintendo Entertainment System" .. "/",
         ["localSnapPath"] = snapDir .. "Nintendo - Super Nintendo Entertainment System" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/SNES/Covers/",
@@ -104,7 +184,7 @@ SystemsToScan =
         ["apptype"] = 7,
         ["table"] = "nes_table",
         ["user_db_file"] = "db_nes.lua",
-        ["romFolder"] = romDir ..  "Nintendo - Nintendo Entertainment System",
+        ["romFolder"] = romUserDir.Nintendo_Entertainment_System,
         ["localCoverPath"] = covDir .. "Nintendo - Nintendo Entertainment System" .. "/",
         ["localSnapPath"] = snapDir .. "Nintendo - Nintendo Entertainment System" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/NES/Covers/",
@@ -116,7 +196,7 @@ SystemsToScan =
         ["apptype"] = 8,
         ["table"] = "gba_table",
         ["user_db_file"] = "db_gba.lua",
-        ["romFolder"] = romDir ..  "Nintendo - Game Boy Advance",
+        ["romFolder"] = romUserDir.Game_Boy_Advance,
         ["localCoverPath"] = covDir .. "Nintendo - Game Boy Advance" .. "/",
         ["localSnapPath"] = snapDir .. "Nintendo - Game Boy Advance" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GBA/Covers/",
@@ -128,7 +208,7 @@ SystemsToScan =
         ["apptype"] = 9,
         ["table"] = "gbc_table",
         ["user_db_file"] = "db_gbc.lua",
-        ["romFolder"] = romDir ..  "Nintendo - Game Boy Color",
+        ["romFolder"] = romUserDir.Game_Boy_Color,
         ["localCoverPath"] = covDir .. "Nintendo - Game Boy Color" .. "/",
         ["localSnapPath"] = snapDir .. "Nintendo - Game Boy Color" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GBC/Covers/",
@@ -140,7 +220,7 @@ SystemsToScan =
         ["apptype"] = 10,
         ["table"] = "gb_table",
         ["user_db_file"] = "db_gb.lua",
-        ["romFolder"] = romDir ..   "Nintendo - Game Boy",
+        ["romFolder"] = romUserDir.Game_Boy,
         ["localCoverPath"] = covDir .. "Nintendo - Game Boy" .. "/",
         ["localSnapPath"] = snapDir .. "Nintendo - Game Boy" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GB/Covers/",
@@ -150,299 +230,299 @@ SystemsToScan =
     [11] = 
     {
         ["apptype"] = 11,
+        ["table"] = "dreamcast_table",
+        ["user_db_file"] = "db_dreamcast.lua",
+        ["romFolder"] = romUserDir.Sega_Dreamcast,
+        ["localCoverPath"] = covDir .. "Sega - Dreamcast" .. "/",
+        ["localSnapPath"] = snapDir .. "Sega - Dreamcast" .. "/",
+        ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/DC/Covers/",
+        ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/DC/Named_Snaps/",
+        ["Missing_Cover"] = "missing_cover_dreamcast_eur.png",
+    },
+    [12] = 
+    {
+        ["apptype"] = 12,
         ["table"] = "sega_cd_table",
         ["user_db_file"] = "db_sega_cd.lua",
-        ["romFolder"] = romDir ..   "Sega - Mega-CD - Sega CD",
+        ["romFolder"] = romUserDir.Sega_CD,
         ["localCoverPath"] = covDir .. "Sega - Mega-CD - Sega CD" .. "/",
         ["localSnapPath"] = snapDir .. "Sega - Mega-CD - Sega CD" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/SEGA_CD/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Sega_-_Mega-CD_-_Sega_CD/a8737a2a394645f27415f7346ac2ceb0cfcd0942/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_sega_cd.png",
     },
-    [12] = 
+    [13] = 
     {
-        ["apptype"] = 12,
+        ["apptype"] = 13,
         ["table"] = "s32x_table",
         ["user_db_file"] = "db_32x.lua",
-        ["romFolder"] = romDir ..   "Sega - 32X",
+        ["romFolder"] = romUserDir.Sega_32X,
         ["localCoverPath"] = covDir .. "Sega - 32X" .. "/",
         ["localSnapPath"] = snapDir .. "Sega - 32X" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/32X/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Sega_-_32X/4deb45e651e29506a7bfc440408b3343f0e1a3ae/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_32x.png",
     },
-    [13] = 
+    [14] = 
     {
-        ["apptype"] = 13,
+        ["apptype"] = 14,
         ["table"] = "md_table",
         ["user_db_file"] = "db_md.lua",
-        ["romFolder"] = romDir ..   "Sega - Mega Drive - Genesis",
+        ["romFolder"] = romUserDir.Sega_Mega_Drive,
         ["localCoverPath"] = covDir .. "Sega - Mega Drive - Genesis" .. "/",
         ["localSnapPath"] = snapDir .. "Sega - Mega Drive - Genesis" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MD/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Sega_-_Mega_Drive_-_Genesis/6ac232741f979a6f0aa54d077ff392fe170f4725/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_md.png",
     },
-    [14] = 
+    [15] = 
     {
-        ["apptype"] = 14,
+        ["apptype"] = 15,
         ["table"] = "sms_table",
         ["user_db_file"] = "db_sms.lua",
-        ["romFolder"] = romDir ..  "Sega - Master System - Mark III",
+        ["romFolder"] = romUserDir.Sega_Master_System,
         ["localCoverPath"] = covDir .. "Sega - Master System - Mark III" .. "/",
         ["localSnapPath"] = snapDir .. "Sega - Master System - Mark III" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/SMS/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Sega_-_Master_System_-_Mark_III/02f8c7f989db6124475b7e0978c27af8534655eb/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_sms.png",
     },
-    [15] = 
+    [16] = 
     {
-        ["apptype"] = 15,
+        ["apptype"] = 16,
         ["table"] = "gg_table",
         ["user_db_file"] = "db_gg.lua",
-        ["romFolder"] = romDir ..   "Sega - Game Gear",
+        ["romFolder"] = romUserDir.Sega_Game_Gear,
         ["localCoverPath"] = covDir .. "Sega - Game Gear" .. "/",
         ["localSnapPath"] = snapDir .. "Sega - Game Gear" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/GG/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Sega_-_Game_Gear/b99b424d2adcf5ccd45c372db2c15f01653f2b92/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_gg.png",
     },
-    [16] = 
+    [17] = 
     {
-        ["apptype"] = 16,
+        ["apptype"] = 17,
         ["table"] = "tg16_table",
         ["user_db_file"] = "db_tg16.lua",
-        ["romFolder"] = romDir .. "NEC - TurboGrafx 16",
+        ["romFolder"] = romUserDir.TurboGrafx_16,
         ["localCoverPath"] = covDir .. "NEC - TurboGrafx 16" .. "/",
         ["localSnapPath"] = snapDir .. "NEC - TurboGrafx 16" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/TG16/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/NEC_-_PC_Engine_-_TurboGrafx_16/d0d6e27f84d757416799e432154e0adcadb154c9/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_tg16.png",
     },
-    [17] = 
+    [18] = 
     {
-        ["apptype"] = 17,
+        ["apptype"] = 18,
         ["table"] = "tgcd_table",
         ["user_db_file"] = "db_tgcd.lua",
-        ["romFolder"] = romDir .. "NEC - TurboGrafx CD",
+        ["romFolder"] = romUserDir.TurboGrafx_CD,
         ["localCoverPath"] = covDir .. "NEC - TurboGrafx CD" .. "/",
         ["localSnapPath"] = snapDir .. "NEC - TurboGrafx CD" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/TG_CD/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/NEC_-_PC_Engine_CD_-_TurboGrafx-CD/cd554a5cdca862f090e6c3f9510a3b1b6c2d5b38/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_tgcd.png",
     },
-    [18] = 
+    [19] = 
     {
-        ["apptype"] = 18,
+        ["apptype"] = 19,
         ["table"] = "pce_table",
         ["user_db_file"] = "db_pce.lua",
-        ["romFolder"] = romDir .. "NEC - PC Engine",
+        ["romFolder"] = romUserDir.PC_Engine,
         ["localCoverPath"] = covDir .. "NEC - PC Engine" .. "/",
         ["localSnapPath"] = snapDir .. "NEC - PC Engine" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/PCE/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/NEC_-_PC_Engine_-_TurboGrafx_16/d0d6e27f84d757416799e432154e0adcadb154c9/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_pce.png",
     },
-    [19] = 
+    [20] = 
     {
-        ["apptype"] = 19,
+        ["apptype"] = 20,
         ["table"] = "pcecd_table",
         ["user_db_file"] = "db_pcecd.lua",
-        ["romFolder"] = romDir .. "NEC - PC Engine CD",
+        ["romFolder"] = romUserDir.PC_Engine_CD,
         ["localCoverPath"] = covDir .. "NEC - PC Engine CD" .. "/",
         ["localSnapPath"] = snapDir .. "NEC - PC Engine CD" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/PCE_CD/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/NEC_-_PC_Engine_CD_-_TurboGrafx-CD/cd554a5cdca862f090e6c3f9510a3b1b6c2d5b38/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_pcecd.png",
     },
-    [20] = 
+    [21] = 
     {
-        ["apptype"] = 20,
+        ["apptype"] = 21,
         ["table"] = "amiga_table",
         ["user_db_file"] = "db_amiga.lua",
-        ["romFolder"] = romDir .. "Commodore - Amiga",
+        ["romFolder"] = romUserDir.Amiga,
         ["localCoverPath"] = covDir .. "Commodore - Amiga" .. "/",
         ["localSnapPath"] = snapDir .. "Commodore - Amiga" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/AMIGA/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Commodore_-_Amiga/b6446e83b3dc93446371a5dbfb0f24574eb56461/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_amiga.png",
     },
-    [21] = 
+    [22] = 
     {
-        ["apptype"] = 21,
+        ["apptype"] = 22,
         ["table"] = "c64_table",
         ["user_db_file"] = "db_c64.lua",
-        ["romFolder"] = romDir .. "Commodore - 64",
+        ["romFolder"] = romUserDir.Commodore_64,
         ["localCoverPath"] = covDir .. "Commodore - 64" .. "/",
         ["localSnapPath"] = snapDir .. "Commodore - 64" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/C64/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Commodore_-_64/df90042ef9823d1b0b9d3ec303051f555dca2246/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_c64.png",
     },
-    [22] = 
+    [23] = 
     {
-        ["apptype"] = 22,
+        ["apptype"] = 23,
         ["table"] = "wswan_col_table",
         ["user_db_file"] = "db_wswan_col.lua",
-        ["romFolder"] = romDir .. "Bandai - WonderSwan Color",
+        ["romFolder"] = romUserDir.WonderSwan_Color,
         ["localCoverPath"] = covDir .. "Bandai - WonderSwan Color" .. "/",
         ["localSnapPath"] = snapDir .. "Bandai - WonderSwan Color" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/WSWAN_COL/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Bandai_-_WonderSwan_Color/5b57a78fafa4acb8590444c15c116998fcea9dce/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_wswan_col.png",
     },
-    [23] = 
+    [24] = 
     {
-        ["apptype"] = 23,
+        ["apptype"] = 24,
         ["table"] = "wswan_table",
         ["user_db_file"] = "db_wswan.lua",
-        ["romFolder"] = romDir .. "Bandai - WonderSwan",
+        ["romFolder"] = romUserDir.WonderSwan,
         ["localCoverPath"] = covDir .. "Bandai - WonderSwan" .. "/",
         ["localSnapPath"] = snapDir .. "Bandai - WonderSwan" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/WSWAN/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Bandai_-_WonderSwan/3913706e173ec5f8c0cdeebd225b16f4dc3dd6c6/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_wswan.png",
     },
-    [24] = 
+    [25] = 
     {
-        ["apptype"] = 24,
+        ["apptype"] = 25,
         ["table"] = "msx2_table",
         ["user_db_file"] = "db_msx2.lua",
-        ["romFolder"] = romDir .. "Microsoft - MSX2",
+        ["romFolder"] = romUserDir.MSX2,
         ["localCoverPath"] = covDir .. "Microsoft - MSX2" .. "/",
         ["localSnapPath"] = snapDir .. "Microsoft - MSX2" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MSX2/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Microsoft_-_MSX2/12d7e10728cc4c3314b8b14b5a9b1892a886d2ab/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_msx2.png",
     },
-    [25] = 
+    [26] = 
     {
-        ["apptype"] = 25,
+        ["apptype"] = 26,
         ["table"] = "msx1_table",
         ["user_db_file"] = "db_msx1.lua",
-        ["romFolder"] = romDir .. "Microsoft - MSX",
+        ["romFolder"] = romUserDir.MSX,
         ["localCoverPath"] = covDir .. "Microsoft - MSX" .. "/",
         ["localSnapPath"] = snapDir .. "Microsoft - MSX" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MSX/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Microsoft_-_MSX/ed54675a51597fd5bf66a45318a273f330b7662f/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_msx1.png",
     },
-    [26] = 
+    [27] = 
     {
-        ["apptype"] = 26,
+        ["apptype"] = 27,
         ["table"] = "zxs_table",
         ["user_db_file"] = "db_zxs.lua",
-        ["romFolder"] = romDir .. "Sinclair - ZX Spectrum",
+        ["romFolder"] = romUserDir.ZX_Spectrum,
         ["localCoverPath"] = covDir .. "Sinclair - ZX Spectrum" .. "/",
         ["localSnapPath"] = snapDir .. "Sinclair - ZX Spectrum" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/ZXS/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Sinclair_-_ZX_Spectrum/d23c953dc9853983fb2fce2b8e96a1ccc08b70e8/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_zxs.png",
     },
-    [27] = 
+    [28] = 
     {
-        ["apptype"] = 27,
+        ["apptype"] = 28,
         ["table"] = "atari_7800_table",
         ["user_db_file"] = "db_atari_7800.lua",
-        ["romFolder"] = romDir .. "Atari - 7800",
+        ["romFolder"] = romUserDir.Atari_7800,
         ["localCoverPath"] = covDir .. "Atari - 7800" .. "/",
         ["localSnapPath"] = snapDir .. "Atari - 7800" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/ATARI_7800/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Atari_-_7800/eff4d49a71a62764dd66d414b1bf7a843f85f7ae/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_atari_7800.png",
     },
-    [28] = 
+    [29] = 
     {
-        ["apptype"] = 28,
+        ["apptype"] = 29,
         ["table"] = "atari_5200_table",
         ["user_db_file"] = "db_atari_5200.lua",
-        ["romFolder"] = romDir .. "Atari - 5200",
+        ["romFolder"] = romUserDir.Atari_5200,
         ["localCoverPath"] = covDir .. "Atari - 5200" .. "/",
         ["localSnapPath"] = snapDir .. "Atari - 5200" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/ATARI_5200/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Atari_-_5200/793489381646954046dd1767a1af0fa4f6b86c24/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_atari_5200.png",
     },
-    [29] = 
+    [30] = 
     {
-        ["apptype"] = 29,
+        ["apptype"] = 30,
         ["table"] = "atari_2600_table",
         ["user_db_file"] = "db_atari_2600.lua",
-        ["romFolder"] = romDir .. "Atari - 2600",
+        ["romFolder"] = romUserDir.Atari_2600,
         ["localCoverPath"] = covDir .. "Atari - 2600" .. "/",
         ["localSnapPath"] = snapDir .. "Atari - 2600" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/ATARI_2600/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Atari_-_2600/ea2ba38f9bace8e85539d12e2f65e31c797c6585/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_atari_2600.png",
     },
-    [30] = 
+    [31] = 
     {
-        ["apptype"] = 30,
+        ["apptype"] = 31,
         ["table"] = "atari_lynx_table",
         ["user_db_file"] = "db_atari_lynx.lua",
-        ["romFolder"] = romDir .. "Atari - Lynx",
+        ["romFolder"] = romUserDir.Atari_Lynx,
         ["localCoverPath"] = covDir .. "Atari - Lynx" .. "/",
         ["localSnapPath"] = snapDir .. "Atari - Lynx" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/ATARI_LYNX/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Atari_-_Lynx/91278444136e9c19f89331421ffe84cce6f82fb9/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_atari_lynx.png",
     },
-    [31] = 
+    [32] = 
     {
-        ["apptype"] = 31,
+        ["apptype"] = 32,
         ["table"] = "colecovision_table",
         ["user_db_file"] = "db_colecovision.lua",
-        ["romFolder"] = romDir .. "Coleco - ColecoVision",
+        ["romFolder"] = romUserDir.ColecoVision,
         ["localCoverPath"] = covDir .. "Coleco - ColecoVision" .. "/",
         ["localSnapPath"] = snapDir .. "Coleco - ColecoVision" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/COLECOVISION/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/Coleco_-_ColecoVision/332c63436431ea5fceedf50b94447bb6e7a8e1f5/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_colecovision.png",
     },
-    [32] = 
+    [33] = 
     {
-        ["apptype"] = 32,
+        ["apptype"] = 33,
         ["table"] = "vectrex_table",
         ["user_db_file"] = "db_vectrex.lua",
-        ["romFolder"] = romDir .. "GCE - Vectrex",
+        ["romFolder"] = romUserDir.Vectrex,
         ["localCoverPath"] = covDir .. "GCE - Vectrex" .. "/",
         ["localSnapPath"] = snapDir .. "GCE - Vectrex" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/VECTREX/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/GCE_-_Vectrex/ed03e5d1214399d2f4429109874b2ad3d8a18709/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_vectrex.png",
     },
-    [33] = 
+    [34] = 
     {
-        ["apptype"] = 33,
+        ["apptype"] = 34,
         ["table"] = "fba_table",
         ["user_db_file"] = "db_fba.lua",
-        ["romFolder"] = romDir .. "FBA 2012",
+        ["romFolder"] = romUserDir.FBA_2012,
         ["localCoverPath"] = covDir .. "FBA 2012" .. "/",
         ["localSnapPath"] = snapDir .. "FBA 2012" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MAME/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MAME/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_fba.png",
     },
-    [34] = 
-    {
-        ["apptype"] = 34,
-        ["table"] = "mame_2003_plus_table",
-        ["user_db_file"] = "db_mame_2003_plus.lua",
-        ["romFolder"] = romDir .. "MAME 2003 Plus",
-        ["localCoverPath"] = covDir .. "MAME 2003 Plus" .. "/",
-        ["localSnapPath"] = snapDir .. "MAME 2003 Plus" .. "/",
-        ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MAME/Covers/",
-        ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MAME/Named_Snaps/",
-        ["Missing_Cover"] = "missing_cover_mame.png",
-    },
     [35] = 
     {
         ["apptype"] = 35,
-        ["table"] = "mame_2000_table",
-        ["user_db_file"] = "db_mame_2000.lua",
-        ["romFolder"] = romDir .. "MAME 2000",
-        ["localCoverPath"] = covDir .. "MAME 2000" .. "/",
-        ["localSnapPath"] = snapDir .. "MAME 2000" .. "/",
+        ["table"] = "mame_2003_plus_table",
+        ["user_db_file"] = "db_mame_2003_plus.lua",
+        ["romFolder"] = romUserDir.MAME_2003Plus,
+        ["localCoverPath"] = covDir .. "MAME 2003 Plus" .. "/",
+        ["localSnapPath"] = snapDir .. "MAME 2003 Plus" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MAME/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MAME/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_mame.png",
@@ -450,41 +530,43 @@ SystemsToScan =
     [36] = 
     {
         ["apptype"] = 36,
+        ["table"] = "mame_2000_table",
+        ["user_db_file"] = "db_mame_2000.lua",
+        ["romFolder"] = romUserDir.MAME_2000,
+        ["localCoverPath"] = covDir .. "MAME 2000" .. "/",
+        ["localSnapPath"] = snapDir .. "MAME 2000" .. "/",
+        ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MAME/Covers/",
+        ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/MAME/Named_Snaps/",
+        ["Missing_Cover"] = "missing_cover_mame.png",
+    },
+    [37] = 
+    {
+        ["apptype"] = 37,
         ["table"] = "neogeo_table",
         ["user_db_file"] = "db_neogeo.lua",
-        ["romFolder"] = romDir .. "SNK - Neo Geo - FBA 2012",
+        ["romFolder"] = romUserDir.FBA_2012,
         ["localCoverPath"] = covDir .. "SNK - Neo Geo - FBA 2012" .. "/",
         ["localSnapPath"] = snapDir .. "SNK - Neo Geo - FBA 2012" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/NEOGEO/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/NEOGEO/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_neogeo.png",
     },
-    [37] = 
+    [38] = 
     {
-        ["apptype"] = 37,
+        ["apptype"] = 38,
         ["table"] = "ngpc_table",
         ["user_db_file"] = "db_ngpc.lua",
-        ["romFolder"] = romDir .. "SNK - Neo Geo Pocket Color",
+        ["romFolder"] = romUserDir.Neo_Geo_Pocket_Color,
         ["localCoverPath"] = covDir .. "SNK - Neo Geo Pocket Color" .. "/",
         ["localSnapPath"] = snapDir .. "SNK - Neo Geo Pocket Color" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/NEOGEO_PC/Covers/",
         ["onlineSnapPathSystem"] = "https://raw.githubusercontent.com/libretro-thumbnails/SNK_-_Neo_Geo_Pocket_Color/f940bd5da36105397897c093dda77ef06d51cbcf/Named_Snaps/",
         ["Missing_Cover"] = "missing_cover_ngpc.png",
     },
-    [38] = 
-    {
-        -- ["apptype"] = 21,
-        ["table"] = "fav_count",
-        -- ["user_db_file"] = "",
-        -- ["romFolder"] = "",
-        -- ["localCoverPath"] = "",
-        -- ["onlineCoverPathSystem"] = "",
-        -- ["Missing_Cover"] = "",
-    },
     [39] = 
     {
-        -- ["apptype"] = 22,
-        ["table"] = "recently_played_table",
+        -- ["apptype"] = 39,
+        ["table"] = "fav_count",
         -- ["user_db_file"] = "",
         -- ["romFolder"] = "",
         -- ["localCoverPath"] = "",
@@ -493,7 +575,17 @@ SystemsToScan =
     },
     [40] = 
     {
-        -- ["apptype"] = 22,
+        -- ["apptype"] = 40,
+        ["table"] = "recently_played_table",
+        -- ["user_db_file"] = "",
+        -- ["romFolder"] = "",
+        -- ["localCoverPath"] = "",
+        -- ["onlineCoverPathSystem"] = "",
+        -- ["Missing_Cover"] = "",
+    },
+    [41] = 
+    {
+        -- ["apptype"] = 41,
         ["table"] = "search_results_table",
         -- ["user_db_file"] = "",
         -- ["romFolder"] = "",
@@ -546,7 +638,67 @@ local setting_icon_scanning = Graphics.loadImage("app0:/DATA/setting-icon-scanni
 local setting_icon_search = Graphics.loadImage("app0:/DATA/setting-icon-search.png")
 local setting_icon_sounds = Graphics.loadImage("app0:/DATA/setting-icon-sounds.png")
 local setting_icon_about = Graphics.loadImage("app0:/DATA/setting-icon-about.png")
+local file_browser_folder_open = Graphics.loadImage("app0:/DATA/file-browser-folder-open.png")
+local file_browser_folder_closed = Graphics.loadImage("app0:/DATA/file-browser-folder-closed.png")
+local file_browser_file = Graphics.loadImage("app0:/DATA/file-browser-file.png")
 
+
+-- Start of ROM Browser setup
+
+local grey_dir = Color.new(200, 200, 200)
+
+local scripts = System.listDirectory("ux0:/")
+
+function scripts_sort_by_folder_first()
+    sorted_directories = {}
+    for k, v in pairs(scripts) do
+        if v.directory == true then
+            table.insert(sorted_directories, v)
+        end
+    end
+    table.sort(sorted_directories, function(a, b) return (a.name:lower() < b.name:lower()) end)
+
+    sorted_files = {}
+    for k, v in pairs(scripts) do
+        if v.directory == false then
+            table.insert(sorted_files, v)
+        end
+    end
+    table.sort(sorted_files, function(a, b) return (a.name:lower() < b.name:lower()) end)
+
+    scripts = {}
+    for k, v in pairs(sorted_directories) do
+        table.insert(scripts, v)
+    end
+    for k, v in pairs(sorted_files) do
+        table.insert(scripts, v)
+    end
+end
+
+scripts_sort_by_folder_first()
+for k, v in pairs(scripts) do
+    v.previous_directory = false
+    v.save = false
+end
+
+selection = {}
+selection.name = "Use this directory"
+selection.directory = true
+selection.previous_directory = false
+selection.save = true
+
+level_up = {}
+level_up.name = "..."
+level_up.directory = true
+level_up.previous_directory = true
+level_up.save = false
+
+local cur_dir_fm = "ux0:/"
+
+-- Init a index
+local i = 1
+
+-- End of ROM Browser setup
 
 
 
@@ -555,19 +707,9 @@ Graphics.setImageFilters(imgFloor, FILTER_LINEAR, FILTER_LINEAR)
 
 -- CREATE DIRECTORIES
 
--- Create directory: Main
-local cur_dir = "ux0:/data/RetroFlow/"
-System.createDirectory("ux0:/data/RetroFlow/")
-
 -- Create directory: Backgrounds
 local background_dir = "ux0:/data/RetroFlow/WALLPAPER/"
 System.createDirectory(background_dir)
-
--- Create directory: Rom Folders
-System.createDirectory(romDir)
-for k, v in pairs(SystemsToScan) do
-    System.createDirectory(tostring(v.romFolder))
-end
 
 -- Create directory: Cover Folders
 System.createDirectory(covDir)
@@ -754,7 +896,11 @@ Font.setPixelSizes(fnt25, 25)
 
 -- Search
 local hasTyped = false
-local ret = ""
+local ret_search = ""
+
+-- Rename
+local rename_keyboard = false
+local ret_rename = ""
 
 function count_cache_and_reload()
     cache_file_count = System.listDirectory(db_Cache_Folder)
@@ -769,6 +915,10 @@ end
 
 
 -- PRINT TABLE FUNCTIONS
+function delete_cache()
+    dofile("app0:addons/printTable.lua")
+    delete_tables()
+end
 function cache_all_tables()
     dofile("app0:addons/printTable.lua")
     print_tables()
@@ -784,6 +934,10 @@ end
 function update_cached_table_recently_played_pre_launch()
     dofile("app0:addons/printTable.lua")
     print_table_recently_played_pre_launch()
+end
+function update_cached_table_renamed_games()
+    dofile("app0:addons/printTable.lua")
+    print_table_renamed_games()
 end
 
 
@@ -839,6 +993,7 @@ local inPreview = false
 local apptype = 0
 local appdir = ""
 local getCovers = 0
+local getRomDir = 1
 local getSnaps = 0
 local tmpappcat = 0
 
@@ -1019,6 +1174,7 @@ local lang_default =
 ["Game_Boy_Advance"] = "Game Boy Advance",
 ["Game_Boy_Color"] = "Game Boy Color",
 ["Game_Boy"] = "Game Boy",
+["Sega_Dreamcast"] = "Sega Dreamcast",
 ["Sega_Mega_Drive"] = "Sega Mega Drive",
 ["Sega_Master_System"] = "Sega Master System",
 ["Sega_Game_Gear"] = "Sega Game Gear",
@@ -1075,6 +1231,7 @@ local lang_default =
 ["Downloading_GBA_covers"] = "Downloading GBA covers",
 ["Downloading_GBC_covers"] = "Downloading GBC covers",
 ["Downloading_GB_covers"] = "Downloading GB covers",
+["Downloading_DC_covers"] = "Downloading DC covers",
 ["Downloading_MD_covers"] = "Downloading MD covers",
 ["Downloading_SMS_covers"] = "Downloading SMS covers",
 ["Downloading_GG_covers"] = "Downloading GG covers",
@@ -1114,6 +1271,7 @@ local lang_default =
 ["Downloading_GBA_backgrounds"] = "Downloading GBA backgrounds",
 ["Downloading_GBC_backgrounds"] = "Downloading GBC backgrounds",
 ["Downloading_GB_backgrounds"] = "Downloading GB backgrounds",
+["Downloading_DC_backgrounds"] = "Downloading DC backgrounds",
 ["Downloading_MD_backgrounds"] = "Downloading MD backgrounds",
 ["Downloading_SMS_backgrounds"] = "Downloading SMS backgrounds",
 ["Downloading_GG_backgrounds"] = "Downloading GG backgrounds",
@@ -1152,6 +1310,7 @@ local lang_default =
 ["Press_X_to_apply_Category"] = "Press X to apply Category",
 ["Default"] = "Default",
 ["Favorite"] = "Favorite",
+["Rename"] = "Rename",
 ["PS_Vita_Game"] = "PS Vita Game",
 ["Homebrew"] = "Homebrew",
 ["PSP_Game"] = "PSP Game",
@@ -1162,6 +1321,7 @@ local lang_default =
 ["GBA_Game"] = "Game Boy Advance Game",
 ["GBC_Game"] = "Game Boy Color Game",
 ["GB_Game"] = "Game Boy Game",
+["DC_Game"] = "Sega Dreamcast Game",
 ["MD_Game"] = "Sega Mega Drive Game",
 ["SMS_Game"] = "Sega Master System Game",
 ["GG_Game"] = "Sega Game Gear Game",
@@ -1209,6 +1369,14 @@ local lang_default =
 ["Back_Chevron"] = "<  Back",
 ["Theme"] = "Theme",
 ["Game_backgounds_colon"] = "Game Backgrounds: ",
+
+-- Game directories
+["Edit_game_directories"] = "Edit game directories...",
+["Game_directories"] = "Game directories",
+["Use_this_directory"] = "Use this directory",
+["Rescan"] = "Rescan",
+["Back"] = "Back",
+
 }
 
 function ChangeLanguage()
@@ -1359,6 +1527,7 @@ end
     setting_y4 = 310
     setting_y5 = 360
     setting_y6 = 410
+    setting_y_smallfont_offset = 2
 
 
 
@@ -1409,6 +1578,9 @@ function FreeMemory()
     Graphics.freeImage(setting_icon_search)
     Graphics.freeImage(setting_icon_sounds)
     Graphics.freeImage(setting_icon_about)
+    Graphics.freeImage(file_browser_folder_open)
+    Graphics.freeImage(file_browser_folder_closed)
+    Graphics.freeImage(file_browser_file)
 end
 
 
@@ -1423,36 +1595,37 @@ function xCatLookup(CatNum)  -- Credit to BlackSheepBoy69 - CatNum = Showcat
     elseif CatNum == 8 then  return gba_table
     elseif CatNum == 9 then  return gbc_table
     elseif CatNum == 10 then     return gb_table
-    elseif CatNum == 11 then     return sega_cd_table
-    elseif CatNum == 12 then     return s32x_table
-    elseif CatNum == 13 then     return md_table
-    elseif CatNum == 14 then     return sms_table
-    elseif CatNum == 15 then     return gg_table
-    elseif CatNum == 16 then     return tg16_table
-    elseif CatNum == 17 then     return tgcd_table
-    elseif CatNum == 18 then     return pce_table
-    elseif CatNum == 19 then     return pcecd_table
-    elseif CatNum == 20 then     return amiga_table
-    elseif CatNum == 21 then     return c64_table
-    elseif CatNum == 22 then     return wswan_col_table
-    elseif CatNum == 23 then     return wswan_table
-    elseif CatNum == 24 then     return msx2_table
-    elseif CatNum == 25 then     return msx1_table
-    elseif CatNum == 26 then     return zxs_table
-    elseif CatNum == 27 then     return atari_7800_table
-    elseif CatNum == 28 then     return atari_5200_table
-    elseif CatNum == 29 then     return atari_2600_table
-    elseif CatNum == 30 then     return atari_lynx_table
-    elseif CatNum == 31 then     return colecovision_table
-    elseif CatNum == 32 then     return vectrex_table
-    elseif CatNum == 33 then     return fba_table
-    elseif CatNum == 34 then     return mame_2003_plus_table
-    elseif CatNum == 35 then     return mame_2000_table
-    elseif CatNum == 36 then     return neogeo_table
-    elseif CatNum == 37 then     return ngpc_table
-    elseif CatNum == 38 then     return fav_count
-    elseif CatNum == 39 then     return recently_played_table
-    elseif CatNum == 40 then     return search_results_table
+    elseif CatNum == 11 then     return dreamcast_table
+    elseif CatNum == 12 then     return sega_cd_table
+    elseif CatNum == 13 then     return s32x_table
+    elseif CatNum == 14 then     return md_table
+    elseif CatNum == 15 then     return sms_table
+    elseif CatNum == 16 then     return gg_table
+    elseif CatNum == 17 then     return tg16_table
+    elseif CatNum == 18 then     return tgcd_table
+    elseif CatNum == 19 then     return pce_table
+    elseif CatNum == 20 then     return pcecd_table
+    elseif CatNum == 21 then     return amiga_table
+    elseif CatNum == 22 then     return c64_table
+    elseif CatNum == 23 then     return wswan_col_table
+    elseif CatNum == 24 then     return wswan_table
+    elseif CatNum == 25 then     return msx2_table
+    elseif CatNum == 26 then     return msx1_table
+    elseif CatNum == 27 then     return zxs_table
+    elseif CatNum == 28 then     return atari_7800_table
+    elseif CatNum == 29 then     return atari_5200_table
+    elseif CatNum == 30 then     return atari_2600_table
+    elseif CatNum == 31 then     return atari_lynx_table
+    elseif CatNum == 32 then     return colecovision_table
+    elseif CatNum == 33 then     return vectrex_table
+    elseif CatNum == 34 then     return fba_table
+    elseif CatNum == 35 then     return mame_2003_plus_table
+    elseif CatNum == 36 then     return mame_2000_table
+    elseif CatNum == 37 then     return neogeo_table
+    elseif CatNum == 38 then     return ngpc_table
+    elseif CatNum == 39 then     return fav_count
+    elseif CatNum == 40 then     return recently_played_table
+    elseif CatNum == 41 then     return search_results_table
     else             return files_table
     end
 end
@@ -1468,34 +1641,86 @@ function xAppNumTableLookup(AppTypeNum)
     elseif AppTypeNum == 8 then  return gba_table
     elseif AppTypeNum == 9 then  return gbc_table
     elseif AppTypeNum == 10 then return gb_table
-    elseif AppTypeNum == 11 then return sega_cd_table
-    elseif AppTypeNum == 12 then return s32x_table
-    elseif AppTypeNum == 13 then return md_table
-    elseif AppTypeNum == 14 then return sms_table
-    elseif AppTypeNum == 15 then return gg_table
-    elseif AppTypeNum == 16 then return tg16_table
-    elseif AppTypeNum == 17 then return tgcd_table
-    elseif AppTypeNum == 18 then return pce_table
-    elseif AppTypeNum == 19 then return pcecd_table
-    elseif AppTypeNum == 20 then return amiga_table
-    elseif AppTypeNum == 21 then return c64_table
-    elseif AppTypeNum == 22 then return wswan_col_table
-    elseif AppTypeNum == 23 then return wswan_table
-    elseif AppTypeNum == 24 then return msx2_table
-    elseif AppTypeNum == 25 then return msx1_table
-    elseif AppTypeNum == 26 then return zxs_table
-    elseif AppTypeNum == 27 then return atari_7800_table
-    elseif AppTypeNum == 28 then return atari_5200_table
-    elseif AppTypeNum == 29 then return atari_2600_table
-    elseif AppTypeNum == 30 then return atari_lynx_table
-    elseif AppTypeNum == 31 then return colecovision_table
-    elseif AppTypeNum == 32 then return vectrex_table
-    elseif AppTypeNum == 33 then return fba_table
-    elseif AppTypeNum == 34 then return mame_2003_plus_table
-    elseif AppTypeNum == 35 then return mame_2000_table
-    elseif AppTypeNum == 36 then return neogeo_table
-    elseif AppTypeNum == 37 then return ngpc_table
+    elseif AppTypeNum == 11 then return dreamcast_table
+    elseif AppTypeNum == 12 then return sega_cd_table
+    elseif AppTypeNum == 13 then return s32x_table
+    elseif AppTypeNum == 14 then return md_table
+    elseif AppTypeNum == 15 then return sms_table
+    elseif AppTypeNum == 16 then return gg_table
+    elseif AppTypeNum == 17 then return tg16_table
+    elseif AppTypeNum == 18 then return tgcd_table
+    elseif AppTypeNum == 19 then return pce_table
+    elseif AppTypeNum == 20 then return pcecd_table
+    elseif AppTypeNum == 21 then return amiga_table
+    elseif AppTypeNum == 22 then return c64_table
+    elseif AppTypeNum == 23 then return wswan_col_table
+    elseif AppTypeNum == 24 then return wswan_table
+    elseif AppTypeNum == 25 then return msx2_table
+    elseif AppTypeNum == 26 then return msx1_table
+    elseif AppTypeNum == 27 then return zxs_table
+    elseif AppTypeNum == 28 then return atari_7800_table
+    elseif AppTypeNum == 29 then return atari_5200_table
+    elseif AppTypeNum == 30 then return atari_2600_table
+    elseif AppTypeNum == 31 then return atari_lynx_table
+    elseif AppTypeNum == 32 then return colecovision_table
+    elseif AppTypeNum == 33 then return vectrex_table
+    elseif AppTypeNum == 34 then return fba_table
+    elseif AppTypeNum == 35 then return mame_2003_plus_table
+    elseif AppTypeNum == 36 then return mame_2000_table
+    elseif AppTypeNum == 37 then return neogeo_table
+    elseif AppTypeNum == 38 then return ngpc_table
     else return homebrews_table
+    end
+end
+
+function xAppDbFileLookup(AppTypeNum)
+    if AppTypeNum == 1 then return "db_games.lua"
+    elseif AppTypeNum == 2 then  return "db_psp.lua"
+    elseif AppTypeNum == 3 then  return "db_psx.lua"
+    elseif AppTypeNum == 5 then  return "db_n64.lua"
+    elseif AppTypeNum == 6 then  return "db_snes.lua"
+    elseif AppTypeNum == 7 then  return "db_nes.lua"
+    elseif AppTypeNum == 8 then  return "db_gba.lua"
+    elseif AppTypeNum == 9 then  return "db_gbc.lua"
+    elseif AppTypeNum == 10 then return "db_gb.lua"
+    elseif AppTypeNum == 11 then return "db_dreamcast.lua"
+    elseif AppTypeNum == 12 then return "db_sega_cd.lua"
+    elseif AppTypeNum == 13 then return "db_32x.lua"
+    elseif AppTypeNum == 14 then return "db_md.lua"
+    elseif AppTypeNum == 15 then return "db_sms.lua"
+    elseif AppTypeNum == 16 then return "db_gg.lua"
+    elseif AppTypeNum == 17 then return "db_tg16.lua"
+    elseif AppTypeNum == 18 then return "db_tgcd.lua"
+    elseif AppTypeNum == 19 then return "db_pce.lua"
+    elseif AppTypeNum == 20 then return "db_pcecd.lua"
+    elseif AppTypeNum == 21 then return "db_amiga.lua"
+    elseif AppTypeNum == 22 then return "db_c64.lua"
+    elseif AppTypeNum == 23 then return "db_wswan_col.lua"
+    elseif AppTypeNum == 24 then return "db_wswan.lua"
+    elseif AppTypeNum == 25 then return "db_msx2.lua"
+    elseif AppTypeNum == 26 then return "db_msx1.lua"
+    elseif AppTypeNum == 27 then return "db_zxs.lua"
+    elseif AppTypeNum == 28 then return "db_atari_7800.lua"
+    elseif AppTypeNum == 29 then return "db_atari_5200.lua"
+    elseif AppTypeNum == 30 then return "db_atari_2600.lua"
+    elseif AppTypeNum == 31 then return "db_atari_lynx.lua"
+    elseif AppTypeNum == 32 then return "db_colecovision.lua"
+    elseif AppTypeNum == 33 then return "db_vectrex.lua"
+    elseif AppTypeNum == 34 then return "db_fba.lua"
+    elseif AppTypeNum == 35 then return "db_mame_2003_plus.lua"
+    elseif AppTypeNum == 36 then return "db_mame_2000.lua"
+    elseif AppTypeNum == 37 then return "db_neogeo.lua"
+    elseif AppTypeNum == 38 then return "db_ngpc.lua"
+    else return "db_homebrews.lua"
+    end
+end
+
+-- Find game table key
+function find_game_table_pos_key(tbl, search)
+    for key, data in pairs(tbl) do
+       if data.name == (search) then 
+          return key
+       end
     end
 end
 
@@ -1508,20 +1733,31 @@ function cleanRomNames()
 
     -- remove space before parenthesis " (" then letters and numbers "(.*)"
     romname_noRegion_noExtension = {}
-    romname_noRegion_noExtension = romname_noExtension:gsub(" %(", "%("):gsub('%b()', '')
+    romname_noRegion_noExtension = romname_noExtension:gsub(" %(", "("):gsub('%b()', '')
 
     romname_url_encoded = {}
     romname_url_encoded = romname_noExtension:gsub("%s+", '%%%%20')
 
     -- Check if name contains parenthesis, if yes strip out to show as version
     if string.find(romname_noExtension, "%(") and string.find(romname_noExtension, "%)") then
+        
+        
         -- Remove all text except for within "()"
         romname_region_initial = {}
-        romname_region_initial = romname_noExtension:match("%((.+)%)")
+        if romname_noExtension:match("%((.+)%)") ~= nil then
+            romname_region_initial = romname_noExtension:match("%((.+)%)")
+        else
+            romname_region_initial = {}
+        end
+
 
         -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
-        romname_region = {}
-        romname_region = romname_region_initial:gsub("%) %(", ', ')
+        if romname_region_initial:gsub("%) %(", ', ') ~= nil then
+            romname_region = romname_region_initial:gsub("%) %(", ', ')
+        else
+            romname_region = " "
+        end
+
     -- If no parenthesis, then add blank to prevent nil error
     else
         -- romname_region = " "
@@ -1560,11 +1796,19 @@ function cleanRomNamesPSP()
     if string.find(romname_noExtension, "%(") and string.find(romname_noExtension, "%)") then
         -- Remove all text except for within "()"
         romname_region_initial = {}
-        romname_region_initial = romname_noExtension:match("%((.+)%)")
+        if romname_noExtension:match("%((.+)%)") ~= nil then
+            romname_region_initial = romname_noExtension:match("%((.+)%)")
+        else
+            romname_region_initial = {}
+        end
 
         -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
-        romname_region = {}
-        romname_region = romname_region_initial:gsub("%) %(", ', ')
+        if romname_region_initial:gsub("%) %(", ', ') ~= nil then
+            romname_region = romname_region_initial:gsub("%) %(", ', ')
+        else
+            romname_region = " "
+        end
+
     -- If no parenthesis, then add blank to prevent nil error
     else
         -- romname_region = " "
@@ -1628,7 +1872,7 @@ function clean_launch_dir()
         System.deleteFile(launch_dir .. "core.txt")
     end
 
-    -- Delete the old N64 args file
+    -- Delete the old N64 & Dreamcast args file
     if  System.doesFileExist(launch_dir .. "args.txt") then
         System.deleteFile(launch_dir .. "args.txt")
     end
@@ -1674,25 +1918,21 @@ function launch_DaedalusX64()
     System.launchEboot("app0:/launch_n64.bin")
 end
 
+function launch_Flycast()
 
--- function CreateUserTitleTable_Vita()
+    clean_launch_dir()
 
---     table.sort(vita_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    -- Create args.txt
+    local file_over = System.openFile(launch_dir .. "args.txt", FCREATE)
+    System.closeFile(file_over)
 
---     local file_over = System.openFile(user_DB_Folder .. "vita.lua", FCREATE)
---     System.closeFile(file_over)
+    args_txt_file = io.open(launch_dir .. "args.txt", "w")
+    args_txt_file:write(rom_location)
+    args_txt_file:close()
 
---     file = io.open(user_DB_Folder .. "vita.lua", "w")
---     file:write('return {' .. "\n")
---     for k, v in pairs(vita_table) do
+    System.launchEboot("app0:/launch_flycast.bin")
+end
 
---         file:write('["' .. v.name .. '"] = {app_title = "' .. string.gsub(v.title,"\n"," ") .. '", titleid = "' .. v.name .. '", version = "' .. v.version .. '"},' .. "\n")
-
---     end
---     file:write('}')
---     file:close()
-
--- end
 
 function CreateUserTitleTable_PSP_game(def_user_db_file)
 
@@ -1779,10 +2019,47 @@ end
 
 function update_md_regional_cover()
     -- Megadrive, update regional missing cover
-    if setLanguage == 1 then
+
+    if setLanguage == 1 then -- USA - Genesis
         for k, v in pairs(md_table) do
               if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_md.png" then
                   v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_md_usa.png"
+              end
+        end
+    else -- Megadrive
+        for k, v in pairs(md_table) do
+              if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_md_usa.png" then
+                  v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_md.png"
+              end
+        end
+    end
+end
+
+function update_dc_regional_cover()
+    -- Dreamcast, update regional missing cover
+
+    if setLanguage == 0 then -- EN - Blue logo
+        for k, v in pairs(dreamcast_table) do
+              if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png" then
+                  v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png"
+              end
+        end
+    elseif setLanguage == 1 then -- USA - Red logo
+        for k, v in pairs(dreamcast_table) do
+              if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png" then
+                  v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png"
+              end
+        end
+    elseif setLanguage == 9 then -- Japan - Orange logo
+        for k, v in pairs(dreamcast_table) do
+              if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" then
+                  v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png"
+              end
+        end
+    else -- Blue logo
+        for k, v in pairs(dreamcast_table) do
+              if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png" then
+                  v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png"
               end
         end
     end
@@ -1805,6 +2082,19 @@ function import_recently_played()
             db_recently_played = dofile(db_Cache_recently_played)
 
             for k, v in ipairs(db_recently_played) do
+
+                -- Legacy fix, add default app type to recently played table
+                if v.app_type_default ~= nil then
+                    -- do nothing
+                else
+                    local key = find_game_table_pos_key(xAppNumTableLookup(v.app_type), v.name)
+                    if key ~= nil then
+                        v.app_type_default = xAppNumTableLookup(v.app_type)[key].app_type_default
+                    else
+                    end
+                end
+
+
                 -- Check rom exists
                 -- If file
                 if v.directory == false then
@@ -1944,6 +2234,20 @@ function import_recently_played()
     end
 end
 
+function import_renamed_games()
+
+    renamed_games_table = {}
+    if System.doesFileExist("ux0:/data/RetroFlow/renamed_games.lua") then
+        db_Cache_renamed_games = "ux0:/data/RetroFlow/renamed_games.lua"
+
+        local db_renamed_games = {}
+        db_renamed_games = dofile(db_Cache_renamed_games)
+
+        for k, v in ipairs(db_renamed_games) do
+            table.insert(renamed_games_table, v)
+        end
+    end
+end
 
 function listDirectory(dir)
     dir = System.listDirectory(dir)
@@ -1960,6 +2264,7 @@ function listDirectory(dir)
     gba_table = {}
     gbc_table = {}
     gb_table = {}
+    dreamcast_table = {}
     sega_cd_table = {}
     s32x_table = {}
     md_table = {}
@@ -1989,6 +2294,8 @@ function listDirectory(dir)
     ngpc_table = {}
     recently_played_table = {}
     search_results_table = {}
+    fav_count = {}
+    renamed_games_table = {}
 
     -- psxdbfull = {}
     -- pspdbfull = {}
@@ -2006,17 +2313,41 @@ function listDirectory(dir)
     local strFav = System.readFile(fileFav_over, fileFavsize)
     System.closeFile(fileFav_over)
 
+    local bubble_filter = System.openFile("app0:/addons/adrenaline_bubble_filter.dat", FREAD)
+    local bubble_filtersize = System.sizeFile(bubble_filter)
+    local bubble_filter_title_codes = System.readFile(bubble_filter, bubble_filtersize)
+    System.closeFile(bubble_filter)
+
+    import_renamed_games()
+
     for i, file in pairs(dir) do
     local custom_path, custom_path_id, app_type = nil, nil, nil
 
+        if file.directory then
+            -- Filter bubbles by the first 4 characters, eg SLUS
+            name4chars = string.sub(file.name, 1, 4)            
+            if string.find(bubble_filter_title_codes, name4chars,1,true) ~= nil then
+                bubble = true
+            else
+                bubble = false
+            end
+        end
 
         if file.directory
             and not string.match(file.name, "RETROFLOW") -- Don't index Retroflow
             and not string.match(file.name, "RETROLNCR") -- Don't index Retroflow Adrenaline Launcher
             and not string.match(file.name, "ADRLANCHR") -- Don't index Adrenaline Launcher
             and not System.doesFileExist(working_dir .. "/" .. file.name .. "/data/config.bin") -- Don't scan PSP and PSX Bubbles
+            and not bubble == true -- Don't scan PSP and PSX Bubbles
             then
 
+            -- get app name to match with custom cover file name
+            if System.doesFileExist(working_dir .. "/" .. file.name .. "/sce_sys/param.sfo") then
+                info = System.extractSfo(working_dir .. "/" .. file.name .. "/sce_sys/param.sfo")
+                app_title = info.title:gsub("\n"," ")
+                file.titleid = tostring(info.titleid)
+                file.version = tostring(info.version)
+            end
 
             -- check if game is in the favorites list
             if System.doesFileExist(cur_dir .. "/favorites.dat") then
@@ -2027,38 +2358,6 @@ function listDirectory(dir)
                 end
             end
 
-            -- Load previous matches
-            -- if System.doesFileExist(user_DB_Folder .. "vita.lua") then
-            --     database_rename_VITA = user_DB_Folder .. "vita.lua"
-            --     vitadb = dofile(database_rename_VITA)
-            -- else
-            --     vitadb = {}
-            -- end
-
-            -- vita_search = vitadb[file.name]
-
-            -- if vita_search == nil then
-            --     -- get app name to match with custom cover file name
-            --     if System.doesFileExist(working_dir .. "/" .. file.name .. "/sce_sys/param.sfo") then
-            --         info = System.extractSfo(working_dir .. "/" .. file.name .. "/sce_sys/param.sfo")
-            --         app_title = info.title
-            --         file.titleid = tostring(info.titleid)
-            --         file.version = tostring(info.version)
-            --     end
-            -- else
-            --     app_title = tostring(vitadb[file.name].app_title)
-            --     file.titleid = tostring(vitadb[file.name].titleid)
-            --     file.version = tostring(vitadb[file.name].version)
-            -- end
-
-
-            -- get app name to match with custom cover file name
-            if System.doesFileExist(working_dir .. "/" .. file.name .. "/sce_sys/param.sfo") then
-                info = System.extractSfo(working_dir .. "/" .. file.name .. "/sce_sys/param.sfo")
-                app_title = info.title:gsub("\n"," ")
-                file.titleid = tostring(info.titleid)
-                file.version = tostring(info.version)
-            end
 
             file.game_path = (working_dir .. "/" .. file.name)
 
@@ -2071,6 +2370,20 @@ function listDirectory(dir)
             file.apptitle = app_title
             file.date_played = 0
 
+            -- Check for renamed game names
+            if #renamed_games_table ~= nil then
+                local key = find_game_table_pos_key(renamed_games_table, file.titleid)
+                if key ~= nil then
+                  -- Yes - Find in files table
+                  file.title = renamed_games_table[key].title
+                  file.apptitle = renamed_games_table[key].title
+                else
+                  -- No
+                end
+            else
+            end
+            
+            
             -- Added for caching sfo scan results
             -- table.insert(vita_table, file)
 
@@ -2081,6 +2394,7 @@ function listDirectory(dir)
                 if System.doesFileExist(cur_dir .. "/overrides.dat") then
                     
                     --0 default, 1 vita, 2 psp, 3 psx, 4 homebrew
+                    file.app_type_default=1
 
                     -- VITA
                     if string.match(str, file.name .. "=1") then
@@ -2234,7 +2548,7 @@ function listDirectory(dir)
 
             else
                 
-                
+                file.app_type_default=0
             --CHECK FOR OVERRIDDEN CATEGORY of HOMEBREW game
                 if System.doesFileExist(cur_dir .. "/overrides.dat") then
                     --0 default, 1 vita, 2 psp, 3 psx, 4 homebrew
@@ -2391,8 +2705,6 @@ function listDirectory(dir)
 
         end
         
-    
-        
         table.insert(files_table, count_of_systems, file.app_type) 
         
         --add blank icon to all
@@ -2401,19 +2713,10 @@ function listDirectory(dir)
         
         table.insert(files_table, count_of_systems, file.icon) 
         
-        file.apptitle = app_title
+        -- file.apptitle = app_title
         table.insert(files_table, count_of_systems, file.apptitle) 
         
     end
-
-    -- LOOKUP TITLE ID: Delete old file and save new list of matches
-
-    -- if not System.doesFileExist(user_DB_Folder .. "vita.lua") then
-    --     CreateUserTitleTable_Vita()
-    -- else
-    --     System.deleteFile(user_DB_Folder .. "vita.lua")
-    --     CreateUserTitleTable_Vita()
-    -- end
 
 
     -- SCAN ROMS
@@ -2439,6 +2742,7 @@ function listDirectory(dir)
                         file.launch_argument = ("PATH=ms0:/ISO/" .. file.name)
                         file.game_path = (def_adrenaline_rom_location .. "/" .. file.name)
                         file.date_played = 0
+                        file.app_type_default=2
 
                         romname_withExtension = file.name
 
@@ -2463,6 +2767,19 @@ function listDirectory(dir)
 
                             custom_path = SystemsToScan[3].localCoverPath .. romname_noRegion_noExtension_notitleid .. ".png"
                             custom_path_id = SystemsToScan[3].localCoverPath .. titleID_noHyphen .. ".png"
+
+                            -- Check for renamed game names
+                            if #renamed_games_table ~= nil then
+                                local key = find_game_table_pos_key(renamed_games_table, file.name)
+                                if key ~= nil then
+                                  -- Yes - Find in files table
+                                  file.title = renamed_games_table[key].title
+                                  file.apptitle = renamed_games_table[key].title
+                                else
+                                  -- No
+                                end
+                            else
+                            end
 
                         else
                         -- No spaces, it's probably a title ID, so scan the database
@@ -2501,7 +2818,7 @@ function listDirectory(dir)
                                         -- Found; use the game name from the full database
                                         title = sql_db_search_result[1].title
                                     end                                
-
+                                    Database.close(db)
                                 else
                                 end
 
@@ -2537,6 +2854,19 @@ function listDirectory(dir)
                             file.version = romname_region
                             file.name_title_search = title
                             file.apptitle = romname_noRegion_noExtension
+
+                            -- Check for renamed game names
+                            if #renamed_games_table ~= nil then
+                                local key = find_game_table_pos_key(renamed_games_table, file.name)
+                                if key ~= nil then
+                                  -- Yes - Find in files table
+                                  file.title = renamed_games_table[key].title
+                                  file.apptitle = renamed_games_table[key].title
+                                else
+                                  -- No
+                                end
+                            else
+                            end
 
                         end
                         --end of database lookup
@@ -2815,6 +3145,7 @@ function listDirectory(dir)
                                     -- Found; use the game name from the full database
                                     title = sql_db_search_result[1].title
                                 end
+                                Database.close(db)
 
                             else
                             end
@@ -2852,6 +3183,20 @@ function listDirectory(dir)
                         file.name_title_search = title
                         file.apptitle = romname_noRegion_noExtension
                         file.date_played = 0
+                        file.app_type_default=2
+
+                        -- Check for renamed game names
+                        if #renamed_games_table ~= nil then
+                            local key = find_game_table_pos_key(renamed_games_table, file.name)
+                            if key ~= nil then
+                              -- Yes - Find in files table
+                              file.title = renamed_games_table[key].title
+                              file.apptitle = renamed_games_table[key].title
+                            else
+                              -- No
+                            end
+                        else
+                        end
 
                         -- OVERRIDES START
 
@@ -3128,6 +3473,7 @@ function listDirectory(dir)
                                         -- Found; use the game name from the full database
                                         title = sql_db_search_result[1].title
                                     end
+                                    Database.close(db)
 
                                 else
                                 end
@@ -3165,6 +3511,20 @@ function listDirectory(dir)
                             file.name_title_search = title
                             file.apptitle = romname_noRegion_noExtension
                             file.date_played = 0
+                            file.app_type_default=3
+
+                            -- Check for renamed game names
+                            if #renamed_games_table ~= nil then
+                                local key = find_game_table_pos_key(renamed_games_table, file.name)
+                                if key ~= nil then
+                                  -- Yes - Find in files table
+                                  file.title = renamed_games_table[key].title
+                                  file.apptitle = renamed_games_table[key].title
+                                else
+                                  -- No
+                                end
+                            else
+                            end
 
                             -- OVERRIDES START
 
@@ -3411,15 +3771,30 @@ function listDirectory(dir)
                 custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
                 custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
                 file.app_type=((def))
+                file.app_type_default=((def))
 
                 file.filename = file.name
                 file.name = romname_noExtension
                 file.title = romname_noRegion_noExtension
                 file.name_online = romname_url_encoded
                 file.version = romname_region
+                file.apptitle = romname_noRegion_noExtension
                 file.date_played = 0
                 file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
                 file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+
+                -- Check for renamed game names
+                if #renamed_games_table ~= nil then
+                    local key = find_game_table_pos_key(renamed_games_table, file.name)
+                    if key ~= nil then
+                      -- Yes - Find in files table
+                      file.title = renamed_games_table[key].title
+                      file.apptitle = renamed_games_table[key].title
+                    else
+                      -- No
+                    end
+                else
+                end
 
                 table.insert((def_table_name), file)
 
@@ -3451,20 +3826,19 @@ function listDirectory(dir)
                 
                 table.insert(files_table, count_of_systems, file.icon) 
                 
-                file.apptitle = romname_noRegion_noExtension
                 table.insert(files_table, count_of_systems, file.apptitle) 
 
             end
         end
     end
 
-    function Scan_Rom_Cue_Filter(def, def_table_name)
+    function Scan_Rom_Filter(def, def_table_name, def_filter)
 
         files = System.listDirectory((SystemsToScan[(def)].romFolder))
         for i, file in pairs(files) do
             local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
             -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
-            if not file.directory and string.match(file.name, ".cue") and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+            if not file.directory and string.match(file.name, (def_filter)) and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
 
                 -- check if game is in the favorites list
                 if System.doesFileExist(cur_dir .. "/favorites.dat") then
@@ -3487,15 +3861,30 @@ function listDirectory(dir)
                 custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
                 custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
                 file.app_type=((def))
+                file.app_type_default=((def))
 
                 file.filename = file.name
                 file.name = romname_noExtension
                 file.title = romname_noRegion_noExtension
                 file.name_online = romname_url_encoded
                 file.version = romname_region
+                file.apptitle = romname_noRegion_noExtension
                 file.date_played = 0
                 file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
                 file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+
+                -- Check for renamed game names
+                if #renamed_games_table ~= nil then
+                    local key = find_game_table_pos_key(renamed_games_table, file.name)
+                    if key ~= nil then
+                      -- Yes - Find in files table
+                      file.title = renamed_games_table[key].title
+                      file.apptitle = renamed_games_table[key].title
+                    else
+                      -- No
+                    end
+                else
+                end
 
                 table.insert((def_table_name), file)
 
@@ -3518,6 +3907,7 @@ function listDirectory(dir)
                 table.insert(files_table, count_of_systems, file.version)
 
                 file.app_type=((def))
+                file.app_type_default=((def))
                 file.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
                 file.cover_path_local = (SystemsToScan[(def)].localCoverPath)
 
@@ -3527,7 +3917,7 @@ function listDirectory(dir)
                 
                 table.insert(files_table, count_of_systems, file.icon) 
                 
-                file.apptitle = romname_noRegion_noExtension
+                
                 table.insert(files_table, count_of_systems, file.apptitle) 
 
             end
@@ -3537,7 +3927,7 @@ function listDirectory(dir)
                 file_subfolder = System.listDirectory((SystemsToScan[(def)].romFolder .. "/" .. file.name))
                 for i, file_subfolder in pairs(file_subfolder) do
                     -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
-                    if not file_subfolder.directory and string.match(file_subfolder.name, ".cue") and not string.match(file_subfolder.name, "Thumbs%.db") and not string.match(file_subfolder.name, "DS_Store") and not string.match(file_subfolder.name, "%._") then
+                    if not file_subfolder.directory and string.match(file_subfolder.name, (def_filter)) and not string.match(file_subfolder.name, "Thumbs%.db") and not string.match(file_subfolder.name, "DS_Store") and not string.match(file_subfolder.name, "%._") then
 
                         -- check if game is in the favorites list
                         if System.doesFileExist(cur_dir .. "/favorites.dat") then
@@ -3666,6 +4056,8 @@ function listDirectory(dir)
                             -- Found; use the game name from the full database
                             title = sql_db_search_result[1].title
                         end
+                        Database.close(db)
+
                     else
                     end
 
@@ -3704,6 +4096,7 @@ function listDirectory(dir)
                 custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
                 custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
                 file.app_type=((def))
+                file.app_type_default=((def))
 
                 -- file.filename = file.name
                 file.filename = file.name
@@ -3716,6 +4109,19 @@ function listDirectory(dir)
                 file.date_played = 0
                 file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
                 file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+
+                -- Check for renamed game names
+                if #renamed_games_table ~= nil then
+                    local key = find_game_table_pos_key(renamed_games_table, file.name)
+                    if key ~= nil then
+                      -- Yes - Find in files table
+                      file.title = renamed_games_table[key].title
+                      file.apptitle = renamed_games_table[key].title
+                    else
+                      -- No
+                    end
+                else
+                end
 
                 if not string.match(title, "bios") and not string.match(title, "Bios") and not string.match(title, "BIOS") then
                     table.insert((def_table_name), file)
@@ -3746,6 +4152,7 @@ function listDirectory(dir)
                 end
                 
                 file.app_type=((def))
+                file.app_type_default=((def))
 
                 -- file.filename = file.name
                 file.filename = romname_withExtension
@@ -3786,36 +4193,39 @@ function listDirectory(dir)
     Scan_Rom_Simple     (8, gba_table)
     Scan_Rom_Simple     (9, gbc_table)
     Scan_Rom_Simple     (10, gb_table)
-    Scan_Rom_Cue_Filter (11, sega_cd_table)
-    Scan_Rom_Simple     (12, s32x_table)
-    Scan_Rom_Simple     (13, md_table)
-    Scan_Rom_Simple     (14, sms_table)
-    Scan_Rom_Simple     (15, gg_table)
-    Scan_Rom_Simple     (16, tg16_table)
-    Scan_Rom_Cue_Filter (17, tgcd_table)
-    Scan_Rom_Simple     (18, pce_table)
-    Scan_Rom_Cue_Filter (19, pcecd_table)
-    Scan_Rom_Simple     (20, amiga_table)
-    Scan_Rom_Simple     (21, c64_table)
-    Scan_Rom_Simple     (22, wswan_col_table)
-    Scan_Rom_Simple     (23, wswan_table)
-    Scan_Rom_Simple     (24, msx2_table)
-    Scan_Rom_Simple     (25, msx1_table)
-    Scan_Rom_Simple     (26, zxs_table)
-    Scan_Rom_Simple     (27, atari_7800_table)
-    Scan_Rom_Simple     (28, atari_5200_table)
-    Scan_Rom_Simple     (29, atari_2600_table)
-    Scan_Rom_Simple     (30, atari_lynx_table)
-    Scan_Rom_Simple     (31, colecovision_table)
-    Scan_Rom_Simple     (32, vectrex_table)
-    Scan_Rom_DB_Lookup  (33, fba_table, "fba_2012.lua", "fba_2012.db")
-    Scan_Rom_DB_Lookup  (34, mame_2003_plus_table, "mame_2003_plus.lua", "mame_2003_plus.db")
-    Scan_Rom_DB_Lookup  (35, mame_2000_table, "mame_2000.lua", "mame_2000.db")
-    Scan_Rom_DB_Lookup  (36, neogeo_table, "neogeo.lua", "neogeo.db")
-    Scan_Rom_Simple     (37, ngpc_table)
+    Scan_Rom_Filter     (11, dreamcast_table, ".cdi")
+    Scan_Rom_Filter     (11, dreamcast_table, ".gdi")
+    Scan_Rom_Filter     (12, sega_cd_table, ".cue")
+    Scan_Rom_Simple     (13, s32x_table)
+    Scan_Rom_Simple     (14, md_table)
+    Scan_Rom_Simple     (15, sms_table)
+    Scan_Rom_Simple     (16, gg_table)
+    Scan_Rom_Simple     (17, tg16_table)
+    Scan_Rom_Filter     (18, tgcd_table, ".cue")
+    Scan_Rom_Simple     (19, pce_table)
+    Scan_Rom_Filter     (20, pcecd_table, ".cue")
+    Scan_Rom_Simple     (21, amiga_table)
+    Scan_Rom_Simple     (22, c64_table)
+    Scan_Rom_Simple     (23, wswan_col_table)
+    Scan_Rom_Simple     (24, wswan_table)
+    Scan_Rom_Simple     (25, msx2_table)
+    Scan_Rom_Simple     (26, msx1_table)
+    Scan_Rom_Simple     (27, zxs_table)
+    Scan_Rom_Simple     (28, atari_7800_table)
+    Scan_Rom_Simple     (29, atari_5200_table)
+    Scan_Rom_Simple     (30, atari_2600_table)
+    Scan_Rom_Simple     (31, atari_lynx_table)
+    Scan_Rom_Simple     (32, colecovision_table)
+    Scan_Rom_Simple     (33, vectrex_table)
+    Scan_Rom_DB_Lookup  (34, fba_table, "fba_2012.lua", "fba_2012.db")
+    Scan_Rom_DB_Lookup  (35, mame_2003_plus_table, "mame_2003_plus.lua", "mame_2003_plus.db")
+    Scan_Rom_DB_Lookup  (36, mame_2000_table, "mame_2000.lua", "mame_2000.db")
+    Scan_Rom_DB_Lookup  (37, neogeo_table, "neogeo.lua", "neogeo.db")
+    Scan_Rom_Simple     (38, ngpc_table)
 
     import_recently_played()
     update_md_regional_cover()
+    update_dc_regional_cover()
 
     table.sort(files_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(folders_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
@@ -3830,6 +4240,7 @@ function listDirectory(dir)
     table.sort(gba_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(gbc_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(gb_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(dreamcast_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(sega_cd_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(s32x_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(md_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
@@ -3889,6 +4300,8 @@ function ScanAdrenalineDirectoryOnly()
     local strFav = System.readFile(fileFav_over, fileFavsize)
     System.closeFile(fileFav_over)
 
+    import_renamed_games()
+
     function scan_PSP_iso_folder (def_adrenaline_rom_location, def_user_db_file)
         if  System.doesDirExist(def_adrenaline_rom_location) then
 
@@ -3910,6 +4323,7 @@ function ScanAdrenalineDirectoryOnly()
                         file.launch_argument = ("PATH=ms0:/ISO/" .. file.name)
                         file.game_path = (def_adrenaline_rom_location .. "/" .. file.name)
                         file.date_played = 0
+                        file.app_type_default=2
 
                         romname_withExtension = file.name
 
@@ -3934,6 +4348,19 @@ function ScanAdrenalineDirectoryOnly()
 
                             custom_path = SystemsToScan[3].localCoverPath .. romname_noRegion_noExtension_notitleid .. ".png"
                             custom_path_id = SystemsToScan[3].localCoverPath .. titleID_noHyphen .. ".png"
+
+                            -- Check for renamed game names
+                            if #renamed_games_table ~= nil then
+                                local key = find_game_table_pos_key(renamed_games_table, file.name)
+                                if key ~= nil then
+                                  -- Yes - Find in files table
+                                  file.title = renamed_games_table[key].title
+                                  file.apptitle = renamed_games_table[key].title
+                                else
+                                  -- No
+                                end
+                            else
+                            end
 
                         else
                         -- No spaces, it's probably a title ID, so scan the database
@@ -3971,7 +4398,8 @@ function ScanAdrenalineDirectoryOnly()
                                     else
                                         -- Found; use the game name from the full database
                                         title = sql_db_search_result[1].title
-                                    end                                
+                                    end
+                                    Database.close(db)                          
 
                                 else
                                 end
@@ -4008,6 +4436,19 @@ function ScanAdrenalineDirectoryOnly()
                             file.version = romname_region
                             file.name_title_search = title
                             file.apptitle = romname_noRegion_noExtension
+
+                            -- Check for renamed game names
+                            if #renamed_games_table ~= nil then
+                                local key = find_game_table_pos_key(renamed_games_table, file.name)
+                                if key ~= nil then
+                                  -- Yes - Find in files table
+                                  file.title = renamed_games_table[key].title
+                                  file.apptitle = renamed_games_table[key].title
+                                else
+                                  -- No
+                                end
+                            else
+                            end
 
                         end
                         --end of database lookup
@@ -4286,6 +4727,7 @@ function ScanAdrenalineDirectoryOnly()
                                     -- Found; use the game name from the full database
                                     title = sql_db_search_result[1].title
                                 end
+                                Database.close(db)
 
                             else
                             end
@@ -4323,6 +4765,20 @@ function ScanAdrenalineDirectoryOnly()
                         file.name_title_search = title
                         file.apptitle = romname_noRegion_noExtension
                         file.date_played = 0
+                        file.app_type_default=2
+
+                        -- Check for renamed game names
+                        if #renamed_games_table ~= nil then
+                            local key = find_game_table_pos_key(renamed_games_table, file.name)
+                            if key ~= nil then
+                              -- Yes - Find in files table
+                              file.title = renamed_games_table[key].title
+                              file.apptitle = renamed_games_table[key].title
+                            else
+                              -- No
+                            end
+                        else
+                        end
 
                         -- OVERRIDES START
 
@@ -4599,6 +5055,7 @@ function ScanAdrenalineDirectoryOnly()
                                         -- Found; use the game name from the full database
                                         title = sql_db_search_result[1].title
                                     end
+                                    Database.close(db)
 
                                 else
                                 end
@@ -4636,6 +5093,20 @@ function ScanAdrenalineDirectoryOnly()
                             file.name_title_search = title
                             file.apptitle = romname_noRegion_noExtension
                             file.date_played = 0
+                            file.app_type_default=3
+
+                            -- Check for renamed game names
+                            if #renamed_games_table ~= nil then
+                                local key = find_game_table_pos_key(renamed_games_table, file.name)
+                                if key ~= nil then
+                                  -- Yes - Find in files table
+                                  file.title = renamed_games_table[key].title
+                                  file.apptitle = renamed_games_table[key].title
+                                else
+                                  -- No
+                                end
+                            else
+                            end
 
                             -- OVERRIDES START
 
@@ -4857,6 +5328,28 @@ function ScanAdrenalineDirectoryOnly()
 end
 
 
+function import_cached_DB_tables(def_user_db_file, def_table_name)
+    if System.doesFileExist(db_Cache_Folder .. (def_user_db_file)) then
+        db_Cache = db_Cache_Folder .. (def_user_db_file)
+
+        local db_import = {}
+        db_import = dofile(db_Cache)
+
+        for k, v in ipairs(db_import) do
+            table.insert(folders_table, v)
+            table.insert((def_table_name), v)
+
+            --add blank icon to all
+            v.icon = imgCoverTmp
+            v.icon_path = v.icon_path
+
+            v.apptitle = v.apptitle
+            table.insert(files_table, count_of_systems, v.apptitle) 
+        end
+    end
+end
+
+
 function import_cached_DB(dir)
     dir = System.listDirectory(dir)
     folders_table = {}
@@ -4871,6 +5364,7 @@ function import_cached_DB(dir)
     gba_table = {}
     gbc_table = {}
     gb_table = {}
+    dreamcast_table = {}
     sega_cd_table = {}
     s32x_table = {}
     md_table = {}
@@ -4900,35 +5394,16 @@ function import_cached_DB(dir)
     ngpc_table = {}
     recently_played_table = {}
     search_results_table = {}
+    fav_count = {}
+    renamed_games_table = {}
 
     local file_over = System.openFile(cur_dir .. "/overrides.dat", FREAD)
     local filesize = System.sizeFile(file_over)
     local str = System.readFile(file_over, filesize)
     System.closeFile(file_over)
 
+    import_renamed_games()
 
-    function import_cached_DB_tables(def_user_db_file, def_table_name)
-        if System.doesFileExist(db_Cache_Folder .. (def_user_db_file)) then
-            db_Cache = db_Cache_Folder .. (def_user_db_file)
-
-            local db_import = {}
-            db_import = dofile(db_Cache)
-
-            for k, v in ipairs(db_import) do
-                table.insert(folders_table, v)
-                table.insert((def_table_name), v)
-
-                --add blank icon to all
-                v.icon = imgCoverTmp
-                v.icon_path = v.icon_path
-
-                v.apptitle = v.apptitle
-                table.insert(files_table, count_of_systems, v.apptitle) 
-            end
-        end
-    end
-
-    
     import_cached_DB_tables("db_games.lua", games_table)
     if showHomebrews == 1 then
         import_cached_DB_tables("db_homebrews.lua", homebrews_table)
@@ -4942,6 +5417,7 @@ function import_cached_DB(dir)
     import_cached_DB_tables("db_gba.lua", gba_table)
     import_cached_DB_tables("db_gbc.lua", gbc_table)
     import_cached_DB_tables("db_gb.lua", gb_table)
+    import_cached_DB_tables("db_dreamcast.lua", dreamcast_table)
     import_cached_DB_tables("db_sega_cd.lua", sega_cd_table)
     import_cached_DB_tables("db_32x.lua", s32x_table)
     import_cached_DB_tables("db_md.lua", md_table)
@@ -4971,6 +5447,7 @@ function import_cached_DB(dir)
     import_cached_DB_tables("db_ngpc.lua", ngpc_table)
     import_recently_played()
     update_md_regional_cover()
+    update_dc_regional_cover()
     
 
     table.sort(files_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
@@ -4986,6 +5463,7 @@ function import_cached_DB(dir)
     table.sort(gba_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(gbc_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(gb_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(dreamcast_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(sega_cd_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(s32x_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(md_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
@@ -5060,7 +5538,6 @@ else
     end
 end
 
-
 function getAppSize(dir)
     local size = 0
     local function get_size(dir)
@@ -5134,7 +5611,7 @@ function GetNameAndAppTypeSelected() -- Credit to BlackSheepBoy69 - This gives a
         app_title = "-"
     end
 
-    if showCat == 40 and #search_results_table == 0 then
+    if showCat == 41 and #search_results_table == 0 then
         app_title = lang_lines.Search_No_Results
     end
 
@@ -5330,6 +5807,31 @@ function GetInfoSelected()
             app_title = "-"
         end
     elseif showCat == 11 then
+        if #dreamcast_table > 0 then
+            info = dreamcast_table[p].name
+            if setLanguage == 0 then -- EN - Blue logo
+                icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+            elseif setLanguage == 1 then -- USA - Red logo
+                icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
+            elseif setLanguage == 9 then -- Japan - Orange logo
+                icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
+            else -- Blue logo
+                icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+            end
+            pic_path = dreamcast_table[p].snap_path_local .. dreamcast_table[p].name .. ".png"
+            app_title = dreamcast_table[p].title
+            apptype = dreamcast_table[p].app_type
+            appdir = dreamcast_table[p].game_path
+            folder = dreamcast_table[p].directory
+            filename = dreamcast_table[p].filename
+            favourite_flag = dreamcast_table[p].favourite
+
+            app_titleid = dreamcast_table[p].name
+            app_version = dreamcast_table[p].version
+        else
+            app_title = "-"
+        end
+    elseif showCat == 12 then
         if #sega_cd_table > 0 then
             info = sega_cd_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_sega_cd.png"
@@ -5346,7 +5848,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 12 then
+    elseif showCat == 13 then
         if #s32x_table > 0 then
             info = s32x_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_32x.png"
@@ -5363,7 +5865,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 13 then
+    elseif showCat == 14 then
         if #md_table > 0 then
             info = md_table[p].name
             if setLanguage == 1 then
@@ -5384,7 +5886,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 14 then
+    elseif showCat == 15 then
         if #sms_table > 0 then
             info = sms_table[p].name
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
@@ -5401,7 +5903,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 15 then
+    elseif showCat == 16 then
         if #gg_table > 0 then
             info = gg_table[p].name
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
@@ -5418,7 +5920,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 16 then
+    elseif showCat == 17 then
         if #tg16_table > 0 then
             info = tg16_table[p].name
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
@@ -5435,7 +5937,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 17 then
+    elseif showCat == 18 then
         if #tgcd_table > 0 then
             info = tgcd_table[p].name
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_tgcd.png"
@@ -5452,7 +5954,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 18 then
+    elseif showCat == 19 then
         if #pce_table > 0 then
             info = pce_table[p].name
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
@@ -5469,7 +5971,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 19 then
+    elseif showCat == 20 then
         if #pcecd_table > 0 then
             info = pcecd_table[p].name
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_pcecd.png"
@@ -5486,7 +5988,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 20 then
+    elseif showCat == 21 then
         if #amiga_table > 0 then
             info = amiga_table[p].name
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
@@ -5503,7 +6005,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 21 then
+    elseif showCat == 22 then
         if #c64_table > 0 then
             info = c64_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_c64.png"
@@ -5520,7 +6022,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 22 then
+    elseif showCat == 23 then
         if #wswan_col_table > 0 then
             info = wswan_col_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan_col.png"
@@ -5537,7 +6039,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 23 then
+    elseif showCat == 24 then
         if #wswan_table > 0 then
             info = wswan_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan.png"
@@ -5554,7 +6056,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 24 then
+    elseif showCat == 25 then
         if #msx2_table > 0 then
             info = msx2_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx2.png"
@@ -5571,7 +6073,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 25 then
+    elseif showCat == 26 then
         if #msx1_table > 0 then
             info = msx1_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx1.png"
@@ -5588,7 +6090,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 26 then
+    elseif showCat == 27 then
         if #zxs_table > 0 then
             info = zxs_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_zxs.png"
@@ -5605,7 +6107,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 27 then
+    elseif showCat == 28 then
         if #atari_7800_table > 0 then
             info = atari_7800_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_7800.png"
@@ -5622,7 +6124,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 28 then
+    elseif showCat == 29 then
         if #atari_5200_table > 0 then
             info = atari_5200_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_5200.png"
@@ -5639,7 +6141,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 29 then
+    elseif showCat == 30 then
         if #atari_2600_table > 0 then
             info = atari_2600_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_2600.png"
@@ -5656,7 +6158,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 30 then
+    elseif showCat == 31 then
         if #atari_lynx_table > 0 then
             info = atari_lynx_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_lynx.png"
@@ -5673,7 +6175,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 31 then
+    elseif showCat == 32 then
         if #colecovision_table > 0 then
             info = colecovision_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_colecovision.png"
@@ -5690,7 +6192,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 32 then
+    elseif showCat == 33 then
         if #vectrex_table > 0 then
             info = vectrex_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_vectrex.png"
@@ -5707,7 +6209,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 33 then
+    elseif showCat == 34 then
         if #fba_table > 0 then
             info = fba_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_fba.png"
@@ -5724,7 +6226,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 34 then
+    elseif showCat == 35 then
         if #mame_2003_plus_table > 0 then
             info = mame_2003_plus_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
@@ -5741,7 +6243,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 35 then
+    elseif showCat == 36 then
         if #mame_2000_table > 0 then
             info = mame_2000_table[p].name
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
@@ -5758,7 +6260,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 36 then
+    elseif showCat == 37 then
         if #neogeo_table > 0 then
             info = neogeo_table[p].name            
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_neogeo.png"
@@ -5775,7 +6277,7 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-    elseif showCat == 37 then
+    elseif showCat == 38 then
         if #ngpc_table > 0 then
             info = ngpc_table[p].name
             icon_path = "ux0:/app/RETROFLOW/DATA/icon_ngpc.png"
@@ -5793,7 +6295,7 @@ function GetInfoSelected()
             app_title = "-"
         end
 
-    elseif showCat == 38 then
+    elseif showCat == 39 then
 
         -- count favorites
         fav_count = {}
@@ -5801,7 +6303,7 @@ function GetInfoSelected()
             if file.favourite==true then
                 if showHomebrews == 0 then
                     -- ignore homebrew apps
-                    if file.app_type > 0 then
+                    if file.app_type ~= nil then
                         if file.favourite==true then
                             table.insert(fav_count, file)
                         end
@@ -5859,63 +6361,73 @@ function GetInfoSelected()
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"
                 elseif apptype==10 then -- GB
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"
-                elseif apptype==11 then -- SEGA_CD
+                elseif apptype==11 then -- DC
+                    if setLanguage == 0 then -- EN - Blue logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                    elseif setLanguage == 1 then -- USA - Red logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
+                    elseif setLanguage == 9 then -- Japan - Orange logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
+                    else -- Blue logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                    end
+                elseif apptype==12 then -- SEGA_CD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_sega_cd.png"
-                elseif apptype==12 then -- 32X
+                elseif apptype==13 then -- 32X
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_32x.png"
-                elseif apptype==13 then -- MD
+                elseif apptype==14 then -- MD
                     if setLanguage == 1 then
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_md_usa.png"
                     else
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"
                     end
-                elseif apptype==14 then -- SMS
+                elseif apptype==15 then -- SMS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
-                elseif apptype==15 then -- GG
+                elseif apptype==16 then -- GG
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
-                elseif apptype==16 then -- TG16
+                elseif apptype==17 then -- TG16
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
-                elseif apptype==17 then -- TGCD
+                elseif apptype==18 then -- TGCD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_tgcd.png"
-                elseif apptype==18 then -- PCE
+                elseif apptype==19 then -- PCE
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
-                elseif apptype==19 then -- PCECD
+                elseif apptype==20 then -- PCECD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_pcecd.png"
-                elseif apptype==20 then -- AMIGA
+                elseif apptype==21 then -- AMIGA
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
-                elseif apptype==21 then -- C64
+                elseif apptype==22 then -- C64
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_c64.png"
-                elseif apptype==22 then -- WSWAN_COL
+                elseif apptype==23 then -- WSWAN_COL
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan_col.png"
-                elseif apptype==23 then -- WSWAN
+                elseif apptype==24 then -- WSWAN
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan.png"
-                elseif apptype==24 then -- MSX2
+                elseif apptype==25 then -- MSX2
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx2.png"
-                elseif apptype==25 then -- MSX1
+                elseif apptype==26 then -- MSX1
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx1.png"
-                elseif apptype==26 then -- ZXS
+                elseif apptype==27 then -- ZXS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_zxs.png"
-                elseif apptype==27 then -- ATARI_7800
+                elseif apptype==28 then -- ATARI_7800
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_7800.png"
-                elseif apptype==28 then -- ATARI_5200
+                elseif apptype==29 then -- ATARI_5200
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_5200.png"
-                elseif apptype==29 then -- ATARI_2600
+                elseif apptype==30 then -- ATARI_2600
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_2600.png"
-                elseif apptype==30 then -- ATARI_LYNX
+                elseif apptype==31 then -- ATARI_LYNX
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_lynx.png"
-                elseif apptype==31 then -- COLECOVISION
+                elseif apptype==32 then -- COLECOVISION
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_colecovision.png"
-                elseif apptype==32 then -- VECTREX
+                elseif apptype==33 then -- VECTREX
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_vectrex.png"
-                elseif apptype==33 then -- FBA
+                elseif apptype==34 then -- FBA
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_fba.png"
-                elseif apptype==34 then -- MAME_2003_PLUS
+                elseif apptype==35 then -- MAME_2003_PLUS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
-                elseif apptype==35 then -- MAME_2000
+                elseif apptype==36 then -- MAME_2000
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
-                elseif apptype==36 then -- NEOGEO
+                elseif apptype==37 then -- NEOGEO
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_neogeo.png"
-                elseif apptype==37 then -- NGPC
+                elseif apptype==38 then -- NGPC
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_ngpc.png"
                 else
                     icon_path = fav_count[p].icon_path
@@ -5926,7 +6438,7 @@ function GetInfoSelected()
             -- app_title = "-"
         end
 
-    elseif showCat == 39 then
+    elseif showCat == 40 then
 
         if #recently_played_table > 0 then
             info = recently_played_table[p].name
@@ -5973,63 +6485,73 @@ function GetInfoSelected()
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"
                 elseif apptype==10 then -- GB
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"
-                elseif apptype==11 then -- SEGA_CD
+                elseif apptype==11 then -- DC
+                    if setLanguage == 0 then -- EN - Blue logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                    elseif setLanguage == 1 then -- USA - Red logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
+                    elseif setLanguage == 9 then -- Japan - Orange logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
+                    else -- Blue logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                    end
+                elseif apptype==12 then -- SEGA_CD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_sega_cd.png"
-                elseif apptype==12 then -- 32X
+                elseif apptype==13 then -- 32X
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_32x.png"
-                elseif apptype==13 then -- MD
+                elseif apptype==14 then -- MD
                     if setLanguage == 1 then
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_md_usa.png"
                     else
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"
                     end
-                elseif apptype==14 then -- SMS
+                elseif apptype==15 then -- SMS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
-                elseif apptype==15 then -- GG
+                elseif apptype==16 then -- GG
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
-                elseif apptype==16 then -- TG16
+                elseif apptype==17 then -- TG16
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
-                elseif apptype==17 then -- TGCD
+                elseif apptype==18 then -- TGCD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_tgcd.png"
-                elseif apptype==18 then -- PCE
+                elseif apptype==19 then -- PCE
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
-                elseif apptype==19 then -- PCECD
+                elseif apptype==20 then -- PCECD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_pcecd.png"
-                elseif apptype==20 then -- AMIGA
+                elseif apptype==21 then -- AMIGA
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
-                elseif apptype==21 then -- C64
+                elseif apptype==22 then -- C64
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_c64.png"
-                elseif apptype==22 then -- WSWAN_COL
+                elseif apptype==23 then -- WSWAN_COL
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan_col.png"
-                elseif apptype==23 then -- WSWAN
+                elseif apptype==24 then -- WSWAN
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan.png"
-                elseif apptype==24 then -- MSX2
+                elseif apptype==25 then -- MSX2
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx2.png"
-                elseif apptype==25 then -- MSX1
+                elseif apptype==26 then -- MSX1
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx1.png"
-                elseif apptype==26 then -- ZXS
+                elseif apptype==27 then -- ZXS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_zxs.png"
-                elseif apptype==27 then -- ATARI_7800
+                elseif apptype==28 then -- ATARI_7800
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_7800.png"
-                elseif apptype==28 then -- ATARI_5200
+                elseif apptype==29 then -- ATARI_5200
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_5200.png"
-                elseif apptype==29 then -- ATARI_2600
+                elseif apptype==30 then -- ATARI_2600
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_2600.png"
-                elseif apptype==30 then -- ATARI_LYNX
+                elseif apptype==31 then -- ATARI_LYNX
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_lynx.png"
-                elseif apptype==31 then -- COLECOVISION
+                elseif apptype==32 then -- COLECOVISION
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_colecovision.png"
-                elseif apptype==32 then -- VECTREX
+                elseif apptype==33 then -- VECTREX
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_vectrex.png"
-                elseif apptype==33 then -- FBA
+                elseif apptype==34 then -- FBA
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_fba.png"
-                elseif apptype==34 then -- MAME_2003_PLUS
+                elseif apptype==35 then -- MAME_2003_PLUS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
-                elseif apptype==35 then -- MAME_2000
+                elseif apptype==36 then -- MAME_2000
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
-                elseif apptype==36 then -- NEOGEO
+                elseif apptype==37 then -- NEOGEO
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_neogeo.png"
-                elseif apptype==37 then -- NGPC
+                elseif apptype==38 then -- NGPC
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_ngpc.png"
                 else
                     icon_path = recently_played_table[p].icon_path
@@ -6040,7 +6562,7 @@ function GetInfoSelected()
             -- app_title = "-"
         end
             
-    elseif showCat == 40 then
+    elseif showCat == 41 then
 
         if #search_results_table > 0 then
             info = search_results_table[p].name
@@ -6087,63 +6609,73 @@ function GetInfoSelected()
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"
                 elseif apptype==10 then -- GB
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"
-                elseif apptype==11 then -- SEGA_CD
+                elseif apptype==11 then -- DC
+                    if setLanguage == 0 then -- EN - Blue logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                    elseif setLanguage == 1 then -- USA - Red logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
+                    elseif setLanguage == 9 then -- Japan - Orange logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
+                    else -- Blue logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                    end
+                elseif apptype==12 then -- SEGA_CD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_sega_cd.png"
-                elseif apptype==12 then -- 32X
+                elseif apptype==13 then -- 32X
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_32x.png"
-                elseif apptype==13 then -- MD
+                elseif apptype==14 then -- MD
                     if setLanguage == 1 then
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_md_usa.png"
                     else
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"
                     end
-                elseif apptype==14 then -- SMS
+                elseif apptype==15 then -- SMS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
-                elseif apptype==15 then -- GG
+                elseif apptype==16 then -- GG
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
-                elseif apptype==16 then -- TG16
+                elseif apptype==17 then -- TG16
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
-                elseif apptype==17 then -- TGCD
+                elseif apptype==18 then -- TGCD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_tgcd.png"
-                elseif apptype==18 then -- PCE
+                elseif apptype==19 then -- PCE
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
-                elseif apptype==19 then -- PCECD
+                elseif apptype==20 then -- PCECD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_pcecd.png"
-                elseif apptype==20 then -- AMIGA
+                elseif apptype==21 then -- AMIGA
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
-                elseif apptype==21 then -- C64
+                elseif apptype==22 then -- C64
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_c64.png"
-                elseif apptype==22 then -- WSWAN_COL
+                elseif apptype==23 then -- WSWAN_COL
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan_col.png"
-                elseif apptype==23 then -- WSWAN
+                elseif apptype==24 then -- WSWAN
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan.png"
-                elseif apptype==24 then -- MSX2
+                elseif apptype==25 then -- MSX2
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx2.png"
-                elseif apptype==25 then -- MSX1
+                elseif apptype==26 then -- MSX1
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx1.png"
-                elseif apptype==26 then -- ZXS
+                elseif apptype==27 then -- ZXS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_zxs.png"
-                elseif apptype==27 then -- ATARI_7800
+                elseif apptype==28 then -- ATARI_7800
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_7800.png"
-                elseif apptype==28 then -- ATARI_5200
+                elseif apptype==29 then -- ATARI_5200
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_5200.png"
-                elseif apptype==29 then -- ATARI_2600
+                elseif apptype==30 then -- ATARI_2600
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_2600.png"
-                elseif apptype==30 then -- ATARI_LYNX
+                elseif apptype==31 then -- ATARI_LYNX
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_lynx.png"
-                elseif apptype==31 then -- COLECOVISION
+                elseif apptype==32 then -- COLECOVISION
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_colecovision.png"
-                elseif apptype==32 then -- VECTREX
+                elseif apptype==33 then -- VECTREX
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_vectrex.png"
-                elseif apptype==33 then -- FBA
+                elseif apptype==34 then -- FBA
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_fba.png"
-                elseif apptype==34 then -- MAME_2003_PLUS
+                elseif apptype==35 then -- MAME_2003_PLUS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
-                elseif apptype==35 then -- MAME_2000
+                elseif apptype==36 then -- MAME_2000
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
-                elseif apptype==36 then -- NEOGEO
+                elseif apptype==37 then -- NEOGEO
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_neogeo.png"
-                elseif apptype==37 then -- NGPC
+                elseif apptype==38 then -- NGPC
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_ngpc.png"
                 else
                     icon_path = search_results_table[p].icon_path
@@ -6202,63 +6734,73 @@ function GetInfoSelected()
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"
                 elseif apptype==10 then -- GB
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"
-                elseif apptype==11 then -- SEGA_CD
+                elseif apptype==11 then -- DC
+                    if setLanguage == 0 then -- EN - Blue logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                    elseif setLanguage == 1 then -- USA - Red logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
+                    elseif setLanguage == 9 then -- Japan - Orange logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
+                    else -- Blue logo
+                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                    end
+                elseif apptype==12 then -- SEGA_CD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_sega_cd.png"
-                elseif apptype==12 then -- 32X
+                elseif apptype==13 then -- 32X
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_32x.png"
-                elseif apptype==13 then -- MD
+                elseif apptype==14 then -- MD
                     if setLanguage == 1 then
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_md_usa.png"
                     else
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"
                     end
-                elseif apptype==14 then -- SMS
+                elseif apptype==15 then -- SMS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
-                elseif apptype==15 then -- GG
+                elseif apptype==16 then -- GG
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
-                elseif apptype==16 then -- TG16
+                elseif apptype==17 then -- TG16
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
-                elseif apptype==17 then -- TGCD
+                elseif apptype==18 then -- TGCD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_tgcd.png"
-                elseif apptype==18 then -- PCE
+                elseif apptype==19 then -- PCE
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
-                elseif apptype==19 then -- PCECD
+                elseif apptype==20 then -- PCECD
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_pcecd.png"
-                elseif apptype==20 then -- AMIGA
+                elseif apptype==21 then -- AMIGA
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
-                elseif apptype==21 then -- C64
+                elseif apptype==22 then -- C64
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_c64.png"
-                elseif apptype==22 then -- WSWAN_COL
+                elseif apptype==23 then -- WSWAN_COL
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan_col.png"
-                elseif apptype==23 then -- WSWAN
+                elseif apptype==24 then -- WSWAN
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan.png"
-                elseif apptype==24 then -- MSX2
+                elseif apptype==25 then -- MSX2
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx2.png"
-                elseif apptype==25 then -- MSX1
+                elseif apptype==26 then -- MSX1
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx1.png"
-                elseif apptype==26 then -- ZXS
+                elseif apptype==27 then -- ZXS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_zxs.png"
-                elseif apptype==27 then -- ATARI_7800
+                elseif apptype==28 then -- ATARI_7800
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_7800.png"
-                elseif apptype==28 then -- ATARI_5200
+                elseif apptype==29 then -- ATARI_5200
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_5200.png"
-                elseif apptype==29 then -- ATARI_2600
+                elseif apptype==30 then -- ATARI_2600
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_2600.png"
-                elseif apptype==30 then -- ATARI_LYNX
+                elseif apptype==31 then -- ATARI_LYNX
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_lynx.png"
-                elseif apptype==31 then -- COLECOVISION
+                elseif apptype==32 then -- COLECOVISION
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_colecovision.png"
-                elseif apptype==32 then -- VECTREX
+                elseif apptype==33 then -- VECTREX
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_vectrex.png"
-                elseif apptype==33 then -- FBA
+                elseif apptype==34 then -- FBA
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_fba.png"
-                elseif apptype==34 then -- MAME_2003_PLUS
+                elseif apptype==35 then -- MAME_2003_PLUS
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
-                elseif apptype==35 then -- MAME_2000
+                elseif apptype==36 then -- MAME_2000
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
-                elseif apptype==36 then -- NEOGEO
+                elseif apptype==37 then -- NEOGEO
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_neogeo.png"
-                elseif apptype==37 then -- NGPC
+                elseif apptype==38 then -- NGPC
                     icon_path = "ux0:/app/RETROFLOW/DATA/icon_ngpc.png"
                 else
                     icon_path = files_table[p].icon_path
@@ -6309,6 +6851,7 @@ function update_favorites_table_favorites(def_table_name)
         update_recently_played_table_favorite(true)
     end
 end
+
 
 function update_favorites_table_recent(def_table_name)
     if recently_played_table[p].favourite == true then
@@ -6382,37 +6925,38 @@ function AddOrRemoveFavorite()
         elseif showCat == 8 then    update_favorites_table_system(gba_table)            update_cached_table("db_gba.lua", gba_table)
         elseif showCat == 9 then    update_favorites_table_system(gbc_table)            update_cached_table("db_gbc.lua", gbc_table)
         elseif showCat == 10 then   update_favorites_table_system(gb_table)             update_cached_table("db_gb.lua", gb_table)
-        elseif showCat == 11 then   update_favorites_table_system(sega_cd_table)        update_cached_table("db_sega_cd.lua", sega_cd_table)
-        elseif showCat == 12 then   update_favorites_table_system(s32x_table)           update_cached_table("db_32x.lua", s32x_table)
-        elseif showCat == 13 then   update_favorites_table_system(md_table)             update_cached_table("db_md.lua", md_table)
-        elseif showCat == 14 then   update_favorites_table_system(sms_table)            update_cached_table("db_sms.lua", sms_table)
-        elseif showCat == 15 then   update_favorites_table_system(gg_table)             update_cached_table("db_gg.lua", gg_table)
-        elseif showCat == 16 then   update_favorites_table_system(tg16_table)           update_cached_table("db_tg16.lua", tg16_table)
-        elseif showCat == 17 then   update_favorites_table_system(tgcd_table)           update_cached_table("db_tgcd.lua", tgcd_table)
-        elseif showCat == 18 then   update_favorites_table_system(pce_table)            update_cached_table("db_pce.lua", pce_table)
-        elseif showCat == 19 then   update_favorites_table_system(pcecd_table)          update_cached_table("db_pcecd.lua", pcecd_table)
-        elseif showCat == 20 then   update_favorites_table_system(amiga_table)          update_cached_table("db_amiga.lua", amiga_table)
-        elseif showCat == 21 then   update_favorites_table_system(c64_table)            update_cached_table("db_c64.lua", c64_table)
-        elseif showCat == 22 then   update_favorites_table_system(wswan_col_table)      update_cached_table("db_wswan_col.lua", wswan_col_table)
-        elseif showCat == 23 then   update_favorites_table_system(wswan_table)          update_cached_table("db_wswan.lua", wswan_table)
-        elseif showCat == 24 then   update_favorites_table_system(msx2_table)           update_cached_table("db_msx2.lua", msx2_table)
-        elseif showCat == 25 then   update_favorites_table_system(msx1_table)           update_cached_table("db_msx1.lua", msx1_table)
-        elseif showCat == 26 then   update_favorites_table_system(zxs_table)            update_cached_table("db_zxs.lua", zxs_table)
-        elseif showCat == 27 then   update_favorites_table_system(atari_7800_table)     update_cached_table("db_atari_7800.lua", atari_7800_table)
-        elseif showCat == 28 then   update_favorites_table_system(atari_5200_table)     update_cached_table("db_atari_5200.lua", atari_5200_table)
-        elseif showCat == 29 then   update_favorites_table_system(atari_2600_table)     update_cached_table("db_atari_2600.lua", atari_2600_table)
-        elseif showCat == 30 then   update_favorites_table_system(atari_lynx_table)     update_cached_table("db_atari_lynx.lua", atari_lynx_table)
-        elseif showCat == 31 then   update_favorites_table_system(colecovision_table)   update_cached_table("db_colecovision.lua", colecovision_table)
-        elseif showCat == 32 then   update_favorites_table_system(vectrex_table)        update_cached_table("db_vectrex.lua", vectrex_table)
-        elseif showCat == 33 then   update_favorites_table_system(fba_table)            update_cached_table("db_fba.lua", fba_table)
-        elseif showCat == 34 then   update_favorites_table_system(mame_2003_plus_table) update_cached_table("db_mame_2003_plus.lua", mame_2003_plus_table)
-        elseif showCat == 35 then   update_favorites_table_system(mame_2000_table)      update_cached_table("db_mame_2000.lua", mame_2000_table)
-        elseif showCat == 36 then   update_favorites_table_system(neogeo_table)         update_cached_table("db_neogeo.lua", neogeo_table)
-        elseif showCat == 37 then   update_favorites_table_system(ngpc_table)           update_cached_table("db_ngpc.lua", ngpc_table)
-        elseif showCat == 40 then   update_favorites_table_system(search_results_table)
+        elseif showCat == 11 then   update_favorites_table_system(dreamcast_table)      update_cached_table("db_dreamcast.lua", dreamcast_table)
+        elseif showCat == 12 then   update_favorites_table_system(sega_cd_table)        update_cached_table("db_sega_cd.lua", sega_cd_table)
+        elseif showCat == 13 then   update_favorites_table_system(s32x_table)           update_cached_table("db_32x.lua", s32x_table)
+        elseif showCat == 14 then   update_favorites_table_system(md_table)             update_cached_table("db_md.lua", md_table)
+        elseif showCat == 15 then   update_favorites_table_system(sms_table)            update_cached_table("db_sms.lua", sms_table)
+        elseif showCat == 16 then   update_favorites_table_system(gg_table)             update_cached_table("db_gg.lua", gg_table)
+        elseif showCat == 17 then   update_favorites_table_system(tg16_table)           update_cached_table("db_tg16.lua", tg16_table)
+        elseif showCat == 18 then   update_favorites_table_system(tgcd_table)           update_cached_table("db_tgcd.lua", tgcd_table)
+        elseif showCat == 19 then   update_favorites_table_system(pce_table)            update_cached_table("db_pce.lua", pce_table)
+        elseif showCat == 20 then   update_favorites_table_system(pcecd_table)          update_cached_table("db_pcecd.lua", pcecd_table)
+        elseif showCat == 21 then   update_favorites_table_system(amiga_table)          update_cached_table("db_amiga.lua", amiga_table)
+        elseif showCat == 22 then   update_favorites_table_system(c64_table)            update_cached_table("db_c64.lua", c64_table)
+        elseif showCat == 23 then   update_favorites_table_system(wswan_col_table)      update_cached_table("db_wswan_col.lua", wswan_col_table)
+        elseif showCat == 24 then   update_favorites_table_system(wswan_table)          update_cached_table("db_wswan.lua", wswan_table)
+        elseif showCat == 25 then   update_favorites_table_system(msx2_table)           update_cached_table("db_msx2.lua", msx2_table)
+        elseif showCat == 26 then   update_favorites_table_system(msx1_table)           update_cached_table("db_msx1.lua", msx1_table)
+        elseif showCat == 27 then   update_favorites_table_system(zxs_table)            update_cached_table("db_zxs.lua", zxs_table)
+        elseif showCat == 28 then   update_favorites_table_system(atari_7800_table)     update_cached_table("db_atari_7800.lua", atari_7800_table)
+        elseif showCat == 29 then   update_favorites_table_system(atari_5200_table)     update_cached_table("db_atari_5200.lua", atari_5200_table)
+        elseif showCat == 30 then   update_favorites_table_system(atari_2600_table)     update_cached_table("db_atari_2600.lua", atari_2600_table)
+        elseif showCat == 31 then   update_favorites_table_system(atari_lynx_table)     update_cached_table("db_atari_lynx.lua", atari_lynx_table)
+        elseif showCat == 32 then   update_favorites_table_system(colecovision_table)   update_cached_table("db_colecovision.lua", colecovision_table)
+        elseif showCat == 33 then   update_favorites_table_system(vectrex_table)        update_cached_table("db_vectrex.lua", vectrex_table)
+        elseif showCat == 34 then   update_favorites_table_system(fba_table)            update_cached_table("db_fba.lua", fba_table)
+        elseif showCat == 35 then   update_favorites_table_system(mame_2003_plus_table) update_cached_table("db_mame_2003_plus.lua", mame_2003_plus_table)
+        elseif showCat == 36 then   update_favorites_table_system(mame_2000_table)      update_cached_table("db_mame_2000.lua", mame_2000_table)
+        elseif showCat == 37 then   update_favorites_table_system(neogeo_table)         update_cached_table("db_neogeo.lua", neogeo_table)
+        elseif showCat == 38 then   update_favorites_table_system(ngpc_table)           update_cached_table("db_ngpc.lua", ngpc_table)
+        elseif showCat == 41 then   update_favorites_table_system(search_results_table)
 
         
-        elseif showCat == 38 then
+        elseif showCat == 39 then
             -- Find game in other tables and update
             if apptype == 0 then        update_favorites_table_favorites(homebrews_table)       update_cached_table("db_homebrews.lua", homebrews_table)
             elseif apptype == 1 then    update_favorites_table_favorites(games_table)           update_cached_table("db_games.lua", games_table)
@@ -6424,37 +6968,38 @@ function AddOrRemoveFavorite()
             elseif apptype == 8 then    update_favorites_table_favorites(gba_table)             update_cached_table("db_gba.lua", gba_table)
             elseif apptype == 9 then    update_favorites_table_favorites(gbc_table)             update_cached_table("db_gbc.lua", gbc_table)
             elseif apptype == 10 then   update_favorites_table_favorites(gb_table)              update_cached_table("db_gb.lua", gb_table)
-            elseif apptype == 11 then   update_favorites_table_favorites(sega_cd_table)         update_cached_table("db_sega_cd.lua", sega_cd_table)
-            elseif apptype == 12 then   update_favorites_table_favorites(s32x_table)            update_cached_table("db_32x.lua", s32x_table)
-            elseif apptype == 13 then   update_favorites_table_favorites(md_table)              update_cached_table("db_md.lua", md_table)
-            elseif apptype == 14 then   update_favorites_table_favorites(sms_table)             update_cached_table("db_sms.lua", sms_table)
-            elseif apptype == 15 then   update_favorites_table_favorites(gg_table)              update_cached_table("db_gg.lua", gg_table)
-            elseif apptype == 16 then   update_favorites_table_favorites(tg16_table)            update_cached_table("db_tg16.lua", tg16_table)
-            elseif apptype == 17 then   update_favorites_table_favorites(tgcd_table)            update_cached_table("db_tgcd.lua", tgcd_table)
-            elseif apptype == 18 then   update_favorites_table_favorites(pce_table)             update_cached_table("db_pce.lua", pce_table)
-            elseif apptype == 19 then   update_favorites_table_favorites(pcecd_table)           update_cached_table("db_pcecd.lua", pcecd_table)
-            elseif apptype == 20 then   update_favorites_table_favorites(amiga_table)           update_cached_table("db_amiga.lua", amiga_table)
-            elseif apptype == 21 then   update_favorites_table_favorites(c64_table)             update_cached_table("db_c64.lua", c64_table)
-            elseif apptype == 22 then   update_favorites_table_favorites(wswan_col_table)       update_cached_table("db_wswan_col.lua", wswan_col_table)
-            elseif apptype == 23 then   update_favorites_table_favorites(wswan_table)           update_cached_table("db_wswan.lua", wswan_table)
-            elseif apptype == 24 then   update_favorites_table_favorites(msx2_table)            update_cached_table("db_msx2.lua", msx2_table)
-            elseif apptype == 25 then   update_favorites_table_favorites(msx1_table)            update_cached_table("db_msx1.lua", msx1_table)
-            elseif apptype == 26 then   update_favorites_table_favorites(zxs_table)             update_cached_table("db_zxs.lua", zxs_table)
-            elseif apptype == 27 then   update_favorites_table_favorites(atari_7800_table)      update_cached_table("db_atari_7800.lua", atari_7800_table)
-            elseif apptype == 28 then   update_favorites_table_favorites(atari_5200_table)      update_cached_table("db_atari_5200.lua", atari_5200_table)
-            elseif apptype == 29 then   update_favorites_table_favorites(atari_2600_table)      update_cached_table("db_atari_2600.lua", atari_2600_table)
-            elseif apptype == 30 then   update_favorites_table_favorites(atari_lynx_table)      update_cached_table("db_atari_lynx.lua", atari_lynx_table)
-            elseif apptype == 31 then   update_favorites_table_favorites(colecovision_table)    update_cached_table("db_colecovision.lua", colecovision_table)
-            elseif apptype == 32 then   update_favorites_table_favorites(vectrex_table)         update_cached_table("db_vectrex.lua", vectrex_table)
-            elseif apptype == 33 then   update_favorites_table_favorites(fba_table)             update_cached_table("db_fba.lua", fba_table)
-            elseif apptype == 34 then   update_favorites_table_favorites(mame_2003_plus_table)  update_cached_table("db_mame_2003_plus.lua", mame_2003_plus_table)
-            elseif apptype == 35 then   update_favorites_table_favorites(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
-            elseif apptype == 36 then   update_favorites_table_favorites(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
-            elseif apptype == 37 then   update_favorites_table_favorites(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
+            elseif apptype == 11 then   update_favorites_table_favorites(dreamcast_table)       update_cached_table("db_dreamcast.lua", dreamcast_table)
+            elseif apptype == 12 then   update_favorites_table_favorites(sega_cd_table)         update_cached_table("db_sega_cd.lua", sega_cd_table)
+            elseif apptype == 13 then   update_favorites_table_favorites(s32x_table)            update_cached_table("db_32x.lua", s32x_table)
+            elseif apptype == 14 then   update_favorites_table_favorites(md_table)              update_cached_table("db_md.lua", md_table)
+            elseif apptype == 15 then   update_favorites_table_favorites(sms_table)             update_cached_table("db_sms.lua", sms_table)
+            elseif apptype == 16 then   update_favorites_table_favorites(gg_table)              update_cached_table("db_gg.lua", gg_table)
+            elseif apptype == 17 then   update_favorites_table_favorites(tg16_table)            update_cached_table("db_tg16.lua", tg16_table)
+            elseif apptype == 18 then   update_favorites_table_favorites(tgcd_table)            update_cached_table("db_tgcd.lua", tgcd_table)
+            elseif apptype == 19 then   update_favorites_table_favorites(pce_table)             update_cached_table("db_pce.lua", pce_table)
+            elseif apptype == 20 then   update_favorites_table_favorites(pcecd_table)           update_cached_table("db_pcecd.lua", pcecd_table)
+            elseif apptype == 21 then   update_favorites_table_favorites(amiga_table)           update_cached_table("db_amiga.lua", amiga_table)
+            elseif apptype == 22 then   update_favorites_table_favorites(c64_table)             update_cached_table("db_c64.lua", c64_table)
+            elseif apptype == 23 then   update_favorites_table_favorites(wswan_col_table)       update_cached_table("db_wswan_col.lua", wswan_col_table)
+            elseif apptype == 24 then   update_favorites_table_favorites(wswan_table)           update_cached_table("db_wswan.lua", wswan_table)
+            elseif apptype == 25 then   update_favorites_table_favorites(msx2_table)            update_cached_table("db_msx2.lua", msx2_table)
+            elseif apptype == 26 then   update_favorites_table_favorites(msx1_table)            update_cached_table("db_msx1.lua", msx1_table)
+            elseif apptype == 27 then   update_favorites_table_favorites(zxs_table)             update_cached_table("db_zxs.lua", zxs_table)
+            elseif apptype == 28 then   update_favorites_table_favorites(atari_7800_table)      update_cached_table("db_atari_7800.lua", atari_7800_table)
+            elseif apptype == 29 then   update_favorites_table_favorites(atari_5200_table)      update_cached_table("db_atari_5200.lua", atari_5200_table)
+            elseif apptype == 30 then   update_favorites_table_favorites(atari_2600_table)      update_cached_table("db_atari_2600.lua", atari_2600_table)
+            elseif apptype == 31 then   update_favorites_table_favorites(atari_lynx_table)      update_cached_table("db_atari_lynx.lua", atari_lynx_table)
+            elseif apptype == 32 then   update_favorites_table_favorites(colecovision_table)    update_cached_table("db_colecovision.lua", colecovision_table)
+            elseif apptype == 33 then   update_favorites_table_favorites(vectrex_table)         update_cached_table("db_vectrex.lua", vectrex_table)
+            elseif apptype == 34 then   update_favorites_table_favorites(fba_table)             update_cached_table("db_fba.lua", fba_table)
+            elseif apptype == 35 then   update_favorites_table_favorites(mame_2003_plus_table)  update_cached_table("db_mame_2003_plus.lua", mame_2003_plus_table)
+            elseif apptype == 36 then   update_favorites_table_favorites(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
+            elseif apptype == 37 then   update_favorites_table_favorites(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
+            elseif apptype == 38 then   update_favorites_table_favorites(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
             else    
             end
 
-        elseif showCat == 39 then
+        elseif showCat == 40 then
             -- Find game in other tables and update
             if apptype == 0 then        update_favorites_table_recent(homebrews_table)       update_cached_table("db_homebrews.lua", homebrews_table)    
             elseif apptype == 1 then    update_favorites_table_recent(games_table)           update_cached_table("db_games.lua", games_table)
@@ -6466,37 +7011,38 @@ function AddOrRemoveFavorite()
             elseif apptype == 8 then    update_favorites_table_recent(gba_table)             update_cached_table("db_gba.lua", gba_table)
             elseif apptype == 9 then    update_favorites_table_recent(gbc_table)             update_cached_table("db_gbc.lua", gbc_table)
             elseif apptype == 10 then   update_favorites_table_recent(gb_table)              update_cached_table("db_gb.lua", gb_table)
-            elseif apptype == 11 then   update_favorites_table_recent(sega_cd_table)         update_cached_table("db_sega_cd.lua", sega_cd_table)
-            elseif apptype == 12 then   update_favorites_table_recent(s32x_table)            update_cached_table("db_32x.lua", s32x_table)
-            elseif apptype == 13 then   update_favorites_table_recent(md_table)              update_cached_table("db_md.lua", md_table)
-            elseif apptype == 14 then   update_favorites_table_recent(sms_table)             update_cached_table("db_sms.lua", sms_table)
-            elseif apptype == 15 then   update_favorites_table_recent(gg_table)              update_cached_table("db_gg.lua", gg_table)
-            elseif apptype == 16 then   update_favorites_table_recent(tg16_table)            update_cached_table("db_tg16.lua", tg16_table)
-            elseif apptype == 17 then   update_favorites_table_recent(tgcd_table)            update_cached_table("db_tgcd.lua", tgcd_table)
-            elseif apptype == 18 then   update_favorites_table_recent(pce_table)             update_cached_table("db_pce.lua", pce_table)
-            elseif apptype == 19 then   update_favorites_table_recent(pcecd_table)           update_cached_table("db_pcecd.lua", pcecd_table)
-            elseif apptype == 20 then   update_favorites_table_recent(amiga_table)           update_cached_table("db_amiga.lua", amiga_table)
-            elseif apptype == 21 then   update_favorites_table_recent(c64_table)             update_cached_table("db_c64.lua", c64_table)
-            elseif apptype == 22 then   update_favorites_table_recent(wswan_col_table)       update_cached_table("db_wswan_col.lua", wswan_col_table)
-            elseif apptype == 23 then   update_favorites_table_recent(wswan_table)           update_cached_table("db_wswan.lua", wswan_table)
-            elseif apptype == 24 then   update_favorites_table_recent(msx2_table)            update_cached_table("db_msx2.lua", msx2_table)
-            elseif apptype == 25 then   update_favorites_table_recent(msx1_table)            update_cached_table("db_msx1.lua", msx1_table)
-            elseif apptype == 26 then   update_favorites_table_recent(zxs_table)             update_cached_table("db_zxs.lua", zxs_table)
-            elseif apptype == 27 then   update_favorites_table_recent(atari_7800_table)      update_cached_table("db_atari_7800.lua", atari_7800_table)
-            elseif apptype == 28 then   update_favorites_table_recent(atari_5200_table)      update_cached_table("db_atari_5200.lua", atari_5200_table)
-            elseif apptype == 29 then   update_favorites_table_recent(atari_2600_table)      update_cached_table("db_atari_2600.lua", atari_2600_table)
-            elseif apptype == 30 then   update_favorites_table_recent(atari_lynx_table)      update_cached_table("db_atari_lynx.lua", atari_lynx_table)
-            elseif apptype == 31 then   update_favorites_table_recent(colecovision_table)    update_cached_table("db_colecovision.lua", colecovision_table)
-            elseif apptype == 32 then   update_favorites_table_recent(vectrex_table)         update_cached_table("db_vectrex.lua", vectrex_table)
-            elseif apptype == 33 then   update_favorites_table_recent(fba_table)             update_cached_table("db_fba.lua", fba_table)
-            elseif apptype == 34 then   update_favorites_table_recent(mame_2003_plus_table)  update_cached_table("db_mame_2003_plus.lua", mame_2003_plus_table)
-            elseif apptype == 35 then   update_favorites_table_recent(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
-            elseif apptype == 36 then   update_favorites_table_recent(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
-            elseif apptype == 37 then   update_favorites_table_recent(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
+            elseif apptype == 11 then   update_favorites_table_recent(dreamcast_table)       update_cached_table("dreamcast_table.lua", dreamcast_table)
+            elseif apptype == 12 then   update_favorites_table_recent(sega_cd_table)         update_cached_table("db_sega_cd.lua", sega_cd_table)
+            elseif apptype == 13 then   update_favorites_table_recent(s32x_table)            update_cached_table("db_32x.lua", s32x_table)
+            elseif apptype == 14 then   update_favorites_table_recent(md_table)              update_cached_table("db_md.lua", md_table)
+            elseif apptype == 15 then   update_favorites_table_recent(sms_table)             update_cached_table("db_sms.lua", sms_table)
+            elseif apptype == 16 then   update_favorites_table_recent(gg_table)              update_cached_table("db_gg.lua", gg_table)
+            elseif apptype == 17 then   update_favorites_table_recent(tg16_table)            update_cached_table("db_tg16.lua", tg16_table)
+            elseif apptype == 18 then   update_favorites_table_recent(tgcd_table)            update_cached_table("db_tgcd.lua", tgcd_table)
+            elseif apptype == 19 then   update_favorites_table_recent(pce_table)             update_cached_table("db_pce.lua", pce_table)
+            elseif apptype == 20 then   update_favorites_table_recent(pcecd_table)           update_cached_table("db_pcecd.lua", pcecd_table)
+            elseif apptype == 21 then   update_favorites_table_recent(amiga_table)           update_cached_table("db_amiga.lua", amiga_table)
+            elseif apptype == 22 then   update_favorites_table_recent(c64_table)             update_cached_table("db_c64.lua", c64_table)
+            elseif apptype == 23 then   update_favorites_table_recent(wswan_col_table)       update_cached_table("db_wswan_col.lua", wswan_col_table)
+            elseif apptype == 24 then   update_favorites_table_recent(wswan_table)           update_cached_table("db_wswan.lua", wswan_table)
+            elseif apptype == 25 then   update_favorites_table_recent(msx2_table)            update_cached_table("db_msx2.lua", msx2_table)
+            elseif apptype == 26 then   update_favorites_table_recent(msx1_table)            update_cached_table("db_msx1.lua", msx1_table)
+            elseif apptype == 27 then   update_favorites_table_recent(zxs_table)             update_cached_table("db_zxs.lua", zxs_table)
+            elseif apptype == 28 then   update_favorites_table_recent(atari_7800_table)      update_cached_table("db_atari_7800.lua", atari_7800_table)
+            elseif apptype == 29 then   update_favorites_table_recent(atari_5200_table)      update_cached_table("db_atari_5200.lua", atari_5200_table)
+            elseif apptype == 30 then   update_favorites_table_recent(atari_2600_table)      update_cached_table("db_atari_2600.lua", atari_2600_table)
+            elseif apptype == 31 then   update_favorites_table_recent(atari_lynx_table)      update_cached_table("db_atari_lynx.lua", atari_lynx_table)
+            elseif apptype == 32 then   update_favorites_table_recent(colecovision_table)    update_cached_table("db_colecovision.lua", colecovision_table)
+            elseif apptype == 33 then   update_favorites_table_recent(vectrex_table)         update_cached_table("db_vectrex.lua", vectrex_table)
+            elseif apptype == 34 then   update_favorites_table_recent(fba_table)             update_cached_table("db_fba.lua", fba_table)
+            elseif apptype == 35 then   update_favorites_table_recent(mame_2003_plus_table)  update_cached_table("db_mame_2003_plus.lua", mame_2003_plus_table)
+            elseif apptype == 36 then   update_favorites_table_recent(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
+            elseif apptype == 37 then   update_favorites_table_recent(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
+            elseif apptype == 38 then   update_favorites_table_recent(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
             else    
             end
 
-        elseif showCat == 40 then
+        elseif showCat == 41 then
             -- Find game in other tables and update
             if apptype == 0 then        update_favorites_table_recent(homebrews_table)       update_cached_table("db_homebrews.lua", homebrews_table) 
             elseif apptype == 1 then    update_favorites_table_recent(games_table)           update_cached_table("db_games.lua", games_table)
@@ -6508,33 +7054,34 @@ function AddOrRemoveFavorite()
             elseif apptype == 8 then    update_favorites_table_recent(gba_table)             update_cached_table("db_gba.lua", gba_table)
             elseif apptype == 9 then    update_favorites_table_recent(gbc_table)             update_cached_table("db_gbc.lua", gbc_table)
             elseif apptype == 10 then   update_favorites_table_recent(gb_table)              update_cached_table("db_gb.lua", gb_table)
-            elseif apptype == 11 then   update_favorites_table_recent(sega_cd_table)         update_cached_table("db_sega_cd.lua", sega_cd_table)
-            elseif apptype == 12 then   update_favorites_table_recent(s32x_table)            update_cached_table("db_32x.lua", s32x_table)
-            elseif apptype == 13 then   update_favorites_table_recent(md_table)              update_cached_table("db_md.lua", md_table)
-            elseif apptype == 14 then   update_favorites_table_recent(sms_table)             update_cached_table("db_sms.lua", sms_table)
-            elseif apptype == 15 then   update_favorites_table_recent(gg_table)              update_cached_table("db_gg.lua", gg_table)
-            elseif apptype == 16 then   update_favorites_table_recent(tg16_table)            update_cached_table("db_tg16.lua", tg16_table)
-            elseif apptype == 17 then   update_favorites_table_recent(tgcd_table)            update_cached_table("db_tgcd.lua", tgcd_table)
-            elseif apptype == 18 then   update_favorites_table_recent(pce_table)             update_cached_table("db_pce.lua", pce_table)
-            elseif apptype == 19 then   update_favorites_table_recent(pcecd_table)           update_cached_table("db_pcecd.lua", pcecd_table)
-            elseif apptype == 20 then   update_favorites_table_recent(amiga_table)           update_cached_table("db_amiga.lua", amiga_table)
-            elseif apptype == 21 then   update_favorites_table_recent(c64_table)             update_cached_table("db_c64.lua", c64_table)
-            elseif apptype == 22 then   update_favorites_table_recent(wswan_col_table)       update_cached_table("db_wswan_col.lua", wswan_col_table)
-            elseif apptype == 23 then   update_favorites_table_recent(wswan_table)           update_cached_table("db_wswan.lua", wswan_table)
-            elseif apptype == 24 then   update_favorites_table_recent(msx2_table)            update_cached_table("db_msx2.lua", msx2_table)
-            elseif apptype == 25 then   update_favorites_table_recent(msx1_table)            update_cached_table("db_msx1.lua", msx1_table)
-            elseif apptype == 26 then   update_favorites_table_recent(zxs_table)             update_cached_table("db_zxs.lua", zxs_table)
-            elseif apptype == 27 then   update_favorites_table_recent(atari_7800_table)      update_cached_table("db_atari_7800.lua", atari_7800_table)
-            elseif apptype == 28 then   update_favorites_table_recent(atari_5200_table)      update_cached_table("db_atari_5200.lua", atari_5200_table)
-            elseif apptype == 29 then   update_favorites_table_recent(atari_2600_table)      update_cached_table("db_atari_2600.lua", atari_2600_table)
-            elseif apptype == 30 then   update_favorites_table_recent(atari_lynx_table)      update_cached_table("db_atari_lynx.lua", atari_lynx_table)
-            elseif apptype == 31 then   update_favorites_table_recent(colecovision_table)    update_cached_table("db_colecovision.lua", colecovision_table)
-            elseif apptype == 32 then   update_favorites_table_recent(vectrex_table)         update_cached_table("db_vectrex.lua", vectrex_table)
-            elseif apptype == 33 then   update_favorites_table_recent(fba_table)             update_cached_table("db_fba.lua", fba_table)
-            elseif apptype == 34 then   update_favorites_table_recent(mame_2003_plus_table)  update_cached_table("db_mame_2003_plus.lua", mame_2003_plus_table)
-            elseif apptype == 35 then   update_favorites_table_recent(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
-            elseif apptype == 36 then   update_favorites_table_recent(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
-            elseif apptype == 37 then   update_favorites_table_recent(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
+            elseif apptype == 11 then   update_favorites_table_recent(dreamcast_table)       update_cached_table("db_dreamcast.lua", dreamcast_table)
+            elseif apptype == 12 then   update_favorites_table_recent(sega_cd_table)         update_cached_table("db_sega_cd.lua", sega_cd_table)
+            elseif apptype == 13 then   update_favorites_table_recent(s32x_table)            update_cached_table("db_32x.lua", s32x_table)
+            elseif apptype == 14 then   update_favorites_table_recent(md_table)              update_cached_table("db_md.lua", md_table)
+            elseif apptype == 15 then   update_favorites_table_recent(sms_table)             update_cached_table("db_sms.lua", sms_table)
+            elseif apptype == 16 then   update_favorites_table_recent(gg_table)              update_cached_table("db_gg.lua", gg_table)
+            elseif apptype == 17 then   update_favorites_table_recent(tg16_table)            update_cached_table("db_tg16.lua", tg16_table)
+            elseif apptype == 18 then   update_favorites_table_recent(tgcd_table)            update_cached_table("db_tgcd.lua", tgcd_table)
+            elseif apptype == 19 then   update_favorites_table_recent(pce_table)             update_cached_table("db_pce.lua", pce_table)
+            elseif apptype == 20 then   update_favorites_table_recent(pcecd_table)           update_cached_table("db_pcecd.lua", pcecd_table)
+            elseif apptype == 21 then   update_favorites_table_recent(amiga_table)           update_cached_table("db_amiga.lua", amiga_table)
+            elseif apptype == 22 then   update_favorites_table_recent(c64_table)             update_cached_table("db_c64.lua", c64_table)
+            elseif apptype == 23 then   update_favorites_table_recent(wswan_col_table)       update_cached_table("db_wswan_col.lua", wswan_col_table)
+            elseif apptype == 24 then   update_favorites_table_recent(wswan_table)           update_cached_table("db_wswan.lua", wswan_table)
+            elseif apptype == 25 then   update_favorites_table_recent(msx2_table)            update_cached_table("db_msx2.lua", msx2_table)
+            elseif apptype == 26 then   update_favorites_table_recent(msx1_table)            update_cached_table("db_msx1.lua", msx1_table)
+            elseif apptype == 27 then   update_favorites_table_recent(zxs_table)             update_cached_table("db_zxs.lua", zxs_table)
+            elseif apptype == 28 then   update_favorites_table_recent(atari_7800_table)      update_cached_table("db_atari_7800.lua", atari_7800_table)
+            elseif apptype == 29 then   update_favorites_table_recent(atari_5200_table)      update_cached_table("db_atari_5200.lua", atari_5200_table)
+            elseif apptype == 30 then   update_favorites_table_recent(atari_2600_table)      update_cached_table("db_atari_2600.lua", atari_2600_table)
+            elseif apptype == 31 then   update_favorites_table_recent(atari_lynx_table)      update_cached_table("db_atari_lynx.lua", atari_lynx_table)
+            elseif apptype == 32 then   update_favorites_table_recent(colecovision_table)    update_cached_table("db_colecovision.lua", colecovision_table)
+            elseif apptype == 33 then   update_favorites_table_recent(vectrex_table)         update_cached_table("db_vectrex.lua", vectrex_table)
+            elseif apptype == 34 then   update_favorites_table_recent(fba_table)             update_cached_table("db_fba.lua", fba_table)
+            elseif apptype == 35 then   update_favorites_table_recent(mame_2003_plus_table)  update_cached_table("db_mame_2003_plus.lua", mame_2003_plus_table)
+            elseif apptype == 36 then   update_favorites_table_recent(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
+            elseif apptype == 37 then   update_favorites_table_recent(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
+            elseif apptype == 38 then   update_favorites_table_recent(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
             else    
             end
 
@@ -6550,33 +7097,34 @@ function AddOrRemoveFavorite()
             elseif apptype == 8 then    update_favorites_table_files(gba_table)             update_cached_table("db_gba.lua", gba_table)
             elseif apptype == 9 then    update_favorites_table_files(gbc_table)             update_cached_table("db_gbc.lua", gbc_table)
             elseif apptype == 10 then   update_favorites_table_files(gb_table)              update_cached_table("db_gb.lua", gb_table)
-            elseif apptype == 11 then   update_favorites_table_files(sega_cd_table)         update_cached_table("db_sega_cd.lua", sega_cd_table)
-            elseif apptype == 12 then   update_favorites_table_files(s32x_table)            update_cached_table("db_32x.lua", s32x_table)
-            elseif apptype == 13 then   update_favorites_table_files(md_table)              update_cached_table("db_md.lua", md_table)
-            elseif apptype == 14 then   update_favorites_table_files(sms_table)             update_cached_table("db_sms.lua", sms_table)
-            elseif apptype == 15 then   update_favorites_table_files(gg_table)              update_cached_table("db_gg.lua", gg_table)
-            elseif apptype == 16 then   update_favorites_table_files(tg16_table)            update_cached_table("db_tg16.lua", tg16_table)
-            elseif apptype == 17 then   update_favorites_table_files(tgcd_table)            update_cached_table("db_tgcd.lua", tgcd_table)
-            elseif apptype == 18 then   update_favorites_table_files(pce_table)             update_cached_table("db_pce.lua", pce_table)
-            elseif apptype == 19 then   update_favorites_table_files(pcecd_table)           update_cached_table("db_pcecd.lua", pcecd_table)
-            elseif apptype == 20 then   update_favorites_table_files(amiga_table)           update_cached_table("db_amiga.lua", amiga_table)
-            elseif apptype == 21 then   update_favorites_table_files(c64_table)             update_cached_table("db_c64.lua", c64_table)
-            elseif apptype == 22 then   update_favorites_table_files(wswan_col_table)       update_cached_table("db_wswan_col.lua", wswan_col_table)
-            elseif apptype == 23 then   update_favorites_table_files(wswan_table)           update_cached_table("db_wswan.lua", wswan_table)
-            elseif apptype == 24 then   update_favorites_table_files(msx2_table)            update_cached_table("db_msx2.lua", msx2_table)
-            elseif apptype == 25 then   update_favorites_table_files(msx1_table)            update_cached_table("db_msx1.lua", msx1_table)
-            elseif apptype == 26 then   update_favorites_table_files(zxs_table)             update_cached_table("db_zxs.lua", zxs_table)
-            elseif apptype == 27 then   update_favorites_table_files(atari_7800_table)      update_cached_table("db_atari_7800.lua", atari_7800_table)
-            elseif apptype == 28 then   update_favorites_table_files(atari_5200_table)      update_cached_table("db_atari_5200.lua", atari_5200_table)
-            elseif apptype == 29 then   update_favorites_table_files(atari_2600_table)      update_cached_table("db_atari_2600.lua", atari_2600_table)
-            elseif apptype == 30 then   update_favorites_table_files(atari_lynx_table)      update_cached_table("db_atari_lynx.lua", atari_lynx_table)
-            elseif apptype == 31 then   update_favorites_table_files(colecovision_table)    update_cached_table("db_colecovision.lua", colecovision_table)
-            elseif apptype == 32 then   update_favorites_table_files(vectrex_table)         update_cached_table("db_vectrex.lua", vectrex_table)
-            elseif apptype == 33 then   update_favorites_table_files(fba_table)             update_cached_table("db_fba.lua", fba_table)
-            elseif apptype == 34 then   update_favorites_table_files(mame_2003_plus_table)  update_cached_table("db_mame_2003_plus.lua", mame_2003_plus_table)
-            elseif apptype == 35 then   update_favorites_table_files(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
-            elseif apptype == 36 then   update_favorites_table_files(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
-            elseif apptype == 37 then   update_favorites_table_files(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
+            elseif apptype == 11 then   update_favorites_table_files(dreamcast_table)       update_cached_table("dreamcast_table.lua", dreamcast_table)
+            elseif apptype == 12 then   update_favorites_table_files(sega_cd_table)         update_cached_table("db_sega_cd.lua", sega_cd_table)
+            elseif apptype == 13 then   update_favorites_table_files(s32x_table)            update_cached_table("db_32x.lua", s32x_table)
+            elseif apptype == 14 then   update_favorites_table_files(md_table)              update_cached_table("db_md.lua", md_table)
+            elseif apptype == 15 then   update_favorites_table_files(sms_table)             update_cached_table("db_sms.lua", sms_table)
+            elseif apptype == 16 then   update_favorites_table_files(gg_table)              update_cached_table("db_gg.lua", gg_table)
+            elseif apptype == 17 then   update_favorites_table_files(tg16_table)            update_cached_table("db_tg16.lua", tg16_table)
+            elseif apptype == 18 then   update_favorites_table_files(tgcd_table)            update_cached_table("db_tgcd.lua", tgcd_table)
+            elseif apptype == 19 then   update_favorites_table_files(pce_table)             update_cached_table("db_pce.lua", pce_table)
+            elseif apptype == 20 then   update_favorites_table_files(pcecd_table)           update_cached_table("db_pcecd.lua", pcecd_table)
+            elseif apptype == 21 then   update_favorites_table_files(amiga_table)           update_cached_table("db_amiga.lua", amiga_table)
+            elseif apptype == 22 then   update_favorites_table_files(c64_table)             update_cached_table("db_c64.lua", c64_table)
+            elseif apptype == 23 then   update_favorites_table_files(wswan_col_table)       update_cached_table("db_wswan_col.lua", wswan_col_table)
+            elseif apptype == 24 then   update_favorites_table_files(wswan_table)           update_cached_table("db_wswan.lua", wswan_table)
+            elseif apptype == 25 then   update_favorites_table_files(msx2_table)            update_cached_table("db_msx2.lua", msx2_table)
+            elseif apptype == 26 then   update_favorites_table_files(msx1_table)            update_cached_table("db_msx1.lua", msx1_table)
+            elseif apptype == 27 then   update_favorites_table_files(zxs_table)             update_cached_table("db_zxs.lua", zxs_table)
+            elseif apptype == 28 then   update_favorites_table_files(atari_7800_table)      update_cached_table("db_atari_7800.lua", atari_7800_table)
+            elseif apptype == 29 then   update_favorites_table_files(atari_5200_table)      update_cached_table("db_atari_5200.lua", atari_5200_table)
+            elseif apptype == 30 then   update_favorites_table_files(atari_2600_table)      update_cached_table("db_atari_2600.lua", atari_2600_table)
+            elseif apptype == 31 then   update_favorites_table_files(atari_lynx_table)      update_cached_table("db_atari_lynx.lua", atari_lynx_table)
+            elseif apptype == 32 then   update_favorites_table_files(colecovision_table)    update_cached_table("db_colecovision.lua", colecovision_table)
+            elseif apptype == 33 then   update_favorites_table_files(vectrex_table)         update_cached_table("db_vectrex.lua", vectrex_table)
+            elseif apptype == 34 then   update_favorites_table_files(fba_table)             update_cached_table("db_fba.lua", fba_table)
+            elseif apptype == 35 then   update_favorites_table_files(mame_2003_plus_table)  update_cached_table("db_mame_2003_plus.lua", mame_2003_plus_table)
+            elseif apptype == 36 then   update_favorites_table_files(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
+            elseif apptype == 37 then   update_favorites_table_files(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
+            elseif apptype == 38 then   update_favorites_table_files(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
             else    
             end
 
@@ -6652,6 +7200,244 @@ function AddtoRecentlyPlayed()
 end
 
 
+function QuickOverride_Remove_from_current_table()
+    if #xAppNumTableLookup(apptype) ~= nil then
+        local key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+        if key ~= nil then
+            table.remove(xAppNumTableLookup(apptype), key)
+            update_cached_table(xAppDbFileLookup(apptype), xAppNumTableLookup(apptype))
+        else
+        end
+    end
+end
+
+function QuickOverride_Vita()
+    xAppNumTableLookup(apptype)[key].app_type = 1
+    xAppNumTableLookup(apptype)[key].cover_path_online = SystemsToScan[1].onlineCoverPathSystem
+    xAppNumTableLookup(apptype)[key].cover_path_local = SystemsToScan[1].localCoverPath
+    xAppNumTableLookup(apptype)[key].snap_path_online = SystemsToScan[1].onlineSnapPathSystem
+    xAppNumTableLookup(apptype)[key].snap_path_local = SystemsToScan[1].localSnapPath
+    -- Cover
+    if System.doesFileExist(SystemsToScan[1].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png") then
+        xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[1].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png" --custom cover by app name
+    elseif System.doesFileExist(SystemsToScan[1].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png") then
+        xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[1].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
+    elseif System.doesFileExist("ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png") then
+        xAppNumTableLookup(apptype)[key].icon_path = "ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png"  --app icon
+    elseif System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
+        xAppNumTableLookup(apptype)[key].icon_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"
+    else
+        xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png"
+    end
+end
+
+function QuickOverride_PSP()
+    xAppNumTableLookup(apptype)[key].app_type = 2
+    xAppNumTableLookup(apptype)[key].cover_path_online = SystemsToScan[3].onlineCoverPathSystem
+    xAppNumTableLookup(apptype)[key].cover_path_local = SystemsToScan[3].localCoverPath
+    xAppNumTableLookup(apptype)[key].snap_path_online = SystemsToScan[3].onlineSnapPathSystem
+    xAppNumTableLookup(apptype)[key].snap_path_local = SystemsToScan[3].localSnapPath
+    -- Cover
+    if System.doesFileExist(SystemsToScan[3].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png") then
+        xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[3].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png" --custom cover by app name
+    elseif System.doesFileExist(SystemsToScan[3].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png") then
+        xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[3].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
+    elseif System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
+        xAppNumTableLookup(apptype)[key].icon_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+    else
+        xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png" --blank grey
+    end
+end
+
+function QuickOverride_PSX()
+    xAppNumTableLookup(apptype)[key].app_type = 3
+    xAppNumTableLookup(apptype)[key].cover_path_online = SystemsToScan[4].onlineCoverPathSystem
+    xAppNumTableLookup(apptype)[key].cover_path_local = SystemsToScan[4].localCoverPath
+    xAppNumTableLookup(apptype)[key].snap_path_online = SystemsToScan[4].onlineSnapPathSystem
+    xAppNumTableLookup(apptype)[key].snap_path_local = SystemsToScan[4].localSnapPath
+    -- Cover
+    if System.doesFileExist(SystemsToScan[4].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png") then
+        xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[4].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png" --custom cover by app name
+    elseif System.doesFileExist(SystemsToScan[4].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png") then
+        xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[4].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
+    elseif System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
+        xAppNumTableLookup(apptype)[key].icon_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+    else
+        xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png" --blank grey
+    end
+end
+
+function QuickOverride_Homebrew()
+    xAppNumTableLookup(apptype)[key].app_type = 0
+    xAppNumTableLookup(apptype)[key].cover_path_online = SystemsToScan[2].onlineCoverPathSystem
+    xAppNumTableLookup(apptype)[key].cover_path_local = SystemsToScan[2].localCoverPath
+    xAppNumTableLookup(apptype)[key].snap_path_online = SystemsToScan[2].onlineSnapPathSystem
+    xAppNumTableLookup(apptype)[key].snap_path_local = SystemsToScan[2].localSnapPath
+    -- Cover
+    if System.doesFileExist(SystemsToScan[2].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png") then
+        xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[2].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png" --custom cover by app name
+    elseif System.doesFileExist(SystemsToScan[2].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png") then
+        xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[2].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
+    elseif System.doesFileExist("ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png") then
+        xAppNumTableLookup(apptype)[key].icon_path = "ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png"  --app icon
+    elseif System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_homebrew.png") then
+        xAppNumTableLookup(apptype)[key].icon_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"
+    else
+        xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png" --blank grey
+    end
+end
+
+function QuickOverride_Category(tmpappcat)
+
+    -- Remove current game from table
+
+        if (tmpappcat)==1 then
+            -- vita
+            if #xAppNumTableLookup(apptype) ~= nil then
+                key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+                if key ~= nil then
+                    QuickOverride_Vita()
+
+                    if #recently_played_table ~= nil then
+                        key_recent = find_game_table_pos_key(recently_played_table, app_titleid)
+                        if key_recent ~= nil then
+                            table.remove(recently_played_table,key_recent)
+                            table.insert(recently_played_table, xAppNumTableLookup(apptype)[key])
+                            update_cached_table_recently_played()
+                            recently_played_table = {}
+                            import_recently_played()
+                        else
+                        end
+                    end
+
+                    table.insert(games_table, xAppNumTableLookup(apptype)[key])
+                    table.sort(games_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+                    update_cached_table("db_games.lua", games_table)
+                else
+                end
+            end
+
+        elseif (tmpappcat)==2 then
+            -- psp
+            if #xAppNumTableLookup(apptype) ~= nil then
+                key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+                if key ~= nil then
+                    QuickOverride_PSP()
+
+                    if #recently_played_table ~= nil then
+                        key_recent = find_game_table_pos_key(recently_played_table, app_titleid)
+                        if key_recent ~= nil then
+                            table.remove(recently_played_table,key_recent)
+                            table.insert(recently_played_table, xAppNumTableLookup(apptype)[key])
+                            update_cached_table_recently_played()
+                            recently_played_table = {}
+                            import_recently_played()
+                        else
+                        end
+                    end
+
+                    table.insert(psp_table, xAppNumTableLookup(apptype)[key])
+                    table.sort(psp_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+                    update_cached_table("db_psp.lua", psp_table)
+                else
+                end
+            end
+            
+        elseif (tmpappcat)==3 then
+            -- psx
+            if #xAppNumTableLookup(apptype) ~= nil then
+                key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+                if key ~= nil then
+                    QuickOverride_PSX()
+
+                    if #recently_played_table ~= nil then
+                        key_recent = find_game_table_pos_key(recently_played_table, app_titleid)
+                        if key_recent ~= nil then
+                            table.remove(recently_played_table,key_recent)
+                            table.insert(recently_played_table, xAppNumTableLookup(apptype)[key])
+                            update_cached_table_recently_played()
+                            recently_played_table = {}
+                            import_recently_played()
+                        else
+                        end
+                    end
+
+                    table.insert(psx_table, xAppNumTableLookup(apptype)[key])
+                    table.sort(psx_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+                    update_cached_table("db_psx.lua", psx_table)
+                else
+                end
+            end
+            
+        elseif (tmpappcat)==4 then
+            -- homebrew
+            
+            -- If homebrew is hidden then Temporarily import for caching
+            if showHomebrews == 0 and #homebrews_table == 0 then
+                if System.doesFileExist("ux0:/data/RetroFlow/CACHE/db_homebrews.lua") then
+                    import_cached_DB_tables("db_homebrews.lua", homebrews_table)
+                else
+                end
+            else
+            end
+
+            if #xAppNumTableLookup(apptype) ~= nil then
+                key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+                if key ~= nil then
+                    QuickOverride_Homebrew()
+
+                    if #recently_played_table ~= nil then
+                        key_recent = find_game_table_pos_key(recently_played_table, app_titleid)
+                        if key_recent ~= nil then
+                            table.remove(recently_played_table,key_recent)
+                            table.insert(recently_played_table, xAppNumTableLookup(apptype)[key])
+                            update_cached_table_recently_played()
+                            recently_played_table = {}
+                            import_recently_played()
+                        else
+                        end
+                    end
+
+                    table.insert(homebrews_table, xAppNumTableLookup(apptype)[key])
+                    table.sort(homebrews_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+                    update_cached_table("db_homebrews.lua", homebrews_table)
+                else
+                end
+            end
+
+            -- Remove homebrew if hidden
+            if showHomebrews == 0 and #homebrews_table ~= nil then
+                for l, file in pairs(files_table) do
+                    if file.app_type == 0 then
+                        table.remove(files_table,l)
+                    else
+                    end
+                end
+                homebrews_table = {}
+            end
+            
+        else
+
+        end
+
+        QuickOverride_Remove_from_current_table()
+
+    -- If the last game is overriden, move to 1st to prevent nil error
+    if p == curTotal then
+        p = 1
+        master_index = p
+    end
+
+    -- force icon change. Credit BlackSheepBoy69
+    xCatLookup(showCat)[p].ricon = Graphics.loadImage(xCatLookup(showCat)[p].icon_path)
+
+    GetInfoSelected()
+    oldpad = pad -- Prevents it from launching next game accidentally. Credit BlackSheepBoy69
+    showMenu = 0
+
+    Render.useTexture(modBackground, imgCustomBack)
+end
+
 function OverrideCategory()
     if System.doesFileExist(cur_dir .. "/overrides.dat") then
         local inf = assert(io.open(cur_dir .. "/overrides.dat", "rw"), "Failed to open overrides.dat")
@@ -6672,27 +7458,38 @@ function OverrideCategory()
         file_override:write(lines)
         file_override:close()
         
-        if startupScan == 0 then -- 0 Off, 1 On
-            -- Startup scan is OFF
-            -- Scan folders and games
-            files_table = listDirectory(System.currentDirectory())
-            -- Import Cached Database
-            files_table = import_cached_DB(System.currentDirectory())
-        else
+        -- if startupScan == 0 then -- 0 Off, 1 On
+        --     -- Startup scan is OFF
+        --     -- Scan folders and games
+        --     files_table = listDirectory(System.currentDirectory())
+        --     -- Import Cached Database
+        --     files_table = import_cached_DB(System.currentDirectory())
+        -- else
+        -- end
+
+        -- --Reload
+        -- FreeIcons()
+        -- FreeMemory()
+        -- Network.term()
+        -- dofile("app0:index.lua")
+
+        if tmpappcat == 0 then
+            -- Get default apptype from table
+            key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+            if key ~= nil then
+                tmpappcat = xAppNumTableLookup(apptype)[key].app_type_default
+                -- If default apptype = 0 (homebrew) set to 4 
+                if tmpappcat == 0 then
+                    tmpappcat = 4
+                end
+            else
+            end
         end
 
+        QuickOverride_Category(tmpappcat)
 
-        --Reload
-        FreeIcons()
-        FreeMemory()
-        Network.term()
-        dofile("app0:index.lua")
     end
-
 end
-
-
-
 
 function DownloadCovers()
     local txt = lang_lines.Downloading_covers .. "..."
@@ -6709,14 +7506,14 @@ function DownloadCovers()
     if Network.isWifiEnabled() then
 
         -- getCovers - 0 All, 1 PSV, 2 PSP, 3 PS1, 4 N64, 5 SNES, 6 NES, 7 GBA, 8 GBC, 9 GB, 10 MD, 11 SMS, 12 GG, 13 MAME, 14 AMIGA, 15 TG16, 16 TGCD, 17 PCE, 18 PCECD, 19 NGPC
-        
-        function DownloadCovers_System(def_getCovers, def_table_name, def_lang_lines_Downloading_SysName_covers)
 
+        function DownloadCovers_System(def_getCovers, def_table_name, def_lang_lines_Downloading_SysName_covers)
+                    
             if getCovers == 0 then -- sort all games by system
                 table.sort(return_table, function(a, b) return (a.app_type < b.app_type) end)
             end
 
-            if  getCovers==(def_getCovers) and #(def_table_name) > 0 then -- Check getcover number against system
+            if getCovers==(def_getCovers) and #(def_table_name) > 0 then -- Check getcover number against system
                 
                 if status ~= RUNNING then
                     if scanComplete == false then
@@ -6726,8 +7523,16 @@ function DownloadCovers()
                         while app_idx <= #(def_table_name) do
 
                             if System.getAsyncState() ~= 0 then
-                                Network.downloadFileAsync((def_table_name)[app_idx].cover_path_online .. (def_table_name)[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
-                                running = true
+                                -- Only downloading missing covers
+
+                                -- Check if cover already exists
+                                if System.doesFileExist((def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].name .. ".png") or System.doesFileExist((def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].apptitle .. ".png") then
+                                    -- Found - do nothing
+                                else
+                                    -- Not found - download
+                                    Network.downloadFileAsync((def_table_name)[app_idx].cover_path_online .. (def_table_name)[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
+                                    running = true
+                                end
                             end
                             if System.getAsyncState() == 1 then
                                 Graphics.initBlend()
@@ -6736,24 +7541,11 @@ function DownloadCovers()
                                 running = false
                             end
                             if running == false then
-                                if System.doesFileExist("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png") then
-                                    tmpfile = System.openFile("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png", FREAD)
-                                    size = System.sizeFile(tmpfile)
-                                    if size < 1024 then
-                                        System.deleteFile("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
 
-                                    -- delete if already exists
-                                    elseif System.doesFileExist((def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].name .. ".png") then
-                                        System.deleteFile("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
-                                        cvrfound = cvrfound + 1
-
-                                    else
-                                        System.rename("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png", (def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].name .. ".png")
-                                        cvrfound = cvrfound + 1
-                                        
-                                    end
-                                    System.closeFile(tmpfile)
-                                    
+                                -- Check if cover already exists
+                                if System.doesFileExist((def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].name .. ".png") or System.doesFileExist((def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].apptitle .. ".png") then
+                                    -- Found - move on
+                                    cvrfound = cvrfound + 1
                                     percent = (app_idx / #(def_table_name)) * 100
                                     clean_name = (def_table_name)[app_idx].name:gsub("\n","")
                                     txt = (def_lang_lines_Downloading_SysName_covers) .. "...\n" .. lang_lines.Cover .. " " .. clean_name .. "\n" .. lang_lines.Found .. " " .. cvrfound .. lang_lines.of .. #(def_table_name)
@@ -6762,7 +7554,49 @@ function DownloadCovers()
                                     Graphics.termBlend()
                                     Screen.flip()
                                     app_idx = app_idx + 1
+
+                                else
+                                    -- Cover doesn't already exist- If it has been downloaded, check size and move to directory, then move on
+                                    if System.doesFileExist("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png") then
+                                        tmpfile = System.openFile("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png", FREAD)
+                                        size = System.sizeFile(tmpfile)
+                                        if size < 1024 then
+                                            System.deleteFile("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
+
+                                        else
+                                            System.rename("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png", (def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].name .. ".png")
+                                            cvrfound = cvrfound + 1
+
+                                            -- Update table
+                                            (def_table_name)[app_idx].icon_path = (def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].name .. ".png"
+
+                                            -- Is the game in the recently played list?
+                                            if #recently_played_table ~= nil then
+                                                local key = find_game_table_pos_key(recently_played_table, (def_table_name)[app_idx].name)
+                                                if key ~= nil then
+                                                    -- Yes - Find in files table
+                                                    recently_played_table[key].icon_path = (def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].name .. ".png"
+                                                else
+                                                    -- No
+                                                end
+                                            else
+                                            end
+                                            
+                                        end
+                                        System.closeFile(tmpfile)
+                                        
+                                        percent = (app_idx / #(def_table_name)) * 100
+                                        clean_name = (def_table_name)[app_idx].name:gsub("\n","")
+                                        txt = (def_lang_lines_Downloading_SysName_covers) .. "...\n" .. lang_lines.Cover .. " " .. clean_name .. "\n" .. lang_lines.Found .. " " .. cvrfound .. lang_lines.of .. #(def_table_name)
+
+                                        Graphics.initBlend()
+                                        Graphics.termBlend()
+                                        Screen.flip()
+                                        app_idx = app_idx + 1
+                                    end
+                                
                                 end
+
                             end
                             
                             if txt ~= old_txt then
@@ -6779,16 +7613,9 @@ function DownloadCovers()
                             scanComplete = true
                         end
                     else
-
-                        if startupScan == 0 then -- 0 Off, 1 On
-                            -- Startup scan is OFF
-                            -- Scan folders and games
-                            files_table = listDirectory(System.currentDirectory())
-                            -- Import Cached Database
-                            files_table = import_cached_DB(System.currentDirectory())
-                        else
-                        end
-
+                        cache_all_tables()
+                        update_cached_table_recently_played()
+                        
                         FreeIcons()
                         FreeMemory()
                         Network.term()
@@ -6804,7 +7631,7 @@ function DownloadCovers()
 
         -- def_getCovers, def_table_name, def_lang_lines_Downloading_SysName_covers)
         DownloadCovers_System(0,    return_table,           lang_lines.Downloading_all_covers)
-        DownloadCovers_System(1,    games_table,            lang_lines.Downloading_PSP_covers)
+        DownloadCovers_System(1,    games_table,            lang_lines.Downloading_PS_Vita_covers)
         DownloadCovers_System(2,    psp_table,              lang_lines.Downloading_PSP_covers)
         DownloadCovers_System(3,    psx_table,              lang_lines.Downloading_PS1_covers)
                                                    -- Homebrew is number 4 kicking out numbers
@@ -6814,49 +7641,43 @@ function DownloadCovers()
         DownloadCovers_System(7,    gba_table,              lang_lines.Downloading_GBA_covers)
         DownloadCovers_System(8,    gbc_table,              lang_lines.Downloading_GBC_covers)
         DownloadCovers_System(9,    gb_table,               lang_lines.Downloading_GB_covers)
-        DownloadCovers_System(10,   sega_cd_table,          lang_lines.Downloading_SCD_covers)
-        DownloadCovers_System(11,   s32x_table,             lang_lines.Downloading_32X_covers)
-        DownloadCovers_System(12,   md_table,               lang_lines.Downloading_MD_covers)
-        DownloadCovers_System(13,   sms_table,              lang_lines.Downloading_SMS_covers)
-        DownloadCovers_System(14,   gg_table,               lang_lines.Downloading_GG_covers)
-        DownloadCovers_System(15,   tg16_table,             lang_lines.Downloading_TG_16_covers)
-        DownloadCovers_System(16,   tgcd_table,             lang_lines.Downloading_TG_CD_covers)
-        DownloadCovers_System(17,   pce_table,              lang_lines.Downloading_PCE_covers)
-        DownloadCovers_System(18,   pcecd_table,            lang_lines.Downloading_PCE_CD_covers)
-        DownloadCovers_System(19,   amiga_table,            lang_lines.Downloading_AMIGA_covers)
-        DownloadCovers_System(20,   c64_table,              lang_lines.Downloading_C64_covers)
-        DownloadCovers_System(21,   wswan_col_table,        lang_lines.Downloading_WSWANCOL_covers)
-        DownloadCovers_System(22,   wswan_table,            lang_lines.Downloading_WSWAN_covers)
-        DownloadCovers_System(23,   msx2_table,             lang_lines.Downloading_MSX2_covers)
-        DownloadCovers_System(24,   msx1_table,             lang_lines.Downloading_MSX_covers)
-        DownloadCovers_System(25,   zxs_table,              lang_lines.Downloading_ZXS_covers)
-        DownloadCovers_System(26,   atari_7800_table,       lang_lines.Downloading_A7800_covers)
-        DownloadCovers_System(27,   atari_5200_table,       lang_lines.Downloading_A5200_covers)
-        DownloadCovers_System(28,   atari_2600_table,       lang_lines.Downloading_A600_covers)
-        DownloadCovers_System(29,   atari_lynx_table,       lang_lines.Downloading_LYNX_covers)
-        DownloadCovers_System(30,   colecovision_table,     lang_lines.Downloading_COLECO_covers)
-        DownloadCovers_System(31,   vectrex_table,          lang_lines.Downloading_VECTREX_covers)
-        DownloadCovers_System(32,   fba_table,              lang_lines.Downloading_FBA2012_covers)
-        DownloadCovers_System(33,   mame_2003_plus_table,   lang_lines.Downloading_MAME_2003_covers)
-        DownloadCovers_System(34,   mame_2000_table,        lang_lines.Downloading_MAME_2000_covers)
-        DownloadCovers_System(35,   neogeo_table,           lang_lines.Downloading_NG_covers)
-        DownloadCovers_System(36,   ngpc_table,             lang_lines.Downloading_NG_PC_covers)
+        DownloadCovers_System(10,   dreamcast_table,        lang_lines.Downloading_DC_covers)
+        DownloadCovers_System(11,   sega_cd_table,          lang_lines.Downloading_SCD_covers)
+        DownloadCovers_System(12,   s32x_table,             lang_lines.Downloading_32X_covers)
+        DownloadCovers_System(13,   md_table,               lang_lines.Downloading_MD_covers)
+        DownloadCovers_System(14,   sms_table,              lang_lines.Downloading_SMS_covers)
+        DownloadCovers_System(15,   gg_table,               lang_lines.Downloading_GG_covers)
+        DownloadCovers_System(16,   tg16_table,             lang_lines.Downloading_TG_16_covers)
+        DownloadCovers_System(17,   tgcd_table,             lang_lines.Downloading_TG_CD_covers)
+        DownloadCovers_System(18,   pce_table,              lang_lines.Downloading_PCE_covers)
+        DownloadCovers_System(19,   pcecd_table,            lang_lines.Downloading_PCE_CD_covers)
+        DownloadCovers_System(20,   amiga_table,            lang_lines.Downloading_AMIGA_covers)
+        DownloadCovers_System(21,   c64_table,              lang_lines.Downloading_C64_covers)
+        DownloadCovers_System(22,   wswan_col_table,        lang_lines.Downloading_WSWANCOL_covers)
+        DownloadCovers_System(23,   wswan_table,            lang_lines.Downloading_WSWAN_covers)
+        DownloadCovers_System(24,   msx2_table,             lang_lines.Downloading_MSX2_covers)
+        DownloadCovers_System(25,   msx1_table,             lang_lines.Downloading_MSX_covers)
+        DownloadCovers_System(26,   zxs_table,              lang_lines.Downloading_ZXS_covers)
+        DownloadCovers_System(27,   atari_7800_table,       lang_lines.Downloading_A7800_covers)
+        DownloadCovers_System(28,   atari_5200_table,       lang_lines.Downloading_A5200_covers)
+        DownloadCovers_System(29,   atari_2600_table,       lang_lines.Downloading_A600_covers)
+        DownloadCovers_System(30,   atari_lynx_table,       lang_lines.Downloading_LYNX_covers)
+        DownloadCovers_System(31,   colecovision_table,     lang_lines.Downloading_COLECO_covers)
+        DownloadCovers_System(32,   vectrex_table,          lang_lines.Downloading_VECTREX_covers)
+        DownloadCovers_System(33,   fba_table,              lang_lines.Downloading_FBA2012_covers)
+        DownloadCovers_System(34,   mame_2003_plus_table,   lang_lines.Downloading_MAME_2003_covers)
+        DownloadCovers_System(35,   mame_2000_table,        lang_lines.Downloading_MAME_2000_covers)
+        DownloadCovers_System(36,   neogeo_table,           lang_lines.Downloading_NG_covers)
+        DownloadCovers_System(37,   ngpc_table,             lang_lines.Downloading_NG_PC_covers)
         
+
     else
         if status ~= RUNNING then
             System.setMessage(lang_lines.Internet_Connection_Required, false, BUTTON_OK)
         end
-        
     end
+
     gettingCovers = false
-
-    -- RESCAN ALL AND UPDATE CACHE
-
-    -- -- Scan folders and games
-    -- files_table = listDirectory(System.currentDirectory())
-    -- -- Import Cached Database
-    -- files_table = import_cached_DB(System.currentDirectory())
-
 end
 
 
@@ -6881,14 +7702,23 @@ function DownloadSnaps()
                 
                 if status ~= RUNNING then
                     if bgscanComplete == false then
-                        System.setMessage("Downloading covers...", true)
+                        System.setMessage("Downloading backgrounds...", true)
                         System.setMessageProgMsg(txt)
                         
                         while app_idx <= #(def_table_name) do
 
                             if System.getAsyncState() ~= 0 then
-                                Network.downloadFileAsync((def_table_name)[app_idx].snap_path_online .. (def_table_name)[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
-                                running = true
+                                -- Only downloading missing backgrounds
+
+                                -- Check if background already exists
+                                if System.doesFileExist((def_table_name)[app_idx].snap_path_local .. (def_table_name)[app_idx].name .. ".png") or System.doesFileExist((def_table_name)[app_idx].snap_path_local .. (def_table_name)[app_idx].apptitle .. ".png") then
+                                    -- Found - do nothing
+                                else
+                                    -- Not found - download
+                                    Network.downloadFileAsync((def_table_name)[app_idx].snap_path_online .. (def_table_name)[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
+                                    running = true
+                                end
+
                             end
                             if System.getAsyncState() == 1 then
                                 Graphics.initBlend()
@@ -6897,24 +7727,11 @@ function DownloadSnaps()
                                 running = false
                             end
                             if running == false then
-                                if System.doesFileExist("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png") then
-                                    tmpfile = System.openFile("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png", FREAD)
-                                    size = System.sizeFile(tmpfile)
-                                    if size < 1024 then
-                                        System.deleteFile("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
 
-                                    -- delete if already exists
-                                    elseif System.doesFileExist((def_table_name)[app_idx].snap_path_local .. (def_table_name)[app_idx].name .. ".png") then
-                                        System.deleteFile("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
-                                        bgfound = bgfound + 1
-
-                                    else
-                                        System.rename("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png", (def_table_name)[app_idx].snap_path_local .. (def_table_name)[app_idx].name .. ".png")
-                                        bgfound = bgfound + 1
-                                        
-                                    end
-                                    System.closeFile(tmpfile)
-                                    
+                                -- Check if background already exists
+                                if System.doesFileExist((def_table_name)[app_idx].snap_path_local .. (def_table_name)[app_idx].name .. ".png") or System.doesFileExist((def_table_name)[app_idx].snap_path_local .. (def_table_name)[app_idx].apptitle .. ".png") then
+                                    -- Found - move on
+                                    bgfound = bgfound + 1
                                     percent = (app_idx / #(def_table_name)) * 100
                                     clean_name = (def_table_name)[app_idx].name:gsub("\n","")
                                     txt = (def_lang_lines_Downloading_SysName_backgrounds) .. "...\n" .. lang_lines.Background .. " " .. clean_name .. "\n" .. lang_lines.Found .. " " .. bgfound .. lang_lines.of .. #(def_table_name)
@@ -6923,7 +7740,32 @@ function DownloadSnaps()
                                     Graphics.termBlend()
                                     Screen.flip()
                                     app_idx = app_idx + 1
+
+                                else 
+                                    -- Background doesn't already exist- If it has been downloaded, check size and move to directory, then move on
+                                    if System.doesFileExist("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png") then
+                                        tmpfile = System.openFile("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png", FREAD)
+                                        size = System.sizeFile(tmpfile)
+                                        if size < 1024 then
+                                            System.deleteFile("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
+                                        else
+                                            System.rename("ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png", (def_table_name)[app_idx].snap_path_local .. (def_table_name)[app_idx].name .. ".png")
+                                            bgfound = bgfound + 1
+                                            
+                                        end
+                                        System.closeFile(tmpfile)
+                                        
+                                        percent = (app_idx / #(def_table_name)) * 100
+                                        clean_name = (def_table_name)[app_idx].name:gsub("\n","")
+                                        txt = (def_lang_lines_Downloading_SysName_backgrounds) .. "...\n" .. lang_lines.Background .. " " .. clean_name .. "\n" .. lang_lines.Found .. " " .. bgfound .. lang_lines.of .. #(def_table_name)
+
+                                        Graphics.initBlend()
+                                        Graphics.termBlend()
+                                        Screen.flip()
+                                        app_idx = app_idx + 1
+                                    end
                                 end
+                                
                             end
                             
                             if txt ~= old_txt then
@@ -6940,15 +7782,8 @@ function DownloadSnaps()
                             bgscanComplete = true
                         end
                     else
-
-                        if startupScan == 0 then -- 0 Off, 1 On
-                            -- Startup scan is OFF
-                            -- Scan folders and games
-                            files_table = listDirectory(System.currentDirectory())
-                            -- Import Cached Database
-                            files_table = import_cached_DB(System.currentDirectory())
-                        else
-                        end
+                        -- cache_all_tables()
+                        -- files_table = import_cached_DB(System.currentDirectory())
 
                         FreeIcons()
                         FreeMemory()
@@ -6971,33 +7806,34 @@ function DownloadSnaps()
         DownloadSnaps_System(6,    gba_table,              lang_lines.Downloading_GBA_backgrounds)
         DownloadSnaps_System(7,    gbc_table,              lang_lines.Downloading_GBC_backgrounds)
         DownloadSnaps_System(8,    gb_table,               lang_lines.Downloading_GB_backgrounds)
-        DownloadSnaps_System(9,   sega_cd_table,          lang_lines.Downloading_SCD_backgrounds)
-        DownloadSnaps_System(10,   s32x_table,             lang_lines.Downloading_32X_backgrounds)
-        DownloadSnaps_System(11,   md_table,               lang_lines.Downloading_MD_backgrounds)
-        DownloadSnaps_System(12,   sms_table,              lang_lines.Downloading_SMS_backgrounds)
-        DownloadSnaps_System(13,   gg_table,               lang_lines.Downloading_GG_backgrounds)
-        DownloadSnaps_System(14,   tg16_table,             lang_lines.Downloading_TG_16_backgrounds)
-        DownloadSnaps_System(15,   tgcd_table,             lang_lines.Downloading_TG_CD_backgrounds)
-        DownloadSnaps_System(16,   pce_table,              lang_lines.Downloading_PCE_backgrounds)
-        DownloadSnaps_System(17,   pcecd_table,            lang_lines.Downloading_PCE_CD_backgrounds)
-        DownloadSnaps_System(18,   amiga_table,            lang_lines.Downloading_AMIGA_backgrounds)
-        DownloadSnaps_System(19,   c64_table,              lang_lines.Downloading_C64_backgrounds)
-        DownloadSnaps_System(20,   wswan_col_table,        lang_lines.Downloading_WSWANCOL_backgrounds)
-        DownloadSnaps_System(21,   wswan_table,            lang_lines.Downloading_WSWAN_backgrounds)
-        DownloadSnaps_System(22,   msx2_table,             lang_lines.Downloading_MSX2_backgrounds)
-        DownloadSnaps_System(23,   msx1_table,             lang_lines.Downloading_MSX_backgrounds)
-        DownloadSnaps_System(24,   zxs_table,              lang_lines.Downloading_ZXS_backgrounds)
-        DownloadSnaps_System(25,   atari_7800_table,       lang_lines.Downloading_A7800_backgrounds)
-        DownloadSnaps_System(26,   atari_5200_table,       lang_lines.Downloading_A5200_backgrounds)
-        DownloadSnaps_System(27,   atari_2600_table,       lang_lines.Downloading_A600_backgrounds)
-        DownloadSnaps_System(28,   atari_lynx_table,       lang_lines.Downloading_LYNX_backgrounds)
-        DownloadSnaps_System(29,   colecovision_table,     lang_lines.Downloading_COLECO_backgrounds)
-        DownloadSnaps_System(30,   vectrex_table,          lang_lines.Downloading_VECTREX_backgrounds)
-        DownloadSnaps_System(31,   fba_table,              lang_lines.Downloading_FBA2012_backgrounds)
-        DownloadSnaps_System(32,   mame_2003_plus_table,   lang_lines.Downloading_MAME_2003_backgrounds)
-        DownloadSnaps_System(33,   mame_2000_table,        lang_lines.Downloading_MAME_2000_backgrounds)
-        DownloadSnaps_System(34,   neogeo_table,           lang_lines.Downloading_NG_backgrounds)
-        DownloadSnaps_System(35,   ngpc_table,             lang_lines.Downloading_NG_PC_backgrounds)
+        DownloadSnaps_System(9,    dreamcast_table,        lang_lines.Downloading_DC_backgrounds)
+        DownloadSnaps_System(10,   sega_cd_table,          lang_lines.Downloading_SCD_backgrounds)
+        DownloadSnaps_System(11,   s32x_table,             lang_lines.Downloading_32X_backgrounds)
+        DownloadSnaps_System(12,   md_table,               lang_lines.Downloading_MD_backgrounds)
+        DownloadSnaps_System(13,   sms_table,              lang_lines.Downloading_SMS_backgrounds)
+        DownloadSnaps_System(14,   gg_table,               lang_lines.Downloading_GG_backgrounds)
+        DownloadSnaps_System(15,   tg16_table,             lang_lines.Downloading_TG_16_backgrounds)
+        DownloadSnaps_System(16,   tgcd_table,             lang_lines.Downloading_TG_CD_backgrounds)
+        DownloadSnaps_System(17,   pce_table,              lang_lines.Downloading_PCE_backgrounds)
+        DownloadSnaps_System(18,   pcecd_table,            lang_lines.Downloading_PCE_CD_backgrounds)
+        DownloadSnaps_System(19,   amiga_table,            lang_lines.Downloading_AMIGA_backgrounds)
+        DownloadSnaps_System(20,   c64_table,              lang_lines.Downloading_C64_backgrounds)
+        DownloadSnaps_System(21,   wswan_col_table,        lang_lines.Downloading_WSWANCOL_backgrounds)
+        DownloadSnaps_System(22,   wswan_table,            lang_lines.Downloading_WSWAN_backgrounds)
+        DownloadSnaps_System(23,   msx2_table,             lang_lines.Downloading_MSX2_backgrounds)
+        DownloadSnaps_System(24,   msx1_table,             lang_lines.Downloading_MSX_backgrounds)
+        DownloadSnaps_System(25,   zxs_table,              lang_lines.Downloading_ZXS_backgrounds)
+        DownloadSnaps_System(26,   atari_7800_table,       lang_lines.Downloading_A7800_backgrounds)
+        DownloadSnaps_System(27,   atari_5200_table,       lang_lines.Downloading_A5200_backgrounds)
+        DownloadSnaps_System(28,   atari_2600_table,       lang_lines.Downloading_A600_backgrounds)
+        DownloadSnaps_System(29,   atari_lynx_table,       lang_lines.Downloading_LYNX_backgrounds)
+        DownloadSnaps_System(30,   colecovision_table,     lang_lines.Downloading_COLECO_backgrounds)
+        DownloadSnaps_System(31,   vectrex_table,          lang_lines.Downloading_VECTREX_backgrounds)
+        DownloadSnaps_System(32,   fba_table,              lang_lines.Downloading_FBA2012_backgrounds)
+        DownloadSnaps_System(33,   mame_2003_plus_table,   lang_lines.Downloading_MAME_2003_backgrounds)
+        DownloadSnaps_System(34,   mame_2000_table,        lang_lines.Downloading_MAME_2000_backgrounds)
+        DownloadSnaps_System(35,   neogeo_table,           lang_lines.Downloading_NG_backgrounds)
+        DownloadSnaps_System(36,   ngpc_table,             lang_lines.Downloading_NG_PC_backgrounds)
         
     else
         if status ~= RUNNING then
@@ -7005,15 +7841,8 @@ function DownloadSnaps()
         end
         
     end
+
     gettingBackgrounds = false
-
-    -- RESCAN ALL AND UPDATE CACHE
-
-    -- -- Scan folders and games
-    -- files_table = listDirectory(System.currentDirectory())
-    -- -- Import Cached Database
-    -- files_table = import_cached_DB(System.currentDirectory())
-
 end
 
 local function DrawCover(x, y, text, icon, sel, apptype)
@@ -7134,7 +7963,7 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverN64Noref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxN64Noref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==7 or apptype==11 or apptype==16 or apptype==17 or apptype==18 or apptype==19 or apptype==20 or apptype==22 or apptype==23 or apptype==33 or apptype==34 or apptype==35 or apptype==36 or apptype==37 then
+        elseif apptype==7 or apptype==12 or apptype==17 or apptype==18 or apptype==19 or apptype==20 or apptype==21 or apptype==23 or apptype==24 or apptype==34 or apptype==35 or apptype==36 or apptype==37 or apptype==38 then
             if setReflections == 1 then
                 Render.useTexture(modCoverNES, icon)
                 Render.drawModel(modCoverNES, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
@@ -7144,7 +7973,7 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverNESNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxNESNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==8 or apptype==9 or apptype==10 then
+        elseif apptype==8 or apptype==9 or apptype==10 or apptype==11 then
             if setReflections == 1 then
                 Render.useTexture(modCoverGB, icon)
                 Render.drawModel(modCoverGB, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
@@ -7154,7 +7983,7 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverGBNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxGBNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==12 or apptype==13 or apptype==14 or apptype==15 then
+        elseif apptype==13 or apptype==14 or apptype==15 or apptype==16 then
             if setReflections == 1 then
                 Render.useTexture(modCoverMD, icon)
                 Render.drawModel(modCoverMD, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
@@ -7164,7 +7993,7 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverMDNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxMDNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==21 or apptype==24 or apptype==25 or apptype==26 then
+        elseif apptype==22 or apptype==25 or apptype==26 or apptype==27 then
             if setReflections == 1 then
                 Render.useTexture(modCoverTAPE, icon)
                 Render.drawModel(modCoverTAPE, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
@@ -7174,7 +8003,7 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverTAPENoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxTAPENoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==27 or apptype==28 or apptype==29 or apptype==31 or apptype==32 then
+        elseif apptype==28 or apptype==29 or apptype==30 or apptype==32 or apptype==33 then
             if setReflections == 1 then
                 Render.useTexture(modCoverATARI, icon)
                 Render.drawModel(modCoverATARI, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
@@ -7184,7 +8013,7 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverATARINoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxATARINoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==30 then
+        elseif apptype==31 then
             if setReflections == 1 then
                 Render.useTexture(modCoverLYNX, icon)
                 Render.drawModel(modCoverLYNX, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
@@ -7222,6 +8051,7 @@ function FreeIcons()
     for k, v in pairs(gba_table)                do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end
     for k, v in pairs(gbc_table)                do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end
     for k, v in pairs(gb_table)                 do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end 
+    for k, v in pairs(dreamcast_table)          do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end 
     for k, v in pairs(sega_cd_table)            do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end 
     for k, v in pairs(s32x_table)               do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end 
     for k, v in pairs(md_table)                 do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end
@@ -7289,13 +8119,13 @@ function DownloadSingleCover()
         if System.doesFileExist("ux0:/data/RetroFlow/" .. app_titleid .. ".png") then
             tmpfile = System.openFile("ux0:/data/RetroFlow/" .. app_titleid .. ".png", FREAD)
             size = System.sizeFile(tmpfile)
-            System.closeFile(tmpfile)
             if size < 1024 then
                 System.deleteFile("ux0:/data/RetroFlow/" .. app_titleid .. ".png")
             else
                 System.rename("ux0:/data/RetroFlow/" .. app_titleid .. ".png", coverspath .. app_titleid .. ".png")
                 cvrfound = 1
             end
+            System.closeFile(tmpfile)
             -- Delete image if not in covers folder
             if System.doesFileExist("ux0:/data/RetroFlow/" .. app_titleid .. ".png") then
                 System.deleteFile("ux0:/data/RetroFlow/" .. app_titleid .. ".png")
@@ -7304,26 +8134,55 @@ function DownloadSingleCover()
 
         function update_cvrfound_showcats(def_table_name, def_user_db_file)
             (def_table_name)[app_idx].icon_path=coverspath .. app_titleid .. ".png"
-            if FileLoad[(def_table_name)[app_idx]] == true then
-                FileLoad[(def_table_name)[app_idx]] = nil
-                Threads.remove((def_table_name)[app_idx])
-                update_cached_table((def_user_db_file), (def_table_name))
+
+            -- Instant cover update - Credit BlackSheepBoy69
+            Threads.addTask((def_table_name)[app_idx], {
+            Type = "ImageLoad",
+            Path = (def_table_name)[app_idx].icon_path,
+            Table = (def_table_name)[app_idx],
+            Index = "ricon"
+            })
+
+            update_cached_table((def_user_db_file), (def_table_name))
+
+            -- Update recently played cover if found
+            if #recently_played_table ~= nil then
+                key = find_game_table_pos_key(recently_played_table, app_titleid)
+                if key ~= nil then
+                    recently_played_table[key].icon_path=coverspath .. app_titleid .. ".png"
+                    update_cached_table_recently_played()
+                else
+                end
+            else
             end
-            if (def_table_name)[app_idx].ricon then
-                (def_table_name)[app_idx].ricon = nil
-            end
+
         end
+
 
         function update_cvrfound_showcats_recent()
             recently_played_table[app_idx].icon_path=coverspath .. app_titleid .. ".png"
-            if FileLoad[recently_played_table[app_idx]] == true then
-                FileLoad[recently_played_table[app_idx]] = nil
-                Threads.remove(recently_played_table[app_idx])
-                update_cached_table_recently_played()
+
+            -- Instant cover update - Credit BlackSheepBoy69
+            Threads.addTask(recently_played_table[app_idx], {
+            Type = "ImageLoad",
+            Path = recently_played_table[app_idx].icon_path,
+            Table = recently_played_table[app_idx],
+            Index = "ricon"
+            })
+
+            update_cached_table_recently_played()
+
+            -- Update game's category cover if found
+            if #xAppNumTableLookup(apptype) ~= nil then
+                key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+                if key ~= nil then
+                    xAppNumTableLookup(apptype)[key].icon_path=coverspath .. app_titleid .. ".png"
+                    update_cached_table(xAppDbFileLookup(apptype), xAppNumTableLookup(apptype))
+                else
+                end
+            else
             end
-            if recently_played_table[app_idx].ricon then
-                recently_played_table[app_idx].ricon = nil
-            end
+
         end
 
         if cvrfound==1 then
@@ -7337,41 +8196,42 @@ function DownloadSingleCover()
             elseif showCat == 8 then update_cvrfound_showcats(gba_table, "db_gba.lua")
             elseif showCat == 9 then update_cvrfound_showcats(gbc_table, "db_gbc.lua")
             elseif showCat == 10 then update_cvrfound_showcats(gb_table, "db_gb.lua")
-            elseif showCat == 11 then update_cvrfound_showcats(sega_cd_table, "db_sega_cd.lua")
-            elseif showCat == 12 then update_cvrfound_showcats(s32x_table, "db_32x.lua")
-            elseif showCat == 13 then update_cvrfound_showcats(md_table, "db_md.lua")
-            elseif showCat == 14 then update_cvrfound_showcats(sms_table, "db_sms.lua")
-            elseif showCat == 15 then update_cvrfound_showcats(gg_table, "db_gg.lua")
-            elseif showCat == 16 then update_cvrfound_showcats(tg16_table, "db_tg16.lua")
-            elseif showCat == 17 then update_cvrfound_showcats(tgcd_table, "db_tgcd.lua")
-            elseif showCat == 18 then update_cvrfound_showcats(pce_table, "db_pce.lua")
-            elseif showCat == 19 then update_cvrfound_showcats(pcecd_table, "db_pcecd.lua")
-            elseif showCat == 20 then update_cvrfound_showcats(amiga_table, "db_amiga.lua")
-            elseif showCat == 21 then update_cvrfound_showcats(c64_table, "db_c64.lua")
-            elseif showCat == 22 then update_cvrfound_showcats(wswan_col_table, "db_wswan_col.lua")
-            elseif showCat == 23 then update_cvrfound_showcats(wswan_table, "db_wswan.lua")
-            elseif showCat == 24 then update_cvrfound_showcats(msx2_table, "db_msx2.lua")
-            elseif showCat == 25 then update_cvrfound_showcats(msx1_table, "db_msx1.lua")
-            elseif showCat == 26 then update_cvrfound_showcats(zxs_table, "db_zxs.lua")
-            elseif showCat == 27 then update_cvrfound_showcats(atari_7800_table, "db_atari_7800.lua")
-            elseif showCat == 28 then update_cvrfound_showcats(atari_5200_table, "db_atari_5200.lua")
-            elseif showCat == 29 then update_cvrfound_showcats(atari_2600_table, "db_atari_2600.lua")
-            elseif showCat == 30 then update_cvrfound_showcats(atari_lynx_table, "db_atari_lynx.lua")
-            elseif showCat == 31 then update_cvrfound_showcats(colecovision_table, "db_colecovision.lua")
-            elseif showCat == 32 then update_cvrfound_showcats(vectrex_table, "db_vectrex.lua")
-            elseif showCat == 33 then update_cvrfound_showcats(fba_table, "db_fba.lua")
-            elseif showCat == 34 then update_cvrfound_showcats(mame_2003_plus_table, "db_mame_2003_plus.lua")
-            elseif showCat == 35 then update_cvrfound_showcats(mame_2000_table, "db_mame_2000.lua")
-            elseif showCat == 36 then update_cvrfound_showcats(neogeo_table, "db_neogeo.lua")
-            elseif showCat == 37 then update_cvrfound_showcats(ngpc_table, "db_ngpc.lua")
-            elseif showCat == 38 then update_cvrfound_showcats(fav_count, "db_files.lua")
-            elseif showCat == 39 then update_cvrfound_showcats_recent()
-            elseif showCat == 40 then update_cvrfound_showcats(search_results_table, "db_files.lua")
+            elseif showCat == 11 then update_cvrfound_showcats(dreamcast_table, "db_dreamcast.lua")
+            elseif showCat == 12 then update_cvrfound_showcats(sega_cd_table, "db_sega_cd.lua")
+            elseif showCat == 13 then update_cvrfound_showcats(s32x_table, "db_32x.lua")
+            elseif showCat == 14 then update_cvrfound_showcats(md_table, "db_md.lua")
+            elseif showCat == 15 then update_cvrfound_showcats(sms_table, "db_sms.lua")
+            elseif showCat == 16 then update_cvrfound_showcats(gg_table, "db_gg.lua")
+            elseif showCat == 17 then update_cvrfound_showcats(tg16_table, "db_tg16.lua")
+            elseif showCat == 18 then update_cvrfound_showcats(tgcd_table, "db_tgcd.lua")
+            elseif showCat == 19 then update_cvrfound_showcats(pce_table, "db_pce.lua")
+            elseif showCat == 20 then update_cvrfound_showcats(pcecd_table, "db_pcecd.lua")
+            elseif showCat == 21 then update_cvrfound_showcats(amiga_table, "db_amiga.lua")
+            elseif showCat == 22 then update_cvrfound_showcats(c64_table, "db_c64.lua")
+            elseif showCat == 23 then update_cvrfound_showcats(wswan_col_table, "db_wswan_col.lua")
+            elseif showCat == 24 then update_cvrfound_showcats(wswan_table, "db_wswan.lua")
+            elseif showCat == 25 then update_cvrfound_showcats(msx2_table, "db_msx2.lua")
+            elseif showCat == 26 then update_cvrfound_showcats(msx1_table, "db_msx1.lua")
+            elseif showCat == 27 then update_cvrfound_showcats(zxs_table, "db_zxs.lua")
+            elseif showCat == 28 then update_cvrfound_showcats(atari_7800_table, "db_atari_7800.lua")
+            elseif showCat == 29 then update_cvrfound_showcats(atari_5200_table, "db_atari_5200.lua")
+            elseif showCat == 30 then update_cvrfound_showcats(atari_2600_table, "db_atari_2600.lua")
+            elseif showCat == 31 then update_cvrfound_showcats(atari_lynx_table, "db_atari_lynx.lua")
+            elseif showCat == 32 then update_cvrfound_showcats(colecovision_table, "db_colecovision.lua")
+            elseif showCat == 33 then update_cvrfound_showcats(vectrex_table, "db_vectrex.lua")
+            elseif showCat == 34 then update_cvrfound_showcats(fba_table, "db_fba.lua")
+            elseif showCat == 35 then update_cvrfound_showcats(mame_2003_plus_table, "db_mame_2003_plus.lua")
+            elseif showCat == 36 then update_cvrfound_showcats(mame_2000_table, "db_mame_2000.lua")
+            elseif showCat == 37 then update_cvrfound_showcats(neogeo_table, "db_neogeo.lua")
+            elseif showCat == 38 then update_cvrfound_showcats(ngpc_table, "db_ngpc.lua")
+            elseif showCat == 39 then update_cvrfound_showcats(fav_count, "db_files.lua")
+            elseif showCat == 40 then update_cvrfound_showcats_recent()
+            elseif showCat == 41 then update_cvrfound_showcats(search_results_table, "db_files.lua")
             else update_cvrfound_showcats(files_table, "db_files.lua")
             end
 
             if status ~= RUNNING then
-                System.setMessage(lang_lines.Cover .. " " .. app_titleid .. " " .. lang_lines.found_exclamation, false, BUTTON_OK)
+                -- System.setMessage(lang_lines.Cover .. " " .. app_titleid .. " " .. lang_lines.found_exclamation, false, BUTTON_OK)
             end
         else
             if status ~= RUNNING then
@@ -7446,36 +8306,37 @@ function DownloadSingleSnap()
             elseif showCat == 8 then pic_path = gba_table[p].snap_path_local .. gba_table[p].name .. ".png"
             elseif showCat == 9 then pic_path = gbc_table[p].snap_path_local .. gbc_table[p].name .. ".png"
             elseif showCat == 10 then pic_path = gb_table[p].snap_path_local .. gb_table[p].name .. ".png"
-            elseif showCat == 11 then pic_path = sega_cd_table[p].snap_path_local .. sega_cd_table[p].name .. ".png"
-            elseif showCat == 12 then pic_path = s32x_table[p].snap_path_local .. s32x_table[p].name .. ".png"
-            elseif showCat == 13 then pic_path = md_table[p].snap_path_local .. md_table[p].name .. ".png"
-            elseif showCat == 14 then pic_path = sms_table[p].snap_path_local .. sms_table[p].name .. ".png"
-            elseif showCat == 15 then pic_path = gg_table[p].snap_path_local .. gg_table[p].name .. ".png"
-            elseif showCat == 16 then pic_path = tg16_table[p].snap_path_local .. tg16_table[p].name .. ".png"
-            elseif showCat == 17 then pic_path = tgcd_table[p].snap_path_local .. tgcd_table[p].name .. ".png"
-            elseif showCat == 18 then pic_path = pce_table[p].snap_path_local .. pce_table[p].name .. ".png"
-            elseif showCat == 19 then pic_path = pcecd_table[p].snap_path_local .. pcecd_table[p].name .. ".png"
-            elseif showCat == 20 then pic_path = amiga_table[p].snap_path_local .. amiga_table[p].name .. ".png"
-            elseif showCat == 21 then pic_path = c64_table[p].snap_path_local .. c64_table[p].name .. ".png"
-            elseif showCat == 22 then pic_path = wswan_col_table[p].snap_path_local .. wswan_col_table[p].name .. ".png"
-            elseif showCat == 23 then pic_path = wswan_table[p].snap_path_local .. wswan_table[p].name .. ".png"
-            elseif showCat == 24 then pic_path = msx2_table[p].snap_path_local .. msx2_table[p].name .. ".png"
-            elseif showCat == 25 then pic_path = msx1_table[p].snap_path_local .. msx1_table[p].name .. ".png"
-            elseif showCat == 26 then pic_path = zxs_table[p].snap_path_local .. zxs_table[p].name .. ".png"
-            elseif showCat == 27 then pic_path = atari_7800_table[p].snap_path_local .. atari_7800_table[p].name .. ".png"
-            elseif showCat == 28 then pic_path = atari_5200_table[p].snap_path_local .. atari_5200_table[p].name .. ".png"
-            elseif showCat == 29 then pic_path = atari_2600_table[p].snap_path_local .. atari_2600_table[p].name .. ".png"
-            elseif showCat == 30 then pic_path = atari_lynx_table[p].snap_path_local .. atari_lynx_table[p].name .. ".png"
-            elseif showCat == 31 then pic_path = colecovision_table[p].snap_path_local .. colecovision_table[p].name .. ".png"
-            elseif showCat == 32 then pic_path = vectrex_table[p].snap_path_local .. vectrex_table[p].name .. ".png"
-            elseif showCat == 33 then pic_path = fba_table[p].snap_path_local .. fba_table[p].name .. ".png"
-            elseif showCat == 34 then pic_path = mame_2003_plus_table[p].snap_path_local .. mame_2003_plus_table[p].name .. ".png"
-            elseif showCat == 35 then pic_path = mame_2000_table[p].snap_path_local .. mame_2000_table[p].name .. ".png"
-            elseif showCat == 36 then pic_path = neogeo_table[p].snap_path_local .. neogeo_table[p].name .. ".png"
-            elseif showCat == 37 then pic_path = ngpc_table[p].snap_path_local .. ngpc_table[p].name .. ".png"
-            elseif showCat == 38 then pic_path = fav_count[p].snap_path_local .. fav_count[p].name .. ".png"
-            elseif showCat == 39 then pic_path = recently_played_table[p].snap_path_local .. recently_played_table[p].name .. ".png"
-            elseif showCat == 40 then pic_path = search_results_table[p].snap_path_local .. search_results_table[p].name .. ".png"
+            elseif showCat == 11 then pic_path = dreamcast_table[p].snap_path_local .. dreamcast_table[p].name .. ".png"
+            elseif showCat == 12 then pic_path = sega_cd_table[p].snap_path_local .. sega_cd_table[p].name .. ".png"
+            elseif showCat == 13 then pic_path = s32x_table[p].snap_path_local .. s32x_table[p].name .. ".png"
+            elseif showCat == 14 then pic_path = md_table[p].snap_path_local .. md_table[p].name .. ".png"
+            elseif showCat == 15 then pic_path = sms_table[p].snap_path_local .. sms_table[p].name .. ".png"
+            elseif showCat == 16 then pic_path = gg_table[p].snap_path_local .. gg_table[p].name .. ".png"
+            elseif showCat == 17 then pic_path = tg16_table[p].snap_path_local .. tg16_table[p].name .. ".png"
+            elseif showCat == 18 then pic_path = tgcd_table[p].snap_path_local .. tgcd_table[p].name .. ".png"
+            elseif showCat == 19 then pic_path = pce_table[p].snap_path_local .. pce_table[p].name .. ".png"
+            elseif showCat == 20 then pic_path = pcecd_table[p].snap_path_local .. pcecd_table[p].name .. ".png"
+            elseif showCat == 21 then pic_path = amiga_table[p].snap_path_local .. amiga_table[p].name .. ".png"
+            elseif showCat == 22 then pic_path = c64_table[p].snap_path_local .. c64_table[p].name .. ".png"
+            elseif showCat == 23 then pic_path = wswan_col_table[p].snap_path_local .. wswan_col_table[p].name .. ".png"
+            elseif showCat == 24 then pic_path = wswan_table[p].snap_path_local .. wswan_table[p].name .. ".png"
+            elseif showCat == 25 then pic_path = msx2_table[p].snap_path_local .. msx2_table[p].name .. ".png"
+            elseif showCat == 26 then pic_path = msx1_table[p].snap_path_local .. msx1_table[p].name .. ".png"
+            elseif showCat == 27 then pic_path = zxs_table[p].snap_path_local .. zxs_table[p].name .. ".png"
+            elseif showCat == 28 then pic_path = atari_7800_table[p].snap_path_local .. atari_7800_table[p].name .. ".png"
+            elseif showCat == 29 then pic_path = atari_5200_table[p].snap_path_local .. atari_5200_table[p].name .. ".png"
+            elseif showCat == 30 then pic_path = atari_2600_table[p].snap_path_local .. atari_2600_table[p].name .. ".png"
+            elseif showCat == 31 then pic_path = atari_lynx_table[p].snap_path_local .. atari_lynx_table[p].name .. ".png"
+            elseif showCat == 32 then pic_path = colecovision_table[p].snap_path_local .. colecovision_table[p].name .. ".png"
+            elseif showCat == 33 then pic_path = vectrex_table[p].snap_path_local .. vectrex_table[p].name .. ".png"
+            elseif showCat == 34 then pic_path = fba_table[p].snap_path_local .. fba_table[p].name .. ".png"
+            elseif showCat == 35 then pic_path = mame_2003_plus_table[p].snap_path_local .. mame_2003_plus_table[p].name .. ".png"
+            elseif showCat == 36 then pic_path = mame_2000_table[p].snap_path_local .. mame_2000_table[p].name .. ".png"
+            elseif showCat == 37 then pic_path = neogeo_table[p].snap_path_local .. neogeo_table[p].name .. ".png"
+            elseif showCat == 38 then pic_path = ngpc_table[p].snap_path_local .. ngpc_table[p].name .. ".png"
+            elseif showCat == 39 then pic_path = fav_count[p].snap_path_local .. fav_count[p].name .. ".png"
+            elseif showCat == 40 then pic_path = recently_played_table[p].snap_path_local .. recently_played_table[p].name .. ".png"
+            elseif showCat == 41 then pic_path = search_results_table[p].snap_path_local .. search_results_table[p].name .. ".png"
             else pic_path = files_table[p].snap_path_local .. files_table[p].name .. ".png"
             end
 
@@ -7487,10 +8348,21 @@ function DownloadSingleSnap()
             else
                 Render.useTexture(modBackground, imgCustomBack)
             end
+
+            -- Update recently played background if found
+            if #recently_played_table ~= nil then
+                key = find_game_table_pos_key(recently_played_table, app_titleid)
+                if key ~= nil then
+                    recently_played_table[key].snap_path_local=snapPath
+                    update_cached_table_recently_played()
+                else
+                end
+            else
+            end
             
 
             if status ~= RUNNING then
-                System.setMessage(lang_lines.Background .. " " .. app_titleid .. " " .. lang_lines.found_exclamation, false, BUTTON_OK)
+                -- System.setMessage(lang_lines.Background .. " " .. app_titleid .. " " .. lang_lines.found_exclamation, false, BUTTON_OK)
             end
         else
             if status ~= RUNNING then
@@ -7613,56 +8485,198 @@ while true do
 
     -- search start - Checking for keyboard state
     state = Keyboard.getState()
-    if state ~= RUNNING and hasTyped == true then
-        
-        
-        hasTyped = false
 
-        -- Typed text
-        ret = "" .. Keyboard.getInput()
+    if rename_keyboard == false then
 
-        -- Bug fix, for when enter pressed without text, do nothing
-        if string.len(ret) == 0 then
-            state = CANCELED
-            -- Terminating keyboard
-            Keyboard.clear()
-        end
-
-        if state == CANCELED then
-        else
-
-            search_results_table = {}
-            -- If already on search category, move away
-            if showCat == 40 then 
-                showCat = 0
-            end
+        if state ~= RUNNING and hasTyped == true then
+                
+            hasTyped = false
 
             -- Typed text
-            -- ret = "" .. Keyboard.getInput()
-            -- Converted to upper and lower case for broader results
-            ret_lc = string.lower(ret)
-            ret_uc = string.upper(ret)
+            ret_search = "" .. Keyboard.getInput()
 
-            for l, file in pairs(files_table) do
-                if string.match(file.apptitle, ret) or string.match(file.apptitle, ret_lc) or string.match(file.apptitle, ret_uc) then
-                    table.insert(search_results_table, file)
-                    table.sort(search_results_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
-                    app_title = search_results_table[1].app_title
-                else
-                    app_title = lang_lines.Search_No_Results -- Workaround - hides last name shown before searching
-                end
+            -- Bug fix, for when enter pressed without text, do nothing
+            if string.len(ret_search) == 0 then
+                state = CANCELED
+                -- Terminating keyboard
+                Keyboard.clear()
             end
 
-            showCat = 40
-            p = 1
-            master_index = p
-            showMenu = 0
-            GetNameAndAppTypeSelected()
+            if state == CANCELED then
+            else
+
+                search_results_table = {}
+                -- If already on search category, move away
+                if showCat == 41 then 
+                    showCat = 0
+                end
+
+                -- Typed text
+                -- Converted to upper and lower case for broader results
+                ret_search_lc = string.lower(ret_search)
+                ret_search_uc = string.upper(ret_search)
+
+                for l, file in pairs(files_table) do
+                    if string.match(file.apptitle, ret_search) or string.match(file.apptitle, ret_search_lc) or string.match(file.apptitle, ret_search_uc) then
+                        table.insert(search_results_table, file)
+                        table.sort(search_results_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+                        local app_title = search_results_table[1].app_title
+                    else
+                        local app_title = lang_lines.Search_No_Results -- Workaround - hides last name shown before searching
+                    end
+                end
+
+                showCat = 41
+                p = 1
+                master_index = p
+                showMenu = 0
+                GetNameAndAppTypeSelected()
+            end
+
+            -- Terminating keyboard
+            Keyboard.clear()
+        else
+        end
+    else
+    end
+
+    if rename_keyboard == true then
+        
+        if state ~= RUNNING and hasTyped == true then
+            hasTyped = false
+
+            -- Typed text
+            ret_rename = "" .. Keyboard.getInput()
+
+            -- Bug fix, for when enter pressed without text, do nothing
+            if string.len(ret_rename) == 0 then
+                state = CANCELED
+                -- Terminating keyboard
+                Keyboard.clear()
+            end
+
+            if state == CANCELED and rename_keyboard == true then
+            else
+
+                -- Update current table
+                xCatLookup(showCat)[p].apptitle = ret_rename
+                xCatLookup(showCat)[p].title = ret_rename    
+                txtname = ret_rename
+
+                -- START updating other tables -- 
+
+                -- Recent
+                if #recently_played_table ~= nil then
+                    local key = find_game_table_pos_key(recently_played_table, app_titleid)
+                    if key ~= nil then
+                      -- Yes - Find in files table
+                      recently_played_table[key].title = ret_rename
+                      recently_played_table[key].apptitle = ret_rename
+                      update_cached_table_recently_played()
+                    else
+                      -- No
+                    end
+                else
+                end
+
+                -- Favourites
+                if #fav_count ~= nil then
+                    local key = find_game_table_pos_key(fav_count, app_titleid)
+                    if key ~= nil then
+                      -- Yes - Find in files table
+                      fav_count[key].title = ret_rename
+                      fav_count[key].apptitle = ret_rename
+                    else
+                      -- No
+                    end
+                else
+                end
+                
+
+                -- Renamed
+                -- Has the game been renamed before?
+                if #renamed_games_table ~= nil then
+                    local key = find_game_table_pos_key(renamed_games_table, app_titleid)
+                    if key ~= nil then
+                      -- Yes - it's already in the rename list, update it.
+                      renamed_games_table[key].title = ret_rename
+                    else
+                        -- No, it's new, add it to the rename list
+                        renamed_game_temp = {}
+                        table.insert(renamed_game_temp, {name = app_titleid, title = ret_rename})
+
+                        for i, file in pairs(renamed_game_temp) do
+                            table.insert(renamed_games_table, file)
+                        end
+                    end
+                    -- Save the renamed table for importing on restart
+                    update_cached_table_renamed_games()
+                else
+                end
+
+
+                -- Apptype table
+                update_cached_table(xAppDbFileLookup(apptype), xAppNumTableLookup(apptype))
+
+                -- All other tables - re-import cache and rename if match rename table
+                files_table = import_cached_DB(System.currentDirectory())
+
+                -- Get favourites list - so can stay on favourites category if renaming from there
+                fav_count = {}
+                for l, file in pairs(return_table) do
+                    if file.favourite==true then
+                        if showHomebrews == 0 then
+                            -- ignore homebrew apps
+                            if file.app_type ~= nil then
+                                if file.favourite==true then
+                                    table.insert(fav_count, file)
+                                end
+                            else
+                            end
+                        else
+                            if file.favourite==true then
+                                table.insert(fav_count, file)
+                            end
+                        end
+                    end
+                end
+
+                -- END updating other tables -- 
+
+                -- Get ready for reload - Game position may change due to alphabetical sorting, find its new position
+                if #xCatLookup(showCat) ~= nil then
+                    local key = find_game_table_pos_key(xCatLookup(showCat), app_titleid)
+                    if key ~= nil then
+                        p = key
+                        master_index = p
+                        showMenu = 0
+                        -- Instantly move to selection
+                        if startCovers == false then
+                            targetX = base_x
+                            startCovers = true
+                            GetInfoSelected()
+                        end
+
+                    else
+                        showCat = 1
+                        p = 1
+                        master_index = p
+                        showMenu = 0
+                    end
+                else
+                end
+
+                GetNameAndAppTypeSelected()
+                Render.useTexture(modBackground, imgCustomBack)
+            end
+
+            rename_keyboard = false
+            -- Terminating keyboard
+            Keyboard.clear()
+        else
         end
 
-        -- Terminating keyboard
-        Keyboard.clear()
-
+    else
     end
     -- search end
 
@@ -7717,36 +8731,37 @@ while true do
         elseif showCat == 8 then Font.print(fnt22, 32, 34, lang_lines.Game_Boy_Advance, white)
         elseif showCat == 9 then Font.print(fnt22, 32, 34, lang_lines.Game_Boy_Color, white)
         elseif showCat == 10 then Font.print(fnt22, 32, 34, lang_lines.Game_Boy, white)
-        elseif showCat == 11 then Font.print(fnt22, 32, 34, lang_lines.Sega_CD, white)
-        elseif showCat == 12 then Font.print(fnt22, 32, 34, lang_lines.Sega_32X, white)
-        elseif showCat == 13 then Font.print(fnt22, 32, 34, lang_lines.Sega_Mega_Drive, white)
-        elseif showCat == 14 then Font.print(fnt22, 32, 34, lang_lines.Sega_Master_System, white)
-        elseif showCat == 15 then Font.print(fnt22, 32, 34, lang_lines.Sega_Game_Gear, white)        
-        elseif showCat == 16 then Font.print(fnt22, 32, 34, lang_lines.TurboGrafx_16, white)
-        elseif showCat == 17 then Font.print(fnt22, 32, 34, lang_lines.TurboGrafx_CD, white)
-        elseif showCat == 18 then Font.print(fnt22, 32, 34, lang_lines.PC_Engine, white)
-        elseif showCat == 19 then Font.print(fnt22, 32, 34, lang_lines.PC_Engine_CD, white)
-        elseif showCat == 20 then Font.print(fnt22, 32, 34, lang_lines.Amiga, white)
-        elseif showCat == 21 then Font.print(fnt22, 32, 34, lang_lines.Commodore_64, white)
-        elseif showCat == 22 then Font.print(fnt22, 32, 34, lang_lines.WonderSwan_Color, white)
-        elseif showCat == 23 then Font.print(fnt22, 32, 34, lang_lines.WonderSwan, white)
-        elseif showCat == 24 then Font.print(fnt22, 32, 34, lang_lines.MSX2, white)
-        elseif showCat == 25 then Font.print(fnt22, 32, 34, lang_lines.MSX, white)
-        elseif showCat == 26 then Font.print(fnt22, 32, 34, lang_lines.ZX_Spectrum, white)
-        elseif showCat == 27 then Font.print(fnt22, 32, 34, lang_lines.Atari_7800, white)
-        elseif showCat == 28 then Font.print(fnt22, 32, 34, lang_lines.Atari_5200, white)
-        elseif showCat == 29 then Font.print(fnt22, 32, 34, lang_lines.Atari_2600, white)
-        elseif showCat == 30 then Font.print(fnt22, 32, 34, lang_lines.Atari_Lynx, white)
-        elseif showCat == 31 then Font.print(fnt22, 32, 34, lang_lines.ColecoVision, white)
-        elseif showCat == 32 then Font.print(fnt22, 32, 34, lang_lines.Vectrex, white)
-        elseif showCat == 33 then Font.print(fnt22, 32, 34, lang_lines.FBA_2012, white)
-        elseif showCat == 34 then Font.print(fnt22, 32, 34, lang_lines.MAME_2003Plus, white)
-        elseif showCat == 35 then Font.print(fnt22, 32, 34, lang_lines.MAME_2000, white)
-        elseif showCat == 36 then Font.print(fnt22, 32, 34, lang_lines.Neo_Geo, white)
-        elseif showCat == 37 then Font.print(fnt22, 32, 34, lang_lines.Neo_Geo_Pocket_Color, white)
-        elseif showCat == 38 then Font.print(fnt22, 32, 34, lang_lines.Favorites, white)
-        elseif showCat == 39 then Font.print(fnt22, 32, 34, lang_lines.Recently_Played, white)
-        elseif showCat == 40 then Font.print(fnt22, 32, 34, lang_lines.Search_Results, white)
+        elseif showCat == 11 then Font.print(fnt22, 32, 34, lang_lines.Sega_Dreamcast, white)
+        elseif showCat == 12 then Font.print(fnt22, 32, 34, lang_lines.Sega_CD, white)
+        elseif showCat == 13 then Font.print(fnt22, 32, 34, lang_lines.Sega_32X, white)
+        elseif showCat == 14 then Font.print(fnt22, 32, 34, lang_lines.Sega_Mega_Drive, white)
+        elseif showCat == 15 then Font.print(fnt22, 32, 34, lang_lines.Sega_Master_System, white)
+        elseif showCat == 16 then Font.print(fnt22, 32, 34, lang_lines.Sega_Game_Gear, white)        
+        elseif showCat == 17 then Font.print(fnt22, 32, 34, lang_lines.TurboGrafx_16, white)
+        elseif showCat == 18 then Font.print(fnt22, 32, 34, lang_lines.TurboGrafx_CD, white)
+        elseif showCat == 19 then Font.print(fnt22, 32, 34, lang_lines.PC_Engine, white)
+        elseif showCat == 20 then Font.print(fnt22, 32, 34, lang_lines.PC_Engine_CD, white)
+        elseif showCat == 21 then Font.print(fnt22, 32, 34, lang_lines.Amiga, white)
+        elseif showCat == 22 then Font.print(fnt22, 32, 34, lang_lines.Commodore_64, white)
+        elseif showCat == 23 then Font.print(fnt22, 32, 34, lang_lines.WonderSwan_Color, white)
+        elseif showCat == 24 then Font.print(fnt22, 32, 34, lang_lines.WonderSwan, white)
+        elseif showCat == 25 then Font.print(fnt22, 32, 34, lang_lines.MSX2, white)
+        elseif showCat == 26 then Font.print(fnt22, 32, 34, lang_lines.MSX, white)
+        elseif showCat == 27 then Font.print(fnt22, 32, 34, lang_lines.ZX_Spectrum, white)
+        elseif showCat == 28 then Font.print(fnt22, 32, 34, lang_lines.Atari_7800, white)
+        elseif showCat == 29 then Font.print(fnt22, 32, 34, lang_lines.Atari_5200, white)
+        elseif showCat == 30 then Font.print(fnt22, 32, 34, lang_lines.Atari_2600, white)
+        elseif showCat == 31 then Font.print(fnt22, 32, 34, lang_lines.Atari_Lynx, white)
+        elseif showCat == 32 then Font.print(fnt22, 32, 34, lang_lines.ColecoVision, white)
+        elseif showCat == 33 then Font.print(fnt22, 32, 34, lang_lines.Vectrex, white)
+        elseif showCat == 34 then Font.print(fnt22, 32, 34, lang_lines.FBA_2012, white)
+        elseif showCat == 35 then Font.print(fnt22, 32, 34, lang_lines.MAME_2003Plus, white)
+        elseif showCat == 36 then Font.print(fnt22, 32, 34, lang_lines.MAME_2000, white)
+        elseif showCat == 37 then Font.print(fnt22, 32, 34, lang_lines.Neo_Geo, white)
+        elseif showCat == 38 then Font.print(fnt22, 32, 34, lang_lines.Neo_Geo_Pocket_Color, white)
+        elseif showCat == 39 then Font.print(fnt22, 32, 34, lang_lines.Favorites, white)
+        elseif showCat == 40 then Font.print(fnt22, 32, 34, lang_lines.Recently_Played, white)
+        elseif showCat == 41 then Font.print(fnt22, 32, 34, lang_lines.Search_Results, white)
         else Font.print(fnt22, 32, 34, lang_lines.All, white)
         end
         if Network.isWifiEnabled() then
@@ -7774,40 +8789,41 @@ while true do
         elseif showCat == 8 then drawCategory (gba_table)
         elseif showCat == 9 then drawCategory (gbc_table)
         elseif showCat == 10 then drawCategory (gb_table)
-        elseif showCat == 11 then drawCategory (sega_cd_table)
-        elseif showCat == 12 then drawCategory (s32x_table)
-        elseif showCat == 13 then drawCategory (md_table)
-        elseif showCat == 14 then drawCategory (sms_table)
-        elseif showCat == 15 then drawCategory (gg_table)
-        elseif showCat == 16 then drawCategory (tg16_table)
-        elseif showCat == 17 then drawCategory (tgcd_table)
-        elseif showCat == 18 then drawCategory (pce_table)
-        elseif showCat == 19 then drawCategory (pcecd_table)
-        elseif showCat == 20 then drawCategory (amiga_table)
-        elseif showCat == 21 then drawCategory (c64_table)
-        elseif showCat == 22 then drawCategory (wswan_col_table)
-        elseif showCat == 23 then drawCategory (wswan_table)
-        elseif showCat == 24 then drawCategory (msx2_table) 
-        elseif showCat == 25 then drawCategory (msx1_table) 
-        elseif showCat == 26 then drawCategory (zxs_table)
-        elseif showCat == 27 then drawCategory (atari_7800_table)
-        elseif showCat == 28 then drawCategory (atari_5200_table)
-        elseif showCat == 29 then drawCategory (atari_2600_table)
-        elseif showCat == 30 then drawCategory (atari_lynx_table)
-        elseif showCat == 31 then drawCategory (colecovision_table)
-        elseif showCat == 32 then drawCategory (vectrex_table)
-        elseif showCat == 33 then drawCategory (fba_table)
-        elseif showCat == 34 then drawCategory (mame_2003_plus_table)
-        elseif showCat == 35 then drawCategory (mame_2000_table)
-        elseif showCat == 36 then drawCategory (neogeo_table)
-        elseif showCat == 37 then drawCategory (ngpc_table)
-        elseif showCat == 38 then
+        elseif showCat == 11 then drawCategory (dreamcast_table)
+        elseif showCat == 12 then drawCategory (sega_cd_table)
+        elseif showCat == 13 then drawCategory (s32x_table)
+        elseif showCat == 14 then drawCategory (md_table)
+        elseif showCat == 15 then drawCategory (sms_table)
+        elseif showCat == 16 then drawCategory (gg_table)
+        elseif showCat == 17 then drawCategory (tg16_table)
+        elseif showCat == 18 then drawCategory (tgcd_table)
+        elseif showCat == 19 then drawCategory (pce_table)
+        elseif showCat == 20 then drawCategory (pcecd_table)
+        elseif showCat == 21 then drawCategory (amiga_table)
+        elseif showCat == 22 then drawCategory (c64_table)
+        elseif showCat == 23 then drawCategory (wswan_col_table)
+        elseif showCat == 24 then drawCategory (wswan_table)
+        elseif showCat == 25 then drawCategory (msx2_table) 
+        elseif showCat == 26 then drawCategory (msx1_table) 
+        elseif showCat == 27 then drawCategory (zxs_table)
+        elseif showCat == 28 then drawCategory (atari_7800_table)
+        elseif showCat == 29 then drawCategory (atari_5200_table)
+        elseif showCat == 30 then drawCategory (atari_2600_table)
+        elseif showCat == 31 then drawCategory (atari_lynx_table)
+        elseif showCat == 32 then drawCategory (colecovision_table)
+        elseif showCat == 33 then drawCategory (vectrex_table)
+        elseif showCat == 34 then drawCategory (fba_table)
+        elseif showCat == 35 then drawCategory (mame_2003_plus_table)
+        elseif showCat == 36 then drawCategory (mame_2000_table)
+        elseif showCat == 37 then drawCategory (neogeo_table)
+        elseif showCat == 38 then drawCategory (ngpc_table)
+        elseif showCat == 39 then
             -- count favorites
             fav_count = {}
             for l, file in pairs(files_table) do
                 if showHomebrews == 0 then
                     -- ignore homebrew apps
-                    if file.app_type > 0 then
+                    if file.app_type ~= nil then
                         if file.favourite==true then
                             table.insert(fav_count, file)
                         end
@@ -7821,8 +8837,8 @@ while true do
             end
             drawCategory (fav_count)
             GetNameAndAppTypeSelected() -- Added to refresh names as games removed from fav cat whilst on fav cat
-        elseif showCat == 39 then drawCategory (recently_played_table)
-        elseif showCat == 40 then drawCategory (search_results_table)
+        elseif showCat == 40 then drawCategory (recently_played_table)
+        elseif showCat == 41 then drawCategory (search_results_table)
         else drawCategory (files_table)
         end
 
@@ -7862,7 +8878,8 @@ while true do
         -- Get text widths for positioning
         label1 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
         label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
-        label3 = Font.getTextWidth(fnt20, lang_lines.Favorite)--Favourite
+        label3 = Font.getTextWidth(fnt20, lang_lines.Rename)--Rename
+        label4 = Font.getTextWidth(fnt20, lang_lines.Favorite)--Favourite
 
         Graphics.drawImage(900-label1, 510, btnO)
         Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
@@ -7870,8 +8887,11 @@ while true do
         Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
         Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
 
-        Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnT)
-        Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Favorite, white)--Favourite
+        Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnS)
+        Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Rename, white)--Rename
+
+        Graphics.drawImage(900-(btnMargin * 6)-label1-label2-label3-label4, 510, btnT)
+        Font.print(fnt20, 900+28-(btnMargin * 6)-label1-label2-label3-label4, 508, lang_lines.Favorite, white)--Favourite
         
         Graphics.fillRect(24, 470, 24, 470, darkalpha)
 
@@ -7896,7 +8916,20 @@ while true do
                 app_size = getAppSize(appdir)/1024/1024
                 game_size = string.format("%02d", app_size) .. "Mb"
             else
-                getRomSize()
+                if string.find(filename, ".cue") or string.find(filename, ".gdi") then
+                    -- Get game directory by trimming filename from gamepath
+                    filename_len = string.len (filename)
+                    game_path_len = string.len (appdir)
+                    directory_len = game_path_len - filename_len -1
+                    game_directory_path = string.sub(appdir, 1, directory_len)
+
+                    app_size = getAppSize(game_directory_path)/1024/1024
+                    game_size = string.format("%02d", app_size) .. "Mb"
+
+                    else
+                    getRomSize()
+                end
+
             end
             
             menuY=0
@@ -7946,6 +8979,7 @@ while true do
                 Render.useTexture(modCoverGBNoref, (def_table_name)[p].ricon) -- gba_table
                 Render.useTexture(modCoverGBNoref, (def_table_name)[p].ricon) -- gbc_table
                 Render.useTexture(modCoverGBNoref, (def_table_name)[p].ricon) -- gb_table
+                Render.useTexture(modCoverGBNoref, (def_table_name)[p].ricon) -- dreamcast_table
                 Render.useTexture(modCoverNESNoref, (def_table_name)[p].ricon) -- sega_cd_table
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].ricon) -- 32x_table
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].ricon) -- md_table
@@ -7988,6 +9022,7 @@ while true do
                 Render.useTexture(modCoverGBNoref, (def_table_name)[p].icon) -- gba_table
                 Render.useTexture(modCoverGBNoref, (def_table_name)[p].icon) -- gbc_table
                 Render.useTexture(modCoverGBNoref, (def_table_name)[p].icon) -- gb_table
+                Render.useTexture(modCoverGBNoref, (def_table_name)[p].icon) -- dreamcast_table
                 Render.useTexture(modCoverNESNoref, (def_table_name)[p].icon) -- sega_cd_table
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].icon) -- 32x_table
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].icon) -- md_table
@@ -8033,36 +9068,37 @@ while true do
         elseif showCat == 8 then set_cover_image (gba_table)
         elseif showCat == 9 then set_cover_image (gbc_table)                
         elseif showCat == 10 then set_cover_image (gb_table)
-        elseif showCat == 11 then set_cover_image (sega_cd_table)
-        elseif showCat == 12 then set_cover_image (s32x_table)
-        elseif showCat == 13 then set_cover_image (md_table)
-        elseif showCat == 14 then set_cover_image (sms_table)
-        elseif showCat == 15 then set_cover_image (gg_table)
-        elseif showCat == 16 then set_cover_image (tg16_table)
-        elseif showCat == 17 then set_cover_image (tgcd_table)
-        elseif showCat == 18 then set_cover_image (pce_table)
-        elseif showCat == 19 then set_cover_image (pcecd_table)
-        elseif showCat == 20 then set_cover_image (amiga_table)
-        elseif showCat == 21 then set_cover_image (c64_table)
-        elseif showCat == 22 then set_cover_image (wswan_col_table)
-        elseif showCat == 23 then set_cover_image (wswan_table)
-        elseif showCat == 24 then set_cover_image (msx2_table)
-        elseif showCat == 25 then set_cover_image (msx1_table)
-        elseif showCat == 26 then set_cover_image (zxs_table)
-        elseif showCat == 27 then set_cover_image (atari_7800_table)
-        elseif showCat == 28 then set_cover_image (atari_5200_table)
-        elseif showCat == 29 then set_cover_image (atari_2600_table)
-        elseif showCat == 30 then set_cover_image (atari_lynx_table)
-        elseif showCat == 31 then set_cover_image (colecovision_table)
-        elseif showCat == 32 then set_cover_image (vectrex_table)
-        elseif showCat == 33 then set_cover_image (fba_table)
-        elseif showCat == 34 then set_cover_image (mame_2003_plus_table)
-        elseif showCat == 35 then set_cover_image (mame_2000_table)
-        elseif showCat == 36 then set_cover_image (neogeo_table)
-        elseif showCat == 37 then set_cover_image (ngpc_table)
-        elseif showCat == 38 then set_cover_image (fav_count)
-        elseif showCat == 39 then set_cover_image (recently_played_table)
-        elseif showCat == 40 then set_cover_image (search_results_table)
+        elseif showCat == 11 then set_cover_image (dreamcast_table)
+        elseif showCat == 12 then set_cover_image (sega_cd_table)
+        elseif showCat == 13 then set_cover_image (s32x_table)
+        elseif showCat == 14 then set_cover_image (md_table)
+        elseif showCat == 15 then set_cover_image (sms_table)
+        elseif showCat == 16 then set_cover_image (gg_table)
+        elseif showCat == 17 then set_cover_image (tg16_table)
+        elseif showCat == 18 then set_cover_image (tgcd_table)
+        elseif showCat == 19 then set_cover_image (pce_table)
+        elseif showCat == 20 then set_cover_image (pcecd_table)
+        elseif showCat == 21 then set_cover_image (amiga_table)
+        elseif showCat == 22 then set_cover_image (c64_table)
+        elseif showCat == 23 then set_cover_image (wswan_col_table)
+        elseif showCat == 24 then set_cover_image (wswan_table)
+        elseif showCat == 25 then set_cover_image (msx2_table)
+        elseif showCat == 26 then set_cover_image (msx1_table)
+        elseif showCat == 27 then set_cover_image (zxs_table)
+        elseif showCat == 28 then set_cover_image (atari_7800_table)
+        elseif showCat == 29 then set_cover_image (atari_5200_table)
+        elseif showCat == 30 then set_cover_image (atari_2600_table)
+        elseif showCat == 31 then set_cover_image (atari_lynx_table)
+        elseif showCat == 32 then set_cover_image (colecovision_table)
+        elseif showCat == 33 then set_cover_image (vectrex_table)
+        elseif showCat == 34 then set_cover_image (fba_table)
+        elseif showCat == 35 then set_cover_image (mame_2003_plus_table)
+        elseif showCat == 36 then set_cover_image (mame_2000_table)
+        elseif showCat == 37 then set_cover_image (neogeo_table)
+        elseif showCat == 38 then set_cover_image (ngpc_table)
+        elseif showCat == 39 then set_cover_image (fav_count)
+        elseif showCat == 40 then set_cover_image (recently_played_table)
+        elseif showCat == 41 then set_cover_image (search_results_table)
         else set_cover_image (files_table)
         end
         
@@ -8107,110 +9143,114 @@ while true do
             Render.drawModel(modBoxGBNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.GB_Game
         elseif apptype==11 then
+            Render.drawModel(modCoverGBNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxGBNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = lang_lines.DC_Game
+        elseif apptype==12 then
             Render.drawModel(modCoverNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.SCD_Game 
-        elseif apptype==12 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.S32X_Game 
         elseif apptype==13 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.MD_Game 
+            tmpapptype = lang_lines.S32X_Game 
         elseif apptype==14 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.SMS_Game 
+            tmpapptype = lang_lines.MD_Game 
         elseif apptype==15 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.GG_Game 
+            tmpapptype = lang_lines.SMS_Game 
         elseif apptype==16 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.TurboGrafx_16_Game 
+            tmpapptype = lang_lines.GG_Game 
         elseif apptype==17 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.TurboGrafx_CD_Game 
+            tmpapptype = lang_lines.TurboGrafx_16_Game 
         elseif apptype==18 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.PC_Engine_Game 
+            tmpapptype = lang_lines.TurboGrafx_CD_Game 
         elseif apptype==19 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.PC_Engine_CD_Game
+            tmpapptype = lang_lines.PC_Engine_Game 
         elseif apptype==20 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.Amiga_Game
+            tmpapptype = lang_lines.PC_Engine_CD_Game
         elseif apptype==21 then
+            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = lang_lines.Amiga_Game
+        elseif apptype==22 then
             Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.C64_Game
-        elseif apptype==22 then
-            Render.drawModel(modCoverNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            Render.drawModel(modBoxNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.WSWANCOL_Game
         elseif apptype==23 then
             Render.drawModel(modCoverNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.WSWAN_Game
+            tmpapptype = lang_lines.WSWANCOL_Game
         elseif apptype==24 then
-            Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            Render.drawModel(modBoxTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.MSX2_Game
+            Render.drawModel(modCoverNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = lang_lines.WSWAN_Game
         elseif apptype==25 then
             Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.MSX_Game
+            tmpapptype = lang_lines.MSX2_Game
         elseif apptype==26 then
             Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.ZXS_Game
+            tmpapptype = lang_lines.MSX_Game
         elseif apptype==27 then
-            Render.drawModel(modCoverATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            Render.drawModel(modBoxATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.A7800_Game
+            Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = lang_lines.ZXS_Game
         elseif apptype==28 then
             Render.drawModel(modCoverATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.A5200_Game
+            tmpapptype = lang_lines.A7800_Game
         elseif apptype==29 then
             Render.drawModel(modCoverATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.A600_Game
+            tmpapptype = lang_lines.A5200_Game
         elseif apptype==30 then
+            Render.drawModel(modCoverATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = lang_lines.A600_Game
+        elseif apptype==31 then
             Render.drawModel(modCoverLYNXNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxLYNXNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.LYNX_Game
-        elseif apptype==31 then
-            Render.drawModel(modCoverATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            Render.drawModel(modBoxATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.COLECO_Game
         elseif apptype==32 then
             Render.drawModel(modCoverATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.VECTREX_Game
+            tmpapptype = lang_lines.COLECO_Game
         elseif apptype==33 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.FBA2012_Game
+            Render.drawModel(modCoverATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = lang_lines.VECTREX_Game
         elseif apptype==34 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.MAME2003_Game 
+            tmpapptype = lang_lines.FBA2012_Game
         elseif apptype==35 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.MAME_2000_Game 
+            tmpapptype = lang_lines.MAME2003_Game 
         elseif apptype==36 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
-            tmpapptype = lang_lines.Neo_Geo_Game 
+            tmpapptype = lang_lines.MAME_2000_Game 
         elseif apptype==37 then
+            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = lang_lines.Neo_Geo_Game 
+        elseif apptype==38 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             Render.drawModel(modBoxMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.Neo_Geo_Pocket_Color_Game 
@@ -8378,6 +9418,14 @@ while true do
                         tmpappcat=0
                     end
                 end
+
+            elseif (Controls.check(pad, SCE_CTRL_SQUARE)) and not (Controls.check(oldpad, SCE_CTRL_SQUARE)) then
+                -- Rename
+                if hasTyped==false then
+                    Keyboard.start(lang_lines.Rename, app_title:gsub("\n",""), 512, TYPE_DEFAULT, MODE_TEXT)
+                    hasTyped=true
+                    rename_keyboard=true
+                end
             end
         end
 
@@ -8450,6 +9498,12 @@ while true do
                       v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_md_usa.png"
                   end
             end
+            -- Dreamcast, update regional missing cover - USA - Red logo
+            for k, v in pairs(dreamcast_table) do 
+                  if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png" then
+                      v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png"
+                  end
+            end
         elseif setLanguage == 2 then
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "Deutsch", white) -- German
         elseif setLanguage == 3 then
@@ -8466,12 +9520,31 @@ while true do
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "Pусский", white) -- Russian
         elseif setLanguage == 9 then
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "日本語", white) -- Japanese
+            -- Dreamcast, update regional missing cover - Japan - Orange logo
+            for k, v in pairs(dreamcast_table) do
+                  if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" then
+                      v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png"
+                  end
+            end
         elseif setLanguage == 10 then
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "繁體中文", white) -- Japanese
         elseif setLanguage == 11 then
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "Polski", white) -- Polish
         else
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "English", white) -- English
+
+            -- Megadrive, update regional missing cover
+            for k, v in pairs(md_table) do
+                  if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_md_usa.png" then
+                      v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_md.png"
+                  end
+            end
+            -- Dreamcast, update regional missing cover - Blue logo
+            for k, v in pairs(dreamcast_table) do
+                  if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png" then
+                      v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png"
+                  end
+            end
         end
 
         -- MENU 2 / #6 About
@@ -8602,62 +9675,64 @@ while true do
         elseif startCategory == 10 then
             Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Game_Boy, white)--GB
         elseif startCategory == 11 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Sega_CD, white)--Sega_CD
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Sega_Dreamcast, white)--Sega_Dreamcast
         elseif startCategory == 12 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Sega_32X, white)--Sega_32X
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Sega_CD, white)--Sega_CD
         elseif startCategory == 13 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Sega_Mega_Drive, white)--MD
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Sega_32X, white)--Sega_32X
         elseif startCategory == 14 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Sega_Master_System, white)--SMS
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Sega_Mega_Drive, white)--MD
         elseif startCategory == 15 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Sega_Game_Gear, white)--GG
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Sega_Master_System, white)--SMS
         elseif startCategory == 16 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.TurboGrafx_16, white)--TG16
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Sega_Game_Gear, white)--GG
         elseif startCategory == 17 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.TurboGrafx_CD, white)--TGCD
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.TurboGrafx_16, white)--TG16
         elseif startCategory == 18 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.PC_Engine, white)--PCE
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.TurboGrafx_CD, white)--TGCD
         elseif startCategory == 19 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.PC_Engine_CD, white)--PCECD
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.PC_Engine, white)--PCE
         elseif startCategory == 20 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Amiga, white)--AMIGA
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.PC_Engine_CD, white)--PCECD
         elseif startCategory == 21 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Commodore_64, white)--Commodore_64
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Amiga, white)--AMIGA
         elseif startCategory == 22 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.WonderSwan_Color, white)--WonderSwan_Color
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Commodore_64, white)--Commodore_64
         elseif startCategory == 23 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.WonderSwan, white)--WonderSwan
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.WonderSwan_Color, white)--WonderSwan_Color
         elseif startCategory == 24 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.MSX2, white)--MSX2
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.WonderSwan, white)--WonderSwan
         elseif startCategory == 25 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.MSX, white)--MSX
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.MSX2, white)--MSX2
         elseif startCategory == 26 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.ZX_Spectrum, white)--ZX_Spectrum
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.MSX, white)--MSX
         elseif startCategory == 27 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Atari_7800, white)--Atari_7800
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.ZX_Spectrum, white)--ZX_Spectrum
         elseif startCategory == 28 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Atari_5200, white)--Atari_5200
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Atari_7800, white)--Atari_7800
         elseif startCategory == 29 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Atari_2600, white)--Atari_2600
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Atari_5200, white)--Atari_5200
         elseif startCategory == 30 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Atari_Lynx, white)--Atari_Lynx
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Atari_2600, white)--Atari_2600
         elseif startCategory == 31 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.ColecoVision, white)--ColecoVision
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Atari_Lynx, white)--Atari_Lynx
         elseif startCategory == 32 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Vectrex, white)--Vectrex
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.ColecoVision, white)--ColecoVision
         elseif startCategory == 33 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.FBA_2012, white)--FBA_2012
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Vectrex, white)--Vectrex
         elseif startCategory == 34 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.MAME_2003Plus, white)--MAME_2003Plus
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.FBA_2012, white)--FBA_2012
         elseif startCategory == 35 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.MAME_2000, white)--MAME_2000
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.MAME_2003Plus, white)--MAME_2003Plus
         elseif startCategory == 36 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Neo_Geo, white)--Neo_Geo
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.MAME_2000, white)--MAME_2000
         elseif startCategory == 37 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Neo_Geo_Pocket_Color, white)--Neo_Geo_Pocket_Color
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Neo_Geo, white)--Neo_Geo
         elseif startCategory == 38 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Favorites, white)--Favorite
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Neo_Geo_Pocket_Color, white)--Neo_Geo_Pocket_Color
         elseif startCategory == 39 then
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Favorites, white)--Favorite
+        elseif startCategory == 40 then
             Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Recently_Played, white)--Recently Played
         end
 
@@ -8735,35 +9810,36 @@ while true do
                     if startCategory == 8 then if #gba_table == 0 then startCategory = startCategory + 1 end end
                     if startCategory == 9 then if #gbc_table == 0 then startCategory = startCategory + 1 end end
                     if startCategory == 10 then if #gb_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 11 then if #sega_cd_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 12 then if #s32x_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 13 then if #md_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 14 then if #sms_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 15 then if #gg_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 16 then if #tg16_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 17 then if #tgcd_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 18 then if #pce_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 19 then if #pcecd_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 20 then if #amiga_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 21 then if #c64_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 22 then if #wswan_col_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 23 then if #wswan_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 24 then if #msx2_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 25 then if #msx1_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 26 then if #zxs_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 27 then if #atari_7800_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 28 then if #atari_5200_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 29 then if #atari_2600_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 30 then if #atari_lynx_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 31 then if #colecovision_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 32 then if #vectrex_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 33 then if #fba_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 34 then if #mame_2003_plus_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 35 then if #mame_2000_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 36 then if #neogeo_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 37 then if #ngpc_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 38 then if #fav_count_3 == 0 then startCategory = startCategory + 1 end end
-                    -- if startCategory == 39 then if #recently_played_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 11 then if #dreamcast_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 12 then if #sega_cd_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 13 then if #s32x_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 14 then if #md_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 15 then if #sms_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 16 then if #gg_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 17 then if #tg16_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 18 then if #tgcd_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 19 then if #pce_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 20 then if #pcecd_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 21 then if #amiga_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 22 then if #c64_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 23 then if #wswan_col_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 24 then if #wswan_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 25 then if #msx2_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 26 then if #msx1_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 27 then if #zxs_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 28 then if #atari_7800_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 29 then if #atari_5200_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 30 then if #atari_2600_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 31 then if #atari_lynx_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 32 then if #colecovision_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 33 then if #vectrex_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 34 then if #fba_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 35 then if #mame_2003_plus_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 36 then if #mame_2000_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 37 then if #neogeo_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 38 then if #ngpc_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 39 then if #fav_count_3 == 0 then startCategory = startCategory + 1 end end
+                    -- if startCategory == 40 then if #recently_played_table == 0 then startCategory = startCategory + 1 end end
 
                 elseif menuY == 2 then -- #2 Show Homebews
                     if showHomebrews == 1 then
@@ -8789,7 +9865,7 @@ while true do
                         -- Import cache to update All games category
                         count_cache_and_reload()
                         -- If currently on recent category view, move to Vita category to hide empty recent category
-                        if showCat == 39 then
+                        if showCat == 40 then
                             curTotal = #recently_played_table
                             if #recently_played_table == 0 then
                                 showCat = 1
@@ -9072,58 +10148,60 @@ while true do
             elseif getCovers == 9 then
                 Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Game_Boy .. "  >", white)
             elseif getCovers == 10 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_CD .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Dreamcast .. "  >", white)
             elseif getCovers == 11 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_32X .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_CD .. "  >", white)
             elseif getCovers == 12 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Mega_Drive .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_32X .. "  >", white)
             elseif getCovers == 13 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Master_System .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Mega_Drive .. "  >", white)
             elseif getCovers == 14 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Game_Gear .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Master_System .. "  >", white)
             elseif getCovers == 15 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.TurboGrafx_16 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Game_Gear .. "  >", white)
             elseif getCovers == 16 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.TurboGrafx_CD .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.TurboGrafx_16 .. "  >", white)
             elseif getCovers == 17 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PC_Engine .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.TurboGrafx_CD .. "  >", white)
             elseif getCovers == 18 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PC_Engine_CD .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PC_Engine .. "  >", white)
             elseif getCovers == 19 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Amiga .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PC_Engine_CD .. "  >", white)
             elseif getCovers == 20 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Commodore_64 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Amiga .. "  >", white)
             elseif getCovers == 21 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.WonderSwan_Color .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Commodore_64 .. "  >", white)
             elseif getCovers == 22 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.WonderSwan .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.WonderSwan_Color .. "  >", white)
             elseif getCovers == 23 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MSX2 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.WonderSwan .. "  >", white)
             elseif getCovers == 24 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MSX .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MSX2 .. "  >", white)
             elseif getCovers == 25 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.ZX_Spectrum .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MSX .. "  >", white)
             elseif getCovers == 26 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_7800 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.ZX_Spectrum .. "  >", white)
             elseif getCovers == 27 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_5200 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_7800 .. "  >", white)
             elseif getCovers == 28 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_2600 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_5200 .. "  >", white)
             elseif getCovers == 29 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_Lynx .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_2600 .. "  >", white)
             elseif getCovers == 30 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.ColecoVision .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_Lynx .. "  >", white)
             elseif getCovers == 31 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Vectrex .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.ColecoVision .. "  >", white)
             elseif getCovers == 32 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.FBA_2012 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Vectrex .. "  >", white)
             elseif getCovers == 33 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MAME_2003Plus .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.FBA_2012 .. "  >", white)
             elseif getCovers == 34 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MAME_2000 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MAME_2003Plus .. "  >", white)
             elseif getCovers == 35 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Neo_Geo .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MAME_2000 .. "  >", white)
             elseif getCovers == 36 then
+                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Neo_Geo .. "  >", white)
+            elseif getCovers == 37 then
                 Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Neo_Geo_Pocket_Color .. "  >", white)
             else
                 Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.All .. "  >", white)
@@ -9153,58 +10231,60 @@ while true do
             elseif getSnaps == 8 then
                 Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Game_Boy .. "  >", white)
             elseif getSnaps == 9 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_CD .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Dreamcast .. "  >", white)
             elseif getSnaps == 10 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_32X .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_CD .. "  >", white)
             elseif getSnaps == 11 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Mega_Drive .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_32X .. "  >", white)
             elseif getSnaps == 12 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Master_System .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Mega_Drive .. "  >", white)
             elseif getSnaps == 13 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Game_Gear .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Master_System .. "  >", white)
             elseif getSnaps == 14 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.TurboGrafx_16 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Game_Gear .. "  >", white)
             elseif getSnaps == 15 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.TurboGrafx_CD .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.TurboGrafx_16 .. "  >", white)
             elseif getSnaps == 16 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PC_Engine .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.TurboGrafx_CD .. "  >", white)
             elseif getSnaps == 17 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PC_Engine_CD .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PC_Engine .. "  >", white)
             elseif getSnaps == 18 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Amiga .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PC_Engine_CD .. "  >", white)
             elseif getSnaps == 19 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Commodore_64 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Amiga .. "  >", white)
             elseif getSnaps == 20 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.WonderSwan_Color .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Commodore_64 .. "  >", white)
             elseif getSnaps == 21 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.WonderSwan .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.WonderSwan_Color .. "  >", white)
             elseif getSnaps == 22 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MSX2 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.WonderSwan .. "  >", white)
             elseif getSnaps == 23 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MSX .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MSX2 .. "  >", white)
             elseif getSnaps == 24 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.ZX_Spectrum .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MSX .. "  >", white)
             elseif getSnaps == 25 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_7800 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.ZX_Spectrum .. "  >", white)
             elseif getSnaps == 26 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_5200 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_7800 .. "  >", white)
             elseif getSnaps == 27 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_2600 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_5200 .. "  >", white)
             elseif getSnaps == 28 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_Lynx .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_2600 .. "  >", white)
             elseif getSnaps == 29 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.ColecoVision .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_Lynx .. "  >", white)
             elseif getSnaps == 30 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Vectrex .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.ColecoVision .. "  >", white)
             elseif getSnaps == 31 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.FBA_2012 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Vectrex .. "  >", white)
             elseif getSnaps == 32 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MAME_2003Plus .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.FBA_2012 .. "  >", white)
             elseif getSnaps == 33 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MAME_2000 .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MAME_2003Plus .. "  >", white)
             elseif getSnaps == 34 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Neo_Geo .. "  >", white)
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MAME_2000 .. "  >", white)
             elseif getSnaps == 35 then
+                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Neo_Geo .. "  >", white)
+            elseif getSnaps == 36 then
                 Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Neo_Geo_Pocket_Color .. "  >", white)
             else
                 Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.All .. "  >", white)
@@ -9295,33 +10375,34 @@ while true do
                     end
 
                     -- Skip empty categories
-                    if getCovers == 36 then if #ngpc_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 35 then if #neogeo_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 34 then if #mame_2000_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 33 then if #mame_2003_plus_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 32 then if #fba_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 31 then if #vectrex_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 30 then if #colecovision_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 29 then if #atari_lynx_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 28 then if #atari_2600_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 27 then if #atari_5200_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 26 then if #atari_7800_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 25 then if #zxs_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 24 then if #msx1_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 23 then if #msx2_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 22 then if #wswan_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 21 then if #wswan_col_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 20 then if #c64_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 19 then if #amiga_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 18 then if #pcecd_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 17 then if #pce_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 16 then if #tgcd_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 15 then if #tg16_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 14 then if #gg_table == 0 then getCovers = getCovers - 1 end end                
-                    if getCovers == 13 then if #sms_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 12 then if #md_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 11 then if #s32x_table == 0 then getCovers = getCovers - 1 end end
-                    if getCovers == 10 then if #sega_cd_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 37 then if #ngpc_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 36 then if #neogeo_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 35 then if #mame_2000_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 34 then if #mame_2003_plus_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 33 then if #fba_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 32 then if #vectrex_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 31 then if #colecovision_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 30 then if #atari_lynx_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 29 then if #atari_2600_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 28 then if #atari_5200_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 27 then if #atari_7800_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 26 then if #zxs_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 25 then if #msx1_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 24 then if #msx2_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 23 then if #wswan_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 22 then if #wswan_col_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 21 then if #c64_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 20 then if #amiga_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 19 then if #pcecd_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 18 then if #pce_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 17 then if #tgcd_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 16 then if #tg16_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 15 then if #gg_table == 0 then getCovers = getCovers - 1 end end                
+                    if getCovers == 14 then if #sms_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 13 then if #md_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 12 then if #s32x_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 11 then if #sega_cd_table == 0 then getCovers = getCovers - 1 end end
+                    if getCovers == 10 then if #dreamcast_table == 0 then getCovers = getCovers - 1 end end
                     if getCovers == 9 then if #gb_table == 0 then getCovers = getCovers - 1 end end
                     if getCovers == 8 then if #gbc_table == 0 then getCovers = getCovers - 1 end end
                     if getCovers == 7 then if #gba_table == 0 then getCovers = getCovers - 1 end end
@@ -9341,33 +10422,34 @@ while true do
                     end
 
                     -- Skip empty categories
-                    if getSnaps == 35 then if #ngpc_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 34 then if #neogeo_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 33 then if #mame_2000_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 32 then if #mame_2003_plus_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 31 then if #fba_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 30 then if #vectrex_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 29 then if #colecovision_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 28 then if #atari_lynx_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 27 then if #atari_2600_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 26 then if #atari_5200_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 25 then if #atari_7800_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 24 then if #zxs_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 23 then if #msx1_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 22 then if #msx2_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 21 then if #wswan_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 20 then if #wswan_col_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 19 then if #c64_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 18 then if #amiga_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 17 then if #pcecd_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 16 then if #pce_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 15 then if #tgcd_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 14 then if #tg16_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 13 then if #gg_table == 0 then getSnaps = getSnaps - 1 end end                
-                    if getSnaps == 12 then if #sms_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 11 then if #md_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 10 then if #s32x_table == 0 then getSnaps = getSnaps - 1 end end
-                    if getSnaps == 9 then if #sega_cd_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 36 then if #ngpc_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 35 then if #neogeo_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 34 then if #mame_2000_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 33 then if #mame_2003_plus_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 32 then if #fba_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 31 then if #vectrex_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 30 then if #colecovision_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 29 then if #atari_lynx_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 28 then if #atari_2600_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 27 then if #atari_5200_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 26 then if #atari_7800_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 25 then if #zxs_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 24 then if #msx1_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 23 then if #msx2_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 22 then if #wswan_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 21 then if #wswan_col_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 20 then if #c64_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 19 then if #amiga_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 18 then if #pcecd_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 17 then if #pce_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 16 then if #tgcd_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 15 then if #tg16_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 14 then if #gg_table == 0 then getSnaps = getSnaps - 1 end end                
+                    if getSnaps == 13 then if #sms_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 12 then if #md_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 11 then if #s32x_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 10 then if #sega_cd_table == 0 then getSnaps = getSnaps - 1 end end
+                    if getSnaps == 9 then if #dreamcast_table == 0 then getSnaps = getSnaps - 1 end end
                     if getSnaps == 8 then if #gb_table == 0 then getSnaps = getSnaps - 1 end end
                     if getSnaps == 7 then if #gbc_table == 0 then getSnaps = getSnaps - 1 end end
                     if getSnaps == 6 then if #gba_table == 0 then getSnaps = getSnaps - 1 end end
@@ -9399,33 +10481,34 @@ while true do
                     if getCovers == 7 then if #gba_table == 0 then getCovers = getCovers + 1 end end
                     if getCovers == 8 then if #gbc_table == 0 then getCovers = getCovers + 1 end end
                     if getCovers == 9 then if #gb_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 10 then if #sega_cd_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 11 then if #s32x_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 12 then if #md_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 13 then if #sms_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 14 then if #gg_table == 0 then getCovers = getCovers + 1 end end                
-                    if getCovers == 15 then if #tg16_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 16 then if #tgcd_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 17 then if #pce_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 18 then if #pcecd_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 19 then if #amiga_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 20 then if #c64_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 21 then if #wswan_col_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 22 then if #wswan_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 23 then if #msx2_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 24 then if #msx1_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 25 then if #zxs_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 26 then if #atari_7800_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 27 then if #atari_5200_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 28 then if #atari_2600_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 29 then if #atari_lynx_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 30 then if #colecovision_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 31 then if #vectrex_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 32 then if #fba_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 33 then if #mame_2003_plus_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 34 then if #mame_2000_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 35 then if #neogeo_table == 0 then getCovers = getCovers + 1 end end
-                    if getCovers == 36 then if #ngpc_table == 0 then getCovers = 0 end end
+                    if getCovers == 10 then if #dreamcast_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 11 then if #sega_cd_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 12 then if #s32x_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 13 then if #md_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 14 then if #sms_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 15 then if #gg_table == 0 then getCovers = getCovers + 1 end end                
+                    if getCovers == 16 then if #tg16_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 17 then if #tgcd_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 18 then if #pce_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 19 then if #pcecd_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 20 then if #amiga_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 21 then if #c64_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 22 then if #wswan_col_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 23 then if #wswan_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 24 then if #msx2_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 25 then if #msx1_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 26 then if #zxs_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 27 then if #atari_7800_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 28 then if #atari_5200_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 29 then if #atari_2600_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 30 then if #atari_lynx_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 31 then if #colecovision_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 32 then if #vectrex_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 33 then if #fba_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 34 then if #mame_2003_plus_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 35 then if #mame_2000_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 36 then if #neogeo_table == 0 then getCovers = getCovers + 1 end end
+                    if getCovers == 37 then if #ngpc_table == 0 then getCovers = 0 end end
 
                 elseif menuY==2 then -- #1 Download Backgrounds
                     if getSnaps < count_of_get_snaps then -- Check getcover number against sytem
@@ -9444,34 +10527,34 @@ while true do
                     if getSnaps == 6 then if #gba_table == 0 then getSnaps = getSnaps + 1 end end
                     if getSnaps == 7 then if #gbc_table == 0 then getSnaps = getSnaps + 1 end end
                     if getSnaps == 8 then if #gb_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 9 then if #sega_cd_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 10 then if #s32x_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 11 then if #md_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 12 then if #sms_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 13 then if #gg_table == 0 then getSnaps = getSnaps + 1 end end                
-                    if getSnaps == 14 then if #tg16_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 15 then if #tgcd_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 16 then if #pce_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 17 then if #pcecd_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 18 then if #amiga_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 19 then if #c64_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 20 then if #wswan_col_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 21 then if #wswan_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 22 then if #msx2_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 23 then if #msx1_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 24 then if #zxs_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 25 then if #atari_7800_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 26 then if #atari_5200_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 27 then if #atari_2600_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 28 then if #atari_lynx_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 29 then if #colecovision_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 30 then if #vectrex_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 31 then if #fba_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 32 then if #mame_2003_plus_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 33 then if #mame_2000_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 34 then if #neogeo_table == 0 then getSnaps = getSnaps + 1 end end
-                    if getSnaps == 35 then if #ngpc_table == 0 then getSnaps = 0 end end
-
+                    if getSnaps == 9 then if #dreamcast_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 10 then if #sega_cd_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 11 then if #s32x_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 12 then if #md_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 13 then if #sms_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 14 then if #gg_table == 0 then getSnaps = getSnaps + 1 end end                
+                    if getSnaps == 15 then if #tg16_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 16 then if #tgcd_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 17 then if #pce_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 18 then if #pcecd_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 19 then if #amiga_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 20 then if #c64_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 21 then if #wswan_col_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 22 then if #wswan_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 23 then if #msx2_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 24 then if #msx1_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 25 then if #zxs_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 26 then if #atari_7800_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 27 then if #atari_5200_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 28 then if #atari_2600_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 29 then if #atari_lynx_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 30 then if #colecovision_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 31 then if #vectrex_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 32 then if #fba_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 33 then if #mame_2003_plus_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 34 then if #mame_2000_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 35 then if #neogeo_table == 0 then getSnaps = getSnaps + 1 end end
+                    if getSnaps == 36 then if #ngpc_table == 0 then getSnaps = 0 end end
                 end
             end
         end
@@ -9498,42 +10581,48 @@ while true do
 
         Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
 
-        menuItems = 2
+        menuItems = 4
 
         -- MENU 6 / #0 Back
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
 
-        -- MENU 6 / #1 Scan on Startup 
+        -- MENU 6 / #1 Game directories
+        Font.print(fnt22, setting_x, setting_y1, lang_lines.Edit_game_directories, white)--Edit_game_directories 
+
+        -- MENU 6 / #2 Scan on Startup 
         if setLanguage == 10 then -- Chinese language fix
-            Font.print(fnt22, setting_x - 7, setting_y1, lang_lines.Startup_scan_colon, white)--Scan on startup
+            Font.print(fnt22, setting_x - 7, setting_y2, lang_lines.Startup_scan_colon, white)--Scan on startup
         else
-            Font.print(fnt22, setting_x, setting_y1, lang_lines.Startup_scan_colon, white)--Scan on startup
+            Font.print(fnt22, setting_x, setting_y2, lang_lines.Startup_scan_colon, white)--Scan on startup
         end
 
         if startupScan == 1 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.On, white)--ON
+            Font.print(fnt22, setting_x_offset, setting_y2, lang_lines.On, white)--ON
         else
             if setLanguage == 10 then -- Chinese language fix
-                Font.print(fnt22, setting_x_offset - 8, setting_y1, lang_lines.Off, white)--OFF
+                Font.print(fnt22, setting_x_offset - 8, setting_y2, lang_lines.Off, white)--OFF
             else
-                Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Off, white)--OFF
+                Font.print(fnt22, setting_x_offset, setting_y2, lang_lines.Off, white)--OFF
             end
         end
 
-
-        -- MENU 6 / #2 Adrenaline_roms
-        Font.print(fnt22, setting_x, setting_y2, lang_lines.Adrenaline_roms, white)--Adrenaline_roms 
+        -- MENU 6 / #3 Adrenaline_roms
+        Font.print(fnt22, setting_x, setting_y3, lang_lines.Adrenaline_roms, white)--Adrenaline_roms 
 
         if Adrenaline_roms == 1 then
-            Font.print(fnt22, setting_x_offset, setting_y2, "ux0:/pspemu", white)--ux0
+            Font.print(fnt22, setting_x_offset, setting_y3, "ux0:/pspemu", white)--ux0
         else
             if setLanguage == 10 then -- Chinese language fix
-                Font.print(fnt22, setting_x_offset - 8, setting_y2, "ux0:/pspemu", white)--ux0
+                Font.print(fnt22, setting_x_offset - 8, setting_y3, "ux0:/pspemu", white)--ux0
             else
-                Font.print(fnt22, setting_x_offset, setting_y2, "uma0:/pspemu", white)--uma0
+                Font.print(fnt22, setting_x_offset, setting_y3, "uma0:/pspemu", white)--uma0
             end
         end
 
+        -- MENU 6 / #4 Rescan
+        Font.print(fnt22, setting_x, setting_y4, lang_lines.Rescan, white)--Rescan
+
+        
 
         -- MENU 6 - FUNCTIONS
         status = System.getMessageState()
@@ -9545,7 +10634,10 @@ while true do
                 if menuY == 0 then -- #0 Back
                     showMenu = 2
                     menuY = 0
-                elseif menuY == 1 then -- #1 Scan on Startup 
+                elseif menuY == 1 then -- #1 Game directories
+                    showMenu = 8
+                    menuY = 0
+                elseif menuY == 2 then -- #2 Scan on Startup 
                     if startupScan == 1 then -- 0 Off, 1 On
                         startupScan = 0
                         --Save settings
@@ -9558,7 +10650,7 @@ while true do
                         SaveSettings()
                         count_cache_and_reload()
                     end
-                elseif menuY == 2 then -- #2
+                elseif menuY == 3 then -- #3 Adrenaline_roms
                     if Adrenaline_roms == 1 then
                         Adrenaline_roms = 0 -- Scan uma0
                         --Save settings
@@ -9572,8 +10664,13 @@ while true do
                         ScanAdrenalineDirectoryOnly()
                         count_cache_and_reload()
                     end
+                elseif menuY == 4 then -- #4 Rescan
+                        delete_cache()
+                        FreeIcons()
+                        FreeMemory()
+                        Network.term()
+                        dofile("app0:index.lua")
                 end
-
             elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
                 if menuY > 0 then
                     menuY = menuY - 1
@@ -9587,8 +10684,6 @@ while true do
                     menuY=0
                 end
             end
-
-
 
         end
   
@@ -9627,6 +10722,527 @@ while true do
             .. "\nAndreas Stürmer, Roc6d, Badmanwazzy37, Leecherman, BlackSheepBoy69."
             .. "\nThank you to everyone that contributed translations for HexFlow.", white)-- Draw info"
 
+-- MENU 8 - EDIT GAME DIRECTORIES
+    elseif showMenu == 8 then
+        
+        -- SETTINGS
+        -- Footer buttons and icons
+        -- Get text widths for positioning
+        label1 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
+        label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
+
+        Graphics.drawImage(900-label1, 510, btnO)
+        Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
+
+        Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
+        Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
+
+        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+
+        Font.print(fnt22, setting_x, setting_yh, lang_lines.Game_directories, white)--Game_directories
+        Graphics.fillRect(60, 900, 97, 100, white)
+
+        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+
+        menuItems = 3
+
+        -- MENU 8 / #0 Back
+        Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
+
+        -- MENU 8 / #1 and 2 Game category and directory
+            if getRomDir == 1 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Amiga .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Amiga, white)
+                filebrowser_heading = lang_lines.Amiga
+            elseif getRomDir == 2 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Atari_2600 .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Atari_2600, white)
+                filebrowser_heading = lang_lines.Atari_2600
+            elseif getRomDir == 3 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Atari_5200 .."  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Atari_5200, white)
+                filebrowser_heading = lang_lines.Atari_5200
+            elseif getRomDir == 4 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Atari_7800 .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Atari_7800, white)
+                filebrowser_heading = lang_lines.Atari_7800
+            elseif getRomDir == 5 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Atari_Lynx .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Atari_Lynx, white)
+                filebrowser_heading = lang_lines.Atari_Lynx
+            elseif getRomDir == 6 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.ColecoVision .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.ColecoVision, white)
+                filebrowser_heading = lang_lines.ColecoVision
+            elseif getRomDir == 7 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Commodore_64 .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Commodore_64, white)
+                filebrowser_heading = lang_lines.Commodore_64
+            elseif getRomDir == 8 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.FBA_2012 .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.FBA_2012, white)
+                filebrowser_heading = lang_lines.FBA_2012
+            elseif getRomDir == 9 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Game_Boy_Advance .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Game_Boy_Advance, white)
+                filebrowser_heading = lang_lines.Game_Boy_Advance
+            elseif getRomDir == 10 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Game_Boy_Color .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Game_Boy_Color, white)
+                filebrowser_heading = lang_lines.Game_Boy_Color
+            elseif getRomDir == 11 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Game_Boy .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Game_Boy, white)
+                filebrowser_heading = lang_lines.Game_Boy
+            elseif getRomDir == 12 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.MAME_2000 .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.MAME_2000, white)
+                filebrowser_heading = lang_lines.MAME_2000
+            elseif getRomDir == 13 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.MAME_2003Plus .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.MAME_2003Plus, white)
+                filebrowser_heading = lang_lines.MAME_2003Plus
+            elseif getRomDir == 14 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.MSX .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.MSX, white)
+                filebrowser_heading = lang_lines.MSX
+            elseif getRomDir == 15 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.MSX2 .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.MSX2, white)
+                filebrowser_heading = lang_lines.MSX2
+            elseif getRomDir == 16 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Neo_Geo_Pocket_Color .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Neo_Geo_Pocket_Color, white)
+                filebrowser_heading = lang_lines.Neo_Geo_Pocket_Color
+            elseif getRomDir == 17 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Neo_Geo .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Neo_Geo, white)
+                filebrowser_heading = lang_lines.Neo_Geo
+            elseif getRomDir == 18 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Nintendo_64 .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Nintendo_64, white)
+                filebrowser_heading = lang_lines.Nintendo_64
+            elseif getRomDir == 19 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Nintendo_Entertainment_System .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Nintendo_Entertainment_System, white)
+                filebrowser_heading = lang_lines.Nintendo_Entertainment_System
+            elseif getRomDir == 20 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.PC_Engine_CD .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.PC_Engine_CD, white)
+                filebrowser_heading = lang_lines.PC_Engine_CD
+            elseif getRomDir == 21 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.PC_Engine .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.PC_Engine, white)
+                filebrowser_heading = lang_lines.PC_Engine
+            elseif getRomDir == 22 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_32X .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_32X, white)
+                filebrowser_heading = lang_lines.Sega_32X
+            elseif getRomDir == 23 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_CD .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_CD, white)
+                filebrowser_heading = lang_lines.Sega_CD
+            elseif getRomDir == 24 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_Dreamcast .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_Dreamcast, white)
+                filebrowser_heading = lang_lines.Sega_Dreamcast
+            elseif getRomDir == 25 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_Game_Gear .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_Game_Gear, white)
+                filebrowser_heading = lang_lines.Sega_Game_Gear
+            elseif getRomDir == 26 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_Master_System .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_Master_System, white)
+                filebrowser_heading = lang_lines.Sega_Master_System
+            elseif getRomDir == 27 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_Mega_Drive .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_Mega_Drive, white)
+                filebrowser_heading = lang_lines.Sega_Mega_Drive
+            elseif getRomDir == 28 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Super_Nintendo .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Super_Nintendo, white)
+                filebrowser_heading = lang_lines.Super_Nintendo
+            elseif getRomDir == 29 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.TurboGrafx_16 .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.TurboGrafx_16, white)
+                filebrowser_heading = lang_lines.TurboGrafx_16
+            elseif getRomDir == 30 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.TurboGrafx_CD .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.TurboGrafx_CD, white)
+                filebrowser_heading = lang_lines.TurboGrafx_CD
+            elseif getRomDir == 31 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Vectrex .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Vectrex, white)
+                filebrowser_heading = lang_lines.Vectrex
+            elseif getRomDir == 32 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.WonderSwan_Color .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.WonderSwan_Color, white)
+                filebrowser_heading = lang_lines.WonderSwan_Color
+            elseif getRomDir == 33 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.WonderSwan .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.WonderSwan, white)
+                filebrowser_heading = lang_lines.WonderSwan
+            elseif getRomDir == 34 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.ZX_Spectrum .. "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.ZX_Spectrum, white)
+                filebrowser_heading = lang_lines.ZX_Spectrum
+            end
+
+        -- MENU 8 / #3 Rescan
+        Font.print(fnt22, setting_x, setting_y3, lang_lines.Rescan, white)--Rescan 
+
+        -- MENU 8 - FUNCTIONS
+        status = System.getMessageState()
+        if status ~= RUNNING then
+            
+            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+                -- MENU 8
+                if menuY == 0 then -- #0 Back
+                    showMenu = 6
+                    menuY = 1
+                end
+                if menuY == 2 then -- #2 ROM Browser
+                    scripts = System.listDirectory("ux0:/")
+                    for k, v in pairs(scripts) do
+                        v.previous_directory = false
+                        v.save = false
+                    end
+                    scripts_sort_by_folder_first()
+                    cur_dir_fm = "ux0:/"
+                    showMenu = 9
+                    menuY = 0
+                end
+                if menuY == 3 then -- Rescan
+                    delete_cache()
+                    FreeIcons()
+                    FreeMemory()
+                    Network.term()
+                    dofile("app0:index.lua")
+                end
+            elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
+                if menuY > 0 then
+                    menuY = menuY - 1
+                    else
+                    menuY=menuItems
+                end
+            elseif (Controls.check(pad, SCE_CTRL_DOWN)) and not (Controls.check(oldpad, SCE_CTRL_DOWN)) then
+                if menuY < menuItems then
+                    menuY = menuY + 1
+                    else
+                    menuY=0
+                end
+            elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
+                if menuY==1 then -- #1 category rom directory selection
+                    if getRomDir > 1 then
+                        getRomDir = getRomDir - 1
+                    else
+                        getRomDir = 34 -- Update number if add more systems
+                    end
+                end
+            elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
+                if menuY==1 then -- #1 category rom directory selection
+                    if getRomDir < 34 then -- Update number if add more systems
+                        getRomDir = getRomDir + 1
+                    else
+                        getRomDir=1
+                    end
+                end
+            end
+
+        end
+
+-- MENU 9 - ROM BROWSER
+    elseif showMenu == 9 then
+        
+        -- SETTINGS
+        -- Footer buttons and icons
+        -- Get text widths for positioning
+        label1 = Font.getTextWidth(fnt20, lang_lines.Back)--Back
+        label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
+        label3 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
+
+        Graphics.fillRect(60, 900, 44, 450, darkalpha)--dark background
+
+        Font.print(fnt22, setting_x, setting_yh, filebrowser_heading, white)--Game heading from menu 8
+        Graphics.fillRect(60, 900, 97, 100, white)
+
+        Graphics.fillRect(60, 900, 150 + (menuY * 50), 200 + (menuY * 50), themeCol)-- selection
+
+        -- START ROM BROWSER
+
+            -- Reset y axis for menu blending
+            local y = setting_y1
+            
+            Font.print(fnt20, setting_x, setting_y0 + 2, cur_dir_fm, grey_dir)
+
+            -- Write visible menu entries
+            for j, file in pairs(scripts) do
+                x = 20
+                if j >= i and y < 450 then
+                    if i == j then
+                        color = white
+                        x = 20
+                    else
+                        color = white
+                    end
+
+                    -- No Icon - ...
+                    if file.directory == true and file.previous_directory == true then
+                        Font.print(fnt22, setting_x, y, file.name, color)
+
+                    -- Icon - Folder Open -- Use this directory
+                    elseif file.directory == true and file.save == true then
+                        Font.print(fnt22, setting_x_icon_offset, y, file.name, color)
+                        Graphics.drawImage(setting_x, y, file_browser_folder_open)
+
+                    -- Icon - Folder Closed
+                    elseif file.directory == true and file.save == false and file.previous_directory == false then
+                        Font.print(fnt22, setting_x_icon_offset, y, file.name, color)
+                        Graphics.drawImage(setting_x, y, file_browser_folder_closed)
+
+                    -- Icon - File
+                    elseif file.directory == false then
+                        Font.print(fnt22, setting_x_icon_offset, y, file.name, color)
+                        Graphics.drawImage(setting_x, y, file_browser_file)
+
+                    else
+                    end
+
+                    y = y + 50
+                end
+            end
+
+        -- END ROM BROWSER
+
+
+        -- Draw footer ontop of dynamic list
+        Graphics.fillRect(0, 960, 496, 544, themeCol)-- footer bottom
+
+        Graphics.drawImage(900-label1, 510, btnO)
+        Font.print(fnt20, 900+28-label1, 508, lang_lines.Back, white)--Back
+
+        Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
+        Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
+
+        Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnT)
+        Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Close, white)--Close
+
+
+        menuItems = 0
+
+
+        -- MENU 9 - FUNCTIONS
+        status = System.getMessageState()
+        if status ~= RUNNING then
+            
+            -- START ROM BROWSER
+
+                -- Check for input
+                pad = Controls.read()
+                if Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS) then
+
+                    if scripts[i].directory == true then
+
+                        
+                        if scripts[i].previous_directory == true then
+                            -- Action = Move to previous directory
+                                if string.len(cur_dir_fm) > 5 then -- Excluding ux0:/
+                                    j=-2
+                                    while string.sub(cur_dir_fm,j,j) ~= "/" do
+                                        j=j-1
+                                    end
+                                    cur_dir_fm = string.sub(cur_dir_fm,1,j)
+
+                                    scripts = System.listDirectory(cur_dir_fm)
+                                    for k, v in pairs(scripts) do
+                                        v.previous_directory = false
+                                        v.save = false
+                                    end
+                                    
+                                    scripts_sort_by_folder_first()
+
+                                    if string.len(cur_dir_fm) > 5 then
+                                        level_up = {}
+                                        level_up.name = "..."
+                                        level_up.directory = true
+                                        level_up.previous_directory = true
+                                        level_up.save = false
+                                        table.insert(scripts, 1, level_up) -- ...
+
+                                        selection = {}
+                                        selection.name = lang_lines.Use_this_directory -- Use_this_directory
+                                        selection.directory = true
+                                        selection.previous_directory = false
+                                        selection.save = true
+                                        table.insert(scripts, 2, selection)
+                                    end
+
+                                    i = 1
+                                end
+                        else
+
+                            
+                            if scripts[i].save == true then     
+                                -- Action = Save directory
+                                    cur_dir_fm = string.sub(cur_dir_fm, 1, -2)
+                                    if getRomDir == 1 then romUserDir.Amiga = cur_dir_fm
+                                    elseif getRomDir == 2 then romUserDir.Atari_2600 = cur_dir_fm
+                                    elseif getRomDir == 3 then romUserDir.Atari_5200 = cur_dir_fm
+                                    elseif getRomDir == 4 then romUserDir.Atari_7800 = cur_dir_fm
+                                    elseif getRomDir == 5 then romUserDir.Atari_Lynx = cur_dir_fm
+                                    elseif getRomDir == 6 then romUserDir.ColecoVision = cur_dir_fm
+                                    elseif getRomDir == 7 then romUserDir.Commodore_64 = cur_dir_fm
+                                    elseif getRomDir == 8 then romUserDir.FBA_2012 = cur_dir_fm
+                                    elseif getRomDir == 9 then romUserDir.Game_Boy_Advance = cur_dir_fm
+                                    elseif getRomDir == 10 then romUserDir.Game_Boy_Color = cur_dir_fm
+                                    elseif getRomDir == 11 then romUserDir.Game_Boy = cur_dir_fm
+                                    elseif getRomDir == 12 then romUserDir.MAME_2000 = cur_dir_fm
+                                    elseif getRomDir == 13 then romUserDir.MAME_2003Plus = cur_dir_fm
+                                    elseif getRomDir == 14 then romUserDir.MSX = cur_dir_fm
+                                    elseif getRomDir == 15 then romUserDir.MSX2 = cur_dir_fm
+                                    elseif getRomDir == 16 then romUserDir.Neo_Geo_Pocket_Color = cur_dir_fm
+                                    elseif getRomDir == 17 then romUserDir.Neo_Geo = cur_dir_fm
+                                    elseif getRomDir == 18 then romUserDir.Nintendo_64 = cur_dir_fm
+                                    elseif getRomDir == 19 then romUserDir.Nintendo_Entertainment_System = cur_dir_fm
+                                    elseif getRomDir == 20 then romUserDir.PC_Engine_CD = cur_dir_fm
+                                    elseif getRomDir == 21 then romUserDir.PC_Engine = cur_dir_fm
+                                    elseif getRomDir == 22 then romUserDir.Sega_32X = cur_dir_fm
+                                    elseif getRomDir == 23 then romUserDir.Sega_CD = cur_dir_fm
+                                    elseif getRomDir == 24 then romUserDir.Sega_Dreamcast = cur_dir_fm
+                                    elseif getRomDir == 25 then romUserDir.Sega_Game_Gear = cur_dir_fm
+                                    elseif getRomDir == 26 then romUserDir.Sega_Master_System = cur_dir_fm
+                                    elseif getRomDir == 27 then romUserDir.Sega_Mega_Drive = cur_dir_fm
+                                    elseif getRomDir == 28 then romUserDir.Super_Nintendo = cur_dir_fm
+                                    elseif getRomDir == 29 then romUserDir.TurboGrafx_16 = cur_dir_fm
+                                    elseif getRomDir == 30 then romUserDir.TurboGrafx_CD = cur_dir_fm
+                                    elseif getRomDir == 31 then romUserDir.Vectrex = cur_dir_fm
+                                    elseif getRomDir == 32 then romUserDir.WonderSwan_Color = cur_dir_fm
+                                    elseif getRomDir == 33 then romUserDir.WonderSwan = cur_dir_fm
+                                    elseif getRomDir == 34 then romUserDir.ZX_Spectrum = cur_dir_fm
+                                    end
+
+                                    print_table_rom_dirs(romUserDir)
+
+                                    
+                                    showMenu = 8
+                                    menuY = 2
+                                    scripts = System.listDirectory("ux0:/")
+                                    scripts_sort_by_folder_first()
+                                    for k, v in pairs(scripts) do
+                                        v.previous_directory = false
+                                        v.save = false
+                                    end
+
+                                    cur_dir_fm = "ux0:/"
+
+                            else
+                                -- Action = List the directory
+                                    cur_dir_fm = cur_dir_fm .. scripts[i].name .. "/"
+                                    scripts = System.listDirectory(cur_dir_fm)
+                                    for k, v in pairs(scripts) do
+                                        v.previous_directory = false
+                                        v.save = false
+                                    end
+
+                                    scripts_sort_by_folder_first()
+
+                                    level_up = {}
+                                    level_up.name = "..."
+                                    level_up.directory = true
+                                    level_up.previous_directory = true
+                                    level_up.save = false
+                                    
+                                    table.insert(scripts, 1, level_up) -- ...
+
+                                    selection = {}
+                                    selection.name = lang_lines.Use_this_directory -- Use_this_directory
+                                    selection.directory = true
+                                    selection.previous_directory = false
+                                    selection.save = true
+                                    table.insert(scripts, 2, selection)
+
+
+                                    i = 1
+
+                            end
+
+                        end
+
+
+                    end
+
+                elseif Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE) then
+                    
+                    local _, dir_level_count = string.gsub(cur_dir_fm, "/", "")
+                    if dir_level_count == 1 then
+                        oldpad = pad
+                        showMenu = 8
+                        menuY = 2
+                        scripts = System.listDirectory("ux0:/")
+                        scripts_sort_by_folder_first()
+                        for k, v in pairs(scripts) do
+                            v.previous_directory = false
+                            v.save = false
+                        end
+                        cur_dir_fm = "ux0:/"
+                    else
+
+
+                        if string.len(cur_dir_fm) > 5 then -- Excluding ux0:/
+                            j=-2
+                            while string.sub(cur_dir_fm,j,j) ~= "/" do
+                                j=j-1
+                            end
+                            cur_dir_fm = string.sub(cur_dir_fm,1,j)
+                            scripts = System.listDirectory(cur_dir_fm)
+                            for k, v in pairs(scripts) do
+                                v.previous_directory = false
+                                v.save = false
+                            end
+
+                            scripts_sort_by_folder_first()
+                           
+                            if string.len(cur_dir_fm) > 5 then
+                                level_up = {}
+                                level_up.name = "..."
+                                level_up.directory = true
+                                level_up.previous_directory = true
+                                level_up.save = false
+                                table.insert(scripts, 1, level_up) -- ...
+
+                                selection = {}
+                                selection.name = lang_lines.Use_this_directory -- Use_this_directory
+                                selection.directory = true
+                                selection.previous_directory = false
+                                selection.save = true
+                                table.insert(scripts, 2, selection)
+                            end
+
+                            i = 1
+                        else
+                        end
+
+                    end
+                elseif Controls.check(pad, SCE_CTRL_UP) and not Controls.check(oldpad, SCE_CTRL_UP) then
+                    i = i - 1
+                elseif Controls.check(pad, SCE_CTRL_DOWN) and not Controls.check(oldpad, SCE_CTRL_DOWN) then
+                    i = i + 1
+                elseif Controls.check(pad, SCE_CTRL_TRIANGLE) then
+                    -- break
+                    showMenu = 8
+                    menuY = 2
+                    scripts = System.listDirectory("ux0:/")
+                    scripts_sort_by_folder_first()
+                    for k, v in pairs(scripts) do
+                        v.previous_directory = false
+                        v.save = false
+                    end
+                    cur_dir_fm = "ux0:/"
+                end
+
+            -- END ROM BROWSER 
+
+        end
 -- END OF MENUS
     end
 
@@ -9644,6 +11260,21 @@ while true do
                 prvRotY=prvRotY+0.02
             end
         end
+    end
+    if showMenu == 9 then
+        --Scroll through ROM Browser
+        if my < 64 then
+            if delayButton < 0.5 then
+                delayButton = 1
+                i = i - 1
+            end
+        elseif my > 180 then
+            if delayButton < 0.5 then
+                delayButton = 1
+                i = i + 1
+            end
+        end
+
     end
     --Controls Start
     if showMenu == 0 then
@@ -9735,35 +11366,36 @@ while true do
                     elseif showCat == 8 then rom_location = (gba_table[p].game_path) launch_retroarch(core.GBA)
                     elseif showCat == 9 then rom_location = (gbc_table[p].game_path) launch_retroarch(core.GBC)
                     elseif showCat == 10 then rom_location = (gb_table[p].game_path) launch_retroarch(core.GB)
-                    elseif showCat == 11 then rom_location = (sega_cd_table[p].game_path) launch_retroarch(core.SEGA_CD) 
-                    elseif showCat == 12 then rom_location = (s32x_table[p].game_path) launch_retroarch(core.s32X) 
-                    elseif showCat == 13 then rom_location = (md_table[p].game_path) launch_retroarch(core.MD)
-                    elseif showCat == 14 then rom_location = (sms_table[p].game_path) launch_retroarch(core.SMS)
-                    elseif showCat == 15 then rom_location = (gg_table[p].game_path) launch_retroarch(core.GG)
-                    elseif showCat == 16 then rom_location = (tg16_table[p].game_path) launch_retroarch(core.TG16)
-                    elseif showCat == 17 then rom_location = (tgcd_table[p].game_path) launch_retroarch(core.TGCD)
-                    elseif showCat == 18 then rom_location = (pce_table[p].game_path) launch_retroarch(core.PCE)
-                    elseif showCat == 19 then rom_location = (pcecd_table[p].game_path) launch_retroarch(core.PCECD)
-                    elseif showCat == 20 then rom_location = (amiga_table[p].game_path) launch_retroarch(core.AMIGA)
-                    elseif showCat == 21 then rom_location = (c64_table[p].game_path) launch_retroarch(core.C64)
-                    elseif showCat == 22 then rom_location = (wswan_col_table[p].game_path) launch_retroarch(core.WSWAN_COL)
-                    elseif showCat == 23 then rom_location = (wswan_table[p].game_path) launch_retroarch(core.WSWAN)
-                    elseif showCat == 24 then rom_location = (msx2_table[p].game_path) launch_retroarch(core.MSX2)
-                    elseif showCat == 25 then rom_location = (msx1_table[p].game_path) launch_retroarch(core.MSX1)
-                    elseif showCat == 26 then rom_location = (zxs_table[p].game_path) launch_retroarch(core.ZXS)
-                    elseif showCat == 27 then rom_location = (atari_7800_table[p].game_path) launch_retroarch(core.ATARI_7800)
-                    elseif showCat == 28 then rom_location = (atari_5200_table[p].game_path) launch_retroarch(core.ATARI_5200)
-                    elseif showCat == 29 then rom_location = (atari_2600_table[p].game_path) launch_retroarch(core.ATARI_2600)
-                    elseif showCat == 30 then rom_location = (atari_lynx_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
-                    elseif showCat == 31 then rom_location = (colecovision_table[p].game_path) launch_retroarch(core.COLECOVISION)
-                    elseif showCat == 32 then rom_location = (vectrex_table[p].game_path) launch_retroarch(core.VECTREX)
-                    elseif showCat == 33 then rom_location = (fba_table[p].game_path) launch_retroarch(core.FBA)
-                    elseif showCat == 34 then rom_location = (mame_2003_plus_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
-                    elseif showCat == 35 then rom_location = (mame_2000_table[p].game_path) launch_retroarch(core.MAME_2000)
-                    elseif showCat == 36 then rom_location = (neogeo_table[p].game_path) launch_retroarch(core.NEOGEO)
-                    elseif showCat == 37 then rom_location = (ngpc_table[p].game_path) launch_retroarch(core.NGPC)
+                    elseif showCat == 11 then rom_location = (dreamcast_table[p].game_path) launch_Flycast()
+                    elseif showCat == 12 then rom_location = (sega_cd_table[p].game_path) launch_retroarch(core.SEGA_CD) 
+                    elseif showCat == 13 then rom_location = (s32x_table[p].game_path) launch_retroarch(core.s32X) 
+                    elseif showCat == 14 then rom_location = (md_table[p].game_path) launch_retroarch(core.MD)
+                    elseif showCat == 15 then rom_location = (sms_table[p].game_path) launch_retroarch(core.SMS)
+                    elseif showCat == 16 then rom_location = (gg_table[p].game_path) launch_retroarch(core.GG)
+                    elseif showCat == 17 then rom_location = (tg16_table[p].game_path) launch_retroarch(core.TG16)
+                    elseif showCat == 18 then rom_location = (tgcd_table[p].game_path) launch_retroarch(core.TGCD)
+                    elseif showCat == 19 then rom_location = (pce_table[p].game_path) launch_retroarch(core.PCE)
+                    elseif showCat == 20 then rom_location = (pcecd_table[p].game_path) launch_retroarch(core.PCECD)
+                    elseif showCat == 21 then rom_location = (amiga_table[p].game_path) launch_retroarch(core.AMIGA)
+                    elseif showCat == 22 then rom_location = (c64_table[p].game_path) launch_retroarch(core.C64)
+                    elseif showCat == 23 then rom_location = (wswan_col_table[p].game_path) launch_retroarch(core.WSWAN_COL)
+                    elseif showCat == 24 then rom_location = (wswan_table[p].game_path) launch_retroarch(core.WSWAN)
+                    elseif showCat == 25 then rom_location = (msx2_table[p].game_path) launch_retroarch(core.MSX2)
+                    elseif showCat == 26 then rom_location = (msx1_table[p].game_path) launch_retroarch(core.MSX1)
+                    elseif showCat == 27 then rom_location = (zxs_table[p].game_path) launch_retroarch(core.ZXS)
+                    elseif showCat == 28 then rom_location = (atari_7800_table[p].game_path) launch_retroarch(core.ATARI_7800)
+                    elseif showCat == 29 then rom_location = (atari_5200_table[p].game_path) launch_retroarch(core.ATARI_5200)
+                    elseif showCat == 30 then rom_location = (atari_2600_table[p].game_path) launch_retroarch(core.ATARI_2600)
+                    elseif showCat == 31 then rom_location = (atari_lynx_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
+                    elseif showCat == 32 then rom_location = (colecovision_table[p].game_path) launch_retroarch(core.COLECOVISION)
+                    elseif showCat == 33 then rom_location = (vectrex_table[p].game_path) launch_retroarch(core.VECTREX)
+                    elseif showCat == 34 then rom_location = (fba_table[p].game_path) launch_retroarch(core.FBA)
+                    elseif showCat == 35 then rom_location = (mame_2003_plus_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
+                    elseif showCat == 36 then rom_location = (mame_2000_table[p].game_path) launch_retroarch(core.MAME_2000)
+                    elseif showCat == 37 then rom_location = (neogeo_table[p].game_path) launch_retroarch(core.NEOGEO)
+                    elseif showCat == 38 then rom_location = (ngpc_table[p].game_path) launch_retroarch(core.NGPC)
 
-                    elseif showCat == 38 then
+                    elseif showCat == 39 then
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (fav_count[p].game_path, "pspemu") then
                                 rom_location = tostring(fav_count[p].launch_argument)
@@ -9779,33 +11411,34 @@ while true do
                         elseif apptype == 8 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GBA)
                         elseif apptype == 9 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GBC)
                         elseif apptype == 10 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GB)
-                        elseif apptype == 11 then rom_location = (fav_count[p].game_path) launch_retroarch(core.SEGA_CD) 
-                        elseif apptype == 12 then rom_location = (fav_count[p].game_path) launch_retroarch(core.s32X) 
-                        elseif apptype == 13 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MD)
-                        elseif apptype == 14 then rom_location = (fav_count[p].game_path) launch_retroarch(core.SMS)
-                        elseif apptype == 15 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GG)
-                        elseif apptype == 16 then rom_location = (fav_count[p].game_path) launch_retroarch(core.TG16)
-                        elseif apptype == 17 then rom_location = (fav_count[p].game_path) launch_retroarch(core.TGCD)
-                        elseif apptype == 18 then rom_location = (fav_count[p].game_path) launch_retroarch(core.PCE)
-                        elseif apptype == 19 then rom_location = (fav_count[p].game_path) launch_retroarch(core.PCECD)
-                        elseif apptype == 20 then rom_location = (fav_count[p].game_path) launch_retroarch(core.AMIGA)
-                        elseif apptype == 21 then rom_location = (fav_count[p].game_path) launch_retroarch(core.C64)
-                        elseif apptype == 22 then rom_location = (fav_count[p].game_path) launch_retroarch(core.WSWAN_COL)
-                        elseif apptype == 23 then rom_location = (fav_count[p].game_path) launch_retroarch(core.WSWAN)
-                        elseif apptype == 24 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MSX2)
-                        elseif apptype == 25 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MSX1)
-                        elseif apptype == 26 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ZXS)
-                        elseif apptype == 27 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_7800)
-                        elseif apptype == 28 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_5200)
-                        elseif apptype == 29 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_2600)
-                        elseif apptype == 30 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_LYNX)
-                        elseif apptype == 31 then rom_location = (fav_count[p].game_path) launch_retroarch(core.COLECOVISION)
-                        elseif apptype == 32 then rom_location = (fav_count[p].game_path) launch_retroarch(core.VECTREX)
-                        elseif apptype == 33 then rom_location = (fav_count[p].game_path) launch_retroarch(core.FBA)
-                        elseif apptype == 34 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
-                        elseif apptype == 35 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MAME_2000)
-                        elseif apptype == 36 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NEOGEO)
-                        elseif apptype == 37 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NGPC)
+                        elseif apptype == 11 then rom_location = (fav_count[p].game_path) launch_Flycast()
+                        elseif apptype == 12 then rom_location = (fav_count[p].game_path) launch_retroarch(core.SEGA_CD) 
+                        elseif apptype == 13 then rom_location = (fav_count[p].game_path) launch_retroarch(core.s32X) 
+                        elseif apptype == 14 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MD)
+                        elseif apptype == 15 then rom_location = (fav_count[p].game_path) launch_retroarch(core.SMS)
+                        elseif apptype == 16 then rom_location = (fav_count[p].game_path) launch_retroarch(core.GG)
+                        elseif apptype == 17 then rom_location = (fav_count[p].game_path) launch_retroarch(core.TG16)
+                        elseif apptype == 18 then rom_location = (fav_count[p].game_path) launch_retroarch(core.TGCD)
+                        elseif apptype == 19 then rom_location = (fav_count[p].game_path) launch_retroarch(core.PCE)
+                        elseif apptype == 20 then rom_location = (fav_count[p].game_path) launch_retroarch(core.PCECD)
+                        elseif apptype == 21 then rom_location = (fav_count[p].game_path) launch_retroarch(core.AMIGA)
+                        elseif apptype == 22 then rom_location = (fav_count[p].game_path) launch_retroarch(core.C64)
+                        elseif apptype == 23 then rom_location = (fav_count[p].game_path) launch_retroarch(core.WSWAN_COL)
+                        elseif apptype == 24 then rom_location = (fav_count[p].game_path) launch_retroarch(core.WSWAN)
+                        elseif apptype == 25 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MSX2)
+                        elseif apptype == 26 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MSX1)
+                        elseif apptype == 27 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ZXS)
+                        elseif apptype == 28 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_7800)
+                        elseif apptype == 29 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_5200)
+                        elseif apptype == 30 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_2600)
+                        elseif apptype == 31 then rom_location = (fav_count[p].game_path) launch_retroarch(core.ATARI_LYNX)
+                        elseif apptype == 32 then rom_location = (fav_count[p].game_path) launch_retroarch(core.COLECOVISION)
+                        elseif apptype == 33 then rom_location = (fav_count[p].game_path) launch_retroarch(core.VECTREX)
+                        elseif apptype == 34 then rom_location = (fav_count[p].game_path) launch_retroarch(core.FBA)
+                        elseif apptype == 35 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
+                        elseif apptype == 36 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MAME_2000)
+                        elseif apptype == 37 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NEOGEO)
+                        elseif apptype == 38 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NGPC)
                         else
                             -- Homebrew
                             if string.match (fav_count[p].game_path, "pspemu") then
@@ -9818,7 +11451,7 @@ while true do
                             appdir=working_dir .. "/" .. fav_count[p].name
                         end
 
-                    elseif showCat == 39 then
+                    elseif showCat == 40 then
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (recently_played_table[p].game_path, "pspemu") then
                                 rom_location = tostring(recently_played_table[p].launch_argument)
@@ -9834,33 +11467,34 @@ while true do
                         elseif apptype == 8 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GBA)
                         elseif apptype == 9 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GBC)
                         elseif apptype == 10 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GB)
-                        elseif apptype == 11 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.SEGA_CD) 
-                        elseif apptype == 12 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.s32X) 
-                        elseif apptype == 13 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MD)
-                        elseif apptype == 14 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.SMS)
-                        elseif apptype == 15 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GG)
-                        elseif apptype == 16 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.TG16)
-                        elseif apptype == 17 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.TGCD)
-                        elseif apptype == 18 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.PCE)
-                        elseif apptype == 19 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.PCECD)
-                        elseif apptype == 20 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.AMIGA)
-                        elseif apptype == 21 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.C64)
-                        elseif apptype == 22 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.WSWAN_COL)
-                        elseif apptype == 23 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.WSWAN)
-                        elseif apptype == 24 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MSX2)
-                        elseif apptype == 25 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MSX1)
-                        elseif apptype == 26 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ZXS)
-                        elseif apptype == 27 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_7800)
-                        elseif apptype == 28 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_5200)
-                        elseif apptype == 29 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_2600)
-                        elseif apptype == 30 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
-                        elseif apptype == 31 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.COLECOVISION)
-                        elseif apptype == 32 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.VECTREX)
-                        elseif apptype == 33 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.FBA)
-                        elseif apptype == 34 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
-                        elseif apptype == 35 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MAME_2000)
-                        elseif apptype == 36 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NEOGEO)
-                        elseif apptype == 37 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NGPC)
+                        elseif apptype == 11 then rom_location = (recently_played_table[p].game_path) launch_Flycast()
+                        elseif apptype == 12 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.SEGA_CD) 
+                        elseif apptype == 13 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.s32X) 
+                        elseif apptype == 14 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MD)
+                        elseif apptype == 15 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.SMS)
+                        elseif apptype == 16 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.GG)
+                        elseif apptype == 17 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.TG16)
+                        elseif apptype == 18 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.TGCD)
+                        elseif apptype == 19 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.PCE)
+                        elseif apptype == 20 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.PCECD)
+                        elseif apptype == 21 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.AMIGA)
+                        elseif apptype == 22 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.C64)
+                        elseif apptype == 23 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.WSWAN_COL)
+                        elseif apptype == 24 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.WSWAN)
+                        elseif apptype == 25 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MSX2)
+                        elseif apptype == 26 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MSX1)
+                        elseif apptype == 27 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ZXS)
+                        elseif apptype == 28 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_7800)
+                        elseif apptype == 29 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_5200)
+                        elseif apptype == 30 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_2600)
+                        elseif apptype == 31 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
+                        elseif apptype == 32 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.COLECOVISION)
+                        elseif apptype == 33 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.VECTREX)
+                        elseif apptype == 34 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.FBA)
+                        elseif apptype == 35 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
+                        elseif apptype == 36 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MAME_2000)
+                        elseif apptype == 37 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NEOGEO)
+                        elseif apptype == 38 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NGPC)
                         else
                             -- Homebrew
                             if string.match (recently_played_table[p].game_path, "pspemu") then
@@ -9874,7 +11508,7 @@ while true do
                         end
 
                     
-                    elseif showCat == 40 then
+                    elseif showCat == 41 then
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (search_results_table[p].game_path, "pspemu") then
                                 rom_location = tostring(search_results_table[p].launch_argument)
@@ -9890,33 +11524,34 @@ while true do
                         elseif apptype == 8 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GBA)
                         elseif apptype == 9 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GBC)
                         elseif apptype == 10 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GB)
-                        elseif apptype == 11 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.SEGA_CD) 
-                        elseif apptype == 12 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.s32X) 
-                        elseif apptype == 13 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MD)
-                        elseif apptype == 14 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.SMS)
-                        elseif apptype == 15 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GG)
-                        elseif apptype == 16 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.TG16)
-                        elseif apptype == 17 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.TGCD)
-                        elseif apptype == 18 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.PCE)
-                        elseif apptype == 19 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.PCECD)
-                        elseif apptype == 20 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.AMIGA)
-                        elseif apptype == 21 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.C64)
-                        elseif apptype == 22 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.WSWAN_COL)
-                        elseif apptype == 23 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.WSWAN)
-                        elseif apptype == 24 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MSX2)
-                        elseif apptype == 25 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MSX1)
-                        elseif apptype == 26 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ZXS)
-                        elseif apptype == 27 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_7800)
-                        elseif apptype == 28 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_5200)
-                        elseif apptype == 29 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_2600)
-                        elseif apptype == 30 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
-                        elseif apptype == 31 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.COLECOVISION)
-                        elseif apptype == 32 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.VECTREX)
-                        elseif apptype == 33 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.FBA)
-                        elseif apptype == 34 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
-                        elseif apptype == 35 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MAME_2000)
-                        elseif apptype == 36 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NEOGEO)
-                        elseif apptype == 37 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NGPC)
+                        elseif apptype == 11 then rom_location = (search_results_table[p].game_path) launch_Flycast()
+                        elseif apptype == 12 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.SEGA_CD) 
+                        elseif apptype == 13 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.s32X) 
+                        elseif apptype == 14 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MD)
+                        elseif apptype == 15 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.SMS)
+                        elseif apptype == 16 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.GG)
+                        elseif apptype == 17 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.TG16)
+                        elseif apptype == 18 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.TGCD)
+                        elseif apptype == 19 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.PCE)
+                        elseif apptype == 20 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.PCECD)
+                        elseif apptype == 21 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.AMIGA)
+                        elseif apptype == 22 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.C64)
+                        elseif apptype == 23 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.WSWAN_COL)
+                        elseif apptype == 24 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.WSWAN)
+                        elseif apptype == 25 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MSX2)
+                        elseif apptype == 26 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MSX1)
+                        elseif apptype == 27 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ZXS)
+                        elseif apptype == 28 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_7800)
+                        elseif apptype == 29 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_5200)
+                        elseif apptype == 30 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_2600)
+                        elseif apptype == 31 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
+                        elseif apptype == 32 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.COLECOVISION)
+                        elseif apptype == 33 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.VECTREX)
+                        elseif apptype == 34 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.FBA)
+                        elseif apptype == 35 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
+                        elseif apptype == 36 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MAME_2000)
+                        elseif apptype == 37 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NEOGEO)
+                        elseif apptype == 38 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NGPC)
                         else
                             -- Homebrew
                             if string.match (search_results_table[p].game_path, "pspemu") then
@@ -9947,33 +11582,34 @@ while true do
                         elseif apptype == 8 then rom_location = (files_table[p].game_path) launch_retroarch(core.GBA)
                         elseif apptype == 9 then rom_location = (files_table[p].game_path) launch_retroarch(core.GBC)
                         elseif apptype == 10 then rom_location = (files_table[p].game_path) launch_retroarch(core.GB)
-                        elseif apptype == 11 then rom_location = (files_table[p].game_path) launch_retroarch(core.SEGA_CD) 
-                        elseif apptype == 12 then rom_location = (files_table[p].game_path) launch_retroarch(core.s32X) 
-                        elseif apptype == 13 then rom_location = (files_table[p].game_path) launch_retroarch(core.MD)
-                        elseif apptype == 14 then rom_location = (files_table[p].game_path) launch_retroarch(core.SMS)
-                        elseif apptype == 15 then rom_location = (files_table[p].game_path) launch_retroarch(core.GG)
-                        elseif apptype == 16 then rom_location = (files_table[p].game_path) launch_retroarch(core.TG16)
-                        elseif apptype == 17 then rom_location = (files_table[p].game_path) launch_retroarch(core.TGCD)
-                        elseif apptype == 18 then rom_location = (files_table[p].game_path) launch_retroarch(core.PCE)
-                        elseif apptype == 19 then rom_location = (files_table[p].game_path) launch_retroarch(core.PCECD)
-                        elseif apptype == 20 then rom_location = (files_table[p].game_path) launch_retroarch(core.AMIGA)
-                        elseif apptype == 21 then rom_location = (files_table[p].game_path) launch_retroarch(core.C64)
-                        elseif apptype == 22 then rom_location = (files_table[p].game_path) launch_retroarch(core.WSWAN_COL)
-                        elseif apptype == 23 then rom_location = (files_table[p].game_path) launch_retroarch(core.WSWAN)
-                        elseif apptype == 24 then rom_location = (files_table[p].game_path) launch_retroarch(core.MSX2)
-                        elseif apptype == 25 then rom_location = (files_table[p].game_path) launch_retroarch(core.MSX1)
-                        elseif apptype == 26 then rom_location = (files_table[p].game_path) launch_retroarch(core.ZXS)
-                        elseif apptype == 27 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_7800)
-                        elseif apptype == 28 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_5200)
-                        elseif apptype == 29 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_2600)
-                        elseif apptype == 30 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
-                        elseif apptype == 31 then rom_location = (files_table[p].game_path) launch_retroarch(core.COLECOVISION)
-                        elseif apptype == 32 then rom_location = (files_table[p].game_path) launch_retroarch(core.VECTREX)
-                        elseif apptype == 33 then rom_location = (files_table[p].game_path) launch_retroarch(core.FBA)
-                        elseif apptype == 34 then rom_location = (files_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
-                        elseif apptype == 35 then rom_location = (files_table[p].game_path) launch_retroarch(core.MAME_2000)
-                        elseif apptype == 36 then rom_location = (files_table[p].game_path) launch_retroarch(core.NEOGEO)
-                        elseif apptype == 37 then rom_location = (files_table[p].game_path) launch_retroarch(core.NGPC)
+                        elseif apptype == 11 then rom_location = (files_table[p].game_path) launch_Flycast()
+                        elseif apptype == 12 then rom_location = (files_table[p].game_path) launch_retroarch(core.SEGA_CD) 
+                        elseif apptype == 13 then rom_location = (files_table[p].game_path) launch_retroarch(core.s32X) 
+                        elseif apptype == 14 then rom_location = (files_table[p].game_path) launch_retroarch(core.MD)
+                        elseif apptype == 15 then rom_location = (files_table[p].game_path) launch_retroarch(core.SMS)
+                        elseif apptype == 16 then rom_location = (files_table[p].game_path) launch_retroarch(core.GG)
+                        elseif apptype == 17 then rom_location = (files_table[p].game_path) launch_retroarch(core.TG16)
+                        elseif apptype == 18 then rom_location = (files_table[p].game_path) launch_retroarch(core.TGCD)
+                        elseif apptype == 19 then rom_location = (files_table[p].game_path) launch_retroarch(core.PCE)
+                        elseif apptype == 20 then rom_location = (files_table[p].game_path) launch_retroarch(core.PCECD)
+                        elseif apptype == 21 then rom_location = (files_table[p].game_path) launch_retroarch(core.AMIGA)
+                        elseif apptype == 22 then rom_location = (files_table[p].game_path) launch_retroarch(core.C64)
+                        elseif apptype == 23 then rom_location = (files_table[p].game_path) launch_retroarch(core.WSWAN_COL)
+                        elseif apptype == 24 then rom_location = (files_table[p].game_path) launch_retroarch(core.WSWAN)
+                        elseif apptype == 25 then rom_location = (files_table[p].game_path) launch_retroarch(core.MSX2)
+                        elseif apptype == 26 then rom_location = (files_table[p].game_path) launch_retroarch(core.MSX1)
+                        elseif apptype == 27 then rom_location = (files_table[p].game_path) launch_retroarch(core.ZXS)
+                        elseif apptype == 28 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_7800)
+                        elseif apptype == 29 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_5200)
+                        elseif apptype == 30 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_2600)
+                        elseif apptype == 31 then rom_location = (files_table[p].game_path) launch_retroarch(core.ATARI_LYNX)
+                        elseif apptype == 32 then rom_location = (files_table[p].game_path) launch_retroarch(core.COLECOVISION)
+                        elseif apptype == 33 then rom_location = (files_table[p].game_path) launch_retroarch(core.VECTREX)
+                        elseif apptype == 34 then rom_location = (files_table[p].game_path) launch_retroarch(core.FBA)
+                        elseif apptype == 35 then rom_location = (files_table[p].game_path) launch_retroarch(core.MAME_2003_PLUS)
+                        elseif apptype == 36 then rom_location = (files_table[p].game_path) launch_retroarch(core.MAME_2000)
+                        elseif apptype == 37 then rom_location = (files_table[p].game_path) launch_retroarch(core.NEOGEO)
+                        elseif apptype == 38 then rom_location = (files_table[p].game_path) launch_retroarch(core.NGPC)
                         else
                             -- Homebrew
                             if string.match (files_table[p].game_path, "pspemu") then
@@ -10048,40 +11684,41 @@ while true do
                 if showCat == 8 then curTotal =     #gba_table              if #gba_table == 0 then             showCat = 9 end end
                 if showCat == 9 then curTotal =     #gbc_table              if #gbc_table == 0 then             showCat = 10 end end
                 if showCat == 10 then curTotal =    #gb_table               if #gb_table == 0 then              showCat = 11 end end
-                if showCat == 11 then curTotal =    #sega_cd_table          if #sega_cd_table == 0 then         showCat = 12 end end
-                if showCat == 12 then curTotal =    #s32x_table             if #s32x_table == 0 then            showCat = 13 end end
-                if showCat == 13 then curTotal =    #md_table               if #md_table == 0 then              showCat = 14 end end
-                if showCat == 14 then curTotal =    #sms_table              if #sms_table == 0 then             showCat = 15 end end
-                if showCat == 15 then curTotal =    #gg_table               if #gg_table == 0 then              showCat = 16 end end
-                if showCat == 16 then curTotal =    #tg16_table             if #tg16_table == 0 then            showCat = 17 end end
-                if showCat == 17 then curTotal =    #tgcd_table             if #tgcd_table == 0 then            showCat = 18 end end
-                if showCat == 18 then curTotal =    #pce_table              if #pce_table == 0 then             showCat = 19 end end
-                if showCat == 19 then curTotal =    #pcecd_table            if #pcecd_table == 0 then           showCat = 20 end end
-                if showCat == 20 then curTotal =    #amiga_table            if #amiga_table == 0 then           showCat = 21 end end
-                if showCat == 21 then curTotal =    #c64_table              if #c64_table == 0 then             showCat = 22 end end
-                if showCat == 22 then curTotal =    #wswan_col_table        if #wswan_col_table == 0 then       showCat = 23 end end
-                if showCat == 23 then curTotal =    #wswan_table            if #wswan_table == 0 then           showCat = 24 end end
-                if showCat == 24 then curTotal =    #msx2_table             if #msx2_table == 0 then            showCat = 25 end end
-                if showCat == 25 then curTotal =    #msx1_table             if #msx1_table == 0 then            showCat = 26 end end
-                if showCat == 26 then curTotal =    #zxs_table              if #zxs_table == 0 then             showCat = 27 end end
-                if showCat == 27 then curTotal =    #atari_7800_table       if #atari_7800_table == 0 then      showCat = 28 end end
-                if showCat == 28 then curTotal =    #atari_5200_table       if #atari_5200_table == 0 then      showCat = 29 end end
-                if showCat == 29 then curTotal =    #atari_2600_table       if #atari_2600_table == 0 then      showCat = 30 end end
-                if showCat == 30 then curTotal =    #atari_lynx_table       if #atari_lynx_table == 0 then      showCat = 31 end end
-                if showCat == 31 then curTotal =    #colecovision_table     if #colecovision_table == 0 then    showCat = 32 end end
-                if showCat == 32 then curTotal =    #vectrex_table          if #vectrex_table == 0 then         showCat = 33 end end
-                if showCat == 33 then curTotal =    #fba_table              if #fba_table == 0 then             showCat = 34 end end
-                if showCat == 34 then curTotal =    #mame_2003_plus_table   if #mame_2003_plus_table == 0 then  showCat = 35 end end
-                if showCat == 35 then curTotal =    #mame_2000_table        if #mame_2000_table == 0 then       showCat = 36 end end
-                if showCat == 36 then curTotal =    #neogeo_table           if #neogeo_table == 0 then          showCat = 37 end end
-                if showCat == 37 then curTotal =    #ngpc_table             if #ngpc_table == 0 then            showCat = 38 end end
-                if showCat == 38 then
+                if showCat == 11 then curTotal =    #dreamcast_table        if #dreamcast_table == 0 then       showCat = 12 end end
+                if showCat == 12 then curTotal =    #sega_cd_table          if #sega_cd_table == 0 then         showCat = 13 end end
+                if showCat == 13 then curTotal =    #s32x_table             if #s32x_table == 0 then            showCat = 14 end end
+                if showCat == 14 then curTotal =    #md_table               if #md_table == 0 then              showCat = 15 end end
+                if showCat == 15 then curTotal =    #sms_table              if #sms_table == 0 then             showCat = 16 end end
+                if showCat == 16 then curTotal =    #gg_table               if #gg_table == 0 then              showCat = 17 end end
+                if showCat == 17 then curTotal =    #tg16_table             if #tg16_table == 0 then            showCat = 18 end end
+                if showCat == 18 then curTotal =    #tgcd_table             if #tgcd_table == 0 then            showCat = 19 end end
+                if showCat == 19 then curTotal =    #pce_table              if #pce_table == 0 then             showCat = 20 end end
+                if showCat == 20 then curTotal =    #pcecd_table            if #pcecd_table == 0 then           showCat = 21 end end
+                if showCat == 21 then curTotal =    #amiga_table            if #amiga_table == 0 then           showCat = 22 end end
+                if showCat == 22 then curTotal =    #c64_table              if #c64_table == 0 then             showCat = 23 end end
+                if showCat == 23 then curTotal =    #wswan_col_table        if #wswan_col_table == 0 then       showCat = 24 end end
+                if showCat == 24 then curTotal =    #wswan_table            if #wswan_table == 0 then           showCat = 25 end end
+                if showCat == 25 then curTotal =    #msx2_table             if #msx2_table == 0 then            showCat = 26 end end
+                if showCat == 26 then curTotal =    #msx1_table             if #msx1_table == 0 then            showCat = 27 end end
+                if showCat == 27 then curTotal =    #zxs_table              if #zxs_table == 0 then             showCat = 28 end end
+                if showCat == 28 then curTotal =    #atari_7800_table       if #atari_7800_table == 0 then      showCat = 29 end end
+                if showCat == 29 then curTotal =    #atari_5200_table       if #atari_5200_table == 0 then      showCat = 30 end end
+                if showCat == 30 then curTotal =    #atari_2600_table       if #atari_2600_table == 0 then      showCat = 31 end end
+                if showCat == 31 then curTotal =    #atari_lynx_table       if #atari_lynx_table == 0 then      showCat = 32 end end
+                if showCat == 32 then curTotal =    #colecovision_table     if #colecovision_table == 0 then    showCat = 33 end end
+                if showCat == 33 then curTotal =    #vectrex_table          if #vectrex_table == 0 then         showCat = 34 end end
+                if showCat == 34 then curTotal =    #fba_table              if #fba_table == 0 then             showCat = 35 end end
+                if showCat == 35 then curTotal =    #mame_2003_plus_table   if #mame_2003_plus_table == 0 then  showCat = 36 end end
+                if showCat == 36 then curTotal =    #mame_2000_table        if #mame_2000_table == 0 then       showCat = 37 end end
+                if showCat == 37 then curTotal =    #neogeo_table           if #neogeo_table == 0 then          showCat = 38 end end
+                if showCat == 38 then curTotal =    #ngpc_table             if #ngpc_table == 0 then            showCat = 39 end end
+                if showCat == 39 then
                     -- count favorites
                     local fav_count = {}
                     for l, file in pairs(files_table) do
                         if showHomebrews == 0 then
                             -- ignore homebrew apps
-                            if file.app_type > 0 then
+                            if file.app_type ~= nil then
                                 if file.favourite==true then
                                     table.insert(fav_count, file)
                                 end
@@ -10094,16 +11731,16 @@ while true do
                         end
                     end
                     curTotal = #fav_count
-                    if #fav_count == 0 then showCat = 39
+                    if #fav_count == 0 then showCat = 40
                     end
                 end
-                if showCat == 39 then 
+                if showCat == 40 then 
                     curTotal = #recently_played_table
-                    if #recently_played_table == 0 then showCat = 40
+                    if #recently_played_table == 0 then showCat = 41
                     end
                 end
                 
-                if showCat == 40 then
+                if showCat == 41 then
                     curTotal = #search_results_table   
                     if #search_results_table == 0 and showAll==1 then 
                         showCat = 0
@@ -10224,7 +11861,7 @@ while true do
                 for l, file in pairs(files_table) do
                     if showHomebrews == 0 then
                         -- ignore homebrew apps
-                        if file.app_type > 0 then
+                        if file.app_type ~= nil then
                             if file.favourite==true then
                                 table.insert(fav_count, file)
                             end
@@ -10240,9 +11877,9 @@ while true do
                 -- Favourites found
                 if #fav_count > 0 then
                     -- Skip to favorites
-                    if showCat == 38 then
+                    if showCat == 39 then
                     else
-                        showCat = 38
+                        showCat = 39
                         p = 1
                         master_index = p
                         GetNameAndAppTypeSelected()
@@ -10307,6 +11944,11 @@ while true do
                 elseif showMenu == 7 then -- About
                     showMenu = 2
                     menuY = 6
+                elseif showMenu == 8 then -- Game directories
+                    showMenu = 6 -- Scan Settings
+                    menuY = 1
+                elseif showMenu == 9 then -- Rom Browser
+                    -- Do nothing
                 elseif showMenu == 2 then
                     -- If search cancelled with circle, return to settings menu
                     state = Keyboard.getState()
@@ -10365,34 +12007,35 @@ while true do
     elseif showCat == 8 then curTotal = #gba_table              if #gba_table == 0              then p = 0 master_index = p end
     elseif showCat == 9 then curTotal = #gbc_table              if #gbc_table == 0              then p = 0 master_index = p end
     elseif showCat == 10 then curTotal = #gb_table              if #gb_table == 0               then p = 0 master_index = p end
-    elseif showCat == 11 then curTotal = #sega_cd_table         if #sega_cd_table == 0          then p = 0 master_index = p end
-    elseif showCat == 12 then curTotal = #s32x_table            if #s32x_table == 0             then p = 0 master_index = p end
-    elseif showCat == 13 then curTotal = #md_table              if #md_table == 0               then p = 0 master_index = p end
-    elseif showCat == 14 then curTotal = #sms_table             if #sms_table == 0              then p = 0 master_index = p end
-    elseif showCat == 15 then curTotal = #gg_table              if #gg_table == 0               then p = 0 master_index = p end
-    elseif showCat == 16 then curTotal = #tg16_table            if #tg16_table == 0             then p = 0 master_index = p end
-    elseif showCat == 17 then curTotal = #tgcd_table            if #tgcd_table == 0             then p = 0 master_index = p end
-    elseif showCat == 18 then curTotal = #pce_table             if #pce_table == 0              then p = 0 master_index = p end
-    elseif showCat == 19 then curTotal = #pcecd_table           if #pcecd_table == 0            then p = 0 master_index = p end
-    elseif showCat == 20 then curTotal = #amiga_table           if #amiga_table == 0            then p = 0 master_index = p end
-    elseif showCat == 21 then curTotal = #c64_table             if #c64_table == 0              then p = 0 master_index = p end
-    elseif showCat == 22 then curTotal = #wswan_col_table       if #wswan_col_table == 0        then p = 0 master_index = p end
-    elseif showCat == 23 then curTotal = #wswan_table           if #wswan_table == 0            then p = 0 master_index = p end
-    elseif showCat == 24 then curTotal = #msx2_table            if #msx2_table == 0             then p = 0 master_index = p end
-    elseif showCat == 25 then curTotal = #msx1_table            if #msx1_table == 0             then p = 0 master_index = p end
-    elseif showCat == 26 then curTotal = #zxs_table             if #zxs_table == 0              then p = 0 master_index = p end
-    elseif showCat == 27 then curTotal = #atari_7800_table      if #atari_7800_table == 0       then p = 0 master_index = p end
-    elseif showCat == 28 then curTotal = #atari_5200_table      if #atari_5200_table == 0       then p = 0 master_index = p end
-    elseif showCat == 29 then curTotal = #atari_2600_table      if #atari_2600_table == 0       then p = 0 master_index = p end
-    elseif showCat == 30 then curTotal = #atari_lynx_table      if #atari_lynx_table == 0       then p = 0 master_index = p end
-    elseif showCat == 31 then curTotal = #colecovision_table    if #colecovision_table == 0     then p = 0 master_index = p end
-    elseif showCat == 32 then curTotal = #vectrex_table         if #vectrex_table == 0          then p = 0 master_index = p end
-    elseif showCat == 33 then curTotal = #fba_table             if #fba_table == 0              then p = 0 master_index = p end
-    elseif showCat == 34 then curTotal = #mame_2003_plus_table  if #mame_2003_plus_table == 0   then p = 0 master_index = p end
-    elseif showCat == 35 then curTotal = #mame_2000_table       if #mame_2000_table == 0        then p = 0 master_index = p end
-    elseif showCat == 36 then curTotal = #neogeo_table          if #neogeo_table == 0           then p = 0 master_index = p end
-    elseif showCat == 37 then curTotal = #ngpc_table            if #ngpc_table == 0             then p = 0 master_index = p end    
-    elseif showCat == 38 then
+    elseif showCat == 11 then curTotal = #dreamcast_table       if #dreamcast_table == 0        then p = 0 master_index = p end
+    elseif showCat == 12 then curTotal = #sega_cd_table         if #sega_cd_table == 0          then p = 0 master_index = p end
+    elseif showCat == 13 then curTotal = #s32x_table            if #s32x_table == 0             then p = 0 master_index = p end
+    elseif showCat == 14 then curTotal = #md_table              if #md_table == 0               then p = 0 master_index = p end
+    elseif showCat == 15 then curTotal = #sms_table             if #sms_table == 0              then p = 0 master_index = p end
+    elseif showCat == 16 then curTotal = #gg_table              if #gg_table == 0               then p = 0 master_index = p end
+    elseif showCat == 17 then curTotal = #tg16_table            if #tg16_table == 0             then p = 0 master_index = p end
+    elseif showCat == 18 then curTotal = #tgcd_table            if #tgcd_table == 0             then p = 0 master_index = p end
+    elseif showCat == 19 then curTotal = #pce_table             if #pce_table == 0              then p = 0 master_index = p end
+    elseif showCat == 20 then curTotal = #pcecd_table           if #pcecd_table == 0            then p = 0 master_index = p end
+    elseif showCat == 21 then curTotal = #amiga_table           if #amiga_table == 0            then p = 0 master_index = p end
+    elseif showCat == 22 then curTotal = #c64_table             if #c64_table == 0              then p = 0 master_index = p end
+    elseif showCat == 23 then curTotal = #wswan_col_table       if #wswan_col_table == 0        then p = 0 master_index = p end
+    elseif showCat == 24 then curTotal = #wswan_table           if #wswan_table == 0            then p = 0 master_index = p end
+    elseif showCat == 25 then curTotal = #msx2_table            if #msx2_table == 0             then p = 0 master_index = p end
+    elseif showCat == 26 then curTotal = #msx1_table            if #msx1_table == 0             then p = 0 master_index = p end
+    elseif showCat == 27 then curTotal = #zxs_table             if #zxs_table == 0              then p = 0 master_index = p end
+    elseif showCat == 28 then curTotal = #atari_7800_table      if #atari_7800_table == 0       then p = 0 master_index = p end
+    elseif showCat == 29 then curTotal = #atari_5200_table      if #atari_5200_table == 0       then p = 0 master_index = p end
+    elseif showCat == 30 then curTotal = #atari_2600_table      if #atari_2600_table == 0       then p = 0 master_index = p end
+    elseif showCat == 31 then curTotal = #atari_lynx_table      if #atari_lynx_table == 0       then p = 0 master_index = p end
+    elseif showCat == 32 then curTotal = #colecovision_table    if #colecovision_table == 0     then p = 0 master_index = p end
+    elseif showCat == 33 then curTotal = #vectrex_table         if #vectrex_table == 0          then p = 0 master_index = p end
+    elseif showCat == 34 then curTotal = #fba_table             if #fba_table == 0              then p = 0 master_index = p end
+    elseif showCat == 35 then curTotal = #mame_2003_plus_table  if #mame_2003_plus_table == 0   then p = 0 master_index = p end
+    elseif showCat == 36 then curTotal = #mame_2000_table       if #mame_2000_table == 0        then p = 0 master_index = p end
+    elseif showCat == 37 then curTotal = #neogeo_table          if #neogeo_table == 0           then p = 0 master_index = p end
+    elseif showCat == 38 then curTotal = #ngpc_table            if #ngpc_table == 0             then p = 0 master_index = p end    
+    elseif showCat == 39 then
         -- count favorites
         local fav_count_2 = {}
         for l, file in pairs(files_table) do
@@ -10405,13 +12048,13 @@ while true do
             p = 0
             master_index = p
         end
-    elseif showCat == 39 then
+    elseif showCat == 40 then
         curTotal = #recently_played_table
         if #recently_played_table == 0 then
             p = 0
             master_index = p
         end
-    elseif showCat == 40 then
+    elseif showCat == 41 then
         curTotal = #search_results_table
         if #search_results_table == 0 then
             p = 0
@@ -10439,6 +12082,13 @@ while true do
         master_index = p
         startCovers = false
         GetInfoSelected()
+    end
+
+    -- Check for out of bounds in menu - ROM Browser
+    if i > #scripts then
+        i = 1
+    elseif i < 1 then
+        i = #scripts
     end
     
     -- Refreshing screen and oldpad

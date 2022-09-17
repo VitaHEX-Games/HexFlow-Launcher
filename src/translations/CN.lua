@@ -48,6 +48,7 @@ return {
 ["Game_Boy_Advance"] = "Game Boy Advance",
 ["Game_Boy_Color"] = "Game Boy Color",
 ["Game_Boy"] = "Game Boy",
+["Sega_Dreamcast"] = "Sega Dreamcast",
 ["Sega_Mega_Drive"] = "Sega Mega Drive",
 ["Sega_Master_System"] = "Sega Master System",
 ["Sega_Game_Gear"] = "Sega Game Gear",
@@ -104,6 +105,7 @@ return {
 ["Downloading_GBA_covers"] = "下載 GBA 封面",
 ["Downloading_GBC_covers"] = "下載 GBC 封面",
 ["Downloading_GB_covers"] = "下載 GB 封面",
+["Downloading_DC_covers"] = "下載 DC 封面",
 ["Downloading_MD_covers"] = "下載 MD 封面",
 ["Downloading_SMS_covers"] = "下載 SMS 封面",
 ["Downloading_GG_covers"] = "下載 GG 封面",
@@ -143,6 +145,7 @@ return {
 ["Downloading_GBA_backgrounds"] = "下載 GBA 背景",
 ["Downloading_GBC_backgrounds"] = "下載 GBC 背景",
 ["Downloading_GB_backgrounds"] = "下載 GB 背景",
+["Downloading_DC_backgrounds"] = "下載 DC 背景",
 ["Downloading_MD_backgrounds"] = "下載 MD 背景",
 ["Downloading_SMS_backgrounds"] = "下載 SMS 背景",
 ["Downloading_GG_backgrounds"] = "下載 GG 背景",
@@ -181,6 +184,7 @@ return {
 ["Press_X_to_apply_Category"] = "按 X 申請類別",
 ["Default"] = "默認",
 ["Favorite"] = "最喜歡的",
+["Rename"] = "改名",
 ["PS_Vita_Game"] = "PS Vita 遊戲",
 ["Homebrew"] = "自製",
 ["PSP_Game"] = "PSP 遊戲",
@@ -191,6 +195,7 @@ return {
 ["GBA_Game"] = "Game Boy Advance 遊戲",
 ["GBC_Game"] = "Game Boy Color 遊戲",
 ["GB_Game"] = "Game Boy 遊戲",
+["DC_Game"] = "Sega Dreamcast 遊戲",
 ["MD_Game"] = "Sega Mega Drive 遊戲",
 ["SMS_Game"] = "Sega Master System 遊戲",
 ["GG_Game"] = "Sega Game Gear 遊戲",
@@ -238,4 +243,12 @@ return {
 ["Back_Chevron"] = "<  返回",
 ["Theme"] = "主題",
 ["Game_backgounds_colon"] = "遊戲背景: ",
+
+-- Game directories
+["Edit_game_directories"] = "編輯遊戲目錄...",
+["Game_directories"] = "遊戲目錄",
+["Use_this_directory"] = "使用這個目錄",
+["Rescan"] = "重新掃描",
+["Back"] = "返回",
+
 }

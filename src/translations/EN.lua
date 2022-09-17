@@ -48,6 +48,7 @@ return {
 ["Game_Boy_Advance"] = "Game Boy Advance",
 ["Game_Boy_Color"] = "Game Boy Color",
 ["Game_Boy"] = "Game Boy",
+["Sega_Dreamcast"] = "Sega Dreamcast",
 ["Sega_Mega_Drive"] = "Sega Mega Drive",
 ["Sega_Master_System"] = "Sega Master System",
 ["Sega_Game_Gear"] = "Sega Game Gear",
@@ -104,6 +105,7 @@ return {
 ["Downloading_GBA_covers"] = "Downloading GBA covers",
 ["Downloading_GBC_covers"] = "Downloading GBC covers",
 ["Downloading_GB_covers"] = "Downloading GB covers",
+["Downloading_DC_covers"] = "Downloading DC covers",
 ["Downloading_MD_covers"] = "Downloading MD covers",
 ["Downloading_SMS_covers"] = "Downloading SMS covers",
 ["Downloading_GG_covers"] = "Downloading GG covers",
@@ -143,6 +145,7 @@ return {
 ["Downloading_GBA_backgrounds"] = "Downloading GBA backgrounds",
 ["Downloading_GBC_backgrounds"] = "Downloading GBC backgrounds",
 ["Downloading_GB_backgrounds"] = "Downloading GB backgrounds",
+["Downloading_DC_backgrounds"] = "Downloading DC backgrounds",
 ["Downloading_MD_backgrounds"] = "Downloading MD backgrounds",
 ["Downloading_SMS_backgrounds"] = "Downloading SMS backgrounds",
 ["Downloading_GG_backgrounds"] = "Downloading GG backgrounds",
@@ -181,6 +184,7 @@ return {
 ["Press_X_to_apply_Category"] = "Press X to apply Category",
 ["Default"] = "Default",
 ["Favorite"] = "Favorite",
+["Rename"] = "Rename",
 ["PS_Vita_Game"] = "PS Vita Game",
 ["Homebrew"] = "Homebrew",
 ["PSP_Game"] = "PSP Game",
@@ -191,6 +195,7 @@ return {
 ["GBA_Game"] = "Game Boy Advance Game",
 ["GBC_Game"] = "Game Boy Color Game",
 ["GB_Game"] = "Game Boy Game",
+["DC_Game"] = "Sega Dreamcast Game",
 ["MD_Game"] = "Sega Mega Drive Game",
 ["SMS_Game"] = "Sega Master System Game",
 ["GG_Game"] = "Sega Game Gear Game",
@@ -238,4 +243,12 @@ return {
 ["Back_Chevron"] = "<  Back",
 ["Theme"] = "Theme",
 ["Game_backgounds_colon"] = "Game Backgrounds: ",
+
+-- Game directories
+["Edit_game_directories"] = "Edit game directories...",
+["Game_directories"] = "Game directories",
+["Use_this_directory"] = "Use this directory",
+["Rescan"] = "Rescan",
+["Back"] = "Back",
+
 }

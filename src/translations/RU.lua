@@ -48,6 +48,7 @@ return {
 ["Game_Boy_Advance"] = "Game Boy Advance",
 ["Game_Boy_Color"] = "Game Boy Color",
 ["Game_Boy"] = "Game Boy",
+["Sega_Dreamcast"] = "Sega Dreamcast",
 ["Sega_Mega_Drive"] = "Sega Mega Drive",
 ["Sega_Master_System"] = "Sega Master System",
 ["Sega_Game_Gear"] = "Sega Game Gear",
@@ -104,6 +105,7 @@ return {
 ["Downloading_GBA_covers"] = "Скачивание обложек для GBA",
 ["Downloading_GBC_covers"] = "Скачивание обложек для GBC",
 ["Downloading_GB_covers"] = "Скачивание обложек для GB",
+["Downloading_DC_covers"] = "Скачивание обложек для DC",
 ["Downloading_MD_covers"] = "Скачивание обложек для MD",
 ["Downloading_SMS_covers"] = "Скачивание обложек для SMS",
 ["Downloading_GG_covers"] = "Скачивание обложек для GG",
@@ -143,6 +145,7 @@ return {
 ["Downloading_GBA_backgrounds"] = "Скачивание фонов GBA",
 ["Downloading_GBC_backgrounds"] = "Скачивание фонов GBC",
 ["Downloading_GB_backgrounds"] = "Скачивание фонов GB",
+["Downloading_DC_backgrounds"] = "Скачивание фонов DC",
 ["Downloading_MD_backgrounds"] = "Скачивание фонов MD",
 ["Downloading_SMS_backgrounds"] = "Скачивание фонов SMS",
 ["Downloading_GG_backgrounds"] = "Скачивание фонов GG",
@@ -181,6 +184,7 @@ return {
 ["Press_X_to_apply_Category"] = "Нажмите X, чтобы применить",
 ["Default"] = "Дефолт",
 ["Favorite"] = "Любимый",
+["Rename"] = "Переименовать",
 ["PS_Vita_Game"] = "Игра PS Vita",
 ["Homebrew"] = "Homebrew",
 ["PSP_Game"] = "Игра PSP",
@@ -191,6 +195,7 @@ return {
 ["GBA_Game"] = "Игра Game Boy Advance",
 ["GBC_Game"] = "Игра Game Boy Color",
 ["GB_Game"] = "Игра Game Boy",
+["DC_Game"] = "Игра Sega Dreamcast",
 ["MD_Game"] = "Игра Sega Mega Drive",
 ["SMS_Game"] = "Игра Sega Master System",
 ["GG_Game"] = "Игра Sega Game Gear",
@@ -238,4 +243,12 @@ return {
 ["Back_Chevron"] = "<  Вернуться",
 ["Theme"] = "Появление",
 ["Game_backgounds_colon"] = "Игровые фоны: ",
+
+-- Game directories
+["Edit_game_directories"] = "Редактировать каталоги игр...",
+["Game_directories"] = "Каталоги игр",
+["Use_this_directory"] = "Используйте этот каталог",
+["Rescan"] = "Перезагрузка",
+["Back"] = "Вернуться",
+
 }

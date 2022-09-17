@@ -48,6 +48,7 @@ return {
 ["Game_Boy_Advance"] = "Game Boy Advance",
 ["Game_Boy_Color"] = "Game Boy Color",
 ["Game_Boy"] = "Game Boy",
+["Sega_Dreamcast"] = "Sega Dreamcast",
 ["Sega_Mega_Drive"] = "Sega Mega Drive",
 ["Sega_Master_System"] = "Sega Master System",
 ["Sega_Game_Gear"] = "Sega Game Gear",
@@ -104,6 +105,7 @@ return {
 ["Downloading_GBA_covers"] = "Pobieranie okładek GBA",
 ["Downloading_GBC_covers"] = "Pobieranie okładek GBC",
 ["Downloading_GB_covers"] = "Pobieranie okładek GB",
+["Downloading_DC_covers"] = "Pobieranie okładek DC",
 ["Downloading_MD_covers"] = "Pobieranie okładek MD",
 ["Downloading_SMS_covers"] = "Pobieranie okładek SMS",
 ["Downloading_GG_covers"] = "Pobieranie okładek GG",
@@ -143,6 +145,7 @@ return {
 ["Downloading_GBA_backgrounds"] = "Pobieranie tła GBA",
 ["Downloading_GBC_backgrounds"] = "Pobieranie tła GBC",
 ["Downloading_GB_backgrounds"] = "Pobieranie tła GB",
+["Downloading_DC_backgrounds"] = "Pobieranie tła DC",
 ["Downloading_MD_backgrounds"] = "Pobieranie tła MD",
 ["Downloading_SMS_backgrounds"] = "Pobieranie tła SMS",
 ["Downloading_GG_backgrounds"] = "Pobieranie tła GG",
@@ -181,6 +184,7 @@ return {
 ["Press_X_to_apply_Category"] = "Naciśnij X by zastosować kategorię",
 ["Default"] = "Domyślna",
 ["Favorite"] = "Ulubiony",
+["Rename"] = "Przemianować",
 ["PS_Vita_Game"] = "Gra PS Vita ",
 ["Homebrew"] = "Homebrew",
 ["PSP_Game"] = "Gra PSP",
@@ -191,6 +195,7 @@ return {
 ["GBA_Game"] = "Gra Game Boy Advance",
 ["GBC_Game"] = "Gra Game Boy Color",
 ["GB_Game"] = "Gra Game Boy",
+["DC_Game"] = "Gra Sega Dreamcast",
 ["MD_Game"] = "Gra Sega Mega Drive",
 ["SMS_Game"] = "Gra Sega Master System",
 ["GG_Game"] = "Gra Sega Game Gear",
@@ -238,4 +243,12 @@ return {
 ["Back_Chevron"] = "<  Wstecz",
 ["Theme"] = "Temat",
 ["Game_backgounds_colon"] = "Tła gry: ",
+
+-- Game directories
+["Edit_game_directories"] = "Edytuj katalogi gier...",
+["Game_directories"] = "Katalogi gier",
+["Use_this_directory"] = "Użyj tego katalogu",
+["Rescan"] = "Skanuj ponownie",
+["Back"] = "Wstecz",
+
 }
