@@ -6,7 +6,7 @@
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "4.0"
+local appversion = "4.1"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -544,7 +544,7 @@ SystemsToScan =
         ["apptype"] = 37,
         ["table"] = "neogeo_table",
         ["user_db_file"] = "db_neogeo.lua",
-        ["romFolder"] = romUserDir.FBA_2012,
+        ["romFolder"] = romUserDir.Neo_Geo,
         ["localCoverPath"] = covDir .. "SNK - Neo Geo - FBA 2012" .. "/",
         ["localSnapPath"] = snapDir .. "SNK - Neo Geo - FBA 2012" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/Retro/NEOGEO/Covers/",
