@@ -4276,15 +4276,41 @@ function listDirectory(dir)
 
     table.sort(recently_played_table, function(a, b) return (tonumber(a.date_played) > tonumber(b.date_played)) end)
     
+    -- CACHE ALL TABLES - PRINT AND SAVE
+    cache_all_tables()
+
     return_table = TableConcat(folders_table, files_table)
+
+    -- Remove homebrew if hidden
+    if showHomebrews == 0 then
+        for l, file in pairs(files_table) do
+            if file.app_type == 0 then
+                table.remove(files_table,l)
+            else
+            end
+        end
+        for l, file in pairs(folders_table) do
+            if file.app_type == 0 then
+                table.remove(folders_table,l)
+            else
+            end
+        end
+        for l, file in pairs(return_table) do
+            if file.app_type == 0 then
+                table.remove(return_table,l)
+            else
+            end
+        end
+        homebrews_table = {}
+    end
+
 
     total_all = #files_table
     total_games = #games_table
     total_homebrews = #homebrews_table
     total_recently_played = #recently_played_table
 
-    -- CACHE ALL TABLES - PRINT AND SAVE
-    cache_all_tables()
+
 
     return return_table
 end
