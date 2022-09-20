@@ -95,16 +95,6 @@ else
     romUserDir = romDir_Default
 end
 
-    -- if System.doesFileExist("app0:/translations/" .. lang) then
-    --     langfile = {}
-    --     langfile = "app0:/translations/" .. lang
-    --     -- lang_lines = {}
-    --     lang_lines = dofile(langfile)
-    -- else
-    --     -- If missing use default EN table
-    --     lang_lines = lang_default
-    -- end
-
 SystemsToScan =
 {
     [1] = 
@@ -3744,443 +3734,458 @@ function listDirectory(dir)
 
     function Scan_Rom_Simple(def, def_table_name)
 
-        files = System.listDirectory((SystemsToScan[(def)].romFolder))
-        for i, file in pairs(files) do
-            local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
-            -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
-            if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+        if System.doesDirExist(SystemsToScan[(def)].romFolder) then
 
-                -- check if game is in the favorites list
-                if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                    if string.find(strFav, file.name,1,true) ~= nil then
-                        file.favourite = true
-                    else
-                        file.favourite = false
-                    end
-                end
+            files = System.listDirectory((SystemsToScan[(def)].romFolder))
+            for i, file in pairs(files) do
+                local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
+                -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+                if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
 
-                file.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name)
-
-                romname_withExtension = file.name
-                cleanRomNames()
-                info = romname_noRegion_noExtension
-                app_title = romname_noExtension
-                
-                table.insert(folders_table, file)
-                --table.insert(games_table, file)
-                custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                file.app_type=((def))
-                file.app_type_default=((def))
-
-                file.filename = file.name
-                file.name = romname_noExtension
-                file.title = romname_noRegion_noExtension
-                file.name_online = romname_url_encoded
-                file.version = romname_region
-                file.apptitle = romname_noRegion_noExtension
-                file.date_played = 0
-                file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
-                file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
-
-                -- Check for renamed game names
-                if #renamed_games_table ~= nil then
-                    local key = find_game_table_pos_key(renamed_games_table, file.name)
-                    if key ~= nil then
-                      -- Yes - Find in files table
-                      file.title = renamed_games_table[key].title
-                      file.apptitle = renamed_games_table[key].title
-                    else
-                      -- No
-                    end
-                else
-                end
-
-                table.insert((def_table_name), file)
-
-                if custom_path and System.doesFileExist(custom_path) then
-                    img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
-                elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                    img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
-                else
-                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                        img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
-                    else
-                        img_path = "app0:/DATA/noimg.png" --blank grey
-                    end
-                end
-
-                table.insert(files_table, count_of_systems, file.app_type) 
-                table.insert(files_table, count_of_systems, file.name)
-                table.insert(files_table, count_of_systems, file.title)
-                table.insert(files_table, count_of_systems, file.name_online)
-                table.insert(files_table, count_of_systems, file.version)
-
-                file.app_type=((def))
-                file.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
-                file.cover_path_local = (SystemsToScan[(def)].localCoverPath)
-
-                --add blank icon to all
-                file.icon = imgCoverTmp
-                file.icon_path = img_path
-                
-                table.insert(files_table, count_of_systems, file.icon) 
-                
-                table.insert(files_table, count_of_systems, file.apptitle) 
-
-            end
-        end
-    end
-
-    function Scan_Rom_Filter(def, def_table_name, def_filter)
-
-        files = System.listDirectory((SystemsToScan[(def)].romFolder))
-        for i, file in pairs(files) do
-            local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
-            -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
-            if not file.directory and string.match(file.name, (def_filter)) and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
-
-                -- check if game is in the favorites list
-                if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                    if string.find(strFav, file.name,1,true) ~= nil then
-                        file.favourite = true
-                    else
-                        file.favourite = false
-                    end
-                end
-
-                file.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name)
-
-                romname_withExtension = file.name
-                cleanRomNames()
-                info = romname_noRegion_noExtension
-                app_title = romname_noExtension
-                
-                table.insert(folders_table, file)
-                --table.insert(games_table, file)
-                custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                file.app_type=((def))
-                file.app_type_default=((def))
-
-                file.filename = file.name
-                file.name = romname_noExtension
-                file.title = romname_noRegion_noExtension
-                file.name_online = romname_url_encoded
-                file.version = romname_region
-                file.apptitle = romname_noRegion_noExtension
-                file.date_played = 0
-                file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
-                file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
-
-                -- Check for renamed game names
-                if #renamed_games_table ~= nil then
-                    local key = find_game_table_pos_key(renamed_games_table, file.name)
-                    if key ~= nil then
-                      -- Yes - Find in files table
-                      file.title = renamed_games_table[key].title
-                      file.apptitle = renamed_games_table[key].title
-                    else
-                      -- No
-                    end
-                else
-                end
-
-                table.insert((def_table_name), file)
-
-                if custom_path and System.doesFileExist(custom_path) then
-                    img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
-                elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                    img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
-                else
-                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                        img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
-                    else
-                        img_path = "app0:/DATA/noimg.png" --blank grey
-                    end
-                end
-
-                table.insert(files_table, count_of_systems, file.app_type) 
-                table.insert(files_table, count_of_systems, file.name)
-                table.insert(files_table, count_of_systems, file.title)
-                table.insert(files_table, count_of_systems, file.name_online)
-                table.insert(files_table, count_of_systems, file.version)
-
-                file.app_type=((def))
-                file.app_type_default=((def))
-                file.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
-                file.cover_path_local = (SystemsToScan[(def)].localCoverPath)
-
-                --add blank icon to all
-                file.icon = imgCoverTmp
-                file.icon_path = img_path
-                
-                table.insert(files_table, count_of_systems, file.icon) 
-                
-                
-                table.insert(files_table, count_of_systems, file.apptitle) 
-
-            end
-
-            -- Scan Sub Folders
-            if file.directory then
-                file_subfolder = System.listDirectory((SystemsToScan[(def)].romFolder .. "/" .. file.name))
-                for i, file_subfolder in pairs(file_subfolder) do
-                    -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
-                    if not file_subfolder.directory and string.match(file_subfolder.name, (def_filter)) and not string.match(file_subfolder.name, "Thumbs%.db") and not string.match(file_subfolder.name, "DS_Store") and not string.match(file_subfolder.name, "%._") then
-
-                        -- check if game is in the favorites list
-                        if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                            if string.find(strFav, file_subfolder.name,1,true) ~= nil then
-                                file_subfolder.favourite = true
-                            else
-                                file_subfolder.favourite = false
-                            end
-                        end
-
-                        file_subfolder.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name .. "/" .. file_subfolder.name)
-
-                        romname_withExtension = file_subfolder.name
-                        cleanRomNames()
-                        info = romname_noRegion_noExtension
-                        app_title = romname_noExtension
-                        
-                        table.insert(folders_table, file_subfolder)
-                        --table.insert(games_table, file)
-                        custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                        custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                        file_subfolder.app_type=((def))
-
-                        file_subfolder.filename = file_subfolder.name
-                        file_subfolder.name = romname_noExtension
-                        file_subfolder.title = romname_noRegion_noExtension
-                        file_subfolder.name_online = romname_url_encoded
-                        file_subfolder.version = romname_region
-                        file_subfolder.date_played = 0
-                        file_subfolder.snap_path_local = (SystemsToScan[(def)].localSnapPath)
-                        file_subfolder.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
-
-                        table.insert((def_table_name), file_subfolder)
-
-                        if custom_path and System.doesFileExist(custom_path) then
-                            img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
-                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                            img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
+                    -- check if game is in the favorites list
+                    if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                        if string.find(strFav, file.name,1,true) ~= nil then
+                            file.favourite = true
                         else
-                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                                img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
-                            else
-                                img_path = "app0:/DATA/noimg.png" --blank grey
-                            end
+                            file.favourite = false
                         end
-
-                        table.insert(files_table, count_of_systems, file_subfolder.app_type) 
-                        table.insert(files_table, count_of_systems, file_subfolder.name)
-                        table.insert(files_table, count_of_systems, file_subfolder.title)
-                        table.insert(files_table, count_of_systems, file_subfolder.name_online)
-                        table.insert(files_table, count_of_systems, file_subfolder.version)
-
-                        file_subfolder.app_type=((def))
-                        file_subfolder.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
-                        file_subfolder.cover_path_local = (SystemsToScan[(def)].localCoverPath)
-
-                        --add blank icon to all
-                        file_subfolder.icon = imgCoverTmp
-                        file_subfolder.icon_path = img_path
-                        
-                        table.insert(files_table, count_of_systems, file_subfolder.icon) 
-                        
-                        file_subfolder.apptitle = romname_noRegion_noExtension
-                        table.insert(files_table, count_of_systems, file_subfolder.apptitle) 
-
-                    end
-                end
-            end
-
-        end
-    end
-
-    function Scan_Rom_DB_Lookup(def, def_table_name, def_user_db_file, def_sql_db_file)
-
-        files = System.listDirectory((SystemsToScan[(def)].romFolder))
-
-        for i, file in pairs(files) do
-        local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-            -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
-        if not file.directory and not string.match(file.name, "neogeo") and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
-
-                -- check if game is in the favorites list
-                if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                    if string.find(strFav, file.name,1,true) ~= nil then
-                        file.favourite = true
-                    else
-                        file.favourite = false
-                    end
-                end
-
-                file.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name)
-
-                romname_withExtension = file.name
-                romname_noExtension = {}
-                romname_noExtension = romname_withExtension:match("(.+)%..+$")
-
-                -- LOOKUP TITLE ID: Get game name based on titleID, search saved table of data, or sql table of data if titleID not found
-
-                -- Load previous matches
-                if System.doesFileExist(user_DB_Folder .. (def_user_db_file)) then
-                    database_rename_PSP = user_DB_Folder .. (def_user_db_file)
-                    pspdb = dofile(database_rename_PSP)
-                else
-                    pspdb = {}
-                end
-
-                -- Check if scanned titleID is a saved match
-                psp_search = pspdb[romname_noExtension]
-
-                -- If no
-                if psp_search == nil then
-
-                    -- Load the full sql database to find the new titleID
-
-                    if System.doesFileExist(cur_dir .. "/DATABASES/" .. (def_sql_db_file)) then
-                        db = Database.open(cur_dir .. "/DATABASES/" .. (def_sql_db_file))
-
-                        sql_db_search_mame = "\"" .. romname_noExtension .. "\""
-                        search_term = "SELECT title FROM games where filename is "  .. sql_db_search_mame
-                        sql_db_search_result = Database.execQuery(db, search_term)
-
-                        if next(sql_db_search_result) == nil then
-                            -- Not found; use the name without adding a game name
-                            title = romname_noExtension
-                        else
-                            -- Found; use the game name from the full database
-                            title = sql_db_search_result[1].title
-                        end
-                        Database.close(db)
-
-                    else
                     end
 
-                -- If found; use the game name from the saved match
-                else
-                    title = pspdb[romname_noExtension].name
-                end
+                    file.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name)
 
-                romname_noRegion_noExtension = {}
-                romname_noRegion_noExtension = title:gsub('%b()', '')
-
-                -- Check if name contains parenthesis, if yes strip out to show as version
-                if string.find(title, "%(") and string.find(title, "%)") then
-                    -- Remove all text except for within "()"
-                    romname_region_initial = {}
-                    romname_region_initial = title:match("%((.+)%)")
-
-                    -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
-                    romname_region = {}
-                    romname_region = romname_region_initial:gsub("%) %(", ', ')
-                -- If no parenthesis, then add blank to prevent nil error
-                else
-                    romname_region = " "
-                end
-
-                --end of function
-
-                info = romname_noRegion_noExtension
-                app_title = romname_noRegion_noExtension
-                
-                if not string.match(title, "bios") and not string.match(title, "Bios") and not string.match(title, "BIOS") then
+                    romname_withExtension = file.name
+                    cleanRomNames()
+                    info = romname_noRegion_noExtension
+                    app_title = romname_noExtension
+                    
                     table.insert(folders_table, file)
-                else
-                end
-                --table.insert(games_table, file)
-                custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                file.app_type=((def))
-                file.app_type_default=((def))
+                    --table.insert(games_table, file)
+                    custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
+                    custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
+                    file.app_type=((def))
+                    file.app_type_default=((def))
 
-                -- file.filename = file.name
-                file.filename = file.name
-                file.name = romname_noExtension
-                file.title = romname_noRegion_noExtension
-                file.name_online = romname_noExtension
-                file.version = romname_region
-                file.name_title_search = title
-                file.apptitle = romname_noRegion_noExtension
-                file.date_played = 0
-                file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
-                file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+                    file.filename = file.name
+                    file.name = romname_noExtension
+                    file.title = romname_noRegion_noExtension
+                    file.name_online = romname_url_encoded
+                    file.version = romname_region
+                    file.apptitle = romname_noRegion_noExtension
+                    file.date_played = 0
+                    file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
+                    file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
 
-                -- Check for renamed game names
-                if #renamed_games_table ~= nil then
-                    local key = find_game_table_pos_key(renamed_games_table, file.name)
-                    if key ~= nil then
-                      -- Yes - Find in files table
-                      file.title = renamed_games_table[key].title
-                      file.apptitle = renamed_games_table[key].title
+                    -- Check for renamed game names
+                    if #renamed_games_table ~= nil then
+                        local key = find_game_table_pos_key(renamed_games_table, file.name)
+                        if key ~= nil then
+                          -- Yes - Find in files table
+                          file.title = renamed_games_table[key].title
+                          file.apptitle = renamed_games_table[key].title
+                        else
+                          -- No
+                        end
                     else
-                      -- No
                     end
-                else
-                end
 
-                if not string.match(title, "bios") and not string.match(title, "Bios") and not string.match(title, "BIOS") then
                     table.insert((def_table_name), file)
-                else
-                end
 
-
-                if custom_path and System.doesFileExist(custom_path) then
-                    img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
-                elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                    img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
-                else
-                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                        img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                    if custom_path and System.doesFileExist(custom_path) then
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
+                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
                     else
-                        img_path = "app0:/DATA/noimg.png" --blank grey
+                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                            img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                        else
+                            img_path = "app0:/DATA/noimg.png" --blank grey
+                        end
                     end
-                end
 
-                if not string.match(title, "bios") and not string.match(title, "Bios") and not string.match(title, "BIOS") then
                     table.insert(files_table, count_of_systems, file.app_type) 
                     table.insert(files_table, count_of_systems, file.name)
                     table.insert(files_table, count_of_systems, file.title)
                     table.insert(files_table, count_of_systems, file.name_online)
                     table.insert(files_table, count_of_systems, file.version)
-                    table.insert(files_table, count_of_systems, file.name_title_search)
-                else
-                end
-                
-                file.app_type=((def))
-                file.app_type_default=((def))
 
-                -- file.filename = file.name
-                file.filename = romname_withExtension
-                file.name = romname_noExtension
-                file.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
-                file.cover_path_local = (SystemsToScan[(def)].localCoverPath)
-                file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
-                file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+                    file.app_type=((def))
+                    file.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
+                    file.cover_path_local = (SystemsToScan[(def)].localCoverPath)
 
-                --add blank icon to all
-                file.icon = imgCoverTmp
-                file.icon_path = img_path
-                
-                if not string.match(title, "bios") and not string.match(title, "Bios") and not string.match(title, "BIOS") then
+                    --add blank icon to all
+                    file.icon = imgCoverTmp
+                    file.icon_path = img_path
+                    
                     table.insert(files_table, count_of_systems, file.icon) 
+                    
                     table.insert(files_table, count_of_systems, file.apptitle) 
-                else
+
+                end
+            end
+        
+        else
+        end
+    end
+
+    function Scan_Rom_Filter(def, def_table_name, def_filter)
+
+        if System.doesDirExist(SystemsToScan[(def)].romFolder) then
+
+            files = System.listDirectory((SystemsToScan[(def)].romFolder))
+            for i, file in pairs(files) do
+                local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
+                -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+                if not file.directory and string.match(file.name, (def_filter)) and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+                    -- check if game is in the favorites list
+                    if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                        if string.find(strFav, file.name,1,true) ~= nil then
+                            file.favourite = true
+                        else
+                            file.favourite = false
+                        end
+                    end
+
+                    file.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name)
+
+                    romname_withExtension = file.name
+                    cleanRomNames()
+                    info = romname_noRegion_noExtension
+                    app_title = romname_noExtension
+                    
+                    table.insert(folders_table, file)
+                    --table.insert(games_table, file)
+                    custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
+                    custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
+                    file.app_type=((def))
+                    file.app_type_default=((def))
+
+                    file.filename = file.name
+                    file.name = romname_noExtension
+                    file.title = romname_noRegion_noExtension
+                    file.name_online = romname_url_encoded
+                    file.version = romname_region
+                    file.apptitle = romname_noRegion_noExtension
+                    file.date_played = 0
+                    file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
+                    file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+
+                    -- Check for renamed game names
+                    if #renamed_games_table ~= nil then
+                        local key = find_game_table_pos_key(renamed_games_table, file.name)
+                        if key ~= nil then
+                          -- Yes - Find in files table
+                          file.title = renamed_games_table[key].title
+                          file.apptitle = renamed_games_table[key].title
+                        else
+                          -- No
+                        end
+                    else
+                    end
+
+                    table.insert((def_table_name), file)
+
+                    if custom_path and System.doesFileExist(custom_path) then
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
+                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
+                    else
+                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                            img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                        else
+                            img_path = "app0:/DATA/noimg.png" --blank grey
+                        end
+                    end
+
+                    table.insert(files_table, count_of_systems, file.app_type) 
+                    table.insert(files_table, count_of_systems, file.name)
+                    table.insert(files_table, count_of_systems, file.title)
+                    table.insert(files_table, count_of_systems, file.name_online)
+                    table.insert(files_table, count_of_systems, file.version)
+
+                    file.app_type=((def))
+                    file.app_type_default=((def))
+                    file.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
+                    file.cover_path_local = (SystemsToScan[(def)].localCoverPath)
+
+                    --add blank icon to all
+                    file.icon = imgCoverTmp
+                    file.icon_path = img_path
+                    
+                    table.insert(files_table, count_of_systems, file.icon) 
+                    
+                    
+                    table.insert(files_table, count_of_systems, file.apptitle) 
+
+                end
+
+                -- Scan Sub Folders
+                if file.directory then
+                    file_subfolder = System.listDirectory((SystemsToScan[(def)].romFolder .. "/" .. file.name))
+                    for i, file_subfolder in pairs(file_subfolder) do
+                        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+                        if not file_subfolder.directory and string.match(file_subfolder.name, (def_filter)) and not string.match(file_subfolder.name, "Thumbs%.db") and not string.match(file_subfolder.name, "DS_Store") and not string.match(file_subfolder.name, "%._") then
+
+                            -- check if game is in the favorites list
+                            if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                                if string.find(strFav, file_subfolder.name,1,true) ~= nil then
+                                    file_subfolder.favourite = true
+                                else
+                                    file_subfolder.favourite = false
+                                end
+                            end
+
+                            file_subfolder.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name .. "/" .. file_subfolder.name)
+
+                            romname_withExtension = file_subfolder.name
+                            cleanRomNames()
+                            info = romname_noRegion_noExtension
+                            app_title = romname_noExtension
+                            
+                            table.insert(folders_table, file_subfolder)
+                            --table.insert(games_table, file)
+                            custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
+                            custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
+                            file_subfolder.app_type=((def))
+
+                            file_subfolder.filename = file_subfolder.name
+                            file_subfolder.name = romname_noExtension
+                            file_subfolder.title = romname_noRegion_noExtension
+                            file_subfolder.name_online = romname_url_encoded
+                            file_subfolder.version = romname_region
+                            file_subfolder.date_played = 0
+                            file_subfolder.snap_path_local = (SystemsToScan[(def)].localSnapPath)
+                            file_subfolder.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+
+                            table.insert((def_table_name), file_subfolder)
+
+                            if custom_path and System.doesFileExist(custom_path) then
+                                img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
+                            elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
+                            else
+                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                                    img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                else
+                                    img_path = "app0:/DATA/noimg.png" --blank grey
+                                end
+                            end
+
+                            table.insert(files_table, count_of_systems, file_subfolder.app_type) 
+                            table.insert(files_table, count_of_systems, file_subfolder.name)
+                            table.insert(files_table, count_of_systems, file_subfolder.title)
+                            table.insert(files_table, count_of_systems, file_subfolder.name_online)
+                            table.insert(files_table, count_of_systems, file_subfolder.version)
+
+                            file_subfolder.app_type=((def))
+                            file_subfolder.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
+                            file_subfolder.cover_path_local = (SystemsToScan[(def)].localCoverPath)
+
+                            --add blank icon to all
+                            file_subfolder.icon = imgCoverTmp
+                            file_subfolder.icon_path = img_path
+                            
+                            table.insert(files_table, count_of_systems, file_subfolder.icon) 
+                            
+                            file_subfolder.apptitle = romname_noRegion_noExtension
+                            table.insert(files_table, count_of_systems, file_subfolder.apptitle) 
+
+                        end
+                    end
                 end
 
             end
-        end
-
-        -- LOOKUP TITLE ID: Delete old file and save new list of matches
-        if not System.doesFileExist(user_DB_Folder .. (def_user_db_file)) then
-            CreateUserTitleTable_for_File((def_user_db_file), (def_table_name))
+        
         else
-            System.deleteFile(user_DB_Folder .. (def_user_db_file))
-            CreateUserTitleTable_for_File((def_user_db_file), (def_table_name))
+        end
+    end
+
+    function Scan_Rom_DB_Lookup(def, def_table_name, def_user_db_file, def_sql_db_file)
+
+        if System.doesDirExist(SystemsToScan[(def)].romFolder) then
+
+            files = System.listDirectory((SystemsToScan[(def)].romFolder))
+
+            for i, file in pairs(files) do
+            local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
+                -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+            if not file.directory and not string.match(file.name, "neogeo") and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+
+                    -- check if game is in the favorites list
+                    if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                        if string.find(strFav, file.name,1,true) ~= nil then
+                            file.favourite = true
+                        else
+                            file.favourite = false
+                        end
+                    end
+
+                    file.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name)
+
+                    romname_withExtension = file.name
+                    romname_noExtension = {}
+                    romname_noExtension = romname_withExtension:match("(.+)%..+$")
+
+                    -- LOOKUP TITLE ID: Get game name based on titleID, search saved table of data, or sql table of data if titleID not found
+
+                    -- Load previous matches
+                    if System.doesFileExist(user_DB_Folder .. (def_user_db_file)) then
+                        database_rename_PSP = user_DB_Folder .. (def_user_db_file)
+                        pspdb = dofile(database_rename_PSP)
+                    else
+                        pspdb = {}
+                    end
+
+                    -- Check if scanned titleID is a saved match
+                    psp_search = pspdb[romname_noExtension]
+
+                    -- If no
+                    if psp_search == nil then
+
+                        -- Load the full sql database to find the new titleID
+
+                        if System.doesFileExist(cur_dir .. "/DATABASES/" .. (def_sql_db_file)) then
+                            db = Database.open(cur_dir .. "/DATABASES/" .. (def_sql_db_file))
+
+                            sql_db_search_mame = "\"" .. romname_noExtension .. "\""
+                            search_term = "SELECT title FROM games where filename is "  .. sql_db_search_mame
+                            sql_db_search_result = Database.execQuery(db, search_term)
+
+                            if next(sql_db_search_result) == nil then
+                                -- Not found; use the name without adding a game name
+                                title = romname_noExtension
+                            else
+                                -- Found; use the game name from the full database
+                                title = sql_db_search_result[1].title
+                            end
+                            Database.close(db)
+
+                        else
+                        end
+
+                    -- If found; use the game name from the saved match
+                    else
+                        title = pspdb[romname_noExtension].name
+                    end
+
+                    romname_noRegion_noExtension = {}
+                    romname_noRegion_noExtension = title:gsub('%b()', '')
+
+                    -- Check if name contains parenthesis, if yes strip out to show as version
+                    if string.find(title, "%(") and string.find(title, "%)") then
+                        -- Remove all text except for within "()"
+                        romname_region_initial = {}
+                        romname_region_initial = title:match("%((.+)%)")
+
+                        -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
+                        romname_region = {}
+                        romname_region = romname_region_initial:gsub("%) %(", ', ')
+                    -- If no parenthesis, then add blank to prevent nil error
+                    else
+                        romname_region = " "
+                    end
+
+                    --end of function
+
+                    info = romname_noRegion_noExtension
+                    app_title = romname_noRegion_noExtension
+                    
+                    if not string.match(title, "bios") and not string.match(title, "Bios") and not string.match(title, "BIOS") then
+                        table.insert(folders_table, file)
+                    else
+                    end
+                    --table.insert(games_table, file)
+                    custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
+                    custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
+                    file.app_type=((def))
+                    file.app_type_default=((def))
+
+                    -- file.filename = file.name
+                    file.filename = file.name
+                    file.name = romname_noExtension
+                    file.title = romname_noRegion_noExtension
+                    file.name_online = romname_noExtension
+                    file.version = romname_region
+                    file.name_title_search = title
+                    file.apptitle = romname_noRegion_noExtension
+                    file.date_played = 0
+                    file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
+                    file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+
+                    -- Check for renamed game names
+                    if #renamed_games_table ~= nil then
+                        local key = find_game_table_pos_key(renamed_games_table, file.name)
+                        if key ~= nil then
+                          -- Yes - Find in files table
+                          file.title = renamed_games_table[key].title
+                          file.apptitle = renamed_games_table[key].title
+                        else
+                          -- No
+                        end
+                    else
+                    end
+
+                    if not string.match(title, "bios") and not string.match(title, "Bios") and not string.match(title, "BIOS") then
+                        table.insert((def_table_name), file)
+                    else
+                    end
+
+
+                    if custom_path and System.doesFileExist(custom_path) then
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
+                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
+                    else
+                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                            img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                        else
+                            img_path = "app0:/DATA/noimg.png" --blank grey
+                        end
+                    end
+
+                    if not string.match(title, "bios") and not string.match(title, "Bios") and not string.match(title, "BIOS") then
+                        table.insert(files_table, count_of_systems, file.app_type) 
+                        table.insert(files_table, count_of_systems, file.name)
+                        table.insert(files_table, count_of_systems, file.title)
+                        table.insert(files_table, count_of_systems, file.name_online)
+                        table.insert(files_table, count_of_systems, file.version)
+                        table.insert(files_table, count_of_systems, file.name_title_search)
+                    else
+                    end
+                    
+                    file.app_type=((def))
+                    file.app_type_default=((def))
+
+                    -- file.filename = file.name
+                    file.filename = romname_withExtension
+                    file.name = romname_noExtension
+                    file.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
+                    file.cover_path_local = (SystemsToScan[(def)].localCoverPath)
+                    file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
+                    file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+
+                    --add blank icon to all
+                    file.icon = imgCoverTmp
+                    file.icon_path = img_path
+                    
+                    if not string.match(title, "bios") and not string.match(title, "Bios") and not string.match(title, "BIOS") then
+                        table.insert(files_table, count_of_systems, file.icon) 
+                        table.insert(files_table, count_of_systems, file.apptitle) 
+                    else
+                    end
+
+                end
+            end
+
+            -- LOOKUP TITLE ID: Delete old file and save new list of matches
+            if not System.doesFileExist(user_DB_Folder .. (def_user_db_file)) then
+                CreateUserTitleTable_for_File((def_user_db_file), (def_table_name))
+            else
+                System.deleteFile(user_DB_Folder .. (def_user_db_file))
+                CreateUserTitleTable_for_File((def_user_db_file), (def_table_name))
+            end
+
+        else
         end
     end
 
