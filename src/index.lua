@@ -8680,7 +8680,8 @@ while true do
                     if key ~= nil then
                         p = key
                         master_index = p
-                        showMenu = 0
+                        -- showMenu = 0
+                        
                         -- Instantly move to selection
                         if startCovers == false then
                             targetX = base_x
@@ -8692,13 +8693,24 @@ while true do
                         showCat = 1
                         p = 1
                         master_index = p
-                        showMenu = 0
+                        -- showMenu = 0
                     end
                 else
                 end
 
                 GetNameAndAppTypeSelected()
-                Render.useTexture(modBackground, imgCustomBack)
+                -- Render.useTexture(modBackground, imgCustomBack)
+
+                GetInfoSelected()
+
+                -- Instant cover update - Credit BlackSheepBoy69
+                Threads.addTask(xCatLookup(showCat)[p], {
+                Type = "ImageLoad",
+                Path = xCatLookup(showCat)[p].icon_path,
+                Table = xCatLookup(showCat)[p],
+                Index = "ricon"
+                })
+
             end
 
             rename_keyboard = false
