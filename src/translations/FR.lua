@@ -245,6 +245,8 @@ return {
 ["Game_backgounds_colon"] = "Arrière-plans de jeu : ",
 
 -- Game directories
+["Home"] = "Page d'accueil",
+["Directory_not_found"] = "Répertoire introuvable",
 ["Edit_game_directories"] = "Modifier les répertoires de jeux...",
 ["Game_directories"] = "Répertoires de jeux",
 ["Use_this_directory"] = "Utilisez ce répertoire",

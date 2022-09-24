@@ -245,6 +245,8 @@ return {
 ["Game_backgounds_colon"] = "Fundos do jogo: ",
 
 -- Game directories
+["Home"] = "Pagina inicial",
+["Directory_not_found"] = "Diretório não encontrado",
 ["Edit_game_directories"] = "Editar diretórios de jogos...",
 ["Game_directories"] = "Diretórios de jogos",
 ["Use_this_directory"] = "Use este diretório",

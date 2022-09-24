@@ -245,6 +245,8 @@ return {
 ["Game_backgounds_colon"] = "Game Backgrounds: ",
 
 -- Game directories
+["Home"] = "Home",
+["Directory_not_found"] = "Directory not found",
 ["Edit_game_directories"] = "Edit game directories...",
 ["Game_directories"] = "Game directories",
 ["Use_this_directory"] = "Use this directory",

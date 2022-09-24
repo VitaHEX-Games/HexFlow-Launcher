@@ -245,6 +245,8 @@ return {
 ["Game_backgounds_colon"] = "Tła gry: ",
 
 -- Game directories
+["Home"] = "Strona główna",
+["Directory_not_found"] = "Nie znaleziono katalogu",
 ["Edit_game_directories"] = "Edytuj katalogi gier...",
 ["Game_directories"] = "Katalogi gier",
 ["Use_this_directory"] = "Użyj tego katalogu",

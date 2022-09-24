@@ -245,6 +245,8 @@ return {
 ["Game_backgounds_colon"] = "ゲームの背景 : ",
 
 -- Game directories
+["Home"] = "ホームページ",
+["Directory_not_found"] = "ディレクトリが見つかりません",
 ["Edit_game_directories"] = "ゲームディレクトリの編集 ...",
 ["Game_directories"] = "ゲームディレクトリ",
 ["Use_this_directory"] = "このディレクトリを使用",

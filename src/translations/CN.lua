@@ -245,6 +245,8 @@ return {
 ["Game_backgounds_colon"] = "遊戲背景: ",
 
 -- Game directories
+["Home"] = "主页",
+["Directory_not_found"] = "找不到目录",
 ["Edit_game_directories"] = "編輯遊戲目錄...",
 ["Game_directories"] = "遊戲目錄",
 ["Use_this_directory"] = "使用這個目錄",

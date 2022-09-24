@@ -245,6 +245,8 @@ return {
 ["Game_backgounds_colon"] = "Игровые фоны: ",
 
 -- Game directories
+["Home"] = "Домашняя страница",
+["Directory_not_found"] = "Каталог не найден",
 ["Edit_game_directories"] = "Редактировать каталоги игр...",
 ["Game_directories"] = "Каталоги игр",
 ["Use_this_directory"] = "Используйте этот каталог",

@@ -245,6 +245,8 @@ return {
 ["Game_backgounds_colon"] = "Spelbakgrunder:",
 
 -- Game directories
+["Home"] = "Hemsida",
+["Directory_not_found"] = "Katalogen inte hittas",
 ["Edit_game_directories"] = "Redigera spelmappar...",
 ["Game_directories"] = "Spelmappar",
 ["Use_this_directory"] = "Använd den här mappen",
