@@ -636,6 +636,7 @@ local file_browser_file = Graphics.loadImage("app0:/DATA/file-browser-file.png")
 -- Start of ROM Browser setup
 
 local grey_dir = Color.new(200, 200, 200)
+local white_opaque = Color.new(255, 255, 255, 100)
 
 local scripts = System.listDirectory("ux0:/")
 
@@ -1361,6 +1362,8 @@ local lang_default =
 ["Game_backgounds_colon"] = "Game Backgrounds: ",
 
 -- Game directories
+["Home"] = "Home",
+["Directory_not_found"] = "Directory not found",
 ["Edit_game_directories"] = "Edit game directories...",
 ["Game_directories"] = "Game directories",
 ["Use_this_directory"] = "Use this directory",
@@ -2755,9 +2758,6 @@ function listDirectory(dir)
                             file.name_title_search = romname_noExtension_notitleid
                             file.apptitle = romname_noRegion_noExtension_notitleid
 
-                            custom_path = SystemsToScan[3].localCoverPath .. romname_noRegion_noExtension_notitleid .. ".png"
-                            custom_path_id = SystemsToScan[3].localCoverPath .. titleID_noHyphen .. ".png"
-
                             -- Check for renamed game names
                             if #renamed_games_table ~= nil then
                                 local key = find_game_table_pos_key(renamed_games_table, file.name)
@@ -2770,6 +2770,9 @@ function listDirectory(dir)
                                 end
                             else
                             end
+
+                            custom_path = SystemsToScan[3].localCoverPath .. file.title .. ".png"
+                            custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
 
                         else
                         -- No spaces, it's probably a title ID, so scan the database
@@ -3760,10 +3763,6 @@ function listDirectory(dir)
                     
                     table.insert(folders_table, file)
                     --table.insert(games_table, file)
-                    custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                    custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                    file.app_type=((def))
-                    file.app_type_default=((def))
 
                     file.filename = file.name
                     file.name = romname_noExtension
@@ -3774,6 +3773,8 @@ function listDirectory(dir)
                     file.date_played = 0
                     file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
                     file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+                    file.app_type=((def))
+                    file.app_type_default=((def))
 
                     -- Check for renamed game names
                     if #renamed_games_table ~= nil then
@@ -3788,12 +3789,15 @@ function listDirectory(dir)
                     else
                     end
 
+                    custom_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png"
+                    custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png"
+
                     table.insert((def_table_name), file)
 
                     if custom_path and System.doesFileExist(custom_path) then
-                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
                     else
                         if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                             img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
@@ -3853,13 +3857,9 @@ function listDirectory(dir)
                     info = romname_noRegion_noExtension
                     app_title = romname_noExtension
                     
-                    table.insert(folders_table, file)
+                    
                     --table.insert(games_table, file)
-                    custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                    custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                    file.app_type=((def))
-                    file.app_type_default=((def))
-
+                
                     file.filename = file.name
                     file.name = romname_noExtension
                     file.title = romname_noRegion_noExtension
@@ -3869,6 +3869,8 @@ function listDirectory(dir)
                     file.date_played = 0
                     file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
                     file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+                    file.app_type=((def))
+                    file.app_type_default=((def))
 
                     -- Check for renamed game names
                     if #renamed_games_table ~= nil then
@@ -3883,12 +3885,13 @@ function listDirectory(dir)
                     else
                     end
 
-                    table.insert((def_table_name), file)
+                    custom_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png"
+                    custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png"
 
                     if custom_path and System.doesFileExist(custom_path) then
-                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
                     else
                         if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                             img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
@@ -3896,6 +3899,9 @@ function listDirectory(dir)
                             img_path = "app0:/DATA/noimg.png" --blank grey
                         end
                     end
+
+                    table.insert(folders_table, file)
+                    table.insert((def_table_name), file)
 
                     table.insert(files_table, count_of_systems, file.app_type) 
                     table.insert(files_table, count_of_systems, file.name)
@@ -3942,27 +3948,39 @@ function listDirectory(dir)
                             info = romname_noRegion_noExtension
                             app_title = romname_noExtension
                             
-                            table.insert(folders_table, file_subfolder)
-                            --table.insert(games_table, file)
-                            custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                            custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                            file_subfolder.app_type=((def))
 
                             file_subfolder.filename = file_subfolder.name
                             file_subfolder.name = romname_noExtension
                             file_subfolder.title = romname_noRegion_noExtension
                             file_subfolder.name_online = romname_url_encoded
                             file_subfolder.version = romname_region
+                            file_subfolder.apptitle = romname_noRegion_noExtension
                             file_subfolder.date_played = 0
                             file_subfolder.snap_path_local = (SystemsToScan[(def)].localSnapPath)
                             file_subfolder.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+                            file_subfolder.app_type=((def))
+                            file.app_type_default=((def))
 
-                            table.insert((def_table_name), file_subfolder)
+                            -- Check for renamed game names
+                            if #renamed_games_table ~= nil then
+                                local key = find_game_table_pos_key(renamed_games_table, file_subfolder.name)
+                                if key ~= nil then
+                                  -- Yes - Find in files table
+                                  file_subfolder.title = renamed_games_table[key].title
+                                  file_subfolder.apptitle = renamed_games_table[key].title
+                                else
+                                  -- No
+                                end
+                            else
+                            end
+
+                            custom_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.title .. ".png"
+                            custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png"
 
                             if custom_path and System.doesFileExist(custom_path) then
-                                img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
+                                img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.title .. ".png" --custom cover by app name
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
+                                img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
                             else
                                 if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                                     img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
@@ -3970,6 +3988,9 @@ function listDirectory(dir)
                                     img_path = "app0:/DATA/noimg.png" --blank grey
                                 end
                             end
+
+                            table.insert(folders_table, file_subfolder)
+                            table.insert((def_table_name), file_subfolder)
 
                             table.insert(files_table, count_of_systems, file_subfolder.app_type) 
                             table.insert(files_table, count_of_systems, file_subfolder.name)
@@ -3986,8 +4007,7 @@ function listDirectory(dir)
                             file_subfolder.icon_path = img_path
                             
                             table.insert(files_table, count_of_systems, file_subfolder.icon) 
-                            
-                            file_subfolder.apptitle = romname_noRegion_noExtension
+                        
                             table.insert(files_table, count_of_systems, file_subfolder.apptitle) 
 
                         end
@@ -4095,10 +4115,6 @@ function listDirectory(dir)
                     else
                     end
                     --table.insert(games_table, file)
-                    custom_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                    custom_path_id = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png"
-                    file.app_type=((def))
-                    file.app_type_default=((def))
 
                     -- file.filename = file.name
                     file.filename = file.name
@@ -4111,6 +4127,11 @@ function listDirectory(dir)
                     file.date_played = 0
                     file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
                     file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+                    file.app_type=((def))
+                    file.app_type_default=((def))
+
+                    custom_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png"
+                    custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png"
 
                     -- Check for renamed game names
                     if #renamed_games_table ~= nil then
@@ -4132,9 +4153,9 @@ function listDirectory(dir)
 
 
                     if custom_path and System.doesFileExist(custom_path) then
-                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app name
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                        img_path = (SystemsToScan[(def)].localCoverPath) .. romname_noExtension .. ".png" --custom cover by app id
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
                     else
                         if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                             img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
@@ -4200,6 +4221,7 @@ function listDirectory(dir)
     Scan_Rom_Simple     (10, gb_table)
     Scan_Rom_Filter     (11, dreamcast_table, ".cdi")
     Scan_Rom_Filter     (11, dreamcast_table, ".gdi")
+    Scan_Rom_Filter     (12, sega_cd_table, ".chd")
     Scan_Rom_Filter     (12, sega_cd_table, ".cue")
     Scan_Rom_Simple     (13, s32x_table)
     Scan_Rom_Simple     (14, md_table)
@@ -4207,8 +4229,10 @@ function listDirectory(dir)
     Scan_Rom_Simple     (16, gg_table)
     Scan_Rom_Simple     (17, tg16_table)
     Scan_Rom_Filter     (18, tgcd_table, ".cue")
+    Scan_Rom_Filter     (18, tgcd_table, ".chd")
     Scan_Rom_Simple     (19, pce_table)
     Scan_Rom_Filter     (20, pcecd_table, ".cue")
+    Scan_Rom_Filter     (20, pcecd_table, ".chd")
     Scan_Rom_Simple     (21, amiga_table)
     Scan_Rom_Simple     (22, c64_table)
     Scan_Rom_Simple     (23, wswan_col_table)
@@ -4227,7 +4251,7 @@ function listDirectory(dir)
     Scan_Rom_DB_Lookup  (36, mame_2000_table, "mame_2000.lua", "mame_2000.db")
     Scan_Rom_DB_Lookup  (37, neogeo_table, "neogeo.lua", "neogeo.db")
     Scan_Rom_Simple     (38, ngpc_table)
-
+  
     import_recently_played()
     update_md_regional_cover()
     update_dc_regional_cover()
@@ -4377,9 +4401,6 @@ function ScanAdrenalineDirectoryOnly()
                             file.name_title_search = romname_noExtension_notitleid
                             file.apptitle = romname_noRegion_noExtension_notitleid
 
-                            custom_path = SystemsToScan[3].localCoverPath .. romname_noRegion_noExtension_notitleid .. ".png"
-                            custom_path_id = SystemsToScan[3].localCoverPath .. titleID_noHyphen .. ".png"
-
                             -- Check for renamed game names
                             if #renamed_games_table ~= nil then
                                 local key = find_game_table_pos_key(renamed_games_table, file.name)
@@ -4392,6 +4413,9 @@ function ScanAdrenalineDirectoryOnly()
                                 end
                             else
                             end
+
+                            custom_path = SystemsToScan[3].localCoverPath .. file.title .. ".png"
+                            custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
 
                         else
                         -- No spaces, it's probably a title ID, so scan the database
@@ -5590,16 +5614,22 @@ end
 function getRomSize()
     -- Get rom size in mb and kb for info screen
     local size = 0
-    tmpfile = System.openFile(appdir, FREAD)
-    size = System.sizeFile(tmpfile)
-    System.closeFile(tmpfile)
 
-    if size < 900000 then -- Guessed at number, seems fine
-        app_size = size/1024
-        game_size = string.format("%02d", app_size) .. "Kb"
+    if System.doesFileExist(appdir) then
+        tmpfile = System.openFile(appdir, FREAD)
+        size = System.sizeFile(tmpfile)
+        System.closeFile(tmpfile)
+
+        if size < 900000 then -- Guessed at number, seems fine
+            app_size = size/1024
+            game_size = string.format("%02d", app_size) .. "Kb"
+        else
+            app_size = size/1024/1024
+            game_size = string.format("%02d", app_size) .. "Mb"
+        end
     else
-        app_size = size/1024/1024
-        game_size = string.format("%02d", app_size) .. "Mb"
+        -- Error handling for missing game
+        game_size = "0Kb"
     end
 end
 
@@ -8956,8 +8986,12 @@ while true do
             end
             
             if folder == true then
-                app_size = getAppSize(appdir)/1024/1024
-                game_size = string.format("%02d", app_size) .. "Mb"
+                if System.doesDirExist(appdir) then
+                    app_size = getAppSize(appdir)/1024/1024
+                    game_size = string.format("%02d", app_size) .. "Mb"
+                else
+                    game_size = "0Kb"
+                end
             else
                 if string.find(filename, ".cue") or string.find(filename, ".gdi") then
                     -- Get game directory by trimming filename from gamepath
@@ -8966,10 +9000,14 @@ while true do
                     directory_len = game_path_len - filename_len -1
                     game_directory_path = string.sub(appdir, 1, directory_len)
 
-                    app_size = getAppSize(game_directory_path)/1024/1024
-                    game_size = string.format("%02d", app_size) .. "Mb"
-
+                    if System.doesDirExist(game_directory_path) then
+                        app_size = getAppSize(game_directory_path)/1024/1024
+                        game_size = string.format("%02d", app_size) .. "Mb"
                     else
+                        game_size = "0Kb"
+                    end
+
+                else
                     getRomSize()
                 end
 
@@ -10944,14 +10982,7 @@ while true do
                     showMenu = 6
                     menuY = 1
                 end
-                if menuY == 2 then -- #2 ROM Browser
-                    scripts = System.listDirectory("ux0:/")
-                    for k, v in pairs(scripts) do
-                        v.previous_directory = false
-                        v.save = false
-                    end
-                    scripts_sort_by_folder_first()
-                    cur_dir_fm = "ux0:/"
+                if menuY == 2 then -- #2 ROM Partitions
                     showMenu = 9
                     menuY = 0
                 end
@@ -10994,8 +11025,259 @@ while true do
 
         end
 
--- MENU 9 - ROM BROWSER
-    elseif showMenu == 9 then
+-- MENU 9 - ROM BROWSER PARTITIONS
+elseif showMenu == 9 then
+        
+        -- SETTINGS
+        -- Footer buttons and icons
+        -- Get text widths for positioning
+        label1 = Font.getTextWidth(fnt20, lang_lines.Back)--Back
+        label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
+        label3 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
+
+        -- Draw footer
+        Graphics.fillRect(0, 960, 496, 544, themeCol)-- footer bottom
+
+        Graphics.drawImage(900-label1, 510, btnO)
+        Font.print(fnt20, 900+28-label1, 508, lang_lines.Back, white)--Back
+
+        Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
+        Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
+
+        Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnT)
+        Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Close, white)--Close
+
+
+        Graphics.fillRect(60, 900, 44, 450, darkalpha)--dark background
+
+        Font.print(fnt22, setting_x, setting_yh, filebrowser_heading, white)--Game heading from menu 8
+        Graphics.fillRect(60, 900, 97, 100, white)
+
+        Graphics.fillRect(60, 900, 100 + (menuY * 50 +50), 150 + (menuY * 50 +50), themeCol)-- selection
+
+        -- menuItems = 3
+
+        menuItems = 4
+        -- START ROM BROWSER PARTITIONS
+
+
+            Font.print(fnt20, setting_x, setting_y0 + 2, lang_lines.Home, grey_dir) -- Home
+            
+            -- MENU 9 / #0 ux0 
+            if System.doesDirExist("ux0:/") then
+                Graphics.drawImage(setting_x_icon, setting_y1, setting_icon_scanning)
+                Font.print(fnt22, setting_x_icon_offset, setting_y1, "ux0:", white)--ux0
+            else
+                Graphics.drawImage(setting_x_icon, setting_y1, setting_icon_scanning, white_opaque)
+                Font.print(fnt22, setting_x_icon_offset, setting_y1, "ux0:", white_opaque)--ux0
+            end
+
+            -- MENU 9 / #1 uma0
+            if System.doesDirExist("uma0:/") then
+                Graphics.drawImage(setting_x_icon, setting_y2, setting_icon_scanning)
+                Font.print(fnt22, setting_x_icon_offset, setting_y2, "uma0:", white)--uma0
+            else
+                Graphics.drawImage(setting_x_icon, setting_y2, setting_icon_scanning, white_opaque)
+                Font.print(fnt22, setting_x_icon_offset, setting_y2, "uma0:", white_opaque)--uma0
+            end
+
+            -- MENU 9 / #2 imc0
+            if System.doesDirExist("imc0:/") then
+                Graphics.drawImage(setting_x_icon, setting_y3, setting_icon_scanning)
+                Font.print(fnt22, setting_x_icon_offset, setting_y3, "imc0:", white)--imc0
+            else
+                Graphics.drawImage(setting_x_icon, setting_y3, setting_icon_scanning, white_opaque)
+                Font.print(fnt22, setting_x_icon_offset, setting_y3, "imc0:", white_opaque)--imc0
+            end
+
+            -- MENU 9 / #3 xmc0
+            if System.doesDirExist("xmc0:/") then
+                Graphics.drawImage(setting_x_icon, setting_y4, setting_icon_scanning)
+                Font.print(fnt22, setting_x_icon_offset, setting_y4, "xmc0:", white)--xmc0
+            else
+                Graphics.drawImage(setting_x_icon, setting_y4, setting_icon_scanning, white_opaque)
+                Font.print(fnt22, setting_x_icon_offset, setting_y4, "xmc0:", white_opaque)--xmc0
+            end
+
+            -- MENU 9 / #4 grw0
+            if System.doesDirExist("grw0:/") then
+                Graphics.drawImage(setting_x_icon, setting_y5, setting_icon_scanning)
+                Font.print(fnt22, setting_x_icon_offset, setting_y5, "grw0:", white)--xmc0
+            else
+                Graphics.drawImage(setting_x_icon, setting_y5, setting_icon_scanning, white_opaque)
+                Font.print(fnt22, setting_x_icon_offset, setting_y5, "grw0:", white_opaque)--xmc0
+            end
+
+
+        -- END ROM BROWSER PARTITIONS
+
+
+        -- MENU 9 - FUNCTIONS
+        status = System.getMessageState()
+        if status ~= RUNNING then
+            
+                -- Check for input
+                pad = Controls.read()
+                if Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS) then
+
+                    function check_partition_and_go_to_menu()
+
+                        -- If partition exists - scan and go menu
+                        if System.doesDirExist(selected_partition) then
+                            scripts = System.listDirectory(selected_partition)
+                            for k, v in pairs(scripts) do
+                                v.previous_directory = false
+                                v.save = false
+                            end
+
+                            -- Add level up
+                            level_up = {}
+                            level_up.name = "..."
+                            level_up.directory = true
+                            level_up.previous_directory = true
+                            level_up.save = false
+                            table.insert(scripts, 1, level_up) -- ...
+
+                            scripts_sort_by_folder_first()
+                            cur_dir_fm = selected_partition
+                            showMenu = 11
+                            menuY = 0      
+
+                        -- If partition does not exist - go to not found menu
+                        else
+                            showMenu = 10
+                            menuY = 0 
+                        end
+                    end
+
+
+                    if menuY == 0 then
+                        selected_partition = "ux0:/"
+                        selected_partition_menuY = 0
+                        check_partition_and_go_to_menu()
+                    elseif menuY == 1 then
+                        selected_partition = "uma0:/"
+                        selected_partition_menuY = 1
+                        check_partition_and_go_to_menu()
+                    elseif menuY == 2 then
+                        selected_partition = "imc0:/"
+                        selected_partition_menuY = 2
+                        check_partition_and_go_to_menu()
+                    elseif menuY == 3 then
+                        selected_partition = "xmc0:/"
+                        selected_partition_menuY = 3
+                        check_partition_and_go_to_menu()
+                    elseif menuY == 4 then
+                        selected_partition = "grw0:/"
+                        selected_partition_menuY = 4
+                        check_partition_and_go_to_menu()
+                    else
+                    end
+
+
+
+                elseif Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE) then
+                    oldpad = pad
+                    showMenu = 8
+                    menuY = 2
+                elseif Controls.check(pad, SCE_CTRL_UP) and not Controls.check(oldpad, SCE_CTRL_UP) then
+                    if menuY > 0 then
+                        menuY = menuY - 1
+                        else
+                        menuY=menuItems
+                    end
+                elseif Controls.check(pad, SCE_CTRL_DOWN) and not Controls.check(oldpad, SCE_CTRL_DOWN) then
+                    if menuY < menuItems then
+                        menuY = menuY + 1
+                        else
+                        menuY=0
+                    end
+                elseif Controls.check(pad, SCE_CTRL_TRIANGLE) then
+                    -- break
+                    showMenu = 8
+                    menuY = 2
+                end
+
+        end
+
+-- MENU 10 - ROM BROWSER PARTITION NOT FOUND
+elseif showMenu == 10 then
+        
+        -- SETTINGS
+        -- Footer buttons and icons
+        -- Get text widths for positioning
+        label1 = Font.getTextWidth(fnt20, lang_lines.Back)--Back
+        label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
+        label3 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
+
+        -- Draw footer
+        Graphics.fillRect(0, 960, 496, 544, themeCol)-- footer bottom
+
+        Graphics.drawImage(900-label1, 510, btnO)
+        Font.print(fnt20, 900+28-label1, 508, lang_lines.Back, white)--Back
+
+        Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
+        Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
+
+        Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnT)
+        Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Close, white)--Close
+
+
+        Graphics.fillRect(60, 900, 44, 450, darkalpha)--dark background
+
+        Font.print(fnt22, setting_x, setting_yh, filebrowser_heading, white)--Game heading from menu 8
+        Graphics.fillRect(60, 900, 97, 100, white)
+
+        Graphics.fillRect(60, 900, 100 + (menuY * 50 +50), 150 + (menuY * 50 +50), themeCol)-- selection
+
+        menuItems = 0
+
+        Font.print(fnt20, setting_x, setting_y0 + 2, lang_lines.Directory_not_found, grey_dir) -- Directory not found
+        Font.print(fnt22, setting_x, setting_y1, "...", white)--Back
+
+
+
+        -- MENU 10 - FUNCTIONS
+        status = System.getMessageState()
+        if status ~= RUNNING then
+            
+                -- Check for input
+                pad = Controls.read()
+                if Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS) then
+
+                    if menuY == 0 then
+                        oldpad = pad
+                        showMenu = 9
+                        menuY = selected_partition_menuY
+                    end
+
+                elseif Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE) then
+                    oldpad = pad
+                    showMenu = 9
+                    menuY = selected_partition_menuY
+                elseif Controls.check(pad, SCE_CTRL_UP) and not Controls.check(oldpad, SCE_CTRL_UP) then
+                    if menuY > 0 then
+                        menuY = menuY - 1
+                        else
+                        menuY=menuItems
+                    end
+                elseif Controls.check(pad, SCE_CTRL_DOWN) and not Controls.check(oldpad, SCE_CTRL_DOWN) then
+                    if menuY < menuItems then
+                        menuY = menuY + 1
+                        else
+                        menuY=0
+                    end
+                elseif Controls.check(pad, SCE_CTRL_TRIANGLE) then
+                    oldpad = pad
+                    showMenu = 9
+                    menuY = selected_partition_menuY
+                end
+
+        end
+
+
+-- MENU 11 - ROM BROWSER
+    elseif showMenu == 11 then
         
         -- SETTINGS
         -- Footer buttons and icons
@@ -11074,7 +11356,7 @@ while true do
         menuItems = 0
 
 
-        -- MENU 9 - FUNCTIONS
+        -- MENU 11 - FUNCTIONS
         status = System.getMessageState()
         if status ~= RUNNING then
             
@@ -11089,7 +11371,7 @@ while true do
                         
                         if scripts[i].previous_directory == true then
                             -- Action = Move to previous directory
-                                if string.len(cur_dir_fm) > 5 then -- Excluding ux0:/
+                                if string.len(cur_dir_fm) > string.len(selected_partition) then -- Excluding partition name eg: ux0:/
                                     j=-2
                                     while string.sub(cur_dir_fm,j,j) ~= "/" do
                                         j=j-1
@@ -11102,16 +11384,18 @@ while true do
                                         v.save = false
                                     end
                                     
+                                    -- Add level up
+                                    level_up = {}
+                                    level_up.name = "..."
+                                    level_up.directory = true
+                                    level_up.previous_directory = true
+                                    level_up.save = false
+                                    table.insert(scripts, 1, level_up) -- ...
+
                                     scripts_sort_by_folder_first()
 
-                                    if string.len(cur_dir_fm) > 5 then
-                                        level_up = {}
-                                        level_up.name = "..."
-                                        level_up.directory = true
-                                        level_up.previous_directory = true
-                                        level_up.save = false
-                                        table.insert(scripts, 1, level_up) -- ...
 
+                                    if string.len(cur_dir_fm) > string.len(selected_partition) then
                                         selection = {}
                                         selection.name = lang_lines.Use_this_directory -- Use_this_directory
                                         selection.directory = true
@@ -11122,6 +11406,13 @@ while true do
 
                                     i = 1
                                 end
+
+                                if string.len(cur_dir_fm) == string.len(selected_partition) then
+                                    oldpad = pad
+                                    showMenu = 9
+                                    menuY = selected_partition_menuY
+                                end
+
                         else
 
                             
@@ -11169,14 +11460,14 @@ while true do
                                     
                                     showMenu = 8
                                     menuY = 2
-                                    scripts = System.listDirectory("ux0:/")
+                                    scripts = System.listDirectory(selected_partition)
                                     scripts_sort_by_folder_first()
                                     for k, v in pairs(scripts) do
                                         v.previous_directory = false
                                         v.save = false
                                     end
 
-                                    cur_dir_fm = "ux0:/"
+                                    cur_dir_fm = selected_partition
 
                             else
                                 -- Action = List the directory
@@ -11219,19 +11510,19 @@ while true do
                     local _, dir_level_count = string.gsub(cur_dir_fm, "/", "")
                     if dir_level_count == 1 then
                         oldpad = pad
-                        showMenu = 8
-                        menuY = 2
-                        scripts = System.listDirectory("ux0:/")
+                        showMenu = 9
+                        menuY = selected_partition_menuY
+                        scripts = System.listDirectory(selected_partition)
                         scripts_sort_by_folder_first()
                         for k, v in pairs(scripts) do
                             v.previous_directory = false
                             v.save = false
                         end
-                        cur_dir_fm = "ux0:/"
+                        cur_dir_fm = selected_partition
                     else
 
 
-                        if string.len(cur_dir_fm) > 5 then -- Excluding ux0:/
+                        if string.len(cur_dir_fm) > string.len(selected_partition) then -- Excluding partition name eg: ux0:/
                             j=-2
                             while string.sub(cur_dir_fm,j,j) ~= "/" do
                                 j=j-1
@@ -11243,16 +11534,17 @@ while true do
                                 v.save = false
                             end
 
+                            -- Add level up
+                            level_up = {}
+                            level_up.name = "..."
+                            level_up.directory = true
+                            level_up.previous_directory = true
+                            level_up.save = false
+                            table.insert(scripts, 1, level_up) -- ...
+
                             scripts_sort_by_folder_first()
                            
-                            if string.len(cur_dir_fm) > 5 then
-                                level_up = {}
-                                level_up.name = "..."
-                                level_up.directory = true
-                                level_up.previous_directory = true
-                                level_up.save = false
-                                table.insert(scripts, 1, level_up) -- ...
-
+                            if string.len(cur_dir_fm) > string.len(selected_partition) then -- Excluding partition name eg: ux0:/
                                 selection = {}
                                 selection.name = lang_lines.Use_this_directory -- Use_this_directory
                                 selection.directory = true
@@ -11260,7 +11552,7 @@ while true do
                                 selection.save = true
                                 table.insert(scripts, 2, selection)
                             end
-
+ 
                             i = 1
                         else
                         end
@@ -11274,13 +11566,13 @@ while true do
                     -- break
                     showMenu = 8
                     menuY = 2
-                    scripts = System.listDirectory("ux0:/")
+                    scripts = System.listDirectory(selected_partition)
                     scripts_sort_by_folder_first()
                     for k, v in pairs(scripts) do
                         v.previous_directory = false
                         v.save = false
                     end
-                    cur_dir_fm = "ux0:/"
+                    cur_dir_fm = selected_partition
                 end
 
             -- END ROM BROWSER 
@@ -11304,7 +11596,7 @@ while true do
             end
         end
     end
-    if showMenu == 9 then
+    if showMenu == 11 then
         --Scroll through ROM Browser
         if my < 64 then
             if delayButton < 0.5 then
@@ -11990,7 +12282,13 @@ while true do
                 elseif showMenu == 8 then -- Game directories
                     showMenu = 6 -- Scan Settings
                     menuY = 1
-                elseif showMenu == 9 then -- Rom Browser
+                elseif showMenu == 9 then -- Rom browser partitions
+                    showMenu = 8 -- Game directories
+                    menuY = 2
+                elseif showMenu == 10 then -- Rom browser partitions not found
+                    showMenu = 8 -- Game directories
+                    menuY = 2
+                elseif showMenu == 11 then -- Rom Browser
                     -- Do nothing
                 elseif showMenu == 2 then
                     -- If search cancelled with circle, return to settings menu
