@@ -702,6 +702,10 @@ Graphics.setImageFilters(imgFloor, FILTER_LINEAR, FILTER_LINEAR)
 local background_dir = "ux0:/data/RetroFlow/WALLPAPER/"
 System.createDirectory(background_dir)
 
+-- Create directory: Music
+local music_dir = "ux0:/data/RetroFlow/MUSIC/"
+System.createDirectory(music_dir)
+
 -- Create directory: Cover Folders
 System.createDirectory(covDir)
 for k, v in pairs(SystemsToScan) do
@@ -1060,21 +1064,56 @@ end
 showCat = startCategory
 
 
+-- Music - Legacy Fix - Move music files from old directory to new
+if System.doesFileExist("ux0:/data/RetroFlow/Music.ogg") then System.rename("ux0:/data/RetroFlow/Music.ogg", "ux0:/data/RetroFlow/MUSIC/Music.ogg") end
 
+-- Music - Scan Music Directory
+music_dir = System.listDirectory("ux0:/data/RetroFlow/MUSIC/")
 
--- Custom Music
--- Use ogg if found, if not found use mp3
-if System.doesFileExist(cur_dir .. "/Music.ogg") then
-    sndMusic = Sound.open(cur_dir .. "/Music.ogg")
-    if setMusic == 1 then
-        Sound.play(sndMusic, true) -- Changed from LOOP to true (HexFlow & RetroFlow use different eboot files)
-    end
-elseif System.doesFileExist(cur_dir .. "/Music.mp3") then
-    sndMusic = Sound.open(cur_dir .. "/Music.mp3")
-    if setMusic == 1 then
-        Sound.play(sndMusic, true) -- Changed from LOOP to true (HexFlow & RetroFlow use different eboot files)
+-- Music - Add to music tracks if ogg
+music_tracks = {}
+for i, file in pairs(music_dir) do
+    if not file.directory then
+        if string.match(file.name, ".ogg") then
+            file.name = file.name
+            table.insert(music_tracks, file)
+        end
+    else
     end
 end
+
+-- Music - Shuffle
+function Shuffle(music_tracks)
+    math.randomseed( os.time() )
+    s = {}
+    for i = 1, #music_tracks do s[i] = music_tracks[i] end
+    for i = #music_tracks, 2, -1 do
+        local j = math.random(i)
+        s[i], s[j] = s[j], s[i]
+    end
+    return s
+end
+
+-- Music -  
+function PlayMusic()
+    if #music_tracks > 1 then
+        Shuffle(music_tracks)
+        shuffled_track = s[1].name
+        sndMusic = Sound.open(cur_dir .. "/MUSIC/" .. shuffled_track)
+        Sound.play(sndMusic, false) -- Don't loop
+    elseif #music_tracks == 1 then
+        sndMusic = Sound.open(cur_dir .. "/MUSIC/" .. music_tracks[1].name)
+        Sound.play(sndMusic, true) -- Loop as only 1 song
+    else
+    end
+    
+end
+
+-- Music -  Play if enabled   
+if setMusic == 1 then
+    PlayMusic()
+end
+
 
 function SetThemeColor()
     if themeColor == 1 then
@@ -1543,9 +1582,10 @@ end
 
 function FreeMemory()
     if setMusic == 1 then
-        if System.doesFileExist(cur_dir .. "/Music.ogg") or System.doesFileExist(cur_dir .. "/Music.mp3") then
+        if #music_tracks > 1 then
             Sound.close(sndMusic)
-        else
+        elseif #music_tracks == 1 then
+            Sound.close(sndMusic)
         end
     end
     Sound.close(click)
@@ -8543,6 +8583,18 @@ while true do
         delayButton = 0
     end
     
+    -- Music
+    if setMusic == 1 then
+        if #music_tracks > 1 then
+            if Sound.isPlaying(sndMusic) then
+            -- do nothing
+            else
+            -- play next random track
+               PlayMusic()
+            end
+        else
+        end
+    end
 
     -- search start - Checking for keyboard state
     state = Keyboard.getState()
@@ -9385,7 +9437,12 @@ while true do
             end
         end
 
-        menuItems = 1
+        -- Override not shown for retro
+        if apptype == 0 or apptype == 1 or apptype == 2 or apptype == 3 then
+            menuItems = 1
+        else
+            menuItems = 0
+        end
 
         -- 0 Homebrew, 1 Vita, 2 PSP, 3 PSX, 5+ Retro
 
@@ -10144,20 +10201,12 @@ while true do
                 elseif menuY == 5 then -- #5 Music
                     if setMusic == 1 then
                         setMusic = 0
-                        if System.doesFileExist(cur_dir .. "/Music.ogg") or System.doesFileExist(cur_dir .. "/Music.mp3") then
-                            if Sound.isPlaying(sndMusic) then
-                                Sound.close(sndMusic)
-                            end
+                        if Sound.isPlaying(sndMusic) then
+                            Sound.close(sndMusic)
                         end
                     else
                         setMusic = 1
-                        if System.doesFileExist(cur_dir .. "/Music.ogg") then
-                            sndMusic = Sound.open(cur_dir .. "/Music.ogg")
-                            Sound.play(sndMusic, true) -- Changed from LOOP to true (HexFlow & RetroFlow use different eboot files)
-                        elseif System.doesFileExist(cur_dir .. "/Music.mp3") then
-                            sndMusic = Sound.open(cur_dir .. "/Music.mp3")
-                            Sound.play(sndMusic, true) -- Changed from LOOP to true (HexFlow & RetroFlow use different eboot files)
-                        end
+                        PlayMusic()
                     end            
                 end
 
