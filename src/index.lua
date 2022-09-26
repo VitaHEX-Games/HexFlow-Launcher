@@ -11817,7 +11817,14 @@ while true do
                         end
                     else
                         setMusic = 1
-                        PlayMusic()
+                        if setMusicShuffle == 1 then
+                            Shuffle(music_sequential)
+                            track = 1
+                            PlayMusic()
+                        else
+                            track = 1
+                            PlayMusic()
+                        end
                     end  
                 elseif menuY == 3 then -- #3 Shuffle music
                     if setMusicShuffle == 1 then
