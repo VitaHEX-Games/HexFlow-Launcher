@@ -21,8 +21,6 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "自定義背景 : ",
 ["Reflection_Effect_colon"] = "反射效果 : ",
-["Sounds_colon"] = "音效 : ",
-["Music_colon"] = "音乐 : ",
 ["Theme_Color_colon"] = "主題顏色 : ",
 ["Red"] = "紅色",
 ["Yellow"] = "黃色",
@@ -33,6 +31,13 @@ return {
 ["Dark_Purple"] = "深紫色",
 ["Orange"] = "橘色",
 ["Blue"] = "藍色",
+
+-- Audio
+["Audio"] = "音频",
+["Sounds_colon"] = "音效 : ",
+["Music_colon"] = "音乐 : ",
+["Shuffle_music_colon"] = "随机播放音乐 : ",
+["Skip_track"] = "跳过曲目",
 
 -- Startup Categories
 ["Startup_Category_colon"] = "啟動類別 : ",

@@ -21,8 +21,6 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Собственный Фон: ",
 ["Reflection_Effect_colon"] = "Эффект Отражения: ",
-["Sounds_colon"] = "Звуки: ",
-["Music_colon"] = "Музыка: ",
 ["Theme_Color_colon"] = "Цвет Темы: ",
 ["Red"] = "Красный",
 ["Yellow"] = "Желтый",
@@ -33,6 +31,13 @@ return {
 ["Dark_Purple"] = "Темно фиолетовый",
 ["Orange"] = "Оранжевый",
 ["Blue"] = "Синий",
+
+-- Audio
+["Audio"] = "Аудио",
+["Sounds_colon"] = "Звуки: ",
+["Music_colon"] = "Музыка: ",
+["Shuffle_music_colon"] = "Перемешать музыку: ",
+["Skip_track"] = "Пропустить трек",
 
 -- Startup Categories
 ["Startup_Category_colon"] = "Категория На Запуске: ",

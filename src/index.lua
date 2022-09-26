@@ -1017,11 +1017,12 @@ local showRecentlyPlayed = 1 -- On
 local showAll = 1 -- On
 local Adrenaline_roms = 1 -- ux0
 local Game_Backgrounds = 1 -- On
+local setMusicShuffle = 1 -- On
 
 function SaveSettings()
     local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
     settings = {}
-    local settings = "Reflections=" .. setReflections .. " " .. "\nSounds=" .. setSounds .. " " .. "\nColor=" .. themeColor .. " " .. "\nBackground=" .. setBackground .. " " .. "\nLanguage=" .. setLanguage .. " " .. "\nView=" .. showView .. " " .. "\nHomebrews=" .. showHomebrews .. " " .. "\nScan=" .. startupScan .. " " .. "\nCategory=" .. startCategory .. " " .. "\nRecent=" .. showRecentlyPlayed .. " " .. "\nAll=" .. showAll .. " " .. "\nAdrenaline_rom_location=" .. Adrenaline_roms .. " " .. "\nGame_Backgrounds=" .. Game_Backgrounds .. " " .. "\nMusic=" .. setMusic
+    local settings = "Reflections=" .. setReflections .. " " .. "\nSounds=" .. setSounds .. " " .. "\nColor=" .. themeColor .. " " .. "\nBackground=" .. setBackground .. " " .. "\nLanguage=" .. setLanguage .. " " .. "\nView=" .. showView .. " " .. "\nHomebrews=" .. showHomebrews .. " " .. "\nScan=" .. startupScan .. " " .. "\nCategory=" .. startCategory .. " " .. "\nRecent=" .. showRecentlyPlayed .. " " .. "\nAll=" .. showAll .. " " .. "\nAdrenaline_rom_location=" .. Adrenaline_roms .. " " .. "\nGame_Backgrounds=" .. Game_Backgrounds .. " " .. "\nMusic=" .. setMusic .. " " .. "\nMusic_Shuffle=" .. setMusicShuffle
     file_settings = io.open(cur_dir .. "/config.dat", "w")
     file_settings:write(settings)
     file_settings:close()
@@ -1056,6 +1057,7 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
     local getAdrenaline_rom_location = settingValue[12]; if getAdrenaline_rom_location ~= nil then Adrenaline_roms = getAdrenaline_rom_location end
     local getGame_Backgrounds = settingValue[13]; if getGame_Backgrounds ~= nil then Game_Backgrounds = getGame_Backgrounds end
     local getMusic = settingValue[14]; if getMusic ~= nil then setMusic = getMusic end
+    local getMusicShuffle = settingValue[15]; if getMusicShuffle ~= nil then setMusicShuffle = getMusicShuffle end
     selectedwall = setBackground
 
 else
@@ -1071,46 +1073,87 @@ if System.doesFileExist("ux0:/data/RetroFlow/Music.ogg") then System.rename("ux0
 music_dir = System.listDirectory("ux0:/data/RetroFlow/MUSIC/")
 
 -- Music - Add to music tracks if ogg
-music_tracks = {}
+music_sequential = {}
 for i, file in pairs(music_dir) do
     if not file.directory then
         if string.match(file.name, ".ogg") then
             file.name = file.name
-            table.insert(music_tracks, file)
+            table.insert(music_sequential, file)
         end
     else
     end
 end
 
 -- Music - Shuffle
-function Shuffle(music_tracks)
+
+-- local track = 1
+-- local music_shuffled = {}
+
+
+
+function Shuffle(music_sequential)
     math.randomseed( os.time() )
-    s = {}
-    for i = 1, #music_tracks do s[i] = music_tracks[i] end
-    for i = #music_tracks, 2, -1 do
+    music_shuffled = {}
+    for i = 1, #music_sequential do music_shuffled[i] = music_sequential[i] end
+    for i = #music_sequential, 2, -1 do
         local j = math.random(i)
-        s[i], s[j] = s[j], s[i]
+        music_shuffled[i], music_shuffled[j] = music_shuffled[j], music_shuffled[i]
     end
-    return s
+    return music_shuffled
 end
 
 -- Music -  
 function PlayMusic()
-    if #music_tracks > 1 then
-        Shuffle(music_tracks)
-        shuffled_track = s[1].name
-        sndMusic = Sound.open(cur_dir .. "/MUSIC/" .. shuffled_track)
-        Sound.play(sndMusic, false) -- Don't loop
-    elseif #music_tracks == 1 then
-        sndMusic = Sound.open(cur_dir .. "/MUSIC/" .. music_tracks[1].name)
-        Sound.play(sndMusic, true) -- Loop as only 1 song
+
+    -- How many tracks?
+
+    -- Just 1 - loop
+    if #music_sequential == 1 then
+        if System.doesFileExist(cur_dir .. "/MUSIC/" .. music_sequential[track].name) then
+            sndMusic = Sound.open(cur_dir .. "/MUSIC/" .. music_sequential[track].name)
+            Sound.play(sndMusic, true) -- Loop as only 1 song
+        end
+
+    -- More than 1 - don't loop, change track
+    elseif #music_sequential > 1 then
+
+        -- Suffle is on
+        if setMusicShuffle == 1 then
+            
+            -- If reached end, go back to track 1
+            if track > #music_shuffled then
+                track = 1
+            end
+            if System.doesFileExist(cur_dir .. "/MUSIC/" .. music_shuffled[track].name) then
+                sndMusic = Sound.open(cur_dir .. "/MUSIC/" .. music_shuffled[track].name)
+                Sound.play(sndMusic, false) -- Don't loop
+            end
+
+        -- Suffle is off
+        else
+            -- If reached end, go back to track 1
+            if track > #music_sequential then
+                track = 1
+            end
+            if System.doesFileExist(cur_dir .. "/MUSIC/" .. music_sequential[track].name) then
+                sndMusic = Sound.open(cur_dir .. "/MUSIC/" .. music_sequential[track].name)
+                Sound.play(sndMusic, false) -- Don't loop
+            end
+        end
     else
+
+    -- No tracks - do nothing
     end
-    
+
 end
 
 -- Music -  Play if enabled   
 if setMusic == 1 then
+    if setMusicShuffle == 1 then
+        Shuffle(music_sequential)
+    else
+    end
+    track = 1
     PlayMusic()
 end
 
@@ -1177,8 +1220,6 @@ local lang_default =
 -- Appearance
 ["Custom_Background_colon"] = "Custom Background: ",
 ["Reflection_Effect_colon"] = "Reflection Effect: ",
-["Sounds_colon"] = "Sounds: ",
-["Music_colon"] = "Music: ",
 ["Theme_Color_colon"] = "Theme Color: ",
 ["Red"] = "Red",
 ["Yellow"] = "Yellow",
@@ -1189,6 +1230,13 @@ local lang_default =
 ["Dark_Purple"] = "Dark Purple",
 ["Orange"] = "Orange",
 ["Blue"] = "Blue",
+
+-- Audio
+["Audio"] = "Audio",
+["Sounds_colon"] = "Sounds: ",
+["Music_colon"] = "Music: ",
+["Shuffle_music_colon"] = "Shuffle music: ",
+["Skip_track"] = "Skip track",
 
 -- Startup Categories
 ["Startup_Category_colon"] = "Startup Category: ",
@@ -1582,9 +1630,9 @@ end
 
 function FreeMemory()
     if setMusic == 1 then
-        if #music_tracks > 1 then
+        if #music_sequential > 1 then
             Sound.close(sndMusic)
-        elseif #music_tracks == 1 then
+        elseif #music_sequential == 1 then
             Sound.close(sndMusic)
         end
     end
@@ -2761,7 +2809,18 @@ function listDirectory(dir)
 
             for i, file in pairs(files_PSP) do
             local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-                if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+                if not file.directory 
+                    and not string.match(file.name, "Thumbs%.db") 
+                    and not string.match(file.name, "DS_Store") 
+                    and not string.match(file.name, ".sav") 
+                    and not string.match(file.name, ".srm") 
+                    and not string.match(file.name, ".mpk") 
+                    and not string.match(file.name, ".eep") 
+                    and not string.match(file.name, ".st0") 
+                    and not string.match(file.name, ".sta") 
+                    and not string.match(file.name, ".sr0") 
+                    and not string.match(file.name, ".ss0") 
+                    and not string.match(file.name, "%._") then
 
                         -- check if game is in the favorites list
                         if System.doesFileExist(cur_dir .. "/favorites.dat") then
@@ -3783,7 +3842,18 @@ function listDirectory(dir)
             for i, file in pairs(files) do
                 local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
                 -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
-                if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+                if not file.directory 
+                    and not string.match(file.name, "Thumbs%.db") 
+                    and not string.match(file.name, "DS_Store") 
+                    and not string.match(file.name, ".sav") 
+                    and not string.match(file.name, ".srm") 
+                    and not string.match(file.name, ".mpk") 
+                    and not string.match(file.name, ".eep") 
+                    and not string.match(file.name, ".st0") 
+                    and not string.match(file.name, ".sta") 
+                    and not string.match(file.name, ".sr0") 
+                    and not string.match(file.name, ".ss0") 
+                    and not string.match(file.name, "%._") then
 
                     -- check if game is in the favorites list
                     if System.doesFileExist(cur_dir .. "/favorites.dat") then
@@ -3879,7 +3949,18 @@ function listDirectory(dir)
             for i, file in pairs(files) do
                 local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
                 -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
-                if not file.directory and string.match(file.name, (def_filter)) and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+                if not file.directory and string.match(file.name, (def_filter)) 
+                    and not string.match(file.name, "Thumbs%.db") 
+                    and not string.match(file.name, "DS_Store") 
+                    and not string.match(file.name, ".sav") 
+                    and not string.match(file.name, ".srm") 
+                    and not string.match(file.name, ".mpk") 
+                    and not string.match(file.name, ".eep") 
+                    and not string.match(file.name, ".st0") 
+                    and not string.match(file.name, ".sta") 
+                    and not string.match(file.name, ".sr0") 
+                    and not string.match(file.name, ".ss0") 
+                    and not string.match(file.name, "%._") then
 
                     -- check if game is in the favorites list
                     if System.doesFileExist(cur_dir .. "/favorites.dat") then
@@ -3970,7 +4051,18 @@ function listDirectory(dir)
                     file_subfolder = System.listDirectory((SystemsToScan[(def)].romFolder .. "/" .. file.name))
                     for i, file_subfolder in pairs(file_subfolder) do
                         -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
-                        if not file_subfolder.directory and string.match(file_subfolder.name, (def_filter)) and not string.match(file_subfolder.name, "Thumbs%.db") and not string.match(file_subfolder.name, "DS_Store") and not string.match(file_subfolder.name, "%._") then
+                        if not file_subfolder.directory and string.match(file_subfolder.name, (def_filter)) 
+                            and not string.match(file_subfolder.name, "Thumbs%.db") 
+                            and not string.match(file_subfolder.name, "DS_Store") 
+                            and not string.match(file_subfolder.name, ".sav") 
+                            and not string.match(file_subfolder.name, ".srm") 
+                            and not string.match(file_subfolder.name, ".mpk") 
+                            and not string.match(file_subfolder.name, ".eep") 
+                            and not string.match(file_subfolder.name, ".st0") 
+                            and not string.match(file_subfolder.name, ".sta") 
+                            and not string.match(file_subfolder.name, ".sr0") 
+                            and not string.match(file_subfolder.name, ".ss0") 
+                            and not string.match(file_subfolder.name, "%._") then
 
                             -- check if game is in the favorites list
                             if System.doesFileExist(cur_dir .. "/favorites.dat") then
@@ -4069,7 +4161,18 @@ function listDirectory(dir)
             for i, file in pairs(files) do
             local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
                 -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
-            if not file.directory and not string.match(file.name, "neogeo") and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+            if not file.directory and not string.match(file.name, "neogeo") 
+                and not string.match(file.name, "Thumbs%.db") 
+                and not string.match(file.name, ".sav") 
+                and not string.match(file.name, ".srm") 
+                and not string.match(file.name, ".mpk") 
+                and not string.match(file.name, ".eep") 
+                and not string.match(file.name, ".st0") 
+                and not string.match(file.name, ".sta") 
+                and not string.match(file.name, ".sr0") 
+                and not string.match(file.name, ".ss0")
+                and not string.match(file.name, "DS_Store") 
+                and not string.match(file.name, "%._") then
 
                     -- check if game is in the favorites list
                     if System.doesFileExist(cur_dir .. "/favorites.dat") then
@@ -4404,7 +4507,18 @@ function ScanAdrenalineDirectoryOnly()
 
             for i, file in pairs(files_PSP) do
             local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-                if not file.directory and not string.match(file.name, "Thumbs%.db") and not string.match(file.name, "DS_Store") and not string.match(file.name, "%._") then
+                if not file.directory 
+                    and not string.match(file.name, "Thumbs%.db") 
+                    and not string.match(file.name, "DS_Store") 
+                    and not string.match(file.name, ".sav") 
+                    and not string.match(file.name, ".srm") 
+                    and not string.match(file.name, ".mpk") 
+                    and not string.match(file.name, ".eep") 
+                    and not string.match(file.name, ".st0") 
+                    and not string.match(file.name, ".sta") 
+                    and not string.match(file.name, ".sr0") 
+                    and not string.match(file.name, ".ss0")
+                    and not string.match(file.name, "%._") then
 
                         -- check if game is in the favorites list
                         if System.doesFileExist(cur_dir .. "/favorites.dat") then
@@ -8585,14 +8699,22 @@ while true do
     
     -- Music
     if setMusic == 1 then
-        if #music_tracks > 1 then
+
+        -- More than 1 track - move to next if the song is over
+        if #music_sequential > 1 then
+            
+            -- Is it playing?
+
             if Sound.isPlaying(sndMusic) then
-            -- do nothing
+                -- Yes - do nothing
             else
-            -- play next random track
-               PlayMusic()
+                -- No - go to the next track
+                track = track + 1 
+                PlayMusic()
             end
-        else
+
+        -- Only 1 track - do nothing
+        else   
         end
     end
 
@@ -9575,6 +9697,7 @@ while true do
         -- Get text widths for positioning
         label1 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
         label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
+        label3 = Font.getTextWidth(fnt20, lang_lines.About)--About
         label_lang = Font.getTextWidth(fnt20, lang_lines.Language_colon) + 12 --Language
 
 
@@ -9583,6 +9706,9 @@ while true do
 
         Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
         Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
+
+        Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnT)
+        Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.About, white)--About
 
         Graphics.fillRect(60, 900, 44, 450, darkalpha)
 
@@ -9610,26 +9736,30 @@ while true do
         Graphics.drawImage(setting_x_icon, setting_y2, setting_icon_theme)
         Font.print(fnt22, setting_x_icon_offset, setting_y2, lang_lines.Theme, white)--Theme
 
-        -- MENU 2 / #3 Artwork
-        Graphics.drawImage(setting_x_icon, setting_y3, setting_icon_artwork)
-        Font.print(fnt22, setting_x_icon_offset, setting_y3, lang_lines.Artwork, white)--Artwork
+        -- MENU 2 / #3 Audio
+        Graphics.drawImage(setting_x_icon, setting_y3, setting_icon_sounds)
+        Font.print(fnt22, setting_x_icon_offset, setting_y3, lang_lines.Audio, white)--Audio
+
+        -- MENU 2 / #4 Artwork
+        Graphics.drawImage(setting_x_icon, setting_y4, setting_icon_artwork)
+        Font.print(fnt22, setting_x_icon_offset, setting_y4, lang_lines.Artwork, white)--Artwork
         if setLanguage == 10 then -- Chinese language fix
-            Font.print(fnt22, setting_x_icon_offset - 8, setting_y3, lang_lines.Artwork, white)--Artwork
+            Font.print(fnt22, setting_x_icon_offset - 8, setting_y4, lang_lines.Artwork, white)--Artwork
         else
-            Font.print(fnt22, setting_x_icon_offset, setting_y3, lang_lines.Artwork, white)--Artwork
+            Font.print(fnt22, setting_x_icon_offset, setting_y4, lang_lines.Artwork, white)--Artwork
         end
 
-        -- MENU 2 / #4 Scanning
-        Graphics.drawImage(setting_x_icon, setting_y4, setting_icon_scanning)
-        Font.print(fnt22, setting_x_icon_offset, setting_y4, lang_lines.Scan_Settings, white)--Scanning
+        -- MENU 2 / #5 Scanning
+        Graphics.drawImage(setting_x_icon, setting_y5, setting_icon_scanning)
+        Font.print(fnt22, setting_x_icon_offset, setting_y5, lang_lines.Scan_Settings, white)--Scanning
 
-        -- MENU 2 / #5 Language
-        Graphics.drawImage(setting_x_icon, setting_y5, setting_icon_language)
-        Font.print(fnt22, setting_x_icon_offset, setting_y5, lang_lines.Language_colon, white)--Language
+        -- MENU 2 / #6 Language
+        Graphics.drawImage(setting_x_icon, setting_y6, setting_icon_language)
+        Font.print(fnt22, setting_x_icon_offset, setting_y6, lang_lines.Language_colon, white)--Language
 
-        -- MENU 2 / #5 Language
+        -- MENU 2 / #6 Language
         if setLanguage == 1 then
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "English - American", white) -- English - American
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "English - American", white) -- English - American
             -- Megadrive, update regional missing cover
             for k, v in pairs(md_table) do
                   if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_md.png" then
@@ -9643,21 +9773,21 @@ while true do
                   end
             end
         elseif setLanguage == 2 then
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "Deutsch", white) -- German
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Deutsch", white) -- German
         elseif setLanguage == 3 then
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, " Français", white) -- French
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, " Français", white) -- French
         elseif setLanguage == 4 then
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "Italiano", white) -- Italian
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Italiano", white) -- Italian
         elseif setLanguage == 5 then
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "Español", white) -- Spanish
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Español", white) -- Spanish
         elseif setLanguage == 6 then
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "Português", white) -- Portuguese
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Português", white) -- Portuguese
         elseif setLanguage == 7 then
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "Svenska", white) -- Swedish
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Svenska", white) -- Swedish
         elseif setLanguage == 8 then
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "Pусский", white) -- Russian
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Pусский", white) -- Russian
         elseif setLanguage == 9 then
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "日本語", white) -- Japanese
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "日本語", white) -- Japanese
             -- Dreamcast, update regional missing cover - Japan - Orange logo
             for k, v in pairs(dreamcast_table) do
                   if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" then
@@ -9665,11 +9795,11 @@ while true do
                   end
             end
         elseif setLanguage == 10 then
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "繁體中文", white) -- Japanese
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "繁體中文", white) -- Japanese
         elseif setLanguage == 11 then
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "Polski", white) -- Polish
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Polski", white) -- Polish
         else
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y5, "English", white) -- English
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "English", white) -- English
 
             -- Megadrive, update regional missing cover
             for k, v in pairs(md_table) do
@@ -9685,13 +9815,13 @@ while true do
             end
         end
 
-        -- MENU 2 / #6 About
-        Graphics.drawImage(setting_x_icon, setting_y6, setting_icon_about)        
-        if setLanguage == 10 then -- Chinese language fix
-            Font.print(fnt22, setting_x_icon_offset - 8, setting_y6, lang_lines.About, white)--About
-        else
-            Font.print(fnt22, setting_x_icon_offset, setting_y6, lang_lines.About, white)--About
-        end
+        -- -- MENU 2 / #6 About
+        -- Graphics.drawImage(setting_x_icon, setting_y6, setting_icon_about)        
+        -- if setLanguage == 10 then -- Chinese language fix
+        --     Font.print(fnt22, setting_x_icon_offset - 8, setting_y6, lang_lines.About, white)--About
+        -- else
+        --     Font.print(fnt22, setting_x_icon_offset, setting_y6, lang_lines.About, white)--About
+        -- end
         
         -- MENU 2 - FUNCTIONS
         status = System.getMessageState()
@@ -9712,22 +9842,22 @@ while true do
                 elseif menuY == 2 then -- Theme
                     showMenu = 4 
                     menuY = 0
-                elseif menuY == 3 then -- Artwork
+                elseif menuY == 3 then -- Audio
+                    showMenu = 12 
+                    menuY = 0
+                elseif menuY == 4 then -- Artwork
                     showMenu = 5 
                     menuY = 0
-                elseif menuY == 4 then -- Scan Settings
+                elseif menuY == 5 then -- Scan Settings
                     showMenu = 6 
                     menuY = 0
-                elseif menuY == 5 then -- Language
+                elseif menuY == 6 then -- Language
                     if setLanguage < 11 then
                         setLanguage = setLanguage + 1
                     else
                         setLanguage = 0
                     end
                     ChangeLanguage()
-                elseif menuY == 6 then -- About
-                    showMenu = 7 
-                    menuY = 0
                 else
                 end
 
@@ -9754,6 +9884,9 @@ while true do
                     end
                 else
                 end
+            elseif (Controls.check(pad, SCE_CTRL_TRIANGLE) and not Controls.check(oldpad, SCE_CTRL_TRIANGLE)) then
+                showMenu = 7 
+                -- menuY = 0
             end
         end
 
@@ -9929,7 +10062,7 @@ while true do
 
                 if menuY == 0 then -- #0 Back
                     showMenu = 2
-                    menuY = 0
+                    menuY = 1 -- Categories
 
                 elseif menuY == 1 then -- #1 Startup Category
                     if startCategory < count_of_start_categories then
@@ -10069,7 +10202,7 @@ while true do
         Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
 
 
-        menuItems = 5
+        menuItems = 3
 
         -- MENU 4 / #0 Back
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
@@ -10128,29 +10261,6 @@ while true do
             wallpaper_print_string (setBackground)
         end
 
-        -- MENU 4 / #4 SOUNDS
-        Font.print(fnt22, setting_x, setting_y4, lang_lines.Sounds_colon, white)--SOUNDS
-        if setSounds == 1 then
-            Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.On, white)--ON
-        else
-            if setLanguage == 10 then -- Chinese language fix
-                Font.print(fnt22, setting_x_offset - 8, setting_y4, lang_lines.Off, white)--OFF
-            else
-                Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.Off, white)--OFF
-            end
-        end
-
-        -- MENU 4 / #5 MUSIC
-        Font.print(fnt22, setting_x, setting_y5, lang_lines.Music_colon, white)--SOUNDS
-        if setMusic == 1 then
-            Font.print(fnt22, setting_x_offset, setting_y5, lang_lines.On, white)--ON
-        else
-            if setLanguage == 10 then -- Chinese language fix
-                Font.print(fnt22, setting_x_offset - 8, setting_y5, lang_lines.Off, white)--OFF
-            else
-                Font.print(fnt22, setting_x_offset, setting_y5, lang_lines.Off, white)--OFF
-            end
-        end
 
         -- MENU 4 - FUNCTIONS
         status = System.getMessageState()
@@ -10159,7 +10269,7 @@ while true do
             if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
                 if menuY == 0 then -- #0 Back
                     showMenu = 2
-                    menuY = 0
+                    menuY = 2 -- Theme
                 elseif menuY == 1 then -- #1 Theme Color
                     if themeColor < 7 then
                         themeColor = themeColor + 1
@@ -10191,23 +10301,7 @@ while true do
                         imgCustomBack = Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
                         Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
                         Render.useTexture(modBackground, imgCustomBack)
-                    end
-                elseif menuY == 4 then -- #4 Sounds
-                    if setSounds == 1 then
-                        setSounds = 0
-                    else
-                        setSounds = 1
-                    end            
-                elseif menuY == 5 then -- #5 Music
-                    if setMusic == 1 then
-                        setMusic = 0
-                        if Sound.isPlaying(sndMusic) then
-                            Sound.close(sndMusic)
-                        end
-                    else
-                        setMusic = 1
-                        PlayMusic()
-                    end            
+                    end           
                 end
 
                 --Save settings
@@ -10446,7 +10540,7 @@ while true do
                 -- MENU 5
                 if menuY == 0 then -- #0 Back
                     showMenu = 2
-                    menuY = 0
+                    menuY = 4 -- Artwork
                 elseif menuY == 1 then -- #1 Download Covers
                     if gettingCovers == false then
                         gettingCovers = true
@@ -10763,7 +10857,7 @@ while true do
                 -- MENU 2
                 if menuY == 0 then -- #0 Back
                     showMenu = 2
-                    menuY = 0
+                    menuY = 5 -- Scan settings
                 elseif menuY == 1 then -- #1 Game directories
                     showMenu = 8
                     menuY = 0
@@ -11075,7 +11169,7 @@ while true do
         end
 
 -- MENU 9 - ROM BROWSER PARTITIONS
-elseif showMenu == 9 then
+    elseif showMenu == 9 then
         
         -- SETTINGS
         -- Footer buttons and icons
@@ -11250,7 +11344,7 @@ elseif showMenu == 9 then
         end
 
 -- MENU 10 - ROM BROWSER PARTITION NOT FOUND
-elseif showMenu == 10 then
+    elseif showMenu == 10 then
         
         -- SETTINGS
         -- Footer buttons and icons
@@ -11323,7 +11417,6 @@ elseif showMenu == 10 then
                 end
 
         end
-
 
 -- MENU 11 - ROM BROWSER
     elseif showMenu == 11 then
@@ -11627,6 +11720,157 @@ elseif showMenu == 10 then
             -- END ROM BROWSER 
 
         end
+
+-- MENU 12 - AUDIO
+    elseif showMenu == 12 then
+        
+        -- SETTINGS
+        -- Footer buttons and icons
+        -- Get text widths for positioning
+        label1 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
+        label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
+
+        Graphics.drawImage(900-label1, 510, btnO)
+        Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
+
+        Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
+        Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
+
+        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+
+        Font.print(fnt22, setting_x, setting_yh, lang_lines.Audio, white)--Audio
+        Graphics.fillRect(60, 900, 97, 100, white)
+
+        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+
+        -- Hide skip track if no music or only 1 song
+        if #music_sequential > 1 then
+            menuItems = 4
+        else
+            menuItems = 3
+        end
+
+        -- MENU 12 / #0 Back
+        Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
+
+        -- MENU 12 / #1 SOUNDS
+        Font.print(fnt22, setting_x, setting_y1, lang_lines.Sounds_colon, white)--SOUNDS
+        if setSounds == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.On, white)--ON
+        else
+            if setLanguage == 10 then -- Chinese language fix
+                Font.print(fnt22, setting_x_offset - 8, setting_y1, lang_lines.Off, white)--OFF
+            else
+                Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Off, white)--OFF
+            end
+        end
+
+        -- MENU 12 / #2 MUSIC
+        Font.print(fnt22, setting_x, setting_y2, lang_lines.Music_colon, white)--MUSIC
+        if setMusic == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y2, lang_lines.On, white)--ON
+        else
+            if setLanguage == 10 then -- Chinese language fix
+                Font.print(fnt22, setting_x_offset - 8, setting_y2, lang_lines.Off, white)--OFF
+            else
+                Font.print(fnt22, setting_x_offset, setting_y2, lang_lines.Off, white)--OFF
+            end
+        end
+
+        -- MENU 12 / #3 SHUFFLE MUSIC
+        Font.print(fnt22, setting_x, setting_y3, lang_lines.Shuffle_music_colon, white)--SHUFFLE MUSIC
+        if setMusicShuffle == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y3, lang_lines.On, white)--ON
+        else
+            if setLanguage == 10 then -- Chinese language fix
+                Font.print(fnt22, setting_x_offset - 8, setting_y3, lang_lines.Off, white)--OFF
+            else
+                Font.print(fnt22, setting_x_offset, setting_y3, lang_lines.Off, white)--OFF
+            end
+        end
+
+        -- MENU 12 / #4 SKIP TRACK
+        if #music_sequential > 1 then
+            Font.print(fnt22, setting_x, setting_y4, lang_lines.Skip_track, white)--SKIP TRACK
+        else
+        end
+
+        -- MENU 12 - FUNCTIONS
+        status = System.getMessageState()
+        if status ~= RUNNING then
+    
+            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+                if menuY == 0 then -- #0 Back
+                    showMenu = 2
+                    menuY = 3 -- Audio 
+                elseif menuY == 1 then -- #1 Sounds
+                    if setSounds == 1 then
+                        setSounds = 0
+                    else
+                        setSounds = 1
+                    end            
+                elseif menuY == 2 then -- #2 Music
+                    if setMusic == 1 then
+                        setMusic = 0
+                        if Sound.isPlaying(sndMusic) then
+                            Sound.close(sndMusic)
+                        end
+                    else
+                        setMusic = 1
+                        PlayMusic()
+                    end  
+                elseif menuY == 3 then -- #3 Shuffle music
+                    if setMusicShuffle == 1 then
+                        setMusicShuffle = 0
+                        if setMusic == 1 then
+                            if Sound.isPlaying(sndMusic) then
+                                Sound.close(sndMusic)
+                                track = 1
+                                PlayMusic()
+                            end
+                        else
+                        end
+                    else
+                        setMusicShuffle = 1
+                        if setMusic == 1 then
+                            if Sound.isPlaying(sndMusic) then
+                                Sound.close(sndMusic)
+                                Shuffle(music_sequential)
+                                track = 1
+                                PlayMusic()
+                            end
+                        else
+                        end
+                    end
+                elseif menuY == 4 then -- #4 Skip track
+                    if setMusic == 1 then
+                        if Sound.isPlaying(sndMusic) then
+                            Sound.close(sndMusic)
+                            track = track + 1 
+                            PlayMusic()
+                        end
+                    else
+                    end           
+                end
+
+                --Save settings
+                SaveSettings()
+                
+            elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
+                if menuY > 0 then
+                    menuY = menuY - 1
+                    else
+                    menuY=menuItems
+                end
+            elseif (Controls.check(pad, SCE_CTRL_DOWN)) and not (Controls.check(oldpad, SCE_CTRL_DOWN)) then
+                if menuY < menuItems then
+                    menuY = menuY + 1
+                    else
+                    menuY=0
+                end
+            end
+        end
+
 -- END OF MENUS
     end
 
@@ -12321,13 +12565,13 @@ elseif showMenu == 10 then
                     menuY = 2
                 elseif showMenu == 5 then -- Artwork
                     showMenu = 2
-                    menuY = 3
+                    menuY = 4
                 elseif showMenu == 6 then -- Scan Settings
                     showMenu = 2
-                    menuY = 4
+                    menuY = 5
                 elseif showMenu == 7 then -- About
                     showMenu = 2
-                    menuY = 6
+                    -- menuY = 6
                 elseif showMenu == 8 then -- Game directories
                     showMenu = 6 -- Scan Settings
                     menuY = 1
@@ -12339,13 +12583,18 @@ elseif showMenu == 10 then
                     menuY = 2
                 elseif showMenu == 11 then -- Rom Browser
                     -- Do nothing
+                elseif showMenu == 12 then -- Audio
+                    showMenu = 2
+                    menuY = 3
                 elseif showMenu == 2 then
                     -- If search cancelled with circle, return to settings menu
                     state = Keyboard.getState()
                     if state == RUNNING then
                         showMenu = 2
+                        menuY = 0
                     else
                         showMenu = 0
+                        menuY = 0
                     end
                 else
                     showMenu = 0

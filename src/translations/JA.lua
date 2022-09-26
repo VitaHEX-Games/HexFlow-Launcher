@@ -21,8 +21,6 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "バックグラウンド画像 : ",
 ["Reflection_Effect_colon"] = "反射結果 : ",
-["Sounds_colon"] = "サウンド : ",
-["Music_colon"] = "音楽 : ",
 ["Theme_Color_colon"] = "テーマの色 : ",
 ["Red"] = "赤",
 ["Yellow"] = "黄",
@@ -33,6 +31,13 @@ return {
 ["Dark_Purple"] = "濃紫色",
 ["Orange"] = "橙",
 ["Blue"] = "青",
+
+-- Audio
+["Audio"] = "オーディオ",
+["Sounds_colon"] = "サウンド : ",
+["Music_colon"] = "音楽 : ",
+["Shuffle_music_colon"] = "音楽をシャッフルする : ",
+["Skip_track"] = "トラックをスキップ",
 
 -- Startup Categories
 ["Startup_Category_colon"] = "起動時カテゴリー : ",

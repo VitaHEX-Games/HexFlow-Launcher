@@ -21,8 +21,6 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Egna bakgrunder: ",
 ["Reflection_Effect_colon"] = "Reflektionseffekt: ",
-["Sounds_colon"] = "Ljud: ",
-["Music_colon"] = "Musik: ",
 ["Theme_Color_colon"] = "Temafärg: ",
 ["Red"] = "Röd",
 ["Yellow"] = "Gul",
@@ -33,6 +31,13 @@ return {
 ["Dark_Purple"] = "Mörklila",
 ["Orange"] = "Orange",
 ["Blue"] = "Blå",
+
+-- Audio
+["Audio"] = "Audio",
+["Sounds_colon"] = "Ljud: ",
+["Music_colon"] = "Musik: ",
+["Shuffle_music_colon"] = "Blanda musik: ",
+["Skip_track"] = "Hoppa över spåret",
 
 -- Startup Categories
 ["Startup_Category_colon"] = "Startkategori: ",

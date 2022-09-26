@@ -21,8 +21,6 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Fond personnalisé :",
 ["Reflection_Effect_colon"] = "Effet miroir :",
-["Sounds_colon"] = "Effet du sons :",
-["Music_colon"] = "Musique : ",
 ["Theme_Color_colon"] = "Couleur du thème :",
 ["Red"] = "Rouge",
 ["Yellow"] = "Jaune",
@@ -33,6 +31,13 @@ return {
 ["Dark_Purple"] = "Violet foncé",
 ["Orange"] = "Orange",
 ["Blue"] = "Bleu",
+
+-- Audio
+["Audio"] = "Audio",
+["Sounds_colon"] = "Effet du sons :",
+["Music_colon"] = "Musique : ",
+["Shuffle_music_colon"] = "Musique aléatoire : ",
+["Skip_track"] = "Sauter la piste",
 
 -- Startup Categories
 ["Startup_Category_colon"] = "Catégorie par défaut :",
