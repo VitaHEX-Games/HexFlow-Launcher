@@ -10929,8 +10929,8 @@ while true do
             .. "\nSupport his projects on patreon.com/vitahex", white)-- Draw info
 
         Font.print(fnt20, 54, 132, "Adding Retro Games:"
-            .. "\nPlace your game roms in the pre-made folders here 'ux0:/data/RetroFlow/ROMS'"
-            .. "\nThen turn on 'Startup scan' in the scan settings. Turn off once done."
+            .. "\nPlace your game roms in 'ux0:/data/RetroFlow/ROMS', or use 'Edit game directories'"
+            .. "\nto choose your own directories, then select 'Rescan' to find your games."
             .. "\n"
             .. "\nAdding PSP Games:"
             .. "\nPlease rename ISO files using Leecherman's 'PSP ISO Renamer tool'."
