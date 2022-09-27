@@ -211,7 +211,7 @@ RetroFlow also uses the ID to lookup the name of the game.
 
 
 
-# Custom Game Covers & Game Backgrounds
+# Custom Game Covers, Game Backgrounds and Music
 
 Place your custom covers in the game system's here "_ux0:/data/RetroFlow/COVERS/_"
 
@@ -232,7 +232,7 @@ You can change your background within the app by going to the settings menu > th
 
 ### Custom Music
 
-Place your **Music.ogg** or **Music.mp3** file in "_ux0:data/RetroFlow/_" (music will play automatically when the "Sounds" option is enabled)
+Place your **.ogg** formatted music files in "_ux0:data/RetroFlow/MUSIC_" (music will play automatically when the "Sounds" option is enabled). 
 
 ## AutoBoot
 
@@ -250,7 +250,7 @@ Navigate your library using the **DPad** or the **Left Stick** or with the **Tou
 
 **Square**: Change Category/Rename game
 
-**Triangle**: Game Details/Add or remove favorites
+**Triangle**: Game Details/Add or remove favorites/About
 
 **Circle**: Change View/Cancel
 
