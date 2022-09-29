@@ -6,7 +6,7 @@
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "4.0.1"
+local appversion = "4.0.2"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -1076,7 +1076,7 @@ music_dir = System.listDirectory("ux0:/data/RetroFlow/MUSIC/")
 music_sequential = {}
 for i, file in pairs(music_dir) do
     if not file.directory then
-        if string.match(file.name, ".ogg") then
+        if string.match(file.name, "%.ogg") then
             file.name = file.name
             table.insert(music_sequential, file)
         end
@@ -1535,7 +1535,7 @@ local wallpaper_table_scanned = {}
 files_wallpaper = System.listDirectory("ux0:/data/RetroFlow/WALLPAPER/")
 for i, file in pairs(files_wallpaper) do
     if not file.directory then
-        if string.match(file.name, ".png") or string.match(file.name, ".jpg") then
+        if string.match(file.name, "%.png") or string.match(file.name, "%.jpg") then
             wallpaper_name_noExtension = file.name:match("(.+)%..+$")
             -- wallpaper_name_noExtension = file.name
             file.filename = file.name
@@ -2812,14 +2812,14 @@ function listDirectory(dir)
                 if not file.directory 
                     and not string.match(file.name, "Thumbs%.db") 
                     and not string.match(file.name, "DS_Store") 
-                    and not string.match(file.name, ".sav") 
-                    and not string.match(file.name, ".srm") 
-                    and not string.match(file.name, ".mpk") 
-                    and not string.match(file.name, ".eep") 
-                    and not string.match(file.name, ".st0") 
-                    and not string.match(file.name, ".sta") 
-                    and not string.match(file.name, ".sr0") 
-                    and not string.match(file.name, ".ss0") 
+                    and not string.match(file.name, "%.sav") 
+                    and not string.match(file.name, "%.srm") 
+                    and not string.match(file.name, "%.mpk") 
+                    and not string.match(file.name, "%.eep") 
+                    and not string.match(file.name, "%.st0") 
+                    and not string.match(file.name, "%.sta") 
+                    and not string.match(file.name, "%.sr0") 
+                    and not string.match(file.name, "%.ss0") 
                     and not string.match(file.name, "%._") then
 
                         -- check if game is in the favorites list
@@ -3845,14 +3845,14 @@ function listDirectory(dir)
                 if not file.directory 
                     and not string.match(file.name, "Thumbs%.db") 
                     and not string.match(file.name, "DS_Store") 
-                    and not string.match(file.name, ".sav") 
-                    and not string.match(file.name, ".srm") 
-                    and not string.match(file.name, ".mpk") 
-                    and not string.match(file.name, ".eep") 
-                    and not string.match(file.name, ".st0") 
-                    and not string.match(file.name, ".sta") 
-                    and not string.match(file.name, ".sr0") 
-                    and not string.match(file.name, ".ss0") 
+                    and not string.match(file.name, "%.sav") 
+                    and not string.match(file.name, "%.srm") 
+                    and not string.match(file.name, "%.mpk") 
+                    and not string.match(file.name, "%.eep") 
+                    and not string.match(file.name, "%.st0") 
+                    and not string.match(file.name, "%.sta") 
+                    and not string.match(file.name, "%.sr0") 
+                    and not string.match(file.name, "%.ss0") 
                     and not string.match(file.name, "%._") then
 
                     -- check if game is in the favorites list
@@ -3952,14 +3952,14 @@ function listDirectory(dir)
                 if not file.directory and string.match(file.name, (def_filter)) 
                     and not string.match(file.name, "Thumbs%.db") 
                     and not string.match(file.name, "DS_Store") 
-                    and not string.match(file.name, ".sav") 
-                    and not string.match(file.name, ".srm") 
-                    and not string.match(file.name, ".mpk") 
-                    and not string.match(file.name, ".eep") 
-                    and not string.match(file.name, ".st0") 
-                    and not string.match(file.name, ".sta") 
-                    and not string.match(file.name, ".sr0") 
-                    and not string.match(file.name, ".ss0") 
+                    and not string.match(file.name, "%.sav") 
+                    and not string.match(file.name, "%.srm") 
+                    and not string.match(file.name, "%.mpk") 
+                    and not string.match(file.name, "%.eep") 
+                    and not string.match(file.name, "%.st0") 
+                    and not string.match(file.name, "%.sta") 
+                    and not string.match(file.name, "%.sr0") 
+                    and not string.match(file.name, "%.ss0") 
                     and not string.match(file.name, "%._") then
 
                     -- check if game is in the favorites list
@@ -4054,14 +4054,14 @@ function listDirectory(dir)
                         if not file_subfolder.directory and string.match(file_subfolder.name, (def_filter)) 
                             and not string.match(file_subfolder.name, "Thumbs%.db") 
                             and not string.match(file_subfolder.name, "DS_Store") 
-                            and not string.match(file_subfolder.name, ".sav") 
-                            and not string.match(file_subfolder.name, ".srm") 
-                            and not string.match(file_subfolder.name, ".mpk") 
-                            and not string.match(file_subfolder.name, ".eep") 
-                            and not string.match(file_subfolder.name, ".st0") 
-                            and not string.match(file_subfolder.name, ".sta") 
-                            and not string.match(file_subfolder.name, ".sr0") 
-                            and not string.match(file_subfolder.name, ".ss0") 
+                            and not string.match(file_subfolder.name, "%.sav") 
+                            and not string.match(file_subfolder.name, "%.srm") 
+                            and not string.match(file_subfolder.name, "%.mpk") 
+                            and not string.match(file_subfolder.name, "%.eep") 
+                            and not string.match(file_subfolder.name, "%.st0") 
+                            and not string.match(file_subfolder.name, "%.sta") 
+                            and not string.match(file_subfolder.name, "%.sr0") 
+                            and not string.match(file_subfolder.name, "%.ss0") 
                             and not string.match(file_subfolder.name, "%._") then
 
                             -- check if game is in the favorites list
@@ -4163,14 +4163,14 @@ function listDirectory(dir)
                 -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
             if not file.directory and not string.match(file.name, "neogeo") 
                 and not string.match(file.name, "Thumbs%.db") 
-                and not string.match(file.name, ".sav") 
-                and not string.match(file.name, ".srm") 
-                and not string.match(file.name, ".mpk") 
-                and not string.match(file.name, ".eep") 
-                and not string.match(file.name, ".st0") 
-                and not string.match(file.name, ".sta") 
-                and not string.match(file.name, ".sr0") 
-                and not string.match(file.name, ".ss0")
+                and not string.match(file.name, "%.sav") 
+                and not string.match(file.name, "%.srm") 
+                and not string.match(file.name, "%.mpk") 
+                and not string.match(file.name, "%.eep") 
+                and not string.match(file.name, "%.st0") 
+                and not string.match(file.name, "%.sta") 
+                and not string.match(file.name, "%.sr0") 
+                and not string.match(file.name, "%.ss0")
                 and not string.match(file.name, "DS_Store") 
                 and not string.match(file.name, "%._") then
 
@@ -4362,20 +4362,20 @@ function listDirectory(dir)
     Scan_Rom_Simple     (8, gba_table)
     Scan_Rom_Simple     (9, gbc_table)
     Scan_Rom_Simple     (10, gb_table)
-    Scan_Rom_Filter     (11, dreamcast_table, ".cdi")
-    Scan_Rom_Filter     (11, dreamcast_table, ".gdi")
-    Scan_Rom_Filter     (12, sega_cd_table, ".chd")
-    Scan_Rom_Filter     (12, sega_cd_table, ".cue")
+    Scan_Rom_Filter     (11, dreamcast_table, "%.cdi")
+    Scan_Rom_Filter     (11, dreamcast_table, "%.gdi")
+    Scan_Rom_Filter     (12, sega_cd_table, "%.chd")
+    Scan_Rom_Filter     (12, sega_cd_table, "%.cue")
     Scan_Rom_Simple     (13, s32x_table)
     Scan_Rom_Simple     (14, md_table)
     Scan_Rom_Simple     (15, sms_table)
     Scan_Rom_Simple     (16, gg_table)
     Scan_Rom_Simple     (17, tg16_table)
-    Scan_Rom_Filter     (18, tgcd_table, ".cue")
-    Scan_Rom_Filter     (18, tgcd_table, ".chd")
+    Scan_Rom_Filter     (18, tgcd_table, "%.cue")
+    Scan_Rom_Filter     (18, tgcd_table, "%.chd")
     Scan_Rom_Simple     (19, pce_table)
-    Scan_Rom_Filter     (20, pcecd_table, ".cue")
-    Scan_Rom_Filter     (20, pcecd_table, ".chd")
+    Scan_Rom_Filter     (20, pcecd_table, "%.cue")
+    Scan_Rom_Filter     (20, pcecd_table, "%.chd")
     Scan_Rom_Simple     (21, amiga_table)
     Scan_Rom_Simple     (22, c64_table)
     Scan_Rom_Simple     (23, wswan_col_table)
@@ -4510,14 +4510,14 @@ function ScanAdrenalineDirectoryOnly()
                 if not file.directory 
                     and not string.match(file.name, "Thumbs%.db") 
                     and not string.match(file.name, "DS_Store") 
-                    and not string.match(file.name, ".sav") 
-                    and not string.match(file.name, ".srm") 
-                    and not string.match(file.name, ".mpk") 
-                    and not string.match(file.name, ".eep") 
-                    and not string.match(file.name, ".st0") 
-                    and not string.match(file.name, ".sta") 
-                    and not string.match(file.name, ".sr0") 
-                    and not string.match(file.name, ".ss0")
+                    and not string.match(file.name, "%.sav") 
+                    and not string.match(file.name, "%.srm") 
+                    and not string.match(file.name, "%.mpk") 
+                    and not string.match(file.name, "%.eep") 
+                    and not string.match(file.name, "%.st0") 
+                    and not string.match(file.name, "%.sta") 
+                    and not string.match(file.name, "%.sr0") 
+                    and not string.match(file.name, "%.ss0")
                     and not string.match(file.name, "%._") then
 
                         -- check if game is in the favorites list
@@ -9167,7 +9167,7 @@ while true do
                     game_size = "0Kb"
                 end
             else
-                if string.find(filename, ".cue") or string.find(filename, ".gdi") then
+                if string.find(filename, "%.cue") or string.find(filename, "%.gdi") then
                     -- Get game directory by trimming filename from gamepath
                     filename_len = string.len (filename)
                     game_path_len = string.len (appdir)
