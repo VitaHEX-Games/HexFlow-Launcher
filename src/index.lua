@@ -2810,6 +2810,7 @@ function listDirectory(dir)
             for i, file in pairs(files_PSP) do
             local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
                 if not file.directory 
+                    and string.match(file.name, "%.") -- has an extenstion
                     and not string.match(file.name, "Thumbs%.db") 
                     and not string.match(file.name, "DS_Store") 
                     and not string.match(file.name, "%.sav") 
@@ -3843,6 +3844,7 @@ function listDirectory(dir)
                 local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
                 -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
                 if not file.directory 
+                    and string.match(file.name, "%.") -- has an extenstion
                     and not string.match(file.name, "Thumbs%.db") 
                     and not string.match(file.name, "DS_Store") 
                     and not string.match(file.name, "%.sav") 
@@ -3950,6 +3952,7 @@ function listDirectory(dir)
                 local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
                 -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
                 if not file.directory and string.match(file.name, (def_filter)) 
+                    and string.match(file.name, "%.") -- has an extenstion
                     and not string.match(file.name, "Thumbs%.db") 
                     and not string.match(file.name, "DS_Store") 
                     and not string.match(file.name, "%.sav") 
@@ -4052,6 +4055,7 @@ function listDirectory(dir)
                     for i, file_subfolder in pairs(file_subfolder) do
                         -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
                         if not file_subfolder.directory and string.match(file_subfolder.name, (def_filter)) 
+                            and string.match(file_subfolder.name, "%.") -- has an extenstion
                             and not string.match(file_subfolder.name, "Thumbs%.db") 
                             and not string.match(file_subfolder.name, "DS_Store") 
                             and not string.match(file_subfolder.name, "%.sav") 
@@ -4162,6 +4166,7 @@ function listDirectory(dir)
             local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
                 -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
             if not file.directory and not string.match(file.name, "neogeo") 
+                and string.match(file.name, "%.") -- has an extenstion
                 and not string.match(file.name, "Thumbs%.db") 
                 and not string.match(file.name, "%.sav") 
                 and not string.match(file.name, "%.srm") 
@@ -4508,6 +4513,7 @@ function ScanAdrenalineDirectoryOnly()
             for i, file in pairs(files_PSP) do
             local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
                 if not file.directory 
+                    and string.match(file.name, "%.") -- has an extenstion
                     and not string.match(file.name, "Thumbs%.db") 
                     and not string.match(file.name, "DS_Store") 
                     and not string.match(file.name, "%.sav") 
