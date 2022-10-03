@@ -631,6 +631,7 @@ local setting_icon_about = Graphics.loadImage("app0:/DATA/setting-icon-about.png
 local file_browser_folder_open = Graphics.loadImage("app0:/DATA/file-browser-folder-open.png")
 local file_browser_folder_closed = Graphics.loadImage("app0:/DATA/file-browser-folder-closed.png")
 local file_browser_file = Graphics.loadImage("app0:/DATA/file-browser-file.png")
+footer_gradient = Graphics.loadImage("app0:/DATA/footer_gradient.png")
 
 
 -- Start of ROM Browser setup
@@ -1662,6 +1663,7 @@ function FreeMemory()
     Graphics.freeImage(file_browser_folder_open)
     Graphics.freeImage(file_browser_folder_closed)
     Graphics.freeImage(file_browser_file)
+    Graphics.freeImage(footer_gradient)
 end
 
 
@@ -8961,18 +8963,6 @@ while true do
         label2 = Font.getTextWidth(fnt20, lang_lines.Details)
         label3 = Font.getTextWidth(fnt20, lang_lines.Category)
         label4 = Font.getTextWidth(fnt20, lang_lines.View)
-
-        Graphics.drawImage(900-label1, 510, btnX)
-        Font.print(fnt20, 900+28-label1, 508, lang_lines.Launch, white)--Launch
-
-        Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnT)
-        Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Details, white)--Details
-
-        Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnS)
-        Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Category, white)--Category
-
-        Graphics.drawImage(900-(btnMargin * 6)-label1-label2-label3-label4, 510, btnO)
-        Font.print(fnt20, 900+28-(btnMargin * 6)-label1-label2-label3-label4, 508, lang_lines.View, white)--View
         
         if showCat == 1 then Font.print(fnt22, 32, 34, lang_lines.PS_Vita, white)
         elseif showCat == 2 then Font.print(fnt22, 32, 34, lang_lines.Homebrews, white)
@@ -9026,8 +9016,27 @@ while true do
             Graphics.fillRect(0, 960, 424, 496, black)-- black footer bottom
             PrintCentered(fnt25, 480, 430, app_title, white, 25)-- Draw title
         else
-            Font.print(fnt22, 24, 508, app_title, white)
+            Graphics.fillRect(0, 960, 496, 544, themeCol)-- footer bottom
+            
+            -- Add gradient to mask out long names so they don't crash into the footer controls 
+            Font.print(fnt22, 24, 506, app_title, white)
+            Graphics.drawImage(900-(btnMargin * 8)-label1-label2-label3-label4, 496, footer_gradient, themeCol)
+            Graphics.fillRect(900-(btnMargin * 8)-label1-label2-label3-label4+48, 960, 496, 544, themeCol)
         end
+
+        
+
+        Graphics.drawImage(900-label1, 510, btnX)
+        Font.print(fnt20, 900+28-label1, 508, lang_lines.Launch, white)--Launch
+
+        Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnT)
+        Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Details, white)--Details
+
+        Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnS)
+        Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Category, white)--Category
+
+        Graphics.drawImage(900-(btnMargin * 6)-label1-label2-label3-label4, 510, btnO)
+        Font.print(fnt20, 900+28-(btnMargin * 6)-label1-label2-label3-label4, 508, lang_lines.View, white)--View
         
         -- Draw Covers
         base_x = 0
