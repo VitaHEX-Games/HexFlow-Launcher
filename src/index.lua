@@ -62,6 +62,8 @@ romDir_Default =
 ["ZX_Spectrum"] = "ux0:/data/RetroFlow/ROMS/Sinclair - ZX Spectrum",
 ["Neo_Geo"] = "ux0:/data/RetroFlow/ROMS/SNK - Neo Geo - FBA 2012",
 ["Neo_Geo_Pocket_Color"] = "ux0:/data/RetroFlow/ROMS/SNK - Neo Geo Pocket Color",
+["PlayStation"] = "ux0:/data/RetroFlow/ROMS/Sony - PlayStation - RetroArch",
+
 }
 
 -- Create directory: Main
@@ -93,6 +95,10 @@ if System.doesFileExist("ux0:/data/RetroFlow/rom_directories.lua") then
 else
     romUserDir = {}
     romUserDir = romDir_Default
+end
+
+if romUserDir.PlayStation == nil then
+    romUserDir.PlayStation = "ux0:/data/RetroFlow/ROMS/Sony - PlayStation - RetroArch"
 end
 
 SystemsToScan =
@@ -138,7 +144,7 @@ SystemsToScan =
         ["apptype"] = 3,
         ["table"] = "psx_table",
         ["user_db_file"] = "db_psx.lua",
-        -- ["romFolder"] = "",
+        ["romFolder"] = romUserDir.PlayStation,
         ["localCoverPath"] = covDir .. "Sony - PlayStation" .. "/",
         ["localSnapPath"] = snapDir .. "Sony - PlayStation" .. "/",
         ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/PS1/",
@@ -792,6 +798,7 @@ MAME_2003_PLUS = "app0:/mame2003_plus_libretro.self",
 MAME_2000 = "app0:/mame2000_libretro.self",
 NEOGEO = "app0:/fbalpha2012_neogeo_libretro.self",
 NGPC = "app0:/mednafen_ngp_libretro.self",
+PS1 = "app0:/pcsx_rearmed_libretro.self",
 }
 
 -- Launcher App Directory
@@ -3836,6 +3843,406 @@ function listDirectory(dir)
         scan_PS1_game_folder (adrenaline_PSP_GAME_uma0, "psx_uma0.lua")
     end
 
+    function scan_Rom_PS1_Eboot (def_ps1_rom_location, def_user_db_file)
+        if  System.doesDirExist(def_ps1_rom_location) then
+
+            files_PSX = System.listDirectory(def_ps1_rom_location)
+
+            for i, file in pairs(files_PSX) do
+            local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
+                if file.directory and System.doesFileExist(def_ps1_rom_location .. "/" .. file.name .. "/EBOOT.PBP") then
+
+                    -- check if game is in the favorites list
+                    if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                        if string.find(strFav, file.name,1,true) ~= nil then
+                            file.favourite = true
+                        else
+                            file.favourite = false
+                        end
+                    end
+
+                    if not string.match(file.name, "NPEG")
+                    and not string.match(file.name, "NPEH")
+                    and not string.match(file.name, "UCES")
+                    and not string.match(file.name, "ULES")
+                    and not string.match(file.name, "NPUG")
+                    and not string.match(file.name, "NPUH")
+                    and not string.match(file.name, "UCUS")
+                    and not string.match(file.name, "ULUS")
+                    and not string.match(file.name, "NPJG")
+                    and not string.match(file.name, "NPJH")
+                    and not string.match(file.name, "NPHG")
+                    and not string.match(file.name, "NPHH")
+                    and not string.match(file.name, "UCAS") then
+
+                        -- file.launch_argument = ("PATH=ms0:/PSP/GAME/" .. file.name .. "/EBOOT.PBP")
+                        file.game_path = (def_ps1_rom_location .. "/" .. file.name .. "/EBOOT.PBP")
+
+                        romname_withExtension = file.name
+
+                        romname_noExtension = {}
+                        romname_noExtension = file.name
+
+                        -- LOOKUP TITLE ID: Get game name based on titleID, search saved table of data, or sql table of data if titleID not found
+
+                        -- Load previous matches
+                        if System.doesFileExist(user_DB_Folder .. def_user_db_file) then
+                            database_rename_PSX = user_DB_Folder .. def_user_db_file
+                            psxdb = dofile(database_rename_PSX)
+                        else
+                            psxdb = {}
+                        end
+
+                        -- Check if scanned titleID is a saved match
+                        psx_search = psxdb[romname_noExtension]
+
+                        -- If no
+                        if psx_search == nil then
+
+                            -- Load the full sql database to find the new titleID
+
+                            if System.doesFileExist(cur_dir .. "/DATABASES/psx.db") then
+                                db = Database.open(cur_dir .. "/DATABASES/psx.db")
+
+                                sql_db_search_mame = "\"" .. romname_noExtension .. "\""
+                                search_term = "SELECT title FROM games where filename is "  .. sql_db_search_mame
+                                sql_db_search_result = Database.execQuery(db, search_term)
+
+                                if next(sql_db_search_result) == nil then
+                                    -- Not found; use the folder name without adding a game name
+                                    title = romname_noExtension
+                                else
+                                    -- Found; use the game name from the full database
+                                    title = sql_db_search_result[1].title
+                                end
+                                Database.close(db)
+
+                            else
+                            end
+
+                        -- If found; use the game name from the saved match
+                        else
+                            title = psxdb[romname_noExtension].name
+                        end
+
+                        romname_noRegion_noExtension = {}
+                        romname_noRegion_noExtension = title:gsub(" %(", "%("):gsub('%b()', ''):gsub(" %[", "%["):gsub('%b[]', '')
+
+                        -- Check if name contains parenthesis, if yes strip out to show as version
+                        if string.find(title, "%(") and string.find(title, "%)") then
+                            -- Remove all text except for within "()"
+                            romname_region_initial = {}
+                            romname_region_initial = title:match("%((.+)%)")
+
+                            -- Tidy up remainder when more than one set of parenthesis used, replace  ") (" with ", "
+                            romname_region = {}
+                            romname_region = romname_region_initial:gsub("%) %(", ', ')
+                        -- If no parenthesis, then add blank to prevent nil error
+                        else
+                            romname_region = " "
+                        end
+
+                        info = romname_noRegion_noExtension
+                        app_title = romname_noRegion_noExtension
+                        
+                        file.filename = file.name
+                        file.name = romname_noExtension
+                        file.title = romname_noRegion_noExtension
+                        file.name_online = tostring(file.name)
+                        file.version = romname_region
+                        file.name_title_search = title
+                        file.apptitle = romname_noRegion_noExtension
+                        file.date_played = 0
+                        file.app_type=3
+                        file.app_type_default=3
+                        file.directory = false -- fix for recently played
+
+                        -- Check for renamed game names
+                        if #renamed_games_table ~= nil then
+                            local key = find_game_table_pos_key(renamed_games_table, file.name)
+                            if key ~= nil then
+                              -- Yes - Find in files table
+                              file.title = renamed_games_table[key].title
+                              file.apptitle = renamed_games_table[key].title
+                            else
+                              -- No
+                            end
+                        else
+                        end
+
+                        table.insert(psx_table, file)
+                        table.insert(folders_table, file)
+
+                        custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
+                        custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
+
+                        file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
+                        file.cover_path_local = SystemsToScan[4].localCoverPath
+                        file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
+                        file.snap_path_local = SystemsToScan[4].localSnapPath
+                        
+                        if custom_path and System.doesFileExist(custom_path) then
+                            img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app name
+                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                            img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
+                        else
+                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
+                                img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                            else
+                                img_path = "app0:/DATA/noimg.png" --blank grey
+                            end
+                        end
+
+                        table.insert(files_table, count_of_systems, file.app_type) 
+                        table.insert(files_table, count_of_systems, file.name)
+                        table.insert(files_table, count_of_systems, file.title)
+                        table.insert(files_table, count_of_systems, file.name_online)
+                        table.insert(files_table, count_of_systems, file.version)
+                        table.insert(files_table, count_of_systems, file.name_title_search)
+
+                        --add blank icon to all
+                        file.icon = imgCoverTmp
+                        file.icon_path = img_path
+                        
+                        table.insert(files_table, count_of_systems, file.icon)                     
+                        table.insert(files_table, count_of_systems, file.apptitle)
+
+                    else
+                    end
+
+                    
+                end
+            end
+
+            -- LOOKUP TITLE ID: Delete old file and save new list of matches
+            if not System.doesFileExist(user_DB_Folder .. def_user_db_file) then
+                CreateUserTitleTable_PSX(def_user_db_file)
+            else
+                System.deleteFile(user_DB_Folder .. def_user_db_file)
+                CreateUserTitleTable_PSX(def_user_db_file)
+            end
+
+        end
+    end
+
+    function Scan_Rom_PS1(def, def_table_name)
+
+        if System.doesDirExist(SystemsToScan[(def)].romFolder) then
+
+            files = System.listDirectory((SystemsToScan[(def)].romFolder))
+            for i, file in pairs(files) do
+                local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
+                -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+                if not file.directory 
+                    and string.match(file.name, "%.cue")
+                    or string.match(file.name, "%.img")
+                    or string.match(file.name, "%.mdf")
+                    or string.match(file.name, "%.toc")
+                    or string.match(file.name, "%.cbn")
+                    or string.match(file.name, "%.m3u")
+                    or string.match(file.name, "%.ccd")
+                    -- and string.match(file.name, "%.") -- has an extenstion 
+                    and not string.match(file.name, "Thumbs%.db") 
+                    and not string.match(file.name, "DS_Store") 
+                    and not string.match(file.name, "%.sav") 
+                    and not string.match(file.name, "%.srm") 
+                    and not string.match(file.name, "%.mpk") 
+                    and not string.match(file.name, "%.eep") 
+                    and not string.match(file.name, "%.st0") 
+                    and not string.match(file.name, "%.sta") 
+                    and not string.match(file.name, "%.sr0") 
+                    and not string.match(file.name, "%.ss0") 
+                    and not string.match(file.name, "%._") then
+
+                    -- check if game is in the favorites list
+                    if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                        if string.find(strFav, file.name,1,true) ~= nil then
+                            file.favourite = true
+                        else
+                            file.favourite = false
+                        end
+                    end
+
+                    file.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name)
+
+                    romname_withExtension = file.name
+                    cleanRomNames()
+                    info = romname_noRegion_noExtension
+                    app_title = romname_noExtension
+                    
+                    
+                    --table.insert(games_table, file)
+                
+                    file.filename = file.name
+                    file.name = romname_noExtension
+                    file.title = romname_noRegion_noExtension
+                    file.name_online = romname_url_encoded
+                    file.version = romname_region
+                    file.apptitle = romname_noRegion_noExtension
+                    file.date_played = 0
+                    file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
+                    file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+                    file.app_type = 3
+                    file.app_type_default = 3
+
+                    -- Check for renamed game names
+                    if #renamed_games_table ~= nil then
+                        local key = find_game_table_pos_key(renamed_games_table, file.name)
+                        if key ~= nil then
+                          -- Yes - Find in files table
+                          file.title = renamed_games_table[key].title
+                          file.apptitle = renamed_games_table[key].title
+                        else
+                          -- No
+                        end
+                    else
+                    end
+
+                    custom_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png"
+                    custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png"
+
+                    if custom_path and System.doesFileExist(custom_path) then
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
+                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                        img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
+                    else
+                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                            img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                        else
+                            img_path = "app0:/DATA/noimg.png" --blank grey
+                        end
+                    end
+
+                    table.insert(folders_table, file)
+                    table.insert((def_table_name), file)
+
+                    table.insert(files_table, count_of_systems, file.app_type) 
+                    table.insert(files_table, count_of_systems, file.name)
+                    table.insert(files_table, count_of_systems, file.title)
+                    table.insert(files_table, count_of_systems, file.name_online)
+                    table.insert(files_table, count_of_systems, file.version)
+
+                    file.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
+                    file.cover_path_local = (SystemsToScan[(def)].localCoverPath)
+
+                    --add blank icon to all
+                    file.icon = imgCoverTmp
+                    file.icon_path = img_path
+                    
+                    table.insert(files_table, count_of_systems, file.icon) 
+                    table.insert(files_table, count_of_systems, file.apptitle) 
+
+                end
+
+
+                -- Scan Sub Folders
+                if file.directory then
+                    file_subfolder = System.listDirectory((SystemsToScan[(def)].romFolder .. "/" .. file.name))
+                    for i, file_subfolder in pairs(file_subfolder) do
+                        -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+                        if not file_subfolder.directory 
+                            and string.match(file_subfolder.name, "%.cue")
+                            or string.match(file_subfolder.name, "%.img")
+                            or string.match(file_subfolder.name, "%.mdf")
+                            or string.match(file_subfolder.name, "%.toc")
+                            or string.match(file_subfolder.name, "%.cbn")
+                            or string.match(file_subfolder.name, "%.m3u")
+                            or string.match(file_subfolder.name, "%.ccd")
+                            -- and string.match(file_subfolder.name, "%.") -- has an extenstion
+                            and not string.match(file_subfolder.name, "Thumbs%.db") 
+                            and not string.match(file_subfolder.name, "DS_Store") 
+                            and not string.match(file_subfolder.name, "%.sav") 
+                            and not string.match(file_subfolder.name, "%.srm") 
+                            and not string.match(file_subfolder.name, "%.mpk") 
+                            and not string.match(file_subfolder.name, "%.eep") 
+                            and not string.match(file_subfolder.name, "%.st0") 
+                            and not string.match(file_subfolder.name, "%.sta") 
+                            and not string.match(file_subfolder.name, "%.sr0") 
+                            and not string.match(file_subfolder.name, "%.ss0") 
+                            and not string.match(file_subfolder.name, "%._") then
+
+                            -- check if game is in the favorites list
+                            if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                                if string.find(strFav, file_subfolder.name,1,true) ~= nil then
+                                    file_subfolder.favourite = true
+                                else
+                                    file_subfolder.favourite = false
+                                end
+                            end
+
+                            file_subfolder.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name .. "/" .. file_subfolder.name)
+
+                            romname_withExtension = file_subfolder.name
+                            cleanRomNames()
+                            info = romname_noRegion_noExtension
+                            app_title = romname_noExtension
+                            
+
+                            file_subfolder.filename = file_subfolder.name
+                            file_subfolder.name = romname_noExtension
+                            file_subfolder.title = romname_noRegion_noExtension
+                            file_subfolder.name_online = romname_url_encoded
+                            file_subfolder.version = romname_region
+                            file_subfolder.apptitle = romname_noRegion_noExtension
+                            file_subfolder.date_played = 0
+                            file_subfolder.snap_path_local = (SystemsToScan[(def)].localSnapPath)
+                            file_subfolder.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+                            file_subfolder.app_type = 3
+                            file_subfolder.app_type_default = 3
+
+                            -- Check for renamed game names
+                            if #renamed_games_table ~= nil then
+                                local key = find_game_table_pos_key(renamed_games_table, file_subfolder.name)
+                                if key ~= nil then
+                                  -- Yes - Find in files table
+                                  file_subfolder.title = renamed_games_table[key].title
+                                  file_subfolder.apptitle = renamed_games_table[key].title
+                                else
+                                  -- No
+                                end
+                            else
+                            end
+
+                            custom_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.title .. ".png"
+                            custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png"
+
+                            if custom_path and System.doesFileExist(custom_path) then
+                                img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.title .. ".png" --custom cover by app name
+                            elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
+                            else
+                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                                    img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                else
+                                    img_path = "app0:/DATA/noimg.png" --blank grey
+                                end
+                            end
+
+                            table.insert(folders_table, file_subfolder)
+                            table.insert((def_table_name), file_subfolder)
+
+                            table.insert(files_table, count_of_systems, file_subfolder.app_type) 
+                            table.insert(files_table, count_of_systems, file_subfolder.name)
+                            table.insert(files_table, count_of_systems, file_subfolder.title)
+                            table.insert(files_table, count_of_systems, file_subfolder.name_online)
+                            table.insert(files_table, count_of_systems, file_subfolder.version)
+
+                            --add blank icon to all
+                            file_subfolder.icon = imgCoverTmp
+                            file_subfolder.icon_path = img_path
+                            
+                            table.insert(files_table, count_of_systems, file_subfolder.icon) 
+                            table.insert(files_table, count_of_systems, file_subfolder.apptitle) 
+
+                        end
+                    end
+                end
+
+            end
+        
+        else
+        end
+    end
 
     function Scan_Rom_Simple(def, def_table_name)
 
@@ -4035,8 +4442,6 @@ function listDirectory(dir)
                     table.insert(files_table, count_of_systems, file.name_online)
                     table.insert(files_table, count_of_systems, file.version)
 
-                    file.app_type=((def))
-                    file.app_type_default=((def))
                     file.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
                     file.cover_path_local = (SystemsToScan[(def)].localCoverPath)
 
@@ -4097,7 +4502,7 @@ function listDirectory(dir)
                             file_subfolder.snap_path_local = (SystemsToScan[(def)].localSnapPath)
                             file_subfolder.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
                             file_subfolder.app_type=((def))
-                            file.app_type_default=((def))
+                            file_subfolder.app_type_default=((def))
 
                             -- Check for renamed game names
                             if #renamed_games_table ~= nil then
@@ -4136,7 +4541,6 @@ function listDirectory(dir)
                             table.insert(files_table, count_of_systems, file_subfolder.name_online)
                             table.insert(files_table, count_of_systems, file_subfolder.version)
 
-                            file_subfolder.app_type=((def))
                             file_subfolder.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
                             file_subfolder.cover_path_local = (SystemsToScan[(def)].localCoverPath)
 
@@ -4363,6 +4767,8 @@ function listDirectory(dir)
     
     -- SCAN ROMS
     -- Scan_Type        (def,  def_table_name)
+    scan_Rom_PS1_Eboot  (SystemsToScan[4].romFolder, "psx.lua") -- Retroarch rom folder
+    Scan_Rom_PS1        (4, psx_table)
     Scan_Rom_Simple     (5, n64_table)
     Scan_Rom_Simple     (6, snes_table)
     Scan_Rom_Simple     (7, nes_table)
@@ -5845,7 +6251,7 @@ function GetInfoSelected()
         if #games_table > 0 then
             info = games_table[p].name
 
-            if string.match (games_table[p].game_path, "pspemu") then
+            if string.match (games_table[p].game_path, "pspemu") or games_table[p].app_type_default == 3 then
                 icon_path = "ux0:/app/RETROFLOW/DATA/icon_psv.png"
             else
                 icon_path = "ur0:/appmeta/" .. games_table[p].name .. "/icon0.png"
@@ -5860,6 +6266,7 @@ function GetInfoSelected()
             folder = games_table[p].directory
             filename = games_table[p].filename
             favourite_flag = games_table[p].favourite
+            game_path = games_table[p].game_path
 
             app_titleid = games_table[p].name
             app_version = games_table[p].version
@@ -5886,6 +6293,7 @@ function GetInfoSelected()
             folder = homebrews_table[p].directory
             filename = homebrews_table[p].filename
             favourite_flag = homebrews_table[p].favourite
+            game_path = homebrews_table[p].game_path
 
             app_titleid = homebrews_table[p].name
             app_version = homebrews_table[p].version
@@ -5904,6 +6312,7 @@ function GetInfoSelected()
             folder = psp_table[p].directory
             filename = psp_table[p].filename
             favourite_flag = psp_table[p].favourite
+            game_path = psp_table[p].game_path
 
             app_titleid = psp_table[p].name
             app_version = psp_table[p].version
@@ -5921,6 +6330,7 @@ function GetInfoSelected()
             folder = psx_table[p].directory
             filename = psx_table[p].filename
             favourite_flag = psx_table[p].favourite
+            game_path = psx_table[p].game_path
 
             app_titleid = psx_table[p].name
             app_version = psx_table[p].version
@@ -5938,6 +6348,7 @@ function GetInfoSelected()
             folder = n64_table[p].directory
             filename = n64_table[p].filename
             favourite_flag = n64_table[p].favourite
+            game_path = n64_table[p].game_path
 
             app_titleid = n64_table[p].name
             app_version = n64_table[p].version
@@ -5955,6 +6366,7 @@ function GetInfoSelected()
             folder = snes_table[p].directory
             filename = snes_table[p].filename
             favourite_flag = snes_table[p].favourite
+            game_path = snes_table[p].game_path
 
             app_titleid = snes_table[p].name
             app_version = snes_table[p].version
@@ -5972,6 +6384,7 @@ function GetInfoSelected()
             folder = nes_table[p].directory
             filename = nes_table[p].filename
             favourite_flag = nes_table[p].favourite
+            game_path = nes_table[p].game_path
 
             app_titleid = nes_table[p].name
             app_version = nes_table[p].version
@@ -5989,6 +6402,7 @@ function GetInfoSelected()
             folder = gba_table[p].directory
             filename = gba_table[p].filename
             favourite_flag = gba_table[p].favourite
+            game_path = gba_table[p].game_path
 
             app_titleid = gba_table[p].name
             app_version = gba_table[p].version
@@ -6006,6 +6420,7 @@ function GetInfoSelected()
             folder = gbc_table[p].directory
             filename = gbc_table[p].filename
             favourite_flag = gbc_table[p].favourite
+            game_path = gbc_table[p].game_path
 
             app_titleid = gbc_table[p].name
             app_version = gbc_table[p].version
@@ -6023,6 +6438,7 @@ function GetInfoSelected()
             folder = gb_table[p].directory
             filename = gb_table[p].filename
             favourite_flag = gb_table[p].favourite
+            game_path = gb_table[p].game_path
 
             app_titleid = gb_table[p].name
             app_version = gb_table[p].version
@@ -6048,6 +6464,7 @@ function GetInfoSelected()
             folder = dreamcast_table[p].directory
             filename = dreamcast_table[p].filename
             favourite_flag = dreamcast_table[p].favourite
+            game_path = dreamcast_table[p].game_path
 
             app_titleid = dreamcast_table[p].name
             app_version = dreamcast_table[p].version
@@ -6065,6 +6482,7 @@ function GetInfoSelected()
             folder = sega_cd_table[p].directory
             filename = sega_cd_table[p].filename
             favourite_flag = sega_cd_table[p].favourite
+            game_path = sega_cd_table[p].game_path
 
             app_titleid = sega_cd_table[p].name
             app_version = sega_cd_table[p].version
@@ -6082,6 +6500,7 @@ function GetInfoSelected()
             folder = s32x_table[p].directory
             filename = s32x_table[p].filename
             favourite_flag = s32x_table[p].favourite
+            game_path = s32x_table[p].game_path
 
             app_titleid = s32x_table[p].name
             app_version = s32x_table[p].version
@@ -6103,6 +6522,7 @@ function GetInfoSelected()
             folder = md_table[p].directory
             filename = md_table[p].filename
             favourite_flag = md_table[p].favourite
+            game_path = md_table[p].game_path
 
             app_titleid = md_table[p].name
             app_version = md_table[p].version
@@ -6120,6 +6540,7 @@ function GetInfoSelected()
             folder = sms_table[p].directory
             filename = sms_table[p].filename
             favourite_flag = sms_table[p].favourite
+            game_path = sms_table[p].game_path
 
             app_titleid = sms_table[p].name
             app_version = sms_table[p].version
@@ -6137,6 +6558,7 @@ function GetInfoSelected()
             folder = gg_table[p].directory
             filename = gg_table[p].filename
             favourite_flag = gg_table[p].favourite
+            game_path = gg_table[p].game_path
 
             app_titleid = gg_table[p].name
             app_version = gg_table[p].version
@@ -6154,6 +6576,7 @@ function GetInfoSelected()
             folder = tg16_table[p].directory
             filename = tg16_table[p].filename
             favourite_flag = tg16_table[p].favourite
+            game_path = tg16_table[p].game_path
 
             app_titleid = tg16_table[p].name
             app_version = tg16_table[p].version
@@ -6171,6 +6594,7 @@ function GetInfoSelected()
             folder = tgcd_table[p].directory
             filename = tgcd_table[p].filename
             favourite_flag = tgcd_table[p].favourite
+            game_path = tgcd_table[p].game_path
 
             app_titleid = tgcd_table[p].name
             app_version = tgcd_table[p].version
@@ -6188,6 +6612,7 @@ function GetInfoSelected()
             folder = pce_table[p].directory
             filename = pce_table[p].filename
             favourite_flag = pce_table[p].favourite
+            game_path = pce_table[p].game_path
 
             app_titleid = pce_table[p].name
             app_version = pce_table[p].version
@@ -6205,6 +6630,7 @@ function GetInfoSelected()
             folder = pcecd_table[p].directory
             filename = pcecd_table[p].filename
             favourite_flag = pcecd_table[p].favourite
+            game_path = pcecd_table[p].game_path
 
             app_titleid = pcecd_table[p].name
             app_version = pcecd_table[p].version
@@ -6222,6 +6648,7 @@ function GetInfoSelected()
             folder = amiga_table[p].directory
             filename = amiga_table[p].filename
             favourite_flag = amiga_table[p].favourite
+            game_path = amiga_table[p].game_path
 
             app_titleid = amiga_table[p].name
             app_version = amiga_table[p].version
@@ -6239,6 +6666,7 @@ function GetInfoSelected()
             folder = c64_table[p].directory
             filename = c64_table[p].filename
             favourite_flag = c64_table[p].favourite
+            game_path = c64_table[p].game_path
 
             app_titleid = c64_table[p].name
             app_version = c64_table[p].version
@@ -6256,6 +6684,7 @@ function GetInfoSelected()
             folder = wswan_col_table[p].directory
             filename = wswan_col_table[p].filename
             favourite_flag = wswan_col_table[p].favourite
+            game_path = wswan_col_table[p].game_path
 
             app_titleid = wswan_col_table[p].name
             app_version = wswan_col_table[p].version
@@ -6273,6 +6702,7 @@ function GetInfoSelected()
             folder = wswan_table[p].directory
             filename = wswan_table[p].filename
             favourite_flag = wswan_table[p].favourite
+            game_path = wswan_table[p].game_path
 
             app_titleid = wswan_table[p].name
             app_version = wswan_table[p].version
@@ -6290,6 +6720,7 @@ function GetInfoSelected()
             folder = msx2_table[p].directory
             filename = msx2_table[p].filename
             favourite_flag = msx2_table[p].favourite
+            game_path = msx2_table[p].game_path
 
             app_titleid = msx2_table[p].name
             app_version = msx2_table[p].version
@@ -6307,6 +6738,7 @@ function GetInfoSelected()
             folder = msx1_table[p].directory
             filename = msx1_table[p].filename
             favourite_flag = msx1_table[p].favourite
+            game_path = msx1_table[p].game_path
 
             app_titleid = msx1_table[p].name
             app_version = msx1_table[p].version
@@ -6324,6 +6756,7 @@ function GetInfoSelected()
             folder = zxs_table[p].directory
             filename = zxs_table[p].filename
             favourite_flag = zxs_table[p].favourite
+            game_path = zxs_table[p].game_path
 
             app_titleid = zxs_table[p].name
             app_version = zxs_table[p].version
@@ -6341,6 +6774,7 @@ function GetInfoSelected()
             folder = atari_7800_table[p].directory
             filename = atari_7800_table[p].filename
             favourite_flag = atari_7800_table[p].favourite
+            game_path = atari_7800_table[p].game_path
 
             app_titleid = atari_7800_table[p].name
             app_version = atari_7800_table[p].version
@@ -6358,6 +6792,7 @@ function GetInfoSelected()
             folder = atari_5200_table[p].directory
             filename = atari_5200_table[p].filename
             favourite_flag = atari_5200_table[p].favourite
+            game_path = atari_5200_table[p].game_path
 
             app_titleid = atari_5200_table[p].name
             app_version = atari_5200_table[p].version
@@ -6375,6 +6810,7 @@ function GetInfoSelected()
             folder = atari_2600_table[p].directory
             filename = atari_2600_table[p].filename
             favourite_flag = atari_2600_table[p].favourite
+            game_path = atari_2600_table[p].game_path
 
             app_titleid = atari_2600_table[p].name
             app_version = atari_2600_table[p].version
@@ -6392,6 +6828,7 @@ function GetInfoSelected()
             folder = atari_lynx_table[p].directory
             filename = atari_lynx_table[p].filename
             favourite_flag = atari_lynx_table[p].favourite
+            game_path = atari_lynx_table[p].game_path
 
             app_titleid = atari_lynx_table[p].name
             app_version = atari_lynx_table[p].version
@@ -6409,6 +6846,7 @@ function GetInfoSelected()
             folder = colecovision_table[p].directory
             filename = colecovision_table[p].filename
             favourite_flag = colecovision_table[p].favourite
+            game_path = colecovision_table[p].game_path
 
             app_titleid = colecovision_table[p].name
             app_version = colecovision_table[p].version
@@ -6426,6 +6864,7 @@ function GetInfoSelected()
             folder = vectrex_table[p].directory
             filename = vectrex_table[p].filename
             favourite_flag = vectrex_table[p].favourite
+            game_path = vectrex_table[p].game_path
 
             app_titleid = vectrex_table[p].name
             app_version = vectrex_table[p].version
@@ -6443,6 +6882,7 @@ function GetInfoSelected()
             folder = fba_table[p].directory
             filename = fba_table[p].filename
             favourite_flag = fba_table[p].favourite
+            game_path = fba_table[p].game_path
 
             app_titleid = fba_table[p].name
             app_version = fba_table[p].version
@@ -6460,6 +6900,7 @@ function GetInfoSelected()
             folder = mame_2003_plus_table[p].directory
             filename = mame_2003_plus_table[p].filename
             favourite_flag = mame_2003_plus_table[p].favourite
+            game_path = mame_2003_plus_table[p].game_path
 
             app_titleid = mame_2003_plus_table[p].name
             app_version = mame_2003_plus_table[p].version
@@ -6477,6 +6918,7 @@ function GetInfoSelected()
             folder = mame_2000_table[p].directory
             filename = mame_2000_table[p].filename
             favourite_flag = mame_2000_table[p].favourite
+            game_path = mame_2000_table[p].game_path
 
             app_titleid = mame_2000_table[p].name
             app_version = mame_2000_table[p].version
@@ -6494,6 +6936,7 @@ function GetInfoSelected()
             folder = neogeo_table[p].directory
             filename = neogeo_table[p].filename
             favourite_flag = neogeo_table[p].favourite
+            game_path = neogeo_table[p].game_path
 
             app_titleid = neogeo_table[p].name
             app_version = neogeo_table[p].version
@@ -6511,6 +6954,7 @@ function GetInfoSelected()
             folder = ngpc_table[p].directory
             filename = ngpc_table[p].filename
             favourite_flag = ngpc_table[p].favourite
+            game_path = ngpc_table[p].game_path
 
             app_titleid = ngpc_table[p].name
             app_version = ngpc_table[p].version
@@ -6548,6 +6992,7 @@ function GetInfoSelected()
             folder = fav_count[p].directory
             filename = fav_count[p].filename
             favourite_flag = fav_count[p].favourite
+            game_path = fav_count[p].game_path
 
             app_titleid = fav_count[p].name
             app_version = fav_count[p].version
@@ -6671,6 +7116,7 @@ function GetInfoSelected()
             folder = recently_played_table[p].directory
             filename = recently_played_table[p].filename
             favourite_flag = recently_played_table[p].favourite
+            game_path = recently_played_table[p].game_path
 
             app_titleid = recently_played_table[p].name
             app_version = recently_played_table[p].version
@@ -6795,6 +7241,7 @@ function GetInfoSelected()
             folder = search_results_table[p].directory
             filename = search_results_table[p].filename
             favourite_flag = search_results_table[p].favourite
+            game_path = search_results_table[p].game_path
 
             app_titleid = search_results_table[p].name
             app_version = search_results_table[p].version
@@ -6920,6 +7367,7 @@ function GetInfoSelected()
             folder = files_table[p].directory
             filename = files_table[p].filename
             favourite_flag = files_table[p].favourite
+            game_path = files_table[p].game_path
 
             app_titleid = files_table[p].name
             app_version = files_table[p].version
@@ -8954,8 +9402,8 @@ while true do
         Font.print(fnt20, 726, 34, string.format("%02d:%02d", h, m), white)-- Draw time
         life = System.getBatteryPercentage()
         Font.print(fnt20, 830, 34, life .. "%", white)-- Draw battery
-        Graphics.drawImage(888, 41, imgBattery)
-        Graphics.fillRect(891, 891 + (life / 5.2), 45, 53, white)
+        Graphics.drawImage(888, 39, imgBattery)
+        Graphics.fillRect(891, 891 + (life / 5.2), 43, 51, white)
 
         -- Footer buttons and icons
         -- Get text widths for positioning
@@ -9543,8 +9991,13 @@ while true do
         -- 0 Homebrew, 1 vita, 2 psp, 3 psx, 5+ Retro
 
         if apptype == 0 or apptype == 1 or apptype == 2 or apptype == 3 then
-            Font.print(fnt22, 50, 240, tmpapptype .. "\n" .. lang_lines.App_ID_colon .. app_titleid .. "\n" .. lang_lines.Version_colon .. app_version .. "\n" .. lang_lines.Size_colon .. game_size, white)-- Draw info
-            --                                               App ID:                                           Version:                                           Size:
+            if string.match (game_path, "pspemu") or string.match (game_path, "ux0:/app/") then
+                Font.print(fnt22, 50, 240, tmpapptype .. "\n" .. lang_lines.App_ID_colon .. app_titleid .. "\n" .. lang_lines.Version_colon .. app_version .. "\n" .. lang_lines.Size_colon .. game_size, white)-- Draw info
+                --                                               App ID:                                           Version:                                           Size:
+            else
+                Font.print(fnt22, 50, 240, tmpapptype .. "\n" .. lang_lines.Version_colon .. app_version .. "\n" .. lang_lines.Size_colon .. game_size, white)-- Draw info
+                --                                               Version:                                           Size:
+            end
         else
             Font.print(fnt22, 50, 240, tmpapptype .. "\n" .. lang_lines.Version_colon .. app_version .. "\n" .. lang_lines.Size_colon .. game_size, white)-- Draw info
             --                                               Version:                                           Size:
@@ -9574,18 +10027,26 @@ while true do
             end
         end
 
-        -- Override not shown for retro
+        -- Override not shown for retro & retroarch ps1
         if apptype == 0 or apptype == 1 or apptype == 2 or apptype == 3 then
-            menuItems = 1
+            if string.match (game_path, "pspemu") or string.match (game_path, "ux0:/app/") then
+                menuItems = 1
+            else
+                menuItems = 0
+            end
         else
             menuItems = 0
         end
+
 
         -- 0 Homebrew, 1 Vita, 2 PSP, 3 PSX, 5+ Retro
 
         -- Vita and Homebrew
         -- if folder == true then -- start Disable category override for retro
-        if apptype == 0 or apptype == 1 or apptype == 2 or apptype == 3 then -- start Disable category override for retro
+        if apptype == 0 or apptype == 1 or apptype == 2 or apptype == 3 
+        and string.match (game_path, "pspemu") 
+        or string.match (game_path, "ux0:/app/") then
+             -- start Disable category override for retro
             if menuY==1 then
                 Graphics.fillRect(24, 470, 350 + (menuY * 40), 430 + (menuY * 40), themeCol)-- selection two lines
             else
@@ -11074,54 +11535,58 @@ while true do
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.PC_Engine, white)
                 filebrowser_heading = lang_lines.PC_Engine
             elseif getRomDir == 22 then
+                Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.PlayStation .. " (RetroArch)" ..  "  >", white)
+                Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.PlayStation, white)
+                filebrowser_heading = lang_lines.PlayStation .. " (RetroArch)"
+            elseif getRomDir == 23 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_32X .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_32X, white)
                 filebrowser_heading = lang_lines.Sega_32X
-            elseif getRomDir == 23 then
+            elseif getRomDir == 24 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_CD .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_CD, white)
                 filebrowser_heading = lang_lines.Sega_CD
-            elseif getRomDir == 24 then
+            elseif getRomDir == 25 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_Dreamcast .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_Dreamcast, white)
                 filebrowser_heading = lang_lines.Sega_Dreamcast
-            elseif getRomDir == 25 then
+            elseif getRomDir == 26 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_Game_Gear .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_Game_Gear, white)
                 filebrowser_heading = lang_lines.Sega_Game_Gear
-            elseif getRomDir == 26 then
+            elseif getRomDir == 27 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_Master_System .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_Master_System, white)
                 filebrowser_heading = lang_lines.Sega_Master_System
-            elseif getRomDir == 27 then
+            elseif getRomDir == 28 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Sega_Mega_Drive .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Sega_Mega_Drive, white)
                 filebrowser_heading = lang_lines.Sega_Mega_Drive
-            elseif getRomDir == 28 then
+            elseif getRomDir == 29 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Super_Nintendo .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Super_Nintendo, white)
                 filebrowser_heading = lang_lines.Super_Nintendo
-            elseif getRomDir == 29 then
+            elseif getRomDir == 30 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.TurboGrafx_16 .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.TurboGrafx_16, white)
                 filebrowser_heading = lang_lines.TurboGrafx_16
-            elseif getRomDir == 30 then
+            elseif getRomDir == 31 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.TurboGrafx_CD .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.TurboGrafx_CD, white)
                 filebrowser_heading = lang_lines.TurboGrafx_CD
-            elseif getRomDir == 31 then
+            elseif getRomDir == 32 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.Vectrex .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.Vectrex, white)
                 filebrowser_heading = lang_lines.Vectrex
-            elseif getRomDir == 32 then
+            elseif getRomDir == 33 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.WonderSwan_Color .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.WonderSwan_Color, white)
                 filebrowser_heading = lang_lines.WonderSwan_Color
-            elseif getRomDir == 33 then
+            elseif getRomDir == 34 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.WonderSwan .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.WonderSwan, white)
                 filebrowser_heading = lang_lines.WonderSwan
-            elseif getRomDir == 34 then
+            elseif getRomDir == 35 then
                 Font.print(fnt22, setting_x, setting_y1, "<  " .. lang_lines.ZX_Spectrum .. "  >", white)
                 Font.print(fnt20, setting_x, setting_y2 + setting_y_smallfont_offset, romUserDir.ZX_Spectrum, white)
                 filebrowser_heading = lang_lines.ZX_Spectrum
@@ -11168,12 +11633,12 @@ while true do
                     if getRomDir > 1 then
                         getRomDir = getRomDir - 1
                     else
-                        getRomDir = 34 -- Update number if add more systems
+                        getRomDir = 35 -- Update number if add more systems
                     end
                 end
             elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
                 if menuY==1 then -- #1 category rom directory selection
-                    if getRomDir < 34 then -- Update number if add more systems
+                    if getRomDir < 35 then -- Update number if add more systems
                         getRomDir = getRomDir + 1
                     else
                         getRomDir=1
@@ -11597,19 +12062,20 @@ while true do
                                     elseif getRomDir == 19 then romUserDir.Nintendo_Entertainment_System = cur_dir_fm
                                     elseif getRomDir == 20 then romUserDir.PC_Engine_CD = cur_dir_fm
                                     elseif getRomDir == 21 then romUserDir.PC_Engine = cur_dir_fm
-                                    elseif getRomDir == 22 then romUserDir.Sega_32X = cur_dir_fm
-                                    elseif getRomDir == 23 then romUserDir.Sega_CD = cur_dir_fm
-                                    elseif getRomDir == 24 then romUserDir.Sega_Dreamcast = cur_dir_fm
-                                    elseif getRomDir == 25 then romUserDir.Sega_Game_Gear = cur_dir_fm
-                                    elseif getRomDir == 26 then romUserDir.Sega_Master_System = cur_dir_fm
-                                    elseif getRomDir == 27 then romUserDir.Sega_Mega_Drive = cur_dir_fm
-                                    elseif getRomDir == 28 then romUserDir.Super_Nintendo = cur_dir_fm
-                                    elseif getRomDir == 29 then romUserDir.TurboGrafx_16 = cur_dir_fm
-                                    elseif getRomDir == 30 then romUserDir.TurboGrafx_CD = cur_dir_fm
-                                    elseif getRomDir == 31 then romUserDir.Vectrex = cur_dir_fm
-                                    elseif getRomDir == 32 then romUserDir.WonderSwan_Color = cur_dir_fm
-                                    elseif getRomDir == 33 then romUserDir.WonderSwan = cur_dir_fm
-                                    elseif getRomDir == 34 then romUserDir.ZX_Spectrum = cur_dir_fm
+                                    elseif getRomDir == 22 then romUserDir.PlayStation = cur_dir_fm
+                                    elseif getRomDir == 23 then romUserDir.Sega_32X = cur_dir_fm
+                                    elseif getRomDir == 24 then romUserDir.Sega_CD = cur_dir_fm
+                                    elseif getRomDir == 25 then romUserDir.Sega_Dreamcast = cur_dir_fm
+                                    elseif getRomDir == 26 then romUserDir.Sega_Game_Gear = cur_dir_fm
+                                    elseif getRomDir == 27 then romUserDir.Sega_Master_System = cur_dir_fm
+                                    elseif getRomDir == 28 then romUserDir.Sega_Mega_Drive = cur_dir_fm
+                                    elseif getRomDir == 29 then romUserDir.Super_Nintendo = cur_dir_fm
+                                    elseif getRomDir == 30 then romUserDir.TurboGrafx_16 = cur_dir_fm
+                                    elseif getRomDir == 31 then romUserDir.TurboGrafx_CD = cur_dir_fm
+                                    elseif getRomDir == 32 then romUserDir.Vectrex = cur_dir_fm
+                                    elseif getRomDir == 33 then romUserDir.WonderSwan_Color = cur_dir_fm
+                                    elseif getRomDir == 34 then romUserDir.WonderSwan = cur_dir_fm
+                                    elseif getRomDir == 35 then romUserDir.ZX_Spectrum = cur_dir_fm
                                     end
 
                                     print_table_rom_dirs(romUserDir)
@@ -11976,37 +12442,63 @@ while true do
 
                     if showCat == 1 then
                         if string.match (games_table[p].game_path, "pspemu") then
+                            -- Launch adrenaline
                             rom_location = tostring(games_table[p].launch_argument)
                             launch_Adrenaline()
                         else
-                            System.launchApp(games_table[p].name)
+                            if games_table[p].app_type_default == 3 then
+                                -- Launch PS1 retroarch
+                                rom_location = (games_table[p].game_path) launch_retroarch(core.PS1)
+                            else
+                                -- Vita app
+                                System.launchApp(games_table[p].name)
+                            end
                         end
 
                     elseif showCat == 2 then
                         if string.match (homebrews_table[p].game_path, "pspemu") then
+                            -- Launch adrenaline
                             rom_location = tostring(homebrews_table[p].launch_argument)
                             launch_Adrenaline()
                         else
-                            System.launchApp(homebrews_table[p].name)
+                            if homebrews_table[p].app_type_default == 3 then
+                                -- Launch PS1 retroarch
+                                rom_location = (homebrews_table[p].game_path) launch_retroarch(core.PS1)
+                            else
+                                -- Vita app
+                                System.launchApp(homebrews_table[p].name)
+                            end
                         end
-
-                        -- launch command for system apps
-                        -- System.executeUri(homebrews_table[p].uri_scheme)
 
                     elseif showCat == 3 then
                         if string.match (psp_table[p].game_path, "pspemu") then
+                            -- Launch adrenaline
                             rom_location = tostring(psp_table[p].launch_argument)
                             launch_Adrenaline()
                         else
-                            System.launchApp(psp_table[p].name)
+                            if psp_table[p].app_type_default == 3 then
+                                -- Launch PS1 retroarch
+                                rom_location = (psp_table[p].game_path) launch_retroarch(core.PS1)
+                            else
+                                -- Vita app
+                                System.launchApp(psp_table[p].name)
+                            end
                         end
 
+                    -- PS1 - Launch adrenaline or retroarch
                     elseif showCat == 4 then
                         if string.match (psx_table[p].game_path, "pspemu") then
+                            -- Launch adrenaline
                             rom_location = tostring(psx_table[p].launch_argument)
                             launch_Adrenaline()
                         else
-                            System.launchApp(psx_table[p].name)
+                            if psx_table[p].app_type_default == 3 then
+                                -- Launch PS1 retroarch
+                                rom_location = (psx_table[p].game_path) launch_retroarch(core.PS1)
+                            else
+                                -- Vita app
+                                System.launchApp(psx_table[p].name)
+                            end
                         end
 
                     -- Start Retro    
@@ -12048,10 +12540,17 @@ while true do
                     elseif showCat == 39 then
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (fav_count[p].game_path, "pspemu") then
+                                -- Launch adrenaline
                                 rom_location = tostring(fav_count[p].launch_argument)
                                 launch_Adrenaline()
                             else
-                                System.launchApp(fav_count[p].name)
+                                if fav_count[p].app_type_default == 3 then
+                                    -- Launch PS1 retroarch
+                                    rom_location = (fav_count[p].game_path) launch_retroarch(core.PS1)
+                                else
+                                    -- Vita app
+                                    System.launchApp(fav_count[p].name)
+                                end
                             end
 
                         -- Start Retro    
@@ -12104,10 +12603,17 @@ while true do
                     elseif showCat == 40 then
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (recently_played_table[p].game_path, "pspemu") then
+                                 -- Launch adrenaline
                                 rom_location = tostring(recently_played_table[p].launch_argument)
                                 launch_Adrenaline()
                             else
-                                System.launchApp(recently_played_table[p].name)
+                                if recently_played_table[p].app_type_default == 3 then
+                                    -- Launch PS1 retroarch
+                                    rom_location = (recently_played_table[p].game_path) launch_retroarch(core.PS1)
+                                else
+                                    -- Vita app
+                                    System.launchApp(recently_played_table[p].name)
+                                end
                             end
 
                         -- Start Retro    
@@ -12161,10 +12667,17 @@ while true do
                     elseif showCat == 41 then
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (search_results_table[p].game_path, "pspemu") then
+                                 -- Launch adrenaline
                                 rom_location = tostring(search_results_table[p].launch_argument)
                                 launch_Adrenaline()
                             else
-                                System.launchApp(search_results_table[p].name)
+                                if search_results_table[p].app_type_default == 3 then
+                                    -- Launch PS1 retroarch
+                                    rom_location = (search_results_table[p].game_path) launch_retroarch(core.PS1)
+                                else
+                                    -- Vita app
+                                    System.launchApp(search_results_table[p].name)
+                                end
                             end
 
                         -- Start Retro    
@@ -12219,10 +12732,17 @@ while true do
 
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (files_table[p].game_path, "pspemu") then
+                                 -- Launch adrenaline
                                 rom_location = tostring(files_table[p].launch_argument)
                                 launch_Adrenaline()
                             else
-                                System.launchApp(files_table[p].name)
+                                if files_table[p].app_type_default == 3 then
+                                    -- Launch PS1 retroarch
+                                    rom_location = (files_table[p].game_path) launch_retroarch(core.PS1)
+                                else
+                                    -- Vita app
+                                    System.launchApp(files_table[p].name)
+                                end
                             end
 
                         -- Start Retro    
