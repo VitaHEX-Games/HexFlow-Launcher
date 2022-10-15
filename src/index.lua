@@ -4227,6 +4227,9 @@ function listDirectory(dir)
                             table.insert(files_table, count_of_systems, file_subfolder.name_online)
                             table.insert(files_table, count_of_systems, file_subfolder.version)
 
+                            file_subfolder.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
+                            file_subfolder.cover_path_local = (SystemsToScan[(def)].localCoverPath)
+
                             --add blank icon to all
                             file_subfolder.icon = imgCoverTmp
                             file_subfolder.icon_path = img_path
