@@ -67,7 +67,7 @@ See the FAQ's section for a guide on [renaming on a mac](https://github.com/jimb
 More information on PSP and Playstation after the FAQ's section.
 
 
-### 3. Check your PS1 and PSP are in the right folders
+### 3. Check your PS1 and PSP are in the right Adrenaline folders
 
 PS1 and PSP games with eboot files should be saved here:
 
@@ -79,6 +79,9 @@ PSP ISO and CSO games should be saved here:
     ux0:pspemu/ISO/
 
 uma0 can also be used.
+
+**Tip:**
+PS1 games can also be launched using RetroArch, helpful for games which don't run well in Adrenaline.
 
 ### 4. Add your retro games to RetroFlow
 
@@ -92,6 +95,8 @@ Once it's finshed loading; close RetroFlow and copy your favourite retro games i
 For PC Engine CD and TurboGrafx-CD RetroFlow will look for '.cue' files for these CD systems. Please make sure all the games are loose with the system's rom folder with .cue files.
 
 For Dreamcast '.gdi' and '.cdi' games are supported.
+
+RetroArch Playstation 1 games use the 'PCSX ReARMed' core, more information on supported extensions here: [https://docs.libretro.com/library/pcsx_rearmed/](https://docs.libretro.com/library/pcsx_rearmed/)
 
 **Option 2 - Use your own  game folders:**
 If you don't want to save your games in the RetroFlow data folder, you can use your own directories.
@@ -202,6 +207,8 @@ RetroFlow uses the ID to match artwork, and tidies the rest of the filename to d
 CSO files are also supported, and should be named as above.
 
 ## Playstation
+
+### PS1 using Adrenaline
 For PSX2PSP, game folder name must match with the GameID. For example:
 
     ux0:pspemu/PSP/GAME/**SLES01234**
@@ -209,7 +216,8 @@ For PSX2PSP, game folder name must match with the GameID. For example:
 Games will need to be in a EBOOT format, see here for information on [how to convert PSX Disc Images to EBOOT for PSP](https://www.cfwaifu.com/psx2psp/).
 RetroFlow also uses the ID to lookup the name of the game.
 
-
+### PS1 using RetroArch
+RetroArch Playstation 1 games use the 'PCSX ReARMed' core, more information on supported extensions and setup see here: [https://docs.libretro.com/library/pcsx_rearmed/](https://docs.libretro.com/library/pcsx_rearmed/)
 
 # Custom Game Covers, Game Backgrounds and Music
 
