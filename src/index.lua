@@ -89,17 +89,30 @@ if not System.doesFileExist("ux0:/data/RetroFlow/rom_directories.lua") then
 end
 
 if System.doesFileExist("ux0:/data/RetroFlow/rom_directories.lua") then
+    -- File exists, import user rom dirs
     db_romdir = "ux0:/data/RetroFlow/rom_directories.lua"
     romUserDir = {}
     romUserDir = dofile(db_romdir)
+
+    -- File not empty
+    if romUserDir ~= nil then 
+        -- Legacy fix, if playstation retroarch missing, use default
+        if romUserDir.PlayStation == nil then
+            romUserDir.PlayStation = "ux0:/data/RetroFlow/ROMS/Sony - PlayStation - RetroArch"
+        end
+    -- File empty, use defaults
+    else
+        romUserDir = {}
+        romUserDir = romDir_Default
+    end
+
 else
+    -- File not found, use default rom dirs
     romUserDir = {}
     romUserDir = romDir_Default
 end
 
-if romUserDir.PlayStation == nil then
-    romUserDir.PlayStation = "ux0:/data/RetroFlow/ROMS/Sony - PlayStation - RetroArch"
-end
+
 
 SystemsToScan =
 {
