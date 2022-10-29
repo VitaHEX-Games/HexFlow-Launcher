@@ -904,6 +904,11 @@ Font.setPixelSizes(fnt22, 22)
 Font.setPixelSizes(fnt25, 25)
 -- Font.setPixelSizes(fnt35, 35)
 
+-- Escape magic characters
+function escape_pattern(text)
+    return text:gsub("([^%w])", "%%%1")
+end
+
 -- Search
 local hasTyped = false
 local ret_search = ""
@@ -1832,8 +1837,18 @@ function cleanRomNames()
     romname_noRegion_noExtension = {}
     romname_noRegion_noExtension = romname_noExtension:gsub(" %(", "("):gsub('%b()', '')
 
+    -- encode url
+    local function urlencode (str)
+       str = string.gsub (str, "([^0-9a-zA-Z !'()*._~-])", -- locale independent
+          function (c) return string.format ("%%%%%02X", string.byte(c)) end)
+       str = string.gsub (str, " ", "%%%%20")
+       str = string.gsub (str, "%(", "%%%%28")
+       str = string.gsub (str, "%)", "%%%%29")
+       return str
+    end
+
     romname_url_encoded = {}
-    romname_url_encoded = romname_noExtension:gsub("%s+", '%%%%20')
+    romname_url_encoded = urlencode (romname_noExtension)
 
     -- Check if name contains parenthesis, if yes strip out to show as version
     if string.find(romname_noExtension, "%(") and string.find(romname_noExtension, "%)") then
@@ -2826,7 +2841,7 @@ function listDirectory(dir)
             for i, file in pairs(files_PSP) do
             local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
                 if not file.directory 
-                    and string.match(file.name, "%.") -- has an extenstion
+                    and string.match(file.name, "%.") -- has an extension
                     and not string.match(file.name, "Thumbs%.db") 
                     and not string.match(file.name, "DS_Store") 
                     and not string.match(file.name, "%.sav") 
@@ -4055,7 +4070,7 @@ function listDirectory(dir)
                     or string.match(file.name, "%.ccd")
                     or string.match(file.name, "%.pbp")
                     or string.match(file.name, "%.PBP")
-                    -- and string.match(file.name, "%.") -- has an extenstion 
+                    -- and string.match(file.name, "%.") -- has an extension 
                     and not string.match(file.name, "eboot.pbp") 
                     and not string.match(file.name, "EBOOT.PBP")
                     and not string.match(file.name, "Thumbs%.db") 
@@ -4166,7 +4181,7 @@ function listDirectory(dir)
                             or string.match(file_subfolder.name, "%.ccd")
                             or string.match(file_subfolder.name, "%.pbp")
                             or string.match(file_subfolder.name, "%.PBP")
-                            -- and string.match(file_subfolder.name, "%.") -- has an extenstion
+                            -- and string.match(file_subfolder.name, "%.") -- has an extension
                             and not string.match(file_subfolder.name, "eboot.pbp") 
                             and not string.match(file_subfolder.name, "EBOOT.PBP")
                             and not string.match(file_subfolder.name, "Thumbs%.db") 
@@ -4275,8 +4290,8 @@ function listDirectory(dir)
             for i, file in pairs(files) do
                 local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
                 -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
-                if not file.directory 
-                    and string.match(file.name, "%.") -- has an extenstion
+                if not file.directory
+                    and string.match(file.name, "%.") -- has an extension
                     and not string.match(file.name, "Thumbs%.db") 
                     and not string.match(file.name, "DS_Store") 
                     and not string.match(file.name, "%.sav") 
@@ -4384,7 +4399,7 @@ function listDirectory(dir)
                 local custom_path, custom_path_id, app_type, name, title, name_online, version = nil, nil, nil, nil, nil, nil, nil
                 -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
                 if not file.directory and string.match(file.name, (def_filter)) 
-                    and string.match(file.name, "%.") -- has an extenstion
+                    and string.match(file.name, "%.") -- has an extension
                     and not string.match(file.name, "Thumbs%.db") 
                     and not string.match(file.name, "DS_Store") 
                     and not string.match(file.name, "%.sav") 
@@ -4485,7 +4500,7 @@ function listDirectory(dir)
                     for i, file_subfolder in pairs(file_subfolder) do
                         -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
                         if not file_subfolder.directory and string.match(file_subfolder.name, (def_filter)) 
-                            and string.match(file_subfolder.name, "%.") -- has an extenstion
+                            and string.match(file_subfolder.name, "%.") -- has an extension
                             and not string.match(file_subfolder.name, "Thumbs%.db") 
                             and not string.match(file_subfolder.name, "DS_Store") 
                             and not string.match(file_subfolder.name, "%.sav") 
@@ -4595,7 +4610,7 @@ function listDirectory(dir)
             local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
                 -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
             if not file.directory and not string.match(file.name, "neogeo") 
-                and string.match(file.name, "%.") -- has an extenstion
+                and string.match(file.name, "%.") -- has an extension
                 and not string.match(file.name, "Thumbs%.db") 
                 and not string.match(file.name, "%.sav") 
                 and not string.match(file.name, "%.srm") 
@@ -7164,11 +7179,11 @@ function DownloadCovers()
                                 -- Only downloading missing covers
 
                                 -- Check if cover already exists
-                                if System.doesFileExist((def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].name .. ".png") or System.doesFileExist((def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].apptitle .. ".png") then
+                                if System.doesFileExist((def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].name:gsub("%%","%%%%") .. ".png") or System.doesFileExist((def_table_name)[app_idx].cover_path_local .. (def_table_name)[app_idx].apptitle .. ".png") then
                                     -- Found - do nothing
                                 else
                                     -- Not found - download
-                                    Network.downloadFileAsync((def_table_name)[app_idx].cover_path_online .. (def_table_name)[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
+                                    Network.downloadFileAsync((def_table_name)[app_idx].cover_path_online .. (def_table_name)[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name:gsub("%%","%%%%") .. ".png")
                                     running = true
                                 end
                             end
@@ -7248,16 +7263,22 @@ function DownloadCovers()
                         end
                         if app_idx >= #(def_table_name) then
                             System.closeMessage()
-                            scanComplete = true
+                            -- scanComplete = true
+
+                            cache_all_tables()
+                            update_cached_table_recently_played()
+                            
+                            -- Redraw covers for current showcat game category 
+                            for k in pairs (xCatLookup(showCat)) do
+                                Threads.addTask(xCatLookup(showCat)[k], {
+                                Type = "ImageLoad",
+                                Path = xCatLookup(showCat)[k].icon_path,
+                                Table = xCatLookup(showCat)[k],
+                                Index = "ricon"
+                                })
+                            end
                         end
                     else
-                        cache_all_tables()
-                        update_cached_table_recently_played()
-                        
-                        FreeIcons()
-                        FreeMemory()
-                        Network.term()
-                        dofile("app0:index.lua")
                     end
                 end
             end
@@ -7349,11 +7370,11 @@ function DownloadSnaps()
                                 -- Only downloading missing backgrounds
 
                                 -- Check if background already exists
-                                if System.doesFileExist((def_table_name)[app_idx].snap_path_local .. (def_table_name)[app_idx].name .. ".png") or System.doesFileExist((def_table_name)[app_idx].snap_path_local .. (def_table_name)[app_idx].apptitle .. ".png") then
+                                if System.doesFileExist((def_table_name)[app_idx].snap_path_local .. (def_table_name)[app_idx].name:gsub("%%","%%%%") .. ".png") or System.doesFileExist((def_table_name)[app_idx].snap_path_local .. (def_table_name)[app_idx].apptitle .. ".png") then
                                     -- Found - do nothing
                                 else
                                     -- Not found - download
-                                    Network.downloadFileAsync((def_table_name)[app_idx].snap_path_online .. (def_table_name)[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name .. ".png")
+                                    Network.downloadFileAsync((def_table_name)[app_idx].snap_path_online .. (def_table_name)[app_idx].name_online .. ".png", "ux0:/data/RetroFlow/" .. (def_table_name)[app_idx].name:gsub("%%","%%%%") .. ".png")
                                     running = true
                                 end
 
@@ -7417,16 +7438,9 @@ function DownloadSnaps()
                         end
                         if app_idx >= #(def_table_name) then
                             System.closeMessage()
-                            bgscanComplete = true
+                            -- bgscanComplete = true
                         end
                     else
-                        -- cache_all_tables()
-                        -- files_table = import_cached_DB(System.currentDirectory())
-
-                        FreeIcons()
-                        FreeMemory()
-                        Network.term()
-                        dofile("app0:index.lua")
                     end
                 end
             end
@@ -7752,7 +7766,7 @@ function DownloadSingleCover()
 
         app_titleid = app_titleid:gsub("\n","")
 
-        Network.downloadFile(onlineCoverspath .. app_titleid:gsub("%s+", '%%20') .. ".png", "ux0:/data/RetroFlow/" .. app_titleid .. ".png")
+        Network.downloadFile(onlineCoverspath .. app_titleid:gsub("%%", '%%25'):gsub("%s+", '%%20') .. ".png", "ux0:/data/RetroFlow/" .. app_titleid .. ".png")
         
         if System.doesFileExist("ux0:/data/RetroFlow/" .. app_titleid .. ".png") then
             tmpfile = System.openFile("ux0:/data/RetroFlow/" .. app_titleid .. ".png", FREAD)
@@ -8170,12 +8184,13 @@ while true do
                 end
 
                 -- Typed text
-                -- Converted to upper and lower case for broader results
+                -- Converted to upper, lower case and proper case for broader results
                 ret_search_lc = string.lower(ret_search)
                 ret_search_uc = string.upper(ret_search)
+                ret_search_pc = string.gsub(" "..ret_search, "%W%l", string.upper):sub(2)
 
                 for l, file in pairs(files_table) do
-                    if string.match(file.apptitle, ret_search) or string.match(file.apptitle, ret_search_lc) or string.match(file.apptitle, ret_search_uc) then
+                    if string.match(file.apptitle, escape_pattern(ret_search)) or string.match(file.apptitle, escape_pattern(ret_search_lc)) or string.match(file.apptitle, escape_pattern(ret_search_uc)) or string.match(file.apptitle, escape_pattern(ret_search_pc)) then
                         table.insert(search_results_table, file)
                         table.sort(search_results_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
                         local app_title = search_results_table[1].app_title
@@ -9794,172 +9809,165 @@ while true do
 
 
         -- MENU 5 / #1 Download Covers
-        if scanComplete == false then
-            Font.print(fnt22, setting_x, setting_y1, lang_lines.Download_Covers_colon, white)
-            if getCovers == 1 then
-            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PS_Vita .. "  >", white)
-            elseif getCovers == 2 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PSP .. "  >", white)
-            elseif getCovers == 3 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PlayStation .."  >", white)
-            elseif getCovers == 4 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Nintendo_64 .. "  >", white)
-            elseif getCovers == 5 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Super_Nintendo .. "  >", white)
-            elseif getCovers == 6 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Nintendo_Entertainment_System .. "  >", white)
-            elseif getCovers == 7 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Game_Boy_Advance .. "  >", white)
-            elseif getCovers == 8 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Game_Boy_Color .. "  >", white)
-            elseif getCovers == 9 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Game_Boy .. "  >", white)
-            elseif getCovers == 10 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Dreamcast .. "  >", white)
-            elseif getCovers == 11 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_CD .. "  >", white)
-            elseif getCovers == 12 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_32X .. "  >", white)
-            elseif getCovers == 13 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Mega_Drive .. "  >", white)
-            elseif getCovers == 14 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Master_System .. "  >", white)
-            elseif getCovers == 15 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Game_Gear .. "  >", white)
-            elseif getCovers == 16 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.TurboGrafx_16 .. "  >", white)
-            elseif getCovers == 17 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.TurboGrafx_CD .. "  >", white)
-            elseif getCovers == 18 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PC_Engine .. "  >", white)
-            elseif getCovers == 19 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PC_Engine_CD .. "  >", white)
-            elseif getCovers == 20 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Amiga .. "  >", white)
-            elseif getCovers == 21 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Commodore_64 .. "  >", white)
-            elseif getCovers == 22 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.WonderSwan_Color .. "  >", white)
-            elseif getCovers == 23 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.WonderSwan .. "  >", white)
-            elseif getCovers == 24 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MSX2 .. "  >", white)
-            elseif getCovers == 25 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MSX .. "  >", white)
-            elseif getCovers == 26 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.ZX_Spectrum .. "  >", white)
-            elseif getCovers == 27 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_7800 .. "  >", white)
-            elseif getCovers == 28 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_5200 .. "  >", white)
-            elseif getCovers == 29 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_2600 .. "  >", white)
-            elseif getCovers == 30 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_Lynx .. "  >", white)
-            elseif getCovers == 31 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.ColecoVision .. "  >", white)
-            elseif getCovers == 32 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Vectrex .. "  >", white)
-            elseif getCovers == 33 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.FBA_2012 .. "  >", white)
-            elseif getCovers == 34 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MAME_2003Plus .. "  >", white)
-            elseif getCovers == 35 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MAME_2000 .. "  >", white)
-            elseif getCovers == 36 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Neo_Geo .. "  >", white)
-            elseif getCovers == 37 then
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Neo_Geo_Pocket_Color .. "  >", white)
-            else
-                Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.All .. "  >", white)
-            end
+        Font.print(fnt22, setting_x, setting_y1, lang_lines.Download_Covers_colon, white)
+
+        if getCovers == 1 then
+        Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PS_Vita .. "  >", white)
+        elseif getCovers == 2 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PSP .. "  >", white)
+        elseif getCovers == 3 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PlayStation .."  >", white)
+        elseif getCovers == 4 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Nintendo_64 .. "  >", white)
+        elseif getCovers == 5 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Super_Nintendo .. "  >", white)
+        elseif getCovers == 6 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Nintendo_Entertainment_System .. "  >", white)
+        elseif getCovers == 7 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Game_Boy_Advance .. "  >", white)
+        elseif getCovers == 8 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Game_Boy_Color .. "  >", white)
+        elseif getCovers == 9 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Game_Boy .. "  >", white)
+        elseif getCovers == 10 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Dreamcast .. "  >", white)
+        elseif getCovers == 11 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_CD .. "  >", white)
+        elseif getCovers == 12 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_32X .. "  >", white)
+        elseif getCovers == 13 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Mega_Drive .. "  >", white)
+        elseif getCovers == 14 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Master_System .. "  >", white)
+        elseif getCovers == 15 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Sega_Game_Gear .. "  >", white)
+        elseif getCovers == 16 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.TurboGrafx_16 .. "  >", white)
+        elseif getCovers == 17 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.TurboGrafx_CD .. "  >", white)
+        elseif getCovers == 18 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PC_Engine .. "  >", white)
+        elseif getCovers == 19 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.PC_Engine_CD .. "  >", white)
+        elseif getCovers == 20 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Amiga .. "  >", white)
+        elseif getCovers == 21 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Commodore_64 .. "  >", white)
+        elseif getCovers == 22 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.WonderSwan_Color .. "  >", white)
+        elseif getCovers == 23 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.WonderSwan .. "  >", white)
+        elseif getCovers == 24 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MSX2 .. "  >", white)
+        elseif getCovers == 25 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MSX .. "  >", white)
+        elseif getCovers == 26 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.ZX_Spectrum .. "  >", white)
+        elseif getCovers == 27 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_7800 .. "  >", white)
+        elseif getCovers == 28 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_5200 .. "  >", white)
+        elseif getCovers == 29 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_2600 .. "  >", white)
+        elseif getCovers == 30 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Atari_Lynx .. "  >", white)
+        elseif getCovers == 31 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.ColecoVision .. "  >", white)
+        elseif getCovers == 32 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Vectrex .. "  >", white)
+        elseif getCovers == 33 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.FBA_2012 .. "  >", white)
+        elseif getCovers == 34 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MAME_2003Plus .. "  >", white)
+        elseif getCovers == 35 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.MAME_2000 .. "  >", white)
+        elseif getCovers == 36 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Neo_Geo .. "  >", white)
+        elseif getCovers == 37 then
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.Neo_Geo_Pocket_Color .. "  >", white)
         else
-            Font.print(fnt22, setting_x, setting_y1,  lang_lines.Reload_Covers_Database, white)--Reload Covers Database
+            Font.print(fnt22, setting_x_offset, setting_y1, "<  " .. lang_lines.All .. "  >", white)
         end
 
 
         -- MENU 5 / #2 Download Backgrounds
-        if bgscanComplete == false then
-            Font.print(fnt22, setting_x, setting_y2, lang_lines.Download_Backgrounds_colon, white)
-            if getSnaps == 1 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PSP .. "  >", white)
-            elseif getSnaps == 2 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PlayStation .."  >", white)
-            elseif getSnaps == 3 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Nintendo_64 .. "  >", white)
-            elseif getSnaps == 4 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Super_Nintendo .. "  >", white)
-            elseif getSnaps == 5 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Nintendo_Entertainment_System .. "  >", white)
-            elseif getSnaps == 6 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Game_Boy_Advance .. "  >", white)
-            elseif getSnaps == 7 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Game_Boy_Color .. "  >", white)
-            elseif getSnaps == 8 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Game_Boy .. "  >", white)
-            elseif getSnaps == 9 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Dreamcast .. "  >", white)
-            elseif getSnaps == 10 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_CD .. "  >", white)
-            elseif getSnaps == 11 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_32X .. "  >", white)
-            elseif getSnaps == 12 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Mega_Drive .. "  >", white)
-            elseif getSnaps == 13 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Master_System .. "  >", white)
-            elseif getSnaps == 14 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Game_Gear .. "  >", white)
-            elseif getSnaps == 15 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.TurboGrafx_16 .. "  >", white)
-            elseif getSnaps == 16 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.TurboGrafx_CD .. "  >", white)
-            elseif getSnaps == 17 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PC_Engine .. "  >", white)
-            elseif getSnaps == 18 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PC_Engine_CD .. "  >", white)
-            elseif getSnaps == 19 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Amiga .. "  >", white)
-            elseif getSnaps == 20 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Commodore_64 .. "  >", white)
-            elseif getSnaps == 21 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.WonderSwan_Color .. "  >", white)
-            elseif getSnaps == 22 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.WonderSwan .. "  >", white)
-            elseif getSnaps == 23 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MSX2 .. "  >", white)
-            elseif getSnaps == 24 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MSX .. "  >", white)
-            elseif getSnaps == 25 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.ZX_Spectrum .. "  >", white)
-            elseif getSnaps == 26 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_7800 .. "  >", white)
-            elseif getSnaps == 27 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_5200 .. "  >", white)
-            elseif getSnaps == 28 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_2600 .. "  >", white)
-            elseif getSnaps == 29 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_Lynx .. "  >", white)
-            elseif getSnaps == 30 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.ColecoVision .. "  >", white)
-            elseif getSnaps == 31 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Vectrex .. "  >", white)
-            elseif getSnaps == 32 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.FBA_2012 .. "  >", white)
-            elseif getSnaps == 33 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MAME_2003Plus .. "  >", white)
-            elseif getSnaps == 34 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MAME_2000 .. "  >", white)
-            elseif getSnaps == 35 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Neo_Geo .. "  >", white)
-            elseif getSnaps == 36 then
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Neo_Geo_Pocket_Color .. "  >", white)
-            else
-                Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.All .. "  >", white)
-            end
-        else
-            Font.print(fnt22, setting_x, setting_y2,  lang_lines.Reload_Backgound_Database, white)--Reload Backgound Database            
-        end
+        Font.print(fnt22, setting_x, setting_y2, lang_lines.Download_Backgrounds_colon, white)
 
+        if getSnaps == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PSP .. "  >", white)
+        elseif getSnaps == 2 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PlayStation .."  >", white)
+        elseif getSnaps == 3 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Nintendo_64 .. "  >", white)
+        elseif getSnaps == 4 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Super_Nintendo .. "  >", white)
+        elseif getSnaps == 5 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Nintendo_Entertainment_System .. "  >", white)
+        elseif getSnaps == 6 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Game_Boy_Advance .. "  >", white)
+        elseif getSnaps == 7 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Game_Boy_Color .. "  >", white)
+        elseif getSnaps == 8 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Game_Boy .. "  >", white)
+        elseif getSnaps == 9 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Dreamcast .. "  >", white)
+        elseif getSnaps == 10 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_CD .. "  >", white)
+        elseif getSnaps == 11 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_32X .. "  >", white)
+        elseif getSnaps == 12 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Mega_Drive .. "  >", white)
+        elseif getSnaps == 13 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Master_System .. "  >", white)
+        elseif getSnaps == 14 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Sega_Game_Gear .. "  >", white)
+        elseif getSnaps == 15 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.TurboGrafx_16 .. "  >", white)
+        elseif getSnaps == 16 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.TurboGrafx_CD .. "  >", white)
+        elseif getSnaps == 17 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PC_Engine .. "  >", white)
+        elseif getSnaps == 18 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.PC_Engine_CD .. "  >", white)
+        elseif getSnaps == 19 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Amiga .. "  >", white)
+        elseif getSnaps == 20 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Commodore_64 .. "  >", white)
+        elseif getSnaps == 21 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.WonderSwan_Color .. "  >", white)
+        elseif getSnaps == 22 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.WonderSwan .. "  >", white)
+        elseif getSnaps == 23 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MSX2 .. "  >", white)
+        elseif getSnaps == 24 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MSX .. "  >", white)
+        elseif getSnaps == 25 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.ZX_Spectrum .. "  >", white)
+        elseif getSnaps == 26 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_7800 .. "  >", white)
+        elseif getSnaps == 27 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_5200 .. "  >", white)
+        elseif getSnaps == 28 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_2600 .. "  >", white)
+        elseif getSnaps == 29 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Atari_Lynx .. "  >", white)
+        elseif getSnaps == 30 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.ColecoVision .. "  >", white)
+        elseif getSnaps == 31 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Vectrex .. "  >", white)
+        elseif getSnaps == 32 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.FBA_2012 .. "  >", white)
+        elseif getSnaps == 33 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MAME_2003Plus .. "  >", white)
+        elseif getSnaps == 34 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.MAME_2000 .. "  >", white)
+        elseif getSnaps == 35 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Neo_Geo .. "  >", white)
+        elseif getSnaps == 36 then
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.Neo_Geo_Pocket_Color .. "  >", white)
+        else
+            Font.print(fnt22, setting_x_offset, setting_y2, "<  " .. lang_lines.All .. "  >", white)
+        end
 
         -- MENU 5 / #3 Game Backgrounds
         Font.print(fnt22, setting_x, setting_y3, lang_lines.Game_backgounds_colon, white) -- Game backgounds
