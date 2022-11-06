@@ -12,7 +12,7 @@ return {
 
 -- General settings
 ["Language_colon"] = "Język: ",
-["Homebrews_Category_colon"] = "Pokazuj Homebrew: ",
+["Homebrews_Category_colon"] = "Kategoria Homebrew: ",
 ["Recently_Played_colon"] = "Ostatnio grane: ",
 ["Startup_scan_colon"] = "Skan przy uruchomieniu: ",
 ["On"] = "Włącz",
@@ -88,7 +88,7 @@ return {
 ["Download_Backgrounds_colon"] = "Pobierz tła: ",
 
 ["All"] = "Wszystko",
-["Reload_Covers_Database"] = "Przeładuj bazę okładek",
+["Reload_Covers_Database"] = "Przeładuj bazę danych okładek",
 ["Reload_Backgound_Database"] = "Przeładuj bazę danych tła",
 ["Internet_Connection_Required"] = "Wymagane połączenie z internetem",
 ["Cover"] = "Okładka",
@@ -188,8 +188,8 @@ return {
 ["Override_Category_colon"] = "Nadpisz kategorię: ",
 ["Press_X_to_apply_Category"] = "Naciśnij X by zastosować kategorię",
 ["Default"] = "Domyślna",
-["Favorite"] = "Ulubiony",
-["Rename"] = "Przemianować",
+["Favorite"] = "Ulubione",
+["Rename"] = "Zmień nazwę",
 ["PS_Vita_Game"] = "Gra PS Vita ",
 ["Homebrew"] = "Homebrew",
 ["PSP_Game"] = "Gra PSP",
@@ -236,7 +236,7 @@ return {
 -- Search
 ["Search"] = "Szukaj",
 ["Search_Results"] = "Wyniki wyszukiwania",
-["Search_No_Results"] = "Naciśnij przycisk wyboru, aby wyszukać ponownie",
+["Search_No_Results"] = "Naciśnij przycisk SELECT, aby wyszukać ponownie",
 
 -- Settings Menu
 ["Categories"] = "Kategorie",
@@ -244,10 +244,10 @@ return {
 ["Artwork"] = "Grafika",
 ["Scan_Settings"] = "Ustawienia skanowania",
 ["Adrenaline_roms"] = "Gry Adrenaline: ",
-["All_Category"] = "Wszystkie kategorie: ",
+["All_Category"] = "Kategoria Wszystko: ",
 ["Back_Chevron"] = "<  Wstecz",
-["Theme"] = "Temat",
-["Game_backgounds_colon"] = "Tła gry: ",
+["Theme"] = "Motyw",
+["Game_backgounds_colon"] = "Tła gier: ",
 
 -- Game directories
 ["Home"] = "Strona główna",
