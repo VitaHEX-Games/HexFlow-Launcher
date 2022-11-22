@@ -1,6 +1,3 @@
-[< Back to main page](https://github.com/jimbob4000/RetroFlow-Launcher)
-<br><br>
-
 # FAQ's
 
 ### My Adrenaline games aren't working?

@@ -75,7 +75,7 @@ For best results it's recommended that your games are named using the **no-intro
  * PS1 using RetroArch - They will use the 'PCSX ReARMed' core, more information on supported extensions here: [https://docs.libretro.com/library/pcsx_rearmed/](https://docs.libretro.com/library/pcsx_rearmed/)
 
 **Note:** 
-If you're using an old version of RetroFlow (below v5) you will need to rename PSP and maybe PS1 games too, please see the guide here: [Legacy guide - Renaming PSP and PSX](https://raw.githubusercontent.com/jimbob4000/RetroFlow-Launcher/main/docs/Legacy_guide_-_Renaming_PSP_and_PSX.md). 
+If you're using an old version of RetroFlow (below v5) you will need to rename PSP and maybe PS1 games too, please see the guide here: [Legacy guide - Renaming PSP and PSX](https://github.com/jimbob4000/RetroFlow-Launcher/blob/main/docs/Legacy_guide_-_Renaming_PSP_and_PSX.md). 
 
 ## 5. Rescan to find your games
 
@@ -191,7 +191,7 @@ This PSP plugin is unsupported, if you're experiencing please try without the pl
 # Support
 
 **Help and FAQ's:**
-For Help and answers to frequent questions please visit the [FAQ's](https://raw.githubusercontent.com/jimbob4000/RetroFlow-Launcher/main/docs/FAQs.md) page.
+For Help and answers to frequent questions please visit the [FAQ's](https://github.com/jimbob4000/RetroFlow-Launcher/blob/main/docs/FAQs.md) page.
 
 **Feature requests:** 
 Please note that I'm not a developer, this mod started as a personal project, please be mindful that there may be some redundant code, or some requests that will be beyond my knowledge to implement.

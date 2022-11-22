@@ -1,6 +1,3 @@
-[< Back to main page](https://github.com/jimbob4000/RetroFlow-Launcher)
-<br><br>
-
 #Legacy guide for naming PSP and PS1 games
 
 ###For RetroFlow versions below v5
