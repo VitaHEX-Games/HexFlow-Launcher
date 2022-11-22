@@ -1,6 +1,6 @@
-#Legacy guide for naming PSP and PS1 games
+# Legacy guide for naming PSP and PS1 games
 
-###For RetroFlow versions below v5
+### For RetroFlow versions below v5
 RetroFlow uses the game ID's for Playstation and PSP for cover matching.
 Please use the guides below.
 
