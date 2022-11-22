@@ -29,7 +29,7 @@ With RetroFlow you can also integerate retro games without the need to create bu
 PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Dreamcast, Sega CD, Sega 32X, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear, PC Engine, PC Engine CD, TurboGrafx-16, TurboGrafx-CD, Commodore Amiga, Commodore 64, WonderSwan, WonderSwan Color, MSX, MSX2, ZX Spectrum, Atari Lynx, Atari 600, Atari 5200, Atari 7800, ColecoVision, Vectrex, FBA 2012, MAME 2003 Plus, MAME 2000, Neo Geo (FBA 2012) and Neo Geo Pocket Color.
 
 
-# Installation
+# Installation & setup
 
 ## 1. Install the RetroFlow VPK's.
 
@@ -86,7 +86,7 @@ If you're using an old version of RetroFlow (below v5) you will need to rename P
 
 ## 6. Download covers & backgrounds
 
-* To download cover images, press start, then choose which covers or backgrounds you would like to download.
+* To download cover images, press start, go to 'Artwork' then choose which covers or backgrounds you would like to download.
 * From version 5 onwards you can also extract background images for PSP games from PSP iso files.
 
 
