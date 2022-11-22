@@ -86,6 +86,7 @@ return {
 ["Download_Covers_colon"] = "Download Covers: ",
 ["Download_Covers"] = "Download Covers",
 ["Download_Backgrounds_colon"] = "Download Backgrounds: ",
+["Extract_PSP_backgrounds"] = "Extract PSP backgrounds",
 
 ["All"] = "All",
 ["Reload_Covers_Database"] = "Reload Covers Database",
@@ -257,5 +258,32 @@ return {
 ["Use_this_directory"] = "Use this directory",
 ["Rescan"] = "Rescan",
 ["Back"] = "Back",
+
+-- Scan progress
+["Scanning_titles"] = "Scanning titles...",
+["Scanning_games_ellipsis"] = "Scanning games...",
+["Scan_complete"] = "Scan complete",
+["Reloading_ellipsis"] = "Reloading...",
+
+-- Guides
+["Help_and_Guides"] = "Help",
+
+["guide_1_heading"] = "Adding games",
+["guide_1_content"] = "Game directories: \nPlace your games in 'ux0:/data/RetroFlow/ROMS/', or to use your own file directories, go to 'Scan Settings' then 'Edit game directories'. \n\nOnce you have added your games, select 'Rescan' to add them to RetroFlow. \n\nFilenames: \nIt's important that your games are named using the 'no-intro' file naming convention, e.g. 'Sonic (USA)', otherwise images won't be downloaded.",
+
+["guide_2_heading"] = "Adrenaline games not loading?",
+["guide_2_content"] = "If Adrenaline games aren't loading and you have installed the RetroFlow Adrenaline Launcher, please install AdrBubbleBooterInstaller: https://vitadb.rinnegatamante.it/#/info/307. \n\nOr try installing Adrenaline Bubble Manager: https://github.com/ONElua/AdrenalineBubbleManager/releases/",
+
+["guide_3_heading"] = "Custom game covers & backgrounds",
+["guide_3_content"] = "Covers: \nCustom covers can be saved in the game folders here: 'ux0:/data/RetroFlow/COVERS/'. \n\nBackgounds: \nCustom game backgrounds can be saved in the game folders here: 'ux0:/data/RetroFlow/BACKGROUNDS/'. \n\nFilenames:\nThe filename must match the App ID or the App Name Images must be in .png format.",
+
+["guide_4_heading"] = "Custom wallpaper & music",
+["guide_4_content"] = "Wallpaper: \nYou can add as many wallpapers as you like by saving them here: 'ux0:/data/RetroFlow/WALLPAPER/'. \nImages must be in .jpg or .png format and the size should be 960px x 544px. \n\nMusic: \nSongs can be added to 'ux0:/data/RetroFlow/MUSIC/'. \nMusic must be in .ogg format.",
+
+["guide_5_heading"] = "Control shortcuts",
+["guide_5_content"] = "DPad Up: Skip to favorites category \n\nDPad Down + Square: Go back one category \n\nDPad Down + L/R triggers: Skip games alphabetically",
+
+["guide_6_heading"] = "About",
+["guide_6_content"] = "RetroFlow by jimbob4000 is a modified version of the HexFlow app. \n\nThe originalHexFlow app is by VitaHex. Support VitaHex's projects on patreon.com/vitahex \n\nMore information:\nFor more information and full credits, please visit: https://github.com/jimbob4000/RetroFlow-Launcher",
 
 }

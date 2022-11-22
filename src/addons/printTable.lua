@@ -48,48 +48,48 @@ local db_Cached_File_ngpc = (db_Cache_Folder .. "db_ngpc.lua")
 function delete_tables()
 
     -- Delete old files
-    if System.doesFileExist(db_Cache_Folder .. "db_files.lua") then     System.deleteFile(db_Cache_Folder .. "db_files.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_folders.lua") then   System.deleteFile(db_Cache_Folder .. "db_folders.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_all_games.lua") then System.deleteFile(db_Cache_Folder .. "db_all_games.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_files.lua") then             System.deleteFile(db_Cache_Folder .. "db_files.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_folders.lua") then           System.deleteFile(db_Cache_Folder .. "db_folders.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_all_games.lua") then         System.deleteFile(db_Cache_Folder .. "db_all_games.lua") else end
 
-    if System.doesFileExist(db_Cache_Folder .. "db_games.lua") then     System.deleteFile(db_Cache_Folder .. "db_games.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_homebrews.lua") then     System.deleteFile(db_Cache_Folder .. "db_homebrews.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_psp.lua") then     System.deleteFile(db_Cache_Folder .. "db_psp.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_psx.lua") then     System.deleteFile(db_Cache_Folder .. "db_psx.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_n64.lua") then     System.deleteFile(db_Cache_Folder .. "db_n64.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_snes.lua") then     System.deleteFile(db_Cache_Folder .. "db_snes.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_nes.lua") then     System.deleteFile(db_Cache_Folder .. "db_nes.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_gba.lua") then     System.deleteFile(db_Cache_Folder .. "db_gba.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_gbc.lua") then     System.deleteFile(db_Cache_Folder .. "db_gbc.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_gb.lua") then     System.deleteFile(db_Cache_Folder .. "db_gb.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_dreamcast.lua") then     System.deleteFile(db_Cache_Folder .. "db_dreamcast.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_sega_cd.lua") then     System.deleteFile(db_Cache_Folder .. "db_sega_cd.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_32x.lua") then     System.deleteFile(db_Cache_Folder .. "db_32x.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_md.lua") then     System.deleteFile(db_Cache_Folder .. "db_md.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_sms.lua") then     System.deleteFile(db_Cache_Folder .. "db_sms.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_gg.lua") then     System.deleteFile(db_Cache_Folder .. "db_gg.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_tg16.lua") then     System.deleteFile(db_Cache_Folder .. "db_tg16.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_tgcd.lua") then     System.deleteFile(db_Cache_Folder .. "db_tgcd.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_pce.lua") then     System.deleteFile(db_Cache_Folder .. "db_pce.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_pcecd.lua") then     System.deleteFile(db_Cache_Folder .. "db_pcecd.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_amiga.lua") then     System.deleteFile(db_Cache_Folder .. "db_amiga.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_c64.lua") then     System.deleteFile(db_Cache_Folder .. "db_c64.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_wswan_col.lua") then     System.deleteFile(db_Cache_Folder .. "db_wswan_col.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_wswan.lua") then     System.deleteFile(db_Cache_Folder .. "db_wswan.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_msx2.lua") then     System.deleteFile(db_Cache_Folder .. "db_msx2.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_msx1.lua") then     System.deleteFile(db_Cache_Folder .. "db_msx1.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_zxs.lua") then     System.deleteFile(db_Cache_Folder .. "db_zxs.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_atari_7800.lua") then     System.deleteFile(db_Cache_Folder .. "db_atari_7800.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_atari_5200.lua") then     System.deleteFile(db_Cache_Folder .. "db_atari_5200.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_atari_2600.lua") then     System.deleteFile(db_Cache_Folder .. "db_atari_2600.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_atari_lynx.lua") then     System.deleteFile(db_Cache_Folder .. "db_atari_lynx.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_colecovision.lua") then     System.deleteFile(db_Cache_Folder .. "db_colecovision.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_vectrex.lua") then     System.deleteFile(db_Cache_Folder .. "db_vectrex.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_fba.lua") then     System.deleteFile(db_Cache_Folder .. "db_fba.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_mame_2003_plus.lua") then     System.deleteFile(db_Cache_Folder .. "db_mame_2003_plus.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_mame_2000.lua") then     System.deleteFile(db_Cache_Folder .. "db_mame_2000.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_neogeo.lua") then     System.deleteFile(db_Cache_Folder .. "db_neogeo.lua") else end
-    if System.doesFileExist(db_Cache_Folder .. "db_ngpc.lua") then     System.deleteFile(db_Cache_Folder .. "db_ngpc.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_games.lua") then             System.deleteFile(db_Cache_Folder .. "db_games.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_homebrews.lua") then         System.deleteFile(db_Cache_Folder .. "db_homebrews.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_psp.lua") then               System.deleteFile(db_Cache_Folder .. "db_psp.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_psx.lua") then               System.deleteFile(db_Cache_Folder .. "db_psx.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_n64.lua") then               System.deleteFile(db_Cache_Folder .. "db_n64.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_snes.lua") then              System.deleteFile(db_Cache_Folder .. "db_snes.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_nes.lua") then               System.deleteFile(db_Cache_Folder .. "db_nes.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_gba.lua") then               System.deleteFile(db_Cache_Folder .. "db_gba.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_gbc.lua") then               System.deleteFile(db_Cache_Folder .. "db_gbc.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_gb.lua") then                System.deleteFile(db_Cache_Folder .. "db_gb.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_dreamcast.lua") then         System.deleteFile(db_Cache_Folder .. "db_dreamcast.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_sega_cd.lua") then           System.deleteFile(db_Cache_Folder .. "db_sega_cd.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_32x.lua") then               System.deleteFile(db_Cache_Folder .. "db_32x.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_md.lua") then                System.deleteFile(db_Cache_Folder .. "db_md.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_sms.lua") then               System.deleteFile(db_Cache_Folder .. "db_sms.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_gg.lua") then                System.deleteFile(db_Cache_Folder .. "db_gg.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_tg16.lua") then              System.deleteFile(db_Cache_Folder .. "db_tg16.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_tgcd.lua") then              System.deleteFile(db_Cache_Folder .. "db_tgcd.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_pce.lua") then               System.deleteFile(db_Cache_Folder .. "db_pce.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_pcecd.lua") then             System.deleteFile(db_Cache_Folder .. "db_pcecd.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_amiga.lua") then             System.deleteFile(db_Cache_Folder .. "db_amiga.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_c64.lua") then               System.deleteFile(db_Cache_Folder .. "db_c64.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_wswan_col.lua") then         System.deleteFile(db_Cache_Folder .. "db_wswan_col.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_wswan.lua") then             System.deleteFile(db_Cache_Folder .. "db_wswan.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_msx2.lua") then              System.deleteFile(db_Cache_Folder .. "db_msx2.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_msx1.lua") then              System.deleteFile(db_Cache_Folder .. "db_msx1.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_zxs.lua") then               System.deleteFile(db_Cache_Folder .. "db_zxs.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_atari_7800.lua") then        System.deleteFile(db_Cache_Folder .. "db_atari_7800.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_atari_5200.lua") then        System.deleteFile(db_Cache_Folder .. "db_atari_5200.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_atari_2600.lua") then        System.deleteFile(db_Cache_Folder .. "db_atari_2600.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_atari_lynx.lua") then        System.deleteFile(db_Cache_Folder .. "db_atari_lynx.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_colecovision.lua") then      System.deleteFile(db_Cache_Folder .. "db_colecovision.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_vectrex.lua") then           System.deleteFile(db_Cache_Folder .. "db_vectrex.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_fba.lua") then               System.deleteFile(db_Cache_Folder .. "db_fba.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_mame_2003_plus.lua") then    System.deleteFile(db_Cache_Folder .. "db_mame_2003_plus.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_mame_2000.lua") then         System.deleteFile(db_Cache_Folder .. "db_mame_2000.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_neogeo.lua") then            System.deleteFile(db_Cache_Folder .. "db_neogeo.lua") else end
+    if System.doesFileExist(db_Cache_Folder .. "db_ngpc.lua") then              System.deleteFile(db_Cache_Folder .. "db_ngpc.lua") else end
 end
 
 -- PRINT ALL TABLES AT ONCE 
@@ -103,13 +103,13 @@ function print_tables()
     
     -- START CREATE DATABASE CACHE
 
-    local db_files = assert(io.open(db_Cached_File_files, "w"))
-    printTable(files_table, db_files)
-    db_files:close()
+    -- local db_files = assert(io.open(db_Cached_File_files, "w"))
+    -- printTable(files_table, db_files)
+    -- db_files:close()
 
-    local db_folders = assert(io.open(db_Cached_File_folders, "w"))
-    printTable(folders_table, db_folders)
-    db_folders:close()
+    -- local db_folders = assert(io.open(db_Cached_File_folders, "w"))
+    -- printTable(folders_table, db_folders)
+    -- db_folders:close()
 
     local db_games = assert(io.open(db_Cached_File_games, "w"))
     printTable(games_table, db_games)

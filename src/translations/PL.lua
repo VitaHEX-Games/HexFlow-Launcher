@@ -12,7 +12,7 @@ return {
 
 -- General settings
 ["Language_colon"] = "Język: ",
-["Homebrews_Category_colon"] = "Pokazuj Homebrew: ",
+["Homebrews_Category_colon"] = "Kategoria Homebrew: ",
 ["Recently_Played_colon"] = "Ostatnio grane: ",
 ["Startup_scan_colon"] = "Skan przy uruchomieniu: ",
 ["On"] = "Włącz",
@@ -86,9 +86,10 @@ return {
 ["Download_Covers_colon"] = "Pobierz okładki: ",
 ["Download_Covers"] = "Pobierz okładki",
 ["Download_Backgrounds_colon"] = "Pobierz tła: ",
+["Extract_PSP_backgrounds"] = "Wyodrębnij tła PSP",
 
 ["All"] = "Wszystko",
-["Reload_Covers_Database"] = "Przeładuj bazę okładek",
+["Reload_Covers_Database"] = "Przeładuj bazę danych okładek",
 ["Reload_Backgound_Database"] = "Przeładuj bazę danych tła",
 ["Internet_Connection_Required"] = "Wymagane połączenie z internetem",
 ["Cover"] = "Okładka",
@@ -188,8 +189,8 @@ return {
 ["Override_Category_colon"] = "Nadpisz kategorię: ",
 ["Press_X_to_apply_Category"] = "Naciśnij X by zastosować kategorię",
 ["Default"] = "Domyślna",
-["Favorite"] = "Ulubiony",
-["Rename"] = "Przemianować",
+["Favorite"] = "Ulubione",
+["Rename"] = "Zmień nazwę",
 ["PS_Vita_Game"] = "Gra PS Vita ",
 ["Homebrew"] = "Homebrew",
 ["PSP_Game"] = "Gra PSP",
@@ -236,7 +237,7 @@ return {
 -- Search
 ["Search"] = "Szukaj",
 ["Search_Results"] = "Wyniki wyszukiwania",
-["Search_No_Results"] = "Naciśnij przycisk wyboru, aby wyszukać ponownie",
+["Search_No_Results"] = "Naciśnij przycisk SELECT, aby wyszukać ponownie",
 
 -- Settings Menu
 ["Categories"] = "Kategorie",
@@ -244,10 +245,10 @@ return {
 ["Artwork"] = "Grafika",
 ["Scan_Settings"] = "Ustawienia skanowania",
 ["Adrenaline_roms"] = "Gry Adrenaline: ",
-["All_Category"] = "Wszystkie kategorie: ",
+["All_Category"] = "Kategoria Wszystko: ",
 ["Back_Chevron"] = "<  Wstecz",
-["Theme"] = "Temat",
-["Game_backgounds_colon"] = "Tła gry: ",
+["Theme"] = "Motyw",
+["Game_backgounds_colon"] = "Tła gier: ",
 
 -- Game directories
 ["Home"] = "Strona główna",
@@ -257,5 +258,32 @@ return {
 ["Use_this_directory"] = "Użyj tego katalogu",
 ["Rescan"] = "Skanuj ponownie",
 ["Back"] = "Wstecz",
+
+-- Scan progress
+["Scanning_titles"] = "Skanowanie tytułów...",
+["Scanning_games_ellipsis"] = "Skanowanie gier...",
+["Scan_complete"] = "Skanowanie zakończone",
+["Reloading_ellipsis"] = "Przeładowuję...",
+
+-- Guides
+["Help_and_Guides"] = "Pomocy",
+
+["guide_1_heading"] = "Dodawanie gier",
+["guide_1_content"] = "Katalogi gier: \nUmieść swoje gry w 'ux0:/data/RetroFlow/ROMS/' lub użyj własnych katalogów plików, przejdź do 'Ustawienia skanowania', a następnie 'Edytuj katalogi gier'. \n\nPo dodaniu gier wybierz 'Skanuj ponownie', aby dodać je do RetroFlow. \n\nNazwy plików: \nWażne jest, aby nazwy gier były zgodne z konwencją nazewnictwa plików 'no-intro', np. 'Sonic (USA)', w przeciwnym razie obrazy nie zostaną pobrane.",
+
+["guide_2_heading"] = "Gry Adrenaline nie ładują się?",
+["guide_2_content"] = "Jeśli gry Adrenaline nie ładują się i masz zainstalowany RetroFlow Adrenaline Launcher, zainstaluj AdrBubbleBooterInstaller: https://vitadb.rinnegatamante.it/#/info/307. \n\nLub spróbuj zainstalować Adrenaline Bubble Manager: https://github.com/ONElua/AdrenalineBubbleManager/releases/",
+
+["guide_3_heading"] = "Dostosuj okładki i tła do gier",
+["guide_3_content"] = "Okładki: \nNiestandardowe okładki można zapisać w folderach gry tutaj: 'ux0:/data/RetroFlow/COVERS/'. \n\nTła: \nNiestandardowe tła gry można zapisać w folderach gier tutaj: 'ux0:/data/RetroFlow/BACKGROUNDS/'. \n\nNazwy plików:\nNazwa pliku musi być zgodna z identyfikatorem aplikacji lub obrazy nazw aplikacji muszą być w formacie .png.",
+
+["guide_4_heading"] = "Dostosuj tapetę i muzykę",
+["guide_4_content"] = "Tapeta: \nMożesz dodać dowolną liczbę tapet, zapisując je tutaj: ux0:/data/RetroFlow/WALLPAPER/'. \nObrazy muszą być w formacie .jpg lub .png, a rozmiar powinien wynosić 960 x 544 pikseli. \n\nMuzyka: \nUtwory można dodawać do 'ux0:/data/RetroFlow/MUSIC/'. \nMuzyka musi być w formacie .ogg.",
+
+["guide_5_heading"] = "Kombinacje przycisków",
+["guide_5_content"] = "Klawisz strzałki w górę: przejdź do kategorii ulubionych \n\nKlawisz strzałki w dół + kwadrat: cofnij się o jedną kategorię \n\nKlawisz strzałki w dół + wyzwalacze L/P: przeskakuj gry alfabetycznie",
+
+["guide_6_heading"] = "O aplikacji",
+["guide_6_content"] = "RetroFlow od jimob4000 to zmodyfikowana wersja aplikacji HexFlow. \n\nOryginalna aplikacja HexFlow jest autorstwa VitaHex. Wesprzyj projekty VitaHex na patreon.com/vitahex \n\nWięcej informacji:\nAby uzyskać więcej informacji i pełne napisy, odwiedź: https://github.com/jimob4000/RetroFlow-Launcher",
 
 }

@@ -86,6 +86,7 @@ return {
 ["Download_Covers_colon"] = "Ladda ner omslag: ",
 ["Download_Covers"] = "Ladda ner omslag",
 ["Download_Backgrounds_colon"] = "Ladda ner bakgrunder: ",
+["Extract_PSP_backgrounds"] = "Extrahera PSP-bakgrunder",
 
 ["All"] = "Allt",
 ["Reload_Covers_Database"] = "Ladda om omslagsdatabasen",
@@ -257,5 +258,32 @@ return {
 ["Use_this_directory"] = "Använd den här mappen",
 ["Rescan"] = "Ladda om",
 ["Back"] = "Bakåt",
+
+-- Scan progress
+["Scanning_titles"] = "Skannar titlar...",
+["Scanning_games_ellipsis"] = "Skannar spel...",
+["Scan_complete"] = "Skanningen är klar",
+["Reloading_ellipsis"] = "Laddar om...",
+
+-- Guides
+["Help_and_Guides"] = "Hjälp",
+
+["guide_1_heading"] = "Lägger till spel",
+["guide_1_content"] = "Spelmappar: \nPlacera dina spel i 'ux0:/data/RetroFlow/ROMS/', eller för att använda dina egna filkataloger, gå till 'Skanningsinställningar' och sedan 'Redigera spelmappar'. \n\nNär du har lagt till dina spel, välj 'Ladda om' för att lägga till dem i RetroFlow. \n\nFilnamn: \nDet är viktigt att dina spel namnges med hjälp av 'no-intro' filnamnkonventionen, t.ex. 'Sonic (USA)', annars kommer bilder inte att laddas ner.",
+
+["guide_2_heading"] = "Adrenaline-spel laddas inte?",
+["guide_2_content"] = "Om Adrenaline-spel inte laddas och du har installerat RetroFlow Adrenaline Launcher, installera AdrBubbleBooterInstaller: https://vitadb.rinnegatamante.it/#/info/307. \n\nEller testa att installera Adrenaline Bubble Manager: https://github.com/ONElua/AdrenalineBubbleManager/releases/",
+
+["guide_3_heading"] = "Anpassade spelomslag och bakgrunder",
+["guide_3_content"] = "Omslag: \nAnpassade omslag kan sparas i spelmapparna här: 'ux0:/data/RetroFlow/COVERS/'. \n\nBakgrunder: \nAnpassade spelbakgrunder kan sparas i spelmapparna här: 'ux0:/data/RetroFlow/BACKGROUNDS/'. \n\nFilnamn:\nFilnamnet måste stämma överens med app-ID eller så måste appnamnbilderna vara i .png-format.",
+
+["guide_4_heading"] = "Anpassad tapet och musik",
+["guide_4_content"] = "Bakgrund: \nDu kan lägga till så många bakgrundsbilder som du vill genom att spara dem här: 'ux0:/data/RetroFlow/WALLPAPER/'. \nBilder måste vara i .jpg- eller .png-format och storleken ska vara 960px x 544px. \n\nMusik: \nSånger kan läggas till 'ux0:/data/RetroFlow/MUSIC/'. \nMusik måste vara i .ogg-format.",
+
+["guide_5_heading"] = "Knappkombinationer",
+["guide_5_content"] = "Pilknapp Upp: Gå till favoritkategorin \n\nPilknapp Ner + Fyrkant: Gå tillbaka en kategori \n\nPilknapp Ner + L/R utlösare: Hoppa över spel i alfabetisk ordning",
+
+["guide_6_heading"] = "Om ansökan",
+["guide_6_content"] = "RetroFlow av jimbob4000 är en modifierad version av HexFlow-appen. \n\nDen ursprungliga HexFlow-appen är från VitaHex. Stöd VitaHex projekt på patreon.com/vitahex \n\nMer information:\nFör mer information och fullständiga poäng, besök: https://github.com/jimbob4000/RetroFlow-Launcher",
 
 }

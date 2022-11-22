@@ -86,6 +86,7 @@ return {
 ["Download_Covers_colon"] = "Скачать Обложки: ",
 ["Download_Covers"] = "Скачать Обложки",
 ["Download_Backgrounds_colon"] = "Скачать фонов: ",
+["Extract_PSP_backgrounds"] = "Извлечь фоны PSP",
 
 ["All"] = "Все",
 ["Reload_Covers_Database"] = "Перезагрузка Дата Базы Обложек",
@@ -257,5 +258,32 @@ return {
 ["Use_this_directory"] = "Используйте этот каталог",
 ["Rescan"] = "Перезагрузка",
 ["Back"] = "Вернуться",
+
+-- Scan progress
+["Scanning_titles"] = "Сканирование названий…",
+["Scanning_games_ellipsis"] = "Сканирование игр...",
+["Scan_complete"] = "Сканирование завершено",
+["Reloading_ellipsis"] = "Перезагружается...",
+
+-- Guides
+["Help_and_Guides"] = "Помощь",
+
+["guide_1_heading"] = "Как добавить игры",
+["guide_1_content"] = "Каталоги игр: \nПоместите свои игры в 'ux0:/data/RetroFlow/ROMS/' \nили, чтобы использовать свои собственные файловые каталоги, перейдите в \n'Настройки сканирования', а затем в 'Редактировать каталоги игр'. \n\nДобавив свои игры, выберите «Перезагрузка», чтобы добавить их в RetroFlow. \n\nИмена файлов: \nВажно, чтобы ваши игры назывались в соответствии с соглашением об именовании \nфайлов 'no-intro', например. «Sonic (USA)», иначе изображения не будут \nзагружены.",
+
+["guide_2_heading"] = "Игры Adrenaline не загружаются?",
+["guide_2_content"] = "Если игры Adrenaline не загружаются и вы установили программу запуска \nRetroFlow Adrenaline Launcher, установите AdrBubbleBooterInstaller: \nhttps://vitadb.rinnegatamante.it/#/info/307. \n\nИли попробуйте установить Adrenaline Bubble Manager: \nhttps://github.com/ONElua/AdrenalineBubbleManager/releases/",
+
+["guide_3_heading"] = "Настройка обложек и фонов для игр",
+["guide_3_content"] = "Обложки: \nПользовательские обложки можно сохранить в папке с игрой здесь: \n'ux0:/data/RetroFlow/COVERS/'. \n\nФон: \nПользовательские игровые фоны можно сохранить в папке с игрой здесь: \n'ux0:/data/RetroFlow/BACKGROUNDS/'. \n\nИмена файлов:\nИмя файла должно соответствовать идентификатору приложения, \nили изображения имени приложения должны быть в формате .png.",
+
+["guide_4_heading"] = "Пользовательские обои и музыка",
+["guide_4_content"] = "Обои: \nВы можете добавить любое количество обоев, сохранив их здесь: \n'ux0:/data/RetroFlow/WALLPAPER/'. \nИзображения должны быть в формате .jpg или .png и иметь размер \n960 x 544 пикселей. \n\nМузыка: \nПесни можно добавлять в 'ux0:/data/RetroFlow/MUSIC/'. \nМузыка должна быть в формате .ogg.",
+
+["guide_5_heading"] = "Комбинации кнопок",
+["guide_5_content"] = "Клавиша со стрелкой вверх: перейти к избранной категории \n\nКлавиша со стрелкой вниз + квадрат: вернуться на одну категорию \n\nКлавиша со стрелкой вниз + триггеры L/R: пропустить игры по алфавиту",
+
+["guide_6_heading"] = "О приложении",
+["guide_6_content"] = "RetroFlow от jimbob4000 — это модифицированная версия приложения HexFlow. \n\nОригинальное приложение HexFlow разработано VitaHex. \nПоддержите проекты VitaHex на patreon.com/vitahex \n\nДополнительная информация:\nДля получения дополнительной информации и полной информации посетите: \nhttps://github.com/jimbob4000/RetroFlow-Launcher",
 
 }

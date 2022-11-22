@@ -14,7 +14,7 @@ return {
 ["Language_colon"] = "語言 : ",
 ["Homebrews_Category_colon"] = "自製類別 : ",
 ["Recently_Played_colon"] = "最近玩過 : ",
-["Startup_scan_colon"] = "开始时扫描 : ",
+["Startup_scan_colon"] = "開始時掃描 : ",
 ["On"] = "開啟",
 ["Off"] = "關閉",
 
@@ -33,11 +33,11 @@ return {
 ["Blue"] = "藍色",
 
 -- Audio
-["Audio"] = "音频",
+["Audio"] = "音頻",
 ["Sounds_colon"] = "音效 : ",
-["Music_colon"] = "音乐 : ",
-["Shuffle_music_colon"] = "随机播放音乐 : ",
-["Skip_track"] = "跳过曲目",
+["Music_colon"] = "音樂 : ",
+["Shuffle_music_colon"] = "隨機播放音樂 : ",
+["Skip_track"] = "跳過曲目",
 
 -- Startup Categories
 ["Startup_Category_colon"] = "啟動類別 : ",
@@ -86,6 +86,7 @@ return {
 ["Download_Covers_colon"] = "下載封面 : ",
 ["Download_Covers"] = "下載封面",
 ["Download_Backgrounds_colon"] = "下載背景: ",
+["Extract_PSP_backgrounds"] = "提取 PSP 背景",
 
 ["All"] = "全部",
 ["Reload_Covers_Database"] = "重新載入封面數據庫",
@@ -243,19 +244,46 @@ return {
 ["Sounds"] = "聲音",
 ["Artwork"] = "圖片",
 ["Scan_Settings"] = "掃描設置",
-["Adrenaline_roms"] = "Adrenaline 游戏 : ",
+["Adrenaline_roms"] = "Adrenaline 遊戲 : ",
 ["All_Category"] = "所有類別 : ",
 ["Back_Chevron"] = "<  返回",
 ["Theme"] = "主題",
 ["Game_backgounds_colon"] = "遊戲背景: ",
 
 -- Game directories
-["Home"] = "主页",
-["Directory_not_found"] = "找不到目录",
+["Home"] = "主頁",
+["Directory_not_found"] = "找不到目錄",
 ["Edit_game_directories"] = "編輯遊戲目錄...",
 ["Game_directories"] = "遊戲目錄",
 ["Use_this_directory"] = "使用這個目錄",
 ["Rescan"] = "重新掃描",
 ["Back"] = "返回",
+
+-- Scan progress
+["Scanning_titles"] = "掃描標題...",
+["Scanning_games_ellipsis"] = "掃描遊戲...",
+["Scan_complete"] = "掃描完成",
+["Reloading_ellipsis"] = "正在重新加載...",
+
+-- Guides
+["Help_and_Guides"] = "幫助",
+
+["guide_1_heading"] = "添加遊戲",
+["guide_1_content"] = "遊戲目錄：\n將您的遊戲放在「ux0:/data/RetroFlow/ROMS/」中，\n或使用您自己的文件目錄，轉到「掃描設置」，然後「編輯遊戲目錄」。 \n\n添加遊戲後，選擇「重新掃描」將它們添加到 RetroFlow。 \n\n文件名：\n請務必使用「no-intro」文件命名約定命名您的遊戲，例如 「Sonic (USA)」，\n否則不會下載圖像。",
+
+["guide_2_heading"] = "Adrenaline 遊戲沒有加載",
+["guide_2_content"] = "如果 Adrenaline 遊戲未加載且您已安裝 RetroFlow Adrenaline Launcher，\n請安裝 AdrBubbleBooterInstaller：\nhttps://vitadb.rinnegatamante.it/#/info/307。 \n\n或者嘗試安裝 Adrenaline Bubble Manager：\nhttps://github.com/ONElua/AdrenalineBubbleManager/releases/",
+
+["guide_3_heading"] = "自定義遊戲封面和背景",
+["guide_3_content"] = "封面：\n自定義封面可以保存在此處的遊戲文件夾中：「ux0:/data/RetroFlow/COVERS/」。 \n\n背景：\n自定義遊戲背景可以保存在此處的遊戲文件夾中：\n「ux0:/data/RetroFlow/BACKGROUNDS/」。 \n\n文件名：\n文件名必須與應用 ID 匹配，或者應用名稱圖像必須為 .png 格式。",
+
+["guide_4_heading"] = "自定義壁紙和音樂",
+["guide_4_content"] = "壁紙：\n您可以在此處保存任意數量的壁紙：「ux0:/data/RetroFlow/WALLPAPER/」。 \n圖片必須為 .jpg 或 .png 格式，尺寸應為 960 像素 x 544 像素。 \n\n音樂：\n歌曲可以添加到「ux0:/data/RetroFlow/MUSIC/」。 \n音樂必須為 .ogg 格式。",
+
+["guide_5_heading"] = "按鈕組合",
+["guide_5_content"] = "向上箭頭鍵：跳至收藏類別 \n\n向下箭頭鍵 + 方形：返回一個類別 \n\n向下箭頭鍵 + L/R 觸發器：按字母順序跳過遊戲",
+
+["guide_6_heading"] = "關於",
+["guide_6_content"] = "jimbob4000 的 RetroFlow 是 HexFlow 應用程序的修改版本。 \n\n最初的 HexFlow 應用程序是由VitaHex 開發的。\n在 patreon.com/vitahex 上支持 VitaHex 的項目 \n\n更多信息：\n更多信息和完整學分，請訪問：https://github.com/jimbob4000/RetroFlow-Launcher",
 
 }

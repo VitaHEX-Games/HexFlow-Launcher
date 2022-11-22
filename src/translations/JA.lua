@@ -86,6 +86,7 @@ return {
 ["Download_Covers_colon"] = "カバーをダウンロード : ",
 ["Download_Covers"] = "カバーをダウンロード",
 ["Download_Backgrounds_colon"] = "背景をダウンロード : ",
+["Extract_PSP_backgrounds"] = "PSPの背景を抽出",
 
 ["All"] = "すべて",
 ["Reload_Covers_Database"] = "カバーDBを再読み込み",
@@ -257,5 +258,33 @@ return {
 ["Use_this_directory"] = "このディレクトリを使用",
 ["Rescan"] = "再スキャン",
 ["Back"] = "後ろ",
+
+-- Scan progress
+["Scanning_titles"] = "タイトルをスキャンしています...",
+["Scanning_games_ellipsis"] = "ゲームをスキャンしています...",
+["Scan_complete"] = "スキャン完了",
+["Reloading_ellipsis"] = "リロード中...",
+
+-- Guides
+["Help_and_Guides"] = "ヘルプ",
+
+["guide_1_heading"] = "ゲームの追加",
+["guide_1_content"] = "ゲームディレクトリ: \nゲームを「ux0:/data/RetroFlow/ROMS/」 に配置するか、\n独自のファイル ディレクトリを使用するには、\n「スキャン設定」 に移動してから 「ゲームディレクトリの編集」 に移動します。 \n\nゲームを追加したら、「再スキャン」を選択して RetroFlow に追加します。 \n\nファイル名: \n「no-intro」ファイル命名規則を使用してゲームに名前を付けることが重要です。 \n「Sonic (USA)」、そうでない場合、画像はダウンロードされません。",
+
+
+["guide_2_heading"] = "Adrenaline ゲームがロードされませんか?",
+["guide_2_content"] = "Adrenaline ゲームがロードされず、RetroFlow Adrenaline Launcher \nがインストールされている場合は、AdrBubbleBooterInstaller \nhttps://vitadb.rinnegatamante.it/#/info/307 をインストールしてください。 \n\nまたは、Adrenaline Bubble Manager をインストールしてみてください: \nhttps://github.com/ONElua/AdrenalineBubbleManager/releases/",
+
+["guide_3_heading"] = "ゲームのカバーと背景をカスタマイズする",
+["guide_3_content"] = "カバー: \nカスタム カバーは次のゲーム フォルダに保存できます: \n「ux0:/data/RetroFlow/COVERS/」。 \n\n背景: \nカスタム ゲームの背景は、「ux0:/data/RetroFlow/BACKGROUNDS/」\nのゲーム フォルダに保存できます。 \n\nファイル名:\nファイル名はアプリ ID またはアプリ名と一致する必要があります。\n画像は .png 形式である必要があります。",
+
+["guide_4_heading"] = "壁紙と音楽をカスタマイズする",
+["guide_4_content"] = "壁紙: \n次の場所に壁紙を保存して、好きなだけ壁紙を追加できます: \n「ux0:/data/RetroFlow/WALLPAPER/」。 \n画像は .jpg または .png 形式で、サイズは 960px x 544px である必要があります。 \n\n音楽: \n曲は 「ux0:/data/RetroFlow/MUSIC/」 に追加できます。 \n音楽は .ogg 形式でなければなりません。",
+
+["guide_5_heading"] = "コントロール ショートカット",
+["guide_5_content"] = "上矢印キー: お気に入りのカテゴリにスキップ \n\n下矢印キー + 四角キー: 1 つのカテゴリに戻る \n\n下矢印キー + L/R トリガー: ゲームをアルファベット順にスキップ",
+
+["guide_6_heading"] = "応募について",
+["guide_6_content"] = "jimbob4000 による RetroFlow は、HexFlow アプリの修正版です。 \n\nオリジナルの HexFlow アプリは VitaHex によるものです。 \npatreon.com/vitahex で VitaHex のプロジェクトをサポート \n\n詳細情報:\n詳細情報と完全なクレジットについては、\nhttps://github.com/jimbob4000/RetroFlow-Launcher にアクセスしてください。",
 
 }
