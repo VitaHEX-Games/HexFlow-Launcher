@@ -33,7 +33,7 @@ return {
 ["Blue"] = "Niebieski",
 
 -- Audio
-["Audio"] = "Audio",
+["Audio"] = "Dźwięk",
 ["Sounds_colon"] = "Dźwięki: ",
 ["Music_colon"] = "Muzyka: ",
 ["Shuffle_music_colon"] = "Tasuj muzykę: ",
