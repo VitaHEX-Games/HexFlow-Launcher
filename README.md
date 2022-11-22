@@ -31,13 +31,13 @@ PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment S
 
 # Installation
 
-### 1. Install the RetroFlow VPK's.
+## 1. Install the RetroFlow VPK's.
 
 * Install the [latest version of RetroFlow](https://github.com/jimbob4000/RetroFlow-Launcher/releases) 
 * Also install the 'RetroFlow Adrenaline launcher' VPK from the [latest version of RetroFlow](https://github.com/jimbob4000/RetroFlow-Launcher/releases).
 * 'RetroFlow Launcher' is the app you will use to browse games. 'RetroFlow Adrenaline launcher' is needed for launching Playstation and PSP games.
 
-### 2. Install any other necessary apps
+## 2. Install any other necessary apps
 * [Adrenaline](https://github.com/TheOfficialFloW/Adrenaline) is required for Playstation and PSP games.
 * [DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases) is required for N64 games. 
 * [RetroArch](https://www.retroarch.com/index.php?page=platforms) is required for other retro systems.  
@@ -45,7 +45,7 @@ PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment S
 * **Important:** If Adrenaline games aren't launching after you have finished the setup, please install [AdrBubbleBooterInstaller](https://vitadb.rinnegatamante.it/#/info/307). Or try installing [Adrenaline Bubble Manager](https://github.com/ONElua/AdrenalineBubbleManager/releases).
 
 
-### 3. Check your PS1 and PSP are in the right Adrenaline folders
+## 3. Check your PS1 and PSP are in the right Adrenaline folders
 
 
 * PS1 and PSP games with eboot files should be saved here: `ux0:pspemu/PSP/GAME/`
@@ -53,7 +53,7 @@ PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment S
 * uma0, ur0, imc0 and xmc0 partitions are also supported.
 * **Tip:** PS1 games can also be launched using RetroArch, helpful for games which don't run well in Adrenaline.
 
-### 4. Add your retro games to RetroFlow
+## 4. Add your retro games to RetroFlow
 
 For best results it's recommended that your games are named using the **no-intro** file naming convention, e.g. "Game Name (USA)", these names are used to download matching cover images.
 
@@ -77,14 +77,14 @@ For best results it's recommended that your games are named using the **no-intro
 **Note:** 
 If you're using an old version of RetroFlow (below v5) you will need to rename PSP and maybe PS1 games too, please see the guide here: [Legacy guide - Renaming PSP and PSX](https://raw.githubusercontent.com/jimbob4000/RetroFlow-Launcher/main/docs/Legacy_guide_-_Renaming_PSP_and_PSX.md). 
 
-### 4. Rescan to find your games
+## 5. Rescan to find your games
 
 * Press 'Start' and go to 'Scan Settings', then select 'Rescan'
 * Your retro games should now appear when you restart the app.
 * 'Startup scan' can be turned off once you have finished adding your games, the app will startup faster when it's turned off.
 
 
-### 5. Download covers & backgrounds
+## 6. Download covers & backgrounds
 
 * To download cover images, press start, then choose which covers or backgrounds you would like to download.
 * From version 5 onwards you can also extract background images for PSP games from PSP iso files.
@@ -117,7 +117,7 @@ Navigate your library using the **DPad** or the **Left Stick** or with the **Tou
 # Customisation
 
 
-### Adding Custom game covers & backgrounds
+## Adding Custom game covers & backgrounds
 
 #### Covers:
 * Custom covers can be saved in the game folders here: `ux0:/data/RetroFlow/COVERS/`.
@@ -132,8 +132,8 @@ Navigate your library using the **DPad** or the **Left Stick** or with the **Tou
 #### Image format:
 * Cover and background images must be in **png** format. 
 
-___
-### Adding Custom wallpaper & music
+
+## Adding Custom wallpaper & music
 
 #### Wallpaper:
 * You can add as many wallpapers as you like by saving them here: `ux0:/data/RetroFlow/WALLPAPER/`. 
