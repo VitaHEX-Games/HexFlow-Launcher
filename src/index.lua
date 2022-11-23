@@ -8167,7 +8167,7 @@ function QuickOverride_Category(tmpappcat)
     end
 
     -- force icon change. Credit BlackSheepBoy69
-    xCatLookup(showCat)[p].ricon = Graphics.loadImage(xCatLookup(showCat)[p].icon_path)
+    -- xCatLookup(showCat)[p].ricon = Graphics.loadImage(xCatLookup(showCat)[p].icon_path)
 
     GetInfoSelected()
     oldpad = pad -- Prevents it from launching next game accidentally. Credit BlackSheepBoy69
