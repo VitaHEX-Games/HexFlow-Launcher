@@ -5047,7 +5047,7 @@ function listDirectory(dir)
                             romname_withExtension = file.name
                             cleanRomNames()
                             info = romname_noRegion_noExtension
-                            app_title = romname_noRegion_noExtension
+                            app_title = romname_noExtension
                             
                             
                             --table.insert(games_table, file)
@@ -5069,7 +5069,6 @@ function listDirectory(dir)
                                 local key = find_game_table_pos_key(renamed_games_table, file.name)
                                 if key ~= nil then
                                   -- Yes - Find in files table
-                                  app_title = renamed_games_table[key].title
                                   file.title = renamed_games_table[key].title
                                   file.apptitle = renamed_games_table[key].title
                                 else
@@ -5092,8 +5091,6 @@ function listDirectory(dir)
                                     img_path = "app0:/DATA/noimg.png" --blank grey
                                 end
                             end
-
-                            update_loading_screen_progress()
 
                             table.insert(folders_table, file)
                             table.insert((def_table_name), file)
@@ -5149,7 +5146,9 @@ function listDirectory(dir)
                             and not string.match(file_subfolder.name, "%.ss0") 
                             and not string.match(file_subfolder.name, "%._") then
 
-                                if string.match(file.name, "%.pbp") or string.match(file.name, "%.PBP") then
+                                if string.match(file_subfolder.name, "%.pbp") or string.match(file_subfolder.name, "%.PBP") then
+
+
 
                                     if sfo_scan_retroarch_db[file_subfolder.name] ~= nil then
 
@@ -5315,6 +5314,83 @@ function listDirectory(dir)
                                         table.insert(files_table, count_of_systems, file_subfolder.apptitle)
                                     end
                                 else
+
+                                    -- check if game is in the favorites list
+                                    if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                                        if string.find(strFav, file_subfolder.name,1,true) ~= nil then
+                                            file_subfolder.favourite = true
+                                        else
+                                            file_subfolder.favourite = false
+                                        end
+                                    end
+
+                                    file_subfolder.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name .. "/" .. file_subfolder.name)
+
+                                    romname_withExtension = file_subfolder.name
+                                    cleanRomNames()
+                                    info = romname_noRegion_noExtension
+                                    app_title = romname_noExtension
+                                    
+
+                                    file_subfolder.filename = file_subfolder.name
+                                    file_subfolder.name = romname_noExtension
+                                    file_subfolder.title = romname_noRegion_noExtension
+                                    file_subfolder.name_online = romname_url_encoded
+                                    file_subfolder.version = romname_region
+                                    file_subfolder.apptitle = romname_noRegion_noExtension
+                                    file_subfolder.date_played = 0
+                                    file_subfolder.snap_path_local = (SystemsToScan[(def)].localSnapPath)
+                                    file_subfolder.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+                                    file_subfolder.app_type = 3
+                                    file_subfolder.app_type_default = 3
+
+                                    -- Check for renamed game names
+                                    if #renamed_games_table ~= nil then
+                                        local key = find_game_table_pos_key(renamed_games_table, file_subfolder.name)
+                                        if key ~= nil then
+                                          -- Yes - Find in files table
+                                          file_subfolder.title = renamed_games_table[key].title
+                                          file_subfolder.apptitle = renamed_games_table[key].title
+                                        else
+                                          -- No
+                                        end
+                                    else
+                                    end
+
+                                    custom_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.title .. ".png"
+                                    custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png"
+
+                                    if custom_path and System.doesFileExist(custom_path) then
+                                        img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.title .. ".png" --custom cover by app name
+                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                        img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
+                                    else
+                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                                            img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                        else
+                                            img_path = "app0:/DATA/noimg.png" --blank grey
+                                        end
+                                    end
+
+                                    table.insert(folders_table, file_subfolder)
+                                    table.insert((def_table_name), file_subfolder)
+
+                                    table.insert(files_table, count_of_systems, file_subfolder.app_type) 
+                                    table.insert(files_table, count_of_systems, file_subfolder.name)
+                                    table.insert(files_table, count_of_systems, file_subfolder.title)
+                                    table.insert(files_table, count_of_systems, file_subfolder.name_online)
+                                    table.insert(files_table, count_of_systems, file_subfolder.version)
+
+                                    file_subfolder.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
+                                    file_subfolder.cover_path_local = (SystemsToScan[(def)].localCoverPath)
+
+                                    --add blank icon to all
+                                    file_subfolder.icon = imgCoverTmp
+                                    file_subfolder.icon_path = img_path
+                                    
+                                    table.insert(files_table, count_of_systems, file_subfolder.icon) 
+                                    table.insert(files_table, count_of_systems, file_subfolder.apptitle)
+
                                 end
 
                         end
