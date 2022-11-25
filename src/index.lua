@@ -2156,6 +2156,11 @@ end
 
 function launch_Adrenaline()
 
+    -- Check for bubble / purchased game, if found launch app instead of Adrenaline
+    if System.doesAppExist(titleid) then
+        System.launchApp(titleid)
+    end
+
     -- Delete the old Adrenaline inf file
     if  System.doesFileExist(launch_dir_adr .. "data/boot.inf") then
         System.deleteFile(launch_dir_adr .. "data/boot.inf")
@@ -12981,6 +12986,7 @@ while true do
                         if string.match (games_table[p].game_path, "pspemu") then
                             -- Launch adrenaline
                             rom_location = tostring(games_table[p].launch_argument)
+                            titleid = tostring(games_table[p].name)
                             launch_Adrenaline()
                         else
                             if games_table[p].app_type_default == 3 then
@@ -12996,6 +13002,7 @@ while true do
                         if string.match (homebrews_table[p].game_path, "pspemu") then
                             -- Launch adrenaline
                             rom_location = tostring(homebrews_table[p].launch_argument)
+                            titleid = tostring(homebrews_table[p].name)
                             launch_Adrenaline()
                         else
                             if homebrews_table[p].app_type_default == 3 then
@@ -13011,6 +13018,7 @@ while true do
                         if string.match (psp_table[p].game_path, "pspemu") then
                             -- Launch adrenaline
                             rom_location = tostring(psp_table[p].launch_argument)
+                            titleid = tostring(psp_table[p].name)
                             launch_Adrenaline()
                         else
                             if psp_table[p].app_type_default == 3 then
@@ -13027,6 +13035,7 @@ while true do
                         if string.match (psx_table[p].game_path, "pspemu") then
                             -- Launch adrenaline
                             rom_location = tostring(psx_table[p].launch_argument)
+                            titleid = tostring(psx_table[p].name)
                             launch_Adrenaline()
                         else
                             if psx_table[p].app_type_default == 3 then
@@ -13079,6 +13088,7 @@ while true do
                             if string.match (fav_count[p].game_path, "pspemu") then
                                 -- Launch adrenaline
                                 rom_location = tostring(fav_count[p].launch_argument)
+                                titleid = tostring(fav_count[p].name)
                                 launch_Adrenaline()
                             else
                                 if fav_count[p].app_type_default == 3 then
@@ -13129,6 +13139,7 @@ while true do
                             -- Homebrew
                             if string.match (fav_count[p].game_path, "pspemu") then
                                 rom_location = (fav_count[p].launch_argument)
+                                titleid = tostring(fav_count[p].name)
                                 launch_Adrenaline()
                             else
                                 System.launchApp(fav_count[p].name)
@@ -13142,6 +13153,7 @@ while true do
                             if string.match (recently_played_table[p].game_path, "pspemu") then
                                  -- Launch adrenaline
                                 rom_location = tostring(recently_played_table[p].launch_argument)
+                                titleid = tostring(recently_played_table[p].name)
                                 launch_Adrenaline()
                             else
                                 if recently_played_table[p].app_type_default == 3 then
@@ -13192,6 +13204,7 @@ while true do
                             -- Homebrew
                             if string.match (recently_played_table[p].game_path, "pspemu") then
                                 rom_location = (recently_played_table[p].launch_argument)
+                                titleid = tostring(recently_played_table[p].name)
                                 launch_Adrenaline()
                             else
                                 System.launchApp(recently_played_table[p].name)
@@ -13206,6 +13219,7 @@ while true do
                             if string.match (search_results_table[p].game_path, "pspemu") then
                                  -- Launch adrenaline
                                 rom_location = tostring(search_results_table[p].launch_argument)
+                                titleid = tostring(search_results_table[p].name)
                                 launch_Adrenaline()
                             else
                                 if search_results_table[p].app_type_default == 3 then
@@ -13256,6 +13270,7 @@ while true do
                             -- Homebrew
                             if string.match (search_results_table[p].game_path, "pspemu") then
                                 rom_location = (search_results_table[p].launch_argument)
+                                titleid = tostring(search_results_table[p].name)
                                 launch_Adrenaline()
                             else
                                 System.launchApp(search_results_table[p].name)
@@ -13271,6 +13286,7 @@ while true do
                             if string.match (files_table[p].game_path, "pspemu") then
                                  -- Launch adrenaline
                                 rom_location = tostring(files_table[p].launch_argument)
+                                titleid = tostring(files_table[p].name)
                                 launch_Adrenaline()
                             else
                                 if files_table[p].app_type_default == 3 then
@@ -13321,6 +13337,7 @@ while true do
                             -- Homebrew
                             if string.match (files_table[p].game_path, "pspemu") then
                                 rom_location = (files_table[p].launch_argument)
+                                titleid = tostring(files_table[p].name)
                                 launch_Adrenaline()
                             else
                                 System.launchApp(files_table[p].name)

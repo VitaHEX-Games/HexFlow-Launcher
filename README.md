@@ -51,6 +51,7 @@ PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment S
 * PS1 and PSP games with eboot files should be saved here: `ux0:pspemu/PSP/GAME/`
 * PSP ISO and CSO games should be saved here: `ux0:pspemu/ISO/`
 * uma0, ur0, imc0 and xmc0 partitions are also supported.
+* The partition you use for Adrenaline will also need to be selected in the 'Scan settings' in RetroFlow.
 * **Tip:** PS1 games can also be launched using RetroArch, helpful for games which don't run well in Adrenaline.
 
 ## 4. Add your retro games to RetroFlow
@@ -79,7 +80,7 @@ If you're using an old version of RetroFlow (below v5) you will need to rename P
 
 ## 5. Rescan to find your games
 
-* Press 'Start' and go to 'Scan Settings', then select 'Rescan'
+* Press 'Start' and go to 'Scan Settings', select your Adrenaline location, and if you are using custom game folders, select those too, then select 'Rescan'.
 * Your retro games should now appear when you restart the app.
 * 'Startup scan' can be turned off once you have finished adding your games, the app will startup faster when it's turned off.
 

@@ -1,8 +1,9 @@
 # FAQ's
 
 ### My Adrenaline games aren't working?
-If Adrenaline games aren't launching, please install [AdrBubbleBooterInstaller](https://vitadb.rinnegatamante.it/#/info/307). <br>
+ * If Adrenaline games aren't launching, please install [AdrBubbleBooterInstaller](https://vitadb.rinnegatamante.it/#/info/307). <br>
 Or try installing [Adrenaline Bubble Manager](https://github.com/ONElua/AdrenalineBubbleManager/releases).
+ * Also check you have selected the right partition for your Adrenaline games (under 'Scan settings, Adrenaline games' in RetroFlow), this should match the 'Memory Stick Location' within Adrenaline's settings menu.
 
 ### Missing artwork - How should I name my games so covers are found?
 It's recommended that your roms are named using the **no-intro** file naming convention, e.g. "Game Name (USA)", these names are used to match with cover images.
