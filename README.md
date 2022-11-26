@@ -153,9 +153,6 @@ You can change your background within the app by going to the settings menu > th
 **Repatch**
 Potential issue with repatch / repatch_4 plugins in the tai config. May cause the Vita to shutdown. Try disabling these if you encounter an issue.
 
-**PSP Categories lite**
-This PSP plugin is unsupported, if you're experiencing please try without the plugin.
-
 
 # Credits
 
