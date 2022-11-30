@@ -6,7 +6,7 @@ local oneLoopTimer = Timer.new()
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "5.0.1"
+local appversion = "5.0.2"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -2787,6 +2787,7 @@ function listDirectory(dir)
             and not string.match(file.name, "RETROFLOW") -- Don't index Retroflow
             and not string.match(file.name, "RETROLNCR") -- Don't index Retroflow Adrenaline Launcher
             and not string.match(file.name, "ADRLANCHR") -- Don't index Adrenaline Launcher
+            and not string.match(file.name, "PSPEMU" .. "%d") -- Don't index PSPEMU001 games, but include PSPEMUCFW (Adrenaline)
             and not System.doesFileExist(working_dir .. "/" .. file.name .. "/data/config.bin") -- Don't scan PSP and PSX Bubbles
             and not bubble == true -- Don't scan PSP and PSX Bubbles
             then
