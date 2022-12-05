@@ -266,24 +266,24 @@ return {
 ["Reloading_ellipsis"] = "Przeładowuję...",
 
 -- Guides
-["Help_and_Guides"] = "Pomocy",
+["Help_and_Guides"] = "Pomoc",
 
 ["guide_1_heading"] = "Dodawanie gier",
-["guide_1_content"] = "Katalogi gier: \nUmieść swoje gry w 'ux0:/data/RetroFlow/ROMS/' lub użyj własnych katalogów plików, przejdź do 'Ustawienia skanowania', a następnie 'Edytuj katalogi gier'. \n\nPo dodaniu gier wybierz 'Skanuj ponownie', aby dodać je do RetroFlow. \n\nNazwy plików: \nWażne jest, aby nazwy gier były zgodne z konwencją nazewnictwa plików 'no-intro', np. 'Sonic (USA)', w przeciwnym razie obrazy nie zostaną pobrane.",
+["guide_1_content"] = "Katalogi gier: \nUmieść swoje gry w 'ux0:/data/RetroFlow/ROMS/', a by użyć własnych katalogów przejdź do 'Ustawienia skanowania', a następnie 'Edytuj katalogi gier'. \n\nPo umieszczeniu gier w folderach wybierz 'Skanuj ponownie', aby dodać je do RetroFlow. \n\nNazwy plików: \nWażne jest, aby Twoje gry były nazwane przy użyciu konwencji nazewnictwa plików 'no-intro', np. 'Sonic (USA)', w przeciwnym razie okładki i tła nie zostaną pobrane.",
 
 ["guide_2_heading"] = "Gry Adrenaline nie ładują się?",
-["guide_2_content"] = "Jeśli gry Adrenaline nie ładują się i masz zainstalowany RetroFlow Adrenaline Launcher, zainstaluj AdrBubbleBooterInstaller: https://vitadb.rinnegatamante.it/#/info/307. \n\nLub spróbuj zainstalować Adrenaline Bubble Manager: https://github.com/ONElua/AdrenalineBubbleManager/releases/",
+["guide_2_content"] = "Jeśli gry Adrenaline nie ładują się i masz zainstalowany RetroFlow Adrenaline Launcher, zainstaluj AdrBubbleBooterInstaller: https://vitadb.rinnegatamante.it/#/info/307. \n\nMożesz również spróbować zainstalować Adrenaline Bubble Manager: https://github.com/ONElua/AdrenalineBubbleManager/releases/",
 
-["guide_3_heading"] = "Dostosuj okładki i tła do gier",
-["guide_3_content"] = "Okładki: \nNiestandardowe okładki można zapisać w folderach gry tutaj: 'ux0:/data/RetroFlow/COVERS/'. \n\nTła: \nNiestandardowe tła gry można zapisać w folderach gier tutaj: 'ux0:/data/RetroFlow/BACKGROUNDS/'. \n\nNazwy plików:\nNazwa pliku musi być zgodna z identyfikatorem aplikacji lub obrazy nazw aplikacji muszą być w formacie .png.",
+["guide_3_heading"] = "Niestandardowe okładki i tła do gier",
+["guide_3_content"] = "Okładki: \nNiestandardowe okładki można zapisywać w folderach odpowiadających danej platformie tutaj: 'ux0:/data/RetroFlow/COVERS/'. \n\nTła: \nNiestandardowe tła gier można zapisywać w folderach odpowiadających danej platformie tutaj: 'ux0:/data/RetroFlow/BACKGROUNDS/'. \n\nNazwy plików:\nNazwa pliku musi być zgodna z ID aplikacji lub Jej Nazwą co do litery. Okładki i tła muszą być w formacie .png.",
 
-["guide_4_heading"] = "Dostosuj tapetę i muzykę",
-["guide_4_content"] = "Tapeta: \nMożesz dodać dowolną liczbę tapet, zapisując je tutaj: ux0:/data/RetroFlow/WALLPAPER/'. \nObrazy muszą być w formacie .jpg lub .png, a rozmiar powinien wynosić 960 x 544 pikseli. \n\nMuzyka: \nUtwory można dodawać do 'ux0:/data/RetroFlow/MUSIC/'. \nMuzyka musi być w formacie .ogg.",
+["guide_4_heading"] = "Niestandardowa tapeta i muzyka",
+["guide_4_content"] = "Tapeta: \nMożesz dodać dowolną liczbę tapet, zapisując je tutaj: ux0:/data/RetroFlow/WALLPAPER/'. \nObrazy muszą być w formacie .jpg lub .png, a ich rozdzielczość powinna wynosić 960 x 544 pikseli. \n\nMuzyka: \nUtwory możesz umieszczać w 'ux0:/data/RetroFlow/MUSIC/'. \nMuszą być one w formacie .ogg.",
 
-["guide_5_heading"] = "Kombinacje przycisków",
-["guide_5_content"] = "Klawisz strzałki w górę: przejdź do kategorii ulubionych \n\nKlawisz strzałki w dół + kwadrat: cofnij się o jedną kategorię \n\nKlawisz strzałki w dół + wyzwalacze L/P: przeskakuj gry alfabetycznie",
+["guide_5_heading"] = "Skróty klawiszowe",
+["guide_5_content"] = "D-pad w górę: przejdź do kategorii ulubionych \n\nD-pad w dół + kwadrat: cofnij się o jedną kategorię \n\nD-pad w dół + trigger L/P: przeskakuj gry alfabetycznie",
 
 ["guide_6_heading"] = "O aplikacji",
-["guide_6_content"] = "RetroFlow od jimob4000 to zmodyfikowana wersja aplikacji HexFlow. \n\nOryginalna aplikacja HexFlow jest autorstwa VitaHex. Wesprzyj projekty VitaHex na patreon.com/vitahex \n\nWięcej informacji:\nAby uzyskać więcej informacji i pełne napisy, odwiedź: https://github.com/jimob4000/RetroFlow-Launcher",
+["guide_6_content"] = "RetroFlow od jimbob4000 to zmodyfikowana wersja aplikacji HexFlow. \n\nOryginalna aplikacja HexFlow jest autorstwa VitaHex. Wesprzyj projekty VitaHex na: patreon.com/vitahex \n\nWięcej informacji:\nAby uzyskać więcej informacji na temat samego projektu oraz ludzi, którzy się do niego przyczynili, odwiedź: https://github.com/jimbob4000/RetroFlow-Launcher",
 
 }
