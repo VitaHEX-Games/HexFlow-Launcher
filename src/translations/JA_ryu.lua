@@ -11,17 +11,17 @@ return {
 ["About"] = "クレジット",
 
 -- General settings
-["Language_colon"] = "言語:",
-["Homebrews_Category_colon"] = "Homebrewsカテゴリー:",
-["Recently_Played_colon"] = "いまめープレイさびたん:",
-["Startup_scan_colon"] = "スタートアップスキャン:",
+["Language_colon"] = "言語：",
+["Homebrews_Category_colon"] = "Homebrewsカテゴリー：",
+["Recently_Played_colon"] = "いまめープレイさびたん：",
+["Startup_scan_colon"] = "スタートアップスキャン：",
 ["On"] = "オン",
 ["Off"] = "オフ",
 
 -- Appearance
-["Custom_Background_colon"] = "バックグラウンドぬ画像:",
-["Reflection_Effect_colon"] = "反射結果:",
-["Theme_Color_colon"] = "テーマぬいる:",
+["Custom_Background_colon"] = "バックグラウンドぬ画像：",
+["Reflection_Effect_colon"] = "反射結果：",
+["Theme_Color_colon"] = "テーマぬいる：",
 ["Red"] = "あかー",
 ["Yellow"] = "ちーる",
 ["Green"] = "おーるー",
@@ -34,13 +34,13 @@ return {
 
 -- Audio
 ["Audio"] = "オーディオ",
-["Sounds_colon"] = "サウンド:",
-["Music_colon"] = "音楽:",
-["Shuffle_music_colon"] = "音楽シャッフルすん:",
+["Sounds_colon"] = "サウンド：",
+["Music_colon"] = "音楽：",
+["Shuffle_music_colon"] = "音楽シャッフルすん：",
 ["Skip_track"] = "トラックスキップ",
 
 -- Startup Categories
-["Startup_Category_colon"] = "起動時ぬカテゴリー:",
+["Startup_Category_colon"] = "起動時ぬカテゴリー：",
 ["Favorites"] = "う気に入り",
 ["Recently_Played"] = "いまめープレイさびたん",
 ["PS_Vita"] = "PS Vita",
@@ -83,9 +83,9 @@ return {
 ["Neo_Geo"] = "ネオジオ",
 
 -- Download
-["Download_Covers_colon"] = "カバーダウンロード:",
+["Download_Covers_colon"] = "カバーダウンロード：",
 ["Download_Covers"] = "カバーダウンロード",
-["Download_Backgrounds_colon"] = "背景ダウンロード:",
+["Download_Backgrounds_colon"] = "背景ダウンロード：",
 ["Extract_PSP_backgrounds"] = "PSPぬ背景抽出",
 
 ["All"] = "まじり",
@@ -181,12 +181,12 @@ return {
 ["Downloading_NG_backgrounds"] = "NGぬ背景ダウンロードすん",
 
 -- Info Screen
-["App_ID_colon"] = "アプリID:",
-["Size_colon"] = "サイズ:",
-["Version_colon"] = "バージョン:",
+["App_ID_colon"] = "アプリID：",
+["Size_colon"] = "サイズ：",
+["Version_colon"] = "バージョン：",
 ["Download_Cover"] = "表紙ダウンロード",
 ["Download_Background"] = "背景ダウンロード",
-["Override_Category_colon"] = "カテゴリ上書き:",
+["Override_Category_colon"] = "カテゴリ上書き：",
 ["Press_X_to_apply_Category"] = "Xうちカテゴリ適用",
 ["Default"] = "既定",
 ["Favorite"] = "う気に入り",
@@ -244,8 +244,8 @@ return {
 ["Sounds"] = "サウンド",
 ["Artwork"] = "画像",
 ["Scan_Settings"] = "スキャンぬ設定",
-["Adrenaline_roms"] = "アドレナリンぬゲーム:",
-["All_Category"] = "まじりぬカテゴリ:",
+["Adrenaline_roms"] = "アドレナリンぬゲーム：",
+["All_Category"] = "まじりぬカテゴリ：",
 ["Back_Chevron"] = "<  むどぅいん",
 ["Theme"] = "テーマ",
 ["Game_backgounds_colon"] = "ゲームぬ背景：",
