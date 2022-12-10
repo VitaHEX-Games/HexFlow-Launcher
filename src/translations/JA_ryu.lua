@@ -279,7 +279,7 @@ return {
 ["guide_3_content"] = "カバー: \nカスタム カバーや次ぬゲーム フォルダんかい保存なやびーん: \n「ux0:/data/RetroFlow/COVERS/」。 \n\n背景: \nカスタム ゲームぬ背景ー、「ux0:/data/RetroFlow/BACKGROUNDS/」\nぬゲーム フォルダんかい保存なやびーん。 \n\nファイル名:\nファイル名ーアプリ ID あらんでぃアプリ名とぅ一致するいりゆーぬあいびーん。\n画像ー .png 形式やんいりゆーぬあいびーん。",
 
 ["guide_4_heading"] = "壁紙とぅ音楽ぬカスタマイズ方法",
-["guide_4_content"] = "壁紙: \n次ぬばすんかい壁紙たぶてぃ、しちなだき壁紙追加なやびーん: \n「ux0:/data/RetroFlow/WALLPAPER/」。 \n画像ー .jpg あらんでぃ .png 形式っし、サイズー 960px x 544px でぃあるいりゆーぬあいびーん。 \n\n音楽: \n曲ー 「ux0:/data/RetroFlow/MUSIC/」 んかい追加なやびーん。 \n音楽ー .ogg 形式でぃなきりばなやびらん。",
+["guide_4_content"] = "壁紙: \n次ぬばすんかい壁紙たぶてぃ、しちなだき壁紙追加なやびーん: \n「ux0:/data/RetroFlow/WALLPAPER/」。 \n画像ー .jpg あらんでぃ .png 形式っし、サイズー 960px x 544px \nでぃあるいりゆーぬあいびーん。 \n\n音楽: \n曲ー 「ux0:/data/RetroFlow/MUSIC/」 んかい追加なやびーん。 \n音楽ー .ogg 形式でぃなきりばなやびらん。",
 
 ["guide_5_heading"] = "コントロールショートカット",
 ["guide_5_content"] = "うぃー矢印キー: う気に入りぬカテゴリんかいスキップ \n\n下矢印キー + 四角キー: 1 ちぬカテゴリんかいむどぅいん \n\n下矢印キー + L/R トリガー: ゲームアルファベット順んかいスキップ",
