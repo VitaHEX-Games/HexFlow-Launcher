@@ -88,6 +88,8 @@
 	        lang = "KO.lua"
 	    elseif setLanguage == 18 then
 	        lang = "CN_S.lua"
+	    elseif setLanguage == 19 then
+        	lang = "JA_ryu.lua"
 	    else
 	        lang = "EN.lua"
 	    end

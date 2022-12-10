@@ -1137,8 +1137,9 @@ end
         elseif setLanguage == 14    then return 11 -- Norwegian
         elseif setLanguage == 15    then return 12 -- Finnish
         elseif setLanguage == 16    then return 13 -- Turkish
-        elseif setLanguage == 17    then return 18 -- Korean
+        elseif setLanguage == 17    then return 19 -- Korean
         elseif setLanguage == 18    then return 16 -- Chinese (Simplified)
+        elseif setLanguage == 19    then return 18 -- Japanese (Ryukyuan)
         else                             return 0  -- English (United Kingdom)
         end
     end
@@ -1152,18 +1153,20 @@ end
         elseif chooseLanguage == 4  then return 4  -- Italian
         elseif chooseLanguage == 5  then return 5  -- Spanish
         elseif chooseLanguage == 6  then return 6  -- Portuguese
-        elseif chooseLanguage == 9  then return 7  -- Swedish
-        elseif chooseLanguage == 14 then return 8  -- Russian
-        elseif chooseLanguage == 17 then return 9  -- Japanese
-        elseif chooseLanguage == 15 then return 10 -- Chinese (Traditional)
-        elseif chooseLanguage == 8  then return 11 -- Polski
         elseif chooseLanguage == 7  then return 12 -- Dutch
+        elseif chooseLanguage == 8  then return 11 -- Polski
+        elseif chooseLanguage == 9  then return 7  -- Swedish
         elseif chooseLanguage == 10 then return 13 -- Danish
         elseif chooseLanguage == 11 then return 14 -- Norwegian
         elseif chooseLanguage == 12 then return 15 -- Finnish
         elseif chooseLanguage == 13 then return 16 -- Turkish
-        elseif chooseLanguage == 18 then return 17 -- Korean
+        elseif chooseLanguage == 14 then return 8  -- Russian
+        elseif chooseLanguage == 15 then return 10 -- Chinese (Traditional)
         elseif chooseLanguage == 16 then return 18 -- Chinese (Simplified)
+        elseif chooseLanguage == 17 then return 9  -- Japanese
+        elseif chooseLanguage == 18 then return 19 -- Japanese (Ryukyuan)        
+        elseif chooseLanguage == 19 then return 17 -- Korean
+        
         else                             return 0  -- English (United Kingdom)
         end
     end
@@ -1767,6 +1770,9 @@ function ChangeLanguage(def)
     elseif setLanguage == 18 then
         lang = "CN_S.lua"
         ChangeFont(font_chinese_simplified)
+    elseif setLanguage == 19 then
+        lang = "JA_ryu.lua"
+        ChangeFont(font_default)
     else
         lang = "EN.lua"
         ChangeFont(font_default)
@@ -2049,7 +2055,7 @@ function xAppNumTableLookup_Missing_Cover(AppTypeNum)
             return "missing_cover_dreamcast_eur"
         elseif setLanguage == 1 then -- USA - Red logo
             return "missing_cover_dreamcast_usa"
-        elseif setLanguage == 9 then -- Japan - Orange logo
+        elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
             return "missing_cover_dreamcast_j"
         else -- Blue logo
             return "missing_cover_dreamcast_eur"
@@ -2326,7 +2332,7 @@ function update_dc_regional_cover()
                   v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png"
               end
         end
-    elseif setLanguage == 9 then -- Japan - Orange logo
+    elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
         for k, v in pairs(dreamcast_table) do
               if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" then
                   v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png"
@@ -6596,7 +6602,7 @@ function GetInfoSelected()
                 icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
             elseif setLanguage == 1 then -- USA - Red logo
                 icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
-            elseif setLanguage == 9 then -- Japan - Orange logo
+            elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
                 icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
             else -- Blue logo
                 icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
@@ -7178,7 +7184,7 @@ function GetInfoSelected()
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
                     elseif setLanguage == 1 then -- USA - Red logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
-                    elseif setLanguage == 9 then -- Japan - Orange logo
+                    elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
                     else -- Blue logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
@@ -7303,7 +7309,7 @@ function GetInfoSelected()
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
                     elseif setLanguage == 1 then -- USA - Red logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
-                    elseif setLanguage == 9 then -- Japan - Orange logo
+                    elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
                     else -- Blue logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
@@ -7428,7 +7434,7 @@ function GetInfoSelected()
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
                     elseif setLanguage == 1 then -- USA - Red logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
-                    elseif setLanguage == 9 then -- Japan - Orange logo
+                    elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
                     else -- Blue logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
@@ -7554,7 +7560,7 @@ function GetInfoSelected()
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
                     elseif setLanguage == 1 then -- USA - Red logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
-                    elseif setLanguage == 9 then -- Japan - Orange logo
+                    elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
                     else -- Blue logo
                         icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
@@ -10480,8 +10486,11 @@ while true do
                   if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" then
                       v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png"
                   end
-            end      
-        elseif chooseLanguage == 18 then 
+            end
+        elseif chooseLanguage == 18 then
+            -- then setLanguage = 18
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "琉球語派", white) -- Japanese (Ryukyuan)   
+        elseif chooseLanguage == 19 then 
             -- setLanguage = 17
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "T한국어", white) -- Korean
         
@@ -10533,7 +10542,7 @@ while true do
                     showMenu = 6 
                     menuY = 0
                 elseif menuY == 6 then -- Language
-                    if chooseLanguage < 18 then
+                    if chooseLanguage < 19 then
                         chooseLanguage = chooseLanguage + 1
                     else
                         chooseLanguage = 0
@@ -12636,7 +12645,7 @@ while true do
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
         
         -- MENU 13 / #1 Content
-        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 then
+        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
             Font.print(fnt20, setting_x, setting_y1, lang_lines.guide_1_content, white)-- Guide 1 Content
         else
@@ -12683,7 +12692,7 @@ while true do
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
         
         -- MENU 14 / #1 Content
-        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 then
+        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
             Font.print(fnt20, setting_x, setting_y1, lang_lines.guide_2_content, white)-- Guide 2 Content
         else
@@ -12730,7 +12739,7 @@ while true do
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
         
         -- MENU 15 / #1 Content
-        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 then
+        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
             Font.print(fnt20, setting_x, setting_y1, lang_lines.guide_3_content, white)-- Guide 3 Content
         else
@@ -12778,7 +12787,7 @@ while true do
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
         
         -- MENU 16 / #1 Content
-        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 then
+        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
             Font.print(fnt20, setting_x, setting_y1, lang_lines.guide_4_content, white)-- Guide 4 Content
         else
@@ -12826,7 +12835,7 @@ while true do
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
         
         -- MENU 17 / #1 Content
-        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 then
+        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
             Font.print(fnt20, setting_x, setting_y1, lang_lines.guide_5_content, white)-- Guide 5 Content
         else
@@ -12875,7 +12884,7 @@ while true do
         -- MENU 18 / #1 Content
         Font.print(fnt20, setting_x, setting_y1, "RetroFlow version " .. appversion, white)-- Guide 6 Content
         
-        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 then
+        if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
             Font.print(fnt20, setting_x, setting_y2, lang_lines.guide_6_content, white)-- Guide 6 Content
         else
