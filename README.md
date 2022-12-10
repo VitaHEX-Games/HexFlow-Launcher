@@ -180,7 +180,7 @@ Potential issue with repatch / repatch_4 plugins in the tai config. May cause th
 * Italian - @TheheroGAC
 * Russian - @\_novff
 * Portuguese - @nighto
-* Japanese - @iGlitch
+* Japanese - @kuragehimekurara1 and @iGlitch
 * Chinese - @acd13141
 * Polish - @SK00RUPA
 
