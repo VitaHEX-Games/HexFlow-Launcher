@@ -7,6 +7,9 @@
 
 -- SETUP - INITIAL
 
+	-- Debug mode
+		local debug_mode = false -- set to true to view detailed scan progress 
+
 	-- Create Directory: Main
 
 		local cur_dir = "ux0:/data/RetroFlow/"
@@ -338,7 +341,11 @@
 	function update_loading_screen_progress()
 		if loading_screen then loading_screen:blit(0, 0) end
 
-		screen.print(custom_font, 480, 450, lang_lines.Scanning_titles, font_size, white, black, __ACENTER) -- Scanning titles...
+		if debug_mode == true then
+			screen.print(custom_font, 480, 450, sfo_title, font_size, white, black, __ACENTER) -- Scanning titles...
+		else
+			screen.print(custom_font, 480, 450, lang_lines.Scanning_titles, font_size, white, black, __ACENTER) -- Scanning titles...
+		end
 
 		loading_progress = loading_progress + 1
 
@@ -358,6 +365,35 @@
 
 
 		screen.flip()
+	end
+
+	function update_debug_message(def)
+
+		if debug_mode == true then
+			if loading_screen then loading_screen:blit(0, 0) end
+
+			screen.print(custom_font, 480, 450, (def), font_size, white, black, __ACENTER) -- Scanning titles...
+			
+			loading_progress = loading_progress + 1
+
+			loading_bar_width = 300
+			loading_percent = (loading_progress/loading_tasks)*100
+
+			-- Set max width
+		    if loading_percent >= loading_bar_width then
+		        loading_percent = loading_bar_width
+		    end
+	    
+			-- Progress bar background
+			draw.fillrect(330,490,loading_bar_width,6,loading_bar_bg)
+
+			-- Progress bar percent
+			draw.fillrect(330,490,((loading_bar_width/100)*loading_percent),6,white)
+
+
+			screen.flip()
+		else
+		end
 	end
 
 	function print_loading_complete() 
@@ -400,7 +436,7 @@
 	    file = io.open(pathini, "w+")
 		file:write("return" .. "\n" .. "{" .. "\n")
 	    for k, v in pairs((tbl)) do
-			file:write('["' .. v.filename .. '"] = {title = "' .. removeMultilines(v.title) .. '", titleid = "' .. v.titleid .. '", region = "' .. v.region .. '", path = "' .. v.path .. '"},' .. "\n")
+			file:write('["' .. v.filename .. '"] = {title = "' .. v.title .. '", titleid = "' .. v.titleid .. '", region = "' .. v.region .. '", path = "' .. v.path .. '"},' .. "\n")
 	    end
 	    file:write('}')
 	    file:close()
@@ -408,6 +444,15 @@
 
 
 -- FUNCTION SCAN 
+
+	function cleanup_game_title(def_sfo_TITLE)
+		local sfo_title = {}
+		-- sfo_title = tostring((def_sfo_TITLE)):gsub("™",""):gsub("â„¢",""):gsub(" ®",""):gsub("â€¢",""):gsub("Â®",""):gsub('[Â]',''):gsub('[®]',''):gsub('[â]',''):gsub('[„]',''):gsub('[¢]',''):gsub("„","")
+		sfo_title = tostring((def_sfo_TITLE)):gsub("™",""):gsub(" ®",""):gsub("®","")
+
+		sfo_title = removeMultilines(sfo_title)
+		return sfo_title
+	end
 
 	-- Scan Function - ISO folders
 
@@ -433,7 +478,7 @@
 								if sfo.TITLE and sfo.DISC_ID and sfo.REGION ~= nil then
 
 									-- Cleanup game title
-									sfo_title = tostring(sfo.TITLE):gsub("™",""):gsub("â„¢",""):gsub(" ®",""):gsub("â€¢",""):gsub("Â®",""):gsub('[Â]',''):gsub('[®]',''):gsub('[â]',''):gsub('[„]',''):gsub('[¢]',''):gsub("„","")
+									sfo_title = cleanup_game_title(sfo.TITLE)
 									
 									file.filename = file.name
 									file.title = sfo_title
@@ -480,7 +525,7 @@
 									if sfo.TITLE and sfo.DISC_ID and sfo.REGION ~= nil then
 
 										-- Cleanup game title
-										sfo_title = tostring(sfo.TITLE):gsub("™",""):gsub("â„¢",""):gsub(" ®",""):gsub("â€¢",""):gsub("Â®",""):gsub('[Â]',''):gsub('[®]',''):gsub('[â]',''):gsub('[„]',''):gsub('[¢]',''):gsub("„","")
+										sfo_title = cleanup_game_title(sfo.TITLE)
 									
 										file.filename = file.name
 										file.title = sfo_title
@@ -503,10 +548,6 @@
 			else
 			end
 
-
-
-
-
 		end
 
 	-- Scan Function - Game folders
@@ -527,10 +568,10 @@
 							local sfo = {}
 							sfo = game.info(rom_dir .. "/" .. file.name .. "/EBOOT.pbp")
 
-							-- Cleanup game title
 							if sfo ~= nil then
-								sfo_title = tostring(sfo.TITLE):gsub("™",""):gsub("â„¢",""):gsub(" ®",""):gsub("â€¢",""):gsub("Â®",""):gsub('[Â]',''):gsub('[®]',''):gsub('[â]',''):gsub('[„]',''):gsub('[¢]',''):gsub("„","")
-								
+								-- Cleanup game title
+								sfo_title = cleanup_game_title(sfo.TITLE)
+
 								file.filename = file.name
 								file.title = sfo_title
 								file.titleid = sfo.DISC_ID
@@ -574,9 +615,9 @@
 									local sfo = {}
 									sfo = game.info(file.path .. "/EBOOT.pbp")
 
-									-- Cleanup game title
 									if sfo ~= nil then
-										sfo_title = tostring(sfo.TITLE):gsub("™",""):gsub("â„¢",""):gsub(" ®",""):gsub("â€¢",""):gsub("Â®",""):gsub('[Â]',''):gsub('[®]',''):gsub('[â]',''):gsub('[„]',''):gsub('[¢]',''):gsub("„","")
+										-- Cleanup game title
+										sfo_title = cleanup_game_title(sfo.TITLE)
 										
 										file.filename = file.name
 										file.title = sfo_title
@@ -631,7 +672,8 @@
 								if sfo.TITLE and sfo.DISC_ID and sfo.REGION ~= nil then
 
 									-- Cleanup game title
-									sfo_title = tostring(sfo.TITLE):gsub("™",""):gsub("â„¢",""):gsub(" ®",""):gsub("â€¢",""):gsub("Â®",""):gsub('[Â]',''):gsub('[®]',''):gsub('[â]',''):gsub('[„]',''):gsub('[¢]',''):gsub("„","")
+									sfo_title = cleanup_game_title(sfo.TITLE)
+
 									file.filename = file.name
 									file.title = sfo_title
 									file.titleid = sfo.DISC_ID
@@ -671,7 +713,8 @@
 									if sfo.TITLE and sfo.DISC_ID and sfo.REGION ~= nil then
 
 										-- Cleanup game title
-										sfo_title = tostring(sfo.TITLE):gsub("™",""):gsub("â„¢",""):gsub(" ®",""):gsub("â€¢",""):gsub("Â®",""):gsub('[Â]',''):gsub('[®]',''):gsub('[â]',''):gsub('[„]',''):gsub('[¢]',''):gsub("„","")
+										sfo_title = cleanup_game_title(sfo.TITLE)
+
 										file.filename = subfolder.name
 										file.title = sfo_title
 										file.titleid = sfo.DISC_ID
@@ -722,19 +765,30 @@
 	-- Scan Command - ISO folders
 
 		table_iso = {}
-
+		update_debug_message("Scanning: ux0:/pspemu/ISO")
 		scan_iso_folder ("ux0:/pspemu/ISO")
+
+		update_debug_message("Scanning: ur0:/pspemu/ISO")
 		scan_iso_folder ("ur0:/pspemu/ISO")
+
+		update_debug_message("Scanning: imc0:/pspemu/ISO")
 		scan_iso_folder ("imc0:/pspemu/ISO")
+
+		update_debug_message("Scanning: xmc0:/pspemu/ISO")
 		scan_iso_folder ("xmc0:/pspemu/ISO")
+
+		update_debug_message("Scanning: uma0:/pspemu/ISO")
 		scan_iso_folder ("uma0:/pspemu/ISO")
 
+		update_debug_message("Creating table: iso")
 		add_cached_games_to_table (cached_table_iso, table_iso)
 
+		update_debug_message("Sorting table: iso")
 		if #table_iso > 0 then
 			table.sort(table_iso, function(a, b) return (a.name:lower() < b.name:lower()) end)
 		end
 
+		update_debug_message("Saving table: iso")
 		write_ini(tostring(titles_dir .. sfo_scan_isos_lua), table_iso)
 
 
@@ -742,32 +796,48 @@
 
 		table_games = {}
 
+		update_debug_message("Scanning: ux0:/pspemu/PSP/GAME")
 		scan_game_folder ("ux0:/pspemu/PSP/GAME")
+
+		update_debug_message("Scanning: ur0:/pspemu/PSP/GAME")
 		scan_game_folder ("ur0:/pspemu/PSP/GAME")
+
+		update_debug_message("Scanning: imc0:/pspemu/PSP/GAME")
 		scan_game_folder ("imc0:/pspemu/PSP/GAME")
+
+		update_debug_message("Scanning: xmc0:/pspemu/PSP/GAME")
 		scan_game_folder ("xmc0:/pspemu/PSP/GAME")
+
+		update_debug_message("Scanning: uma0:/pspemu/PSP/GAME")
 		scan_game_folder ("uma0:/pspemu/PSP/GAME")
 
+		update_debug_message("Creating table: games")
 		add_cached_games_to_table (cached_table_games, table_games)
 
+		update_debug_message("Sorting table: games")
 		if #table_games > 0 then
 			table.sort(table_games, function(a, b) return (a.title:lower() < b.title:lower()) end)
 		end
 
+		update_debug_message("Saving table: games")
 		write_ini(tostring(titles_dir .. sfo_scan_games_lua), table_games)
 
 	-- Scan Command - Retroarch PS1 Game folders
 
 		table_retroarch = {}
 
+		update_debug_message("Scanning: romUserDir.PlayStation")
 		scan_Rom_PS1_Eboot(romUserDir.PlayStation)
 		
+		update_debug_message("Creating table: retroarch")
 		add_cached_games_to_table (cached_table_retroarch, table_retroarch)
 
+		update_debug_message("Sorting table: retroarch")
 		if #table_retroarch > 0 then
 			table.sort(table_retroarch, function(a, b) return (a.title:lower() < b.title:lower()) end)
 		end
 		
+		update_debug_message("Saving table: retroarch")
 		write_ini(tostring(titles_dir .. sfo_scan_retroarch_lua), table_retroarch)
 
 		

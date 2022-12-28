@@ -2801,7 +2801,8 @@ function listDirectory(dir)
             -- get app name to match with custom cover file name
             if System.doesFileExist(working_dir .. "/" .. file.name .. "/sce_sys/param.sfo") then
                 info = System.extractSfo(working_dir .. "/" .. file.name .. "/sce_sys/param.sfo")
-                app_title = info.title:gsub("\n"," "):gsub("™",""):gsub("â„¢",""):gsub(" ®",""):gsub("â€¢",""):gsub("Â®",""):gsub('[Â]',''):gsub('[®]',''):gsub('[â]',''):gsub('[„]',''):gsub('[¢]',''):gsub("„","")
+                -- app_title = info.title:gsub("\n"," "):gsub("™",""):gsub("â„¢",""):gsub(" ®",""):gsub("â€¢",""):gsub("Â®",""):gsub('[Â]',''):gsub('[®]',''):gsub('[â]',''):gsub('[„]',''):gsub('[¢]',''):gsub("„","")
+                app_title = info.title:gsub("\n"," "):gsub("™",""):gsub(" ®",""):gsub("®","")
                 file.titleid = tostring(info.titleid)
                 file.version = tostring(info.version)
             end
