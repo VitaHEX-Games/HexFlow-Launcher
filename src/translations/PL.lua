@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Ciemny fiolet",
 ["Orange"] = "Pomarańczowy",
 ["Blue"] = "Niebieski",
+["Swap_X_and_O_buttons_colon"] = "Zamień przyciski X i O: ",
 
 -- Audio
 ["Audio"] = "Dźwięk",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Pobierz tło",
 ["Override_Category_colon"] = "Nadpisz kategorię: ",
 ["Press_X_to_apply_Category"] = "Naciśnij X by zastosować kategorię",
+["Press_O_to_apply_Category"] = "Naciśnij O by zastosować kategorię",
 ["Default"] = "Domyślna",
 ["Favorite"] = "Ulubione",
 ["Rename"] = "Zmień nazwę",

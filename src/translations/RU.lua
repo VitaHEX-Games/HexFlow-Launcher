@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Темно фиолетовый",
 ["Orange"] = "Оранжевый",
 ["Blue"] = "Синий",
+["Swap_X_and_O_buttons_colon"] = "Поменяйте местами кнопки X и O:",
 
 -- Audio
 ["Audio"] = "Аудио",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Скачать фон",
 ["Override_Category_colon"] = "Категория переопределения",
 ["Press_X_to_apply_Category"] = "Нажмите X, чтобы применить",
+["Press_O_to_apply_Category"] = "Нажмите O, чтобы применить",
 ["Default"] = "Дефолт",
 ["Favorite"] = "Любимый",
 ["Rename"] = "Переименовать",

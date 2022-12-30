@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "어두운 보라색",
 ["Orange"] = "주황색",
 ["Blue"] = "푸른",
+["Swap_X_and_O_buttons_colon"] = "X와 O 버튼을 교체하십시오: ",
 
 -- Audio
 ["Audio"] = "오디오",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "배경 다운로드",
 ["Override_Category_colon"] = "범주 재정의: ",
 ["Press_X_to_apply_Category"] = "카테고리를 변경하려면 X를 누르세요",
+["Press_O_to_apply_Category"] = "카테고리를 변경하려면 O를 누르세요",
 ["Default"] = "기본값",
 ["Favorite"] = "가장 좋아하는",
 ["Rename"] = "이름 바꾸기",

@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Koyu mor",
 ["Orange"] = "Turuncu",
 ["Blue"] = "Mavi",
+["Swap_X_and_O_buttons_colon"] = "X ve O düğmelerini değiştirin: ",
 
 -- Audio
 ["Audio"] = "Ses",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Arka Planı İndir",
 ["Override_Category_colon"] = "Kategoriyi Geçersiz Kıl: ",
 ["Press_X_to_apply_Category"] = "Kategoriyi uygulamak için X'e basın",
+["Press_O_to_apply_Category"] = "Kategoriyi uygulamak için O'e basın",
 ["Default"] = "Varsayılan",
 ["Favorite"] = "Favori",
 ["Rename"] = "Yeniden isimlendirmek",

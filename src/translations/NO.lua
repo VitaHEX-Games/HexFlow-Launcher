@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Mørklilla",
 ["Orange"] = "Oransje",
 ["Blue"] = "Blå",
+["Swap_X_and_O_buttons_colon"] = "Bytt X- og O-knapper: ",
 
 -- Audio
 ["Audio"] = "Lyd",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Last ned bakgrunn",
 ["Override_Category_colon"] = "Overstyr kategori: ",
 ["Press_X_to_apply_Category"] = "Trykk X for å overstyre kategori",
+["Press_O_to_apply_Category"] = "Trykk O for å overstyre kategori",
 ["Default"] = "Misligholde",
 ["Favorite"] = "Favoritt",
 ["Rename"] = "Gi nytt navn",

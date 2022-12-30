@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Viola scuro",
 ["Orange"] = "Arancione",
 ["Blue"] = "Blu",
+["Swap_X_and_O_buttons_colon"] = "Scambia i pulsanti X e O: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Scarica Sfondo",
 ["Override_Category_colon"] = "Sostituisci categoria: ",
 ["Press_X_to_apply_Category"] = "Premi X per applicare la categoria",
+["Press_O_to_apply_Category"] = "Premi O per applicare la categoria",
 ["Default"] = "Predefinito",
 ["Favorite"] = "Preferito",
 ["Rename"] = "Rinominare",

@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "深紫色",
 ["Orange"] = "橘色",
 ["Blue"] = "藍色",
+["Swap_X_and_O_buttons_colon"] = "交換 X 和 O 按鈕：",
 
 -- Audio
 ["Audio"] = "音頻",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "下載背景",
 ["Override_Category_colon"] = "覆蓋類別 : ",
 ["Press_X_to_apply_Category"] = "按 X 申請類別",
+["Press_O_to_apply_Category"] = "按 O 申請類別",
 ["Default"] = "默認",
 ["Favorite"] = "最喜歡的",
 ["Rename"] = "改名",

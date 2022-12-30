@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Dunkelviolett",
 ["Orange"] = "Orange",
 ["Blue"] = "Blau",
+["Swap_X_and_O_buttons_colon"] = "X- und O-Tasten vertauschen: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Hintergrund herunterladen",
 ["Override_Category_colon"] = "Kategorie überschreiben: ",
 ["Press_X_to_apply_Category"] = "Drücken Sie X, um zu speichern",
+["Press_O_to_apply_Category"] = "Drücken Sie O, um zu speichern",
 ["Default"] = "Standard",
 ["Favorite"] = "Favorit",
 ["Rename"] = "Umbenennen",

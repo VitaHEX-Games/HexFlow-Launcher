@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Donkerpaars",
 ["Orange"] = "Oranje",
 ["Blue"] = "Blauw",
+["Swap_X_and_O_buttons_colon"] = "Verwissel de X- en O-knoppen: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Achtergrond downloaden",
 ["Override_Category_colon"] = "Categorie overschrijven: ",
 ["Press_X_to_apply_Category"] = "Druk op X om te wijzigen",
+["Press_O_to_apply_Category"] = "Druk op O om te wijzigen",
 ["Default"] = "Standaard",
 ["Favorite"] = "Favoriet",
 ["Rename"] = "Hernoemen",

@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Roxo escuro",
 ["Orange"] = "Laranja",
 ["Blue"] = "Azul",
+["Swap_X_and_O_buttons_colon"] = "Troque os botões X e O: ",
 
 -- Audio
 ["Audio"] = "Áudio",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Baixar plano de fundo",
 ["Override_Category_colon"] = "Categoria de substituição: ",
 ["Press_X_to_apply_Category"] = "Pressione X para aplicar a categoria",
+["Press_O_to_apply_Category"] = "Pressione O para aplicar a categoria",
 ["Default"] = "Padrões",
 ["Favorite"] = "Favorito",
 ["Rename"] = "Renomear",

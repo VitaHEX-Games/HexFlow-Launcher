@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "濃紫色",
 ["Orange"] = "オレンジ",
 ["Blue"] = "青色",
+["Swap_X_and_O_buttons_colon"] = "XボタンとOボタンを入れ替える：",
 
 -- Audio
 ["Audio"] = "オーディオ",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "背景をダウンロード",
 ["Override_Category_colon"] = "カテゴリを上書き：",
 ["Press_X_to_apply_Category"] = "Xを押してカテゴリを適用",
+["Press_O_to_apply_Category"] = "Oを押してカテゴリを適用",
 ["Default"] = "デフォルト",
 ["Favorite"] = "お気に入り",
 ["Rename"] = "名前を変更",

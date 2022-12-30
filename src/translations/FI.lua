@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Tumma violetti",
 ["Orange"] = "Oranssi",
 ["Blue"] = "Sininen",
+["Swap_X_and_O_buttons_colon"] = "Vaihda X- ja O-painikkeita: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Lataa taustakuva",
 ["Override_Category_colon"] = "Muuta kategoria: ",
 ["Press_X_to_apply_Category"] = "Paina X vaihtaaksesi kategoria",
+["Press_O_to_apply_Category"] = "Paina O vaihtaaksesi kategoria",
 ["Default"] = "Oletusasetus",
 ["Favorite"] = "Suosikki",
 ["Rename"] = "Nimeä uudelleen",

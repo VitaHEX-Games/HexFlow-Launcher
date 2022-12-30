@@ -28,7 +28,6 @@ local snapDir = "ux0:/data/RetroFlow/BACKGROUNDS/"
 if System.doesDirExist("ux0:/data/RetroFlow/COVERS/MAME") then System.rename("ux0:/data/RetroFlow/COVERS/MAME", "ux0:/data/RetroFlow/COVERS/MAME 2000") end
 if System.doesDirExist("ux0:/data/RetroFlow/ROMS/MAME 2000") then System.rename("ux0:/data/RetroFlow/ROMS/MAME 2000", "ux0:/data/RetroFlow/ROMS/MAME 2000") end
 
-
 -- Default system rom folders
 romDir_Default =
 {
@@ -626,10 +625,11 @@ local click = Sound.open("app0:/DATA/click2.ogg")
 local sndMusic = click--temp
 local imgCoverTmp = Graphics.loadImage("app0:/DATA/noimg.png")
 local backTmp = Graphics.loadImage("app0:/DATA/noimg.png")
-local btnX = Graphics.loadImage("app0:/DATA/x.png")
+
+
+
 local btnT = Graphics.loadImage("app0:/DATA/t.png")
 local btnS = Graphics.loadImage("app0:/DATA/s.png")
-local btnO = Graphics.loadImage("app0:/DATA/o.png")
 local imgWifi = Graphics.loadImage("app0:/DATA/wifi.png")
 local imgBattery = Graphics.loadImage("app0:/DATA/bat.png")
 local imgBack = Graphics.loadImage("app0:/DATA/back_01.jpg")
@@ -976,7 +976,7 @@ local p = 1
 local oldpad = 0
 local delayTouch = 8.0
 local delayButton = 8.0
-local hideBoxes = 1.0
+local hideBoxes = 0.3 -- used to be 1
 local prvRotY = 0
 
 local gettingCovers = false
@@ -1045,10 +1045,12 @@ local Adrenaline_roms = 1 -- ux0
 local Game_Backgrounds = 1 -- On
 local setMusicShuffle = 1 -- On
 
+local setSwap_X_O_buttons = 0 -- 0 Off
+
 function SaveSettings()
     local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
     settings = {}
-    local settings = "Reflections=" .. setReflections .. " " .. "\nSounds=" .. setSounds .. " " .. "\nColor=" .. themeColor .. " " .. "\nBackground=" .. setBackground .. " " .. "\nLanguage=" .. setLanguage .. " " .. "\nView=" .. showView .. " " .. "\nHomebrews=" .. showHomebrews .. " " .. "\nScan=" .. startupScan .. " " .. "\nCategory=" .. startCategory .. " " .. "\nRecent=" .. showRecentlyPlayed .. " " .. "\nAll=" .. showAll .. " " .. "\nAdrenaline_rom_location=" .. Adrenaline_roms .. " " .. "\nGame_Backgrounds=" .. Game_Backgrounds .. " " .. "\nMusic=" .. setMusic .. " " .. "\nMusic_Shuffle=" .. setMusicShuffle
+    local settings = "Reflections=" .. setReflections .. " " .. "\nSounds=" .. setSounds .. " " .. "\nColor=" .. themeColor .. " " .. "\nBackground=" .. setBackground .. " " .. "\nLanguage=" .. setLanguage .. " " .. "\nView=" .. showView .. " " .. "\nHomebrews=" .. showHomebrews .. " " .. "\nScan=" .. startupScan .. " " .. "\nCategory=" .. startCategory .. " " .. "\nRecent=" .. showRecentlyPlayed .. " " .. "\nAll=" .. showAll .. " " .. "\nAdrenaline_rom_location=" .. Adrenaline_roms .. " " .. "\nGame_Backgrounds=" .. Game_Backgrounds .. " " .. "\nMusic=" .. setMusic .. " " .. "\nMusic_Shuffle=" .. setMusicShuffle .. " " .. "\nSwap_X_O_buttons=" .. setSwap_X_O_buttons
     file_settings = io.open(cur_dir .. "/config.dat", "w")
     file_settings:write(settings)
     file_settings:close()
@@ -1084,6 +1086,8 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
     local getGame_Backgrounds = settingValue[13]; if getGame_Backgrounds ~= nil then Game_Backgrounds = getGame_Backgrounds end
     local getMusic = settingValue[14]; if getMusic ~= nil then setMusic = getMusic end
     local getMusicShuffle = settingValue[15]; if getMusicShuffle ~= nil then setMusicShuffle = getMusicShuffle end
+    local getSwap_X_O_buttons = settingValue[16]; if getSwap_X_O_buttons ~= nil then setSwap_X_O_buttons = getSwap_X_O_buttons end
+
     selectedwall = setBackground
 
 else
@@ -1301,6 +1305,7 @@ function SetThemeColor()
 end
 SetThemeColor()
 
+
 -- Speed related settings
 local cpu_speed = 444 -- Was 333
 System.setBusSpeed(222)
@@ -1350,6 +1355,7 @@ local lang_default =
 ["Dark_Purple"] = "Dark Purple",
 ["Orange"] = "Orange",
 ["Blue"] = "Blue",
+["Swap_X_and_O_buttons_colon"] = "Swap X and O buttons: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -1507,6 +1513,7 @@ local lang_default =
 ["Download_Background"] = "Download Background",
 ["Override_Category_colon"] = "Override Category: ",
 ["Press_X_to_apply_Category"] = "Press X to apply Category",
+["Press_O_to_apply_Category"] = "Press O to apply Category",
 ["Default"] = "Default",
 ["Favorite"] = "Favorite",
 ["Rename"] = "Rename",
@@ -1789,9 +1796,9 @@ function ChangeLanguage(def)
         lang_lines = lang_default
     end
 
-    if setLanguage == 3 then
-    -- French language fix
-        setting_x_offset = 440
+    if setLanguage == 3 or setLanguage == 8 or setLanguage == 9 or setLanguage == 12 or setLanguage == 19 then
+    -- French, Russian, Japanese, Dutch, Japanese (Ryukyuan) language fix
+        setting_x_offset = 460
     else
         -- setting_x_offset = 365
         setting_x_offset = 400
@@ -1805,6 +1812,32 @@ end
 ChangeLanguage(xsetLanguageLookup(chooseLanguage))
 
 
+function Swap_X_O_buttons()
+    if setSwap_X_O_buttons == 1 then 
+        -- Swap buttons is - On
+
+        -- Update buttons
+        SCE_CTRL_CROSS_MAP = SCE_CTRL_CIRCLE
+        SCE_CTRL_CIRCLE_MAP = SCE_CTRL_CROSS
+
+        -- Swap images
+        btnO = Graphics.loadImage("app0:/DATA/x.png")
+        btnX = Graphics.loadImage("app0:/DATA/o.png")
+    else 
+        -- Swap buttons is - Off
+
+        -- Update buttons
+        SCE_CTRL_CROSS_MAP = SCE_CTRL_CROSS
+        SCE_CTRL_CIRCLE_MAP = SCE_CTRL_CIRCLE
+
+        -- Swap images
+        btnX = Graphics.loadImage("app0:/DATA/x.png")
+        btnO = Graphics.loadImage("app0:/DATA/o.png")
+    end
+end
+Swap_X_O_buttons()
+
+
 -- Menu Layout
     btnMargin = 32 -- Distance between footer buttons
 
@@ -1814,9 +1847,9 @@ ChangeLanguage(xsetLanguageLookup(chooseLanguage))
     setting_x = 78
 
     
-    if setLanguage == 3 then
-    -- French language fix
-        setting_x_offset = 440
+    if setLanguage == 3 or setLanguage == 8 or setLanguage == 9 or setLanguage == 12 or setLanguage == 19 then
+    -- French, Russian, Japanese, Dutch, Japanese (Ryukyuan) language fix
+        setting_x_offset = 460
     else
         -- setting_x_offset = 365
         setting_x_offset = 400
@@ -8841,7 +8874,7 @@ local function DrawCover(x, y, text, icon, sel, apptype)
             end
         end
     else
-        hideBoxes = hideBoxes - 0.1
+        -- hideBoxes = hideBoxes - 0.1
     end
 end
 
@@ -9298,6 +9331,12 @@ while true do
         delayButton = delayButton - 0.1
     else
         delayButton = 0
+    end
+
+    if hideBoxes > 0 then
+        hideBoxes = hideBoxes - 0.1
+    else
+        hideBoxes = 0
     end
     
     -- Music
@@ -10249,11 +10288,19 @@ while true do
                 Graphics.fillRect(24, 470, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
             end
 
+            if setSwap_X_O_buttons == 1 then 
+                -- Swap buttons is - On
+                Press_Button_to_apply_Category = tostring(lang_lines.Press_O_to_apply_Category)
+            else 
+                -- Swap buttons is - Off
+                Press_Button_to_apply_Category = tostring(lang_lines.Press_X_to_apply_Category)
+            end
+
             -- Make box wider for German, French, Russian, Portuguese, Dutch, Turkish
             if setLanguage == 2 or setLanguage == 3 or setLanguage == 6 or setLanguage == 8 or setLanguage == 12 or setLanguage == 16 then
-                Font.print(fnt22, 50, 352+40, lang_lines.Override_Category_colon.. "\n< " .. tmpcatText .. " >\n( " .. lang_lines.Press_X_to_apply_Category .. ")", white)
+                Font.print(fnt22, 50, 352+40, lang_lines.Override_Category_colon.. "\n< " .. tmpcatText .. " >\n( " .. Press_Button_to_apply_Category .. ")", white)
             else
-                Font.print(fnt22, 50, 352+40, lang_lines.Override_Category_colon.. "< " .. tmpcatText .. " >\n( " .. lang_lines.Press_X_to_apply_Category .. ")", white)
+                Font.print(fnt22, 50, 352+40, lang_lines.Override_Category_colon.. "< " .. tmpcatText .. " >\n( " .. Press_Button_to_apply_Category .. ")", white)
             end
 
 
@@ -10277,7 +10324,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
                 if menuY == 0 then
                     if tmpimagecat==0 then
                         if gettingCovers == false then
@@ -10518,7 +10565,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- MENU 2 / #0 Search
                 if menuY == 0 then
@@ -10723,7 +10770,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- count favorites
                 local fav_count_3 = {}
@@ -10875,7 +10922,7 @@ while true do
         Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
 
 
-        menuItems = 3
+        menuItems = 4
 
         -- MENU 4 / #0 Back
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
@@ -10913,6 +10960,14 @@ while true do
         -- MENU 4 / #3 Custom Background
         Font.print(fnt22, setting_x, setting_y3,  lang_lines.Custom_Background_colon, white)
 
+        -- MENU 4 / #4 Remap X and O buttons
+        Font.print(fnt22, setting_x, setting_y4,  lang_lines.Swap_X_and_O_buttons_colon, white)
+        if setSwap_X_O_buttons == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.On, white)--ON
+        else
+            Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.Off, white)--OFF
+        end
+
         function wallpaper_print_string (def)
             if setBackground == (def) then
                 Font.print(fnt22, setting_x_offset, setting_y3, tostring(wallpaper_table_settings[(def)].wallpaper_string), white) --FILENAME
@@ -10930,7 +10985,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
     
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
                 if menuY == 0 then -- #0 Back
                     showMenu = 2
                     menuY = 2 -- Theme
@@ -10965,12 +11020,22 @@ while true do
                         imgCustomBack = Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
                         Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
                         Render.useTexture(modBackground, imgCustomBack)
-                    end           
+                    end
+                elseif menuY == 4 then -- #4 Remap X and O buttons
+                    if setSwap_X_O_buttons == 1 then
+                        setSwap_X_O_buttons = 0
+                    else
+                        setSwap_X_O_buttons = 1
+                    end
+                    Swap_X_O_buttons()
+                    oldpad = pad
+                    showMenu = 4
+                    menuY = 4
                 end
 
                 --Save settings
                 SaveSettings()
-                
+
             elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
                 if menuY > 0 then
                     menuY = menuY - 1
@@ -10984,6 +11049,7 @@ while true do
                     menuY=0
                 end
             end
+            
         end
 
 -- MENU 5 - ARTWORK
@@ -11190,7 +11256,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- MENU 5
                 if menuY == 0 then -- #0 Back
@@ -11511,7 +11577,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- MENU 2
                 if menuY == 0 then -- #0 Back
@@ -11635,7 +11701,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- MENU 2 / #0 Search
                 if menuY == 0 then -- #0 Back
@@ -11873,7 +11939,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
                 -- MENU 8
                 if menuY == 0 then -- #0 Back
                     showMenu = 6
@@ -12015,7 +12081,7 @@ while true do
             
                 -- Check for input
                 pad = Controls.read()
-                if Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS) then
+                if Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP) then
 
                     function check_partition_and_go_to_menu()
 
@@ -12073,7 +12139,7 @@ while true do
 
 
 
-                elseif Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE) then
+                elseif Controls.check(pad, SCE_CTRL_CIRCLE_MAP) and not Controls.check(oldpad, SCE_CTRL_CIRCLE_MAP) then
                     oldpad = pad
                     showMenu = 8
                     menuY = 2
@@ -12140,7 +12206,7 @@ while true do
             
                 -- Check for input
                 pad = Controls.read()
-                if Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS) then
+                if Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP) then
 
                     if menuY == 0 then
                         oldpad = pad
@@ -12148,7 +12214,7 @@ while true do
                         menuY = selected_partition_menuY
                     end
 
-                elseif Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE) then
+                elseif Controls.check(pad, SCE_CTRL_CIRCLE_MAP) and not Controls.check(oldpad, SCE_CTRL_CIRCLE_MAP) then
                     oldpad = pad
                     showMenu = 9
                     menuY = selected_partition_menuY
@@ -12260,7 +12326,7 @@ while true do
 
                 -- Check for input
                 pad = Controls.read()
-                if Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS) then
+                if Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP) then
 
                     if scripts[i].directory == true then
 
@@ -12402,7 +12468,7 @@ while true do
 
                     end
 
-                elseif Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE) then
+                elseif Controls.check(pad, SCE_CTRL_CIRCLE_MAP) and not Controls.check(oldpad, SCE_CTRL_CIRCLE_MAP) then
                     
                     local _, dir_level_count = string.gsub(cur_dir_fm, "/", "")
                     if dir_level_count == 1 then
@@ -12542,7 +12608,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
     
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
                 if menuY == 0 then -- #0 Back
                     showMenu = 2
                     menuY = 3 -- Audio 
@@ -12657,7 +12723,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- MENU 13 / #0 Back
                 if menuY == 0 then -- #0 Back
@@ -12704,7 +12770,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- MENU 14 / #0 Back
                 if menuY == 0 then -- #0 Back
@@ -12752,7 +12818,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- MENU 15 / #0 Back
                 if menuY == 0 then -- #0 Back
@@ -12800,7 +12866,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- MENU 16 / #0 Back
                 if menuY == 0 then -- #0 Back
@@ -12847,7 +12913,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- MENU 17 / #0 Back
                 if menuY == 0 then -- #0 Back
@@ -12896,7 +12962,7 @@ while true do
         status = System.getMessageState()
         if status ~= RUNNING then
             
-            if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- MENU 18 / #0 Back
                 if menuY == 0 then -- #0 Back
@@ -12978,7 +13044,7 @@ while true do
         end
         
         -- Navigation Buttons
-        if (Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS)) then
+        if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
             state = Keyboard.getState()
             messagestate = System.getMessageState() -- Check if message active - RetroFlow Adrenaline Launcher needs to be installed
 
@@ -13482,7 +13548,7 @@ while true do
 
                     end
 
-                    hideBoxes = 8
+                    hideBoxes = 0.8 -- used to be 8
                     p = 1
                     master_index = p
                     startCovers = false
@@ -13590,7 +13656,7 @@ while true do
                         end
                     end
 
-                    hideBoxes = 8
+                    hideBoxes = 0.8 -- used to be 8
                     p = 1
                     master_index = p
                     startCovers = false
@@ -13601,7 +13667,7 @@ while true do
 
             else
             end
-        elseif (Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE)) then
+        elseif (Controls.check(pad, SCE_CTRL_CIRCLE_MAP) and not Controls.check(oldpad, SCE_CTRL_CIRCLE_MAP)) then
             -- VIEW
             
             state = Keyboard.getState()
@@ -13842,7 +13908,7 @@ while true do
             end
         end
     elseif showMenu > 0 then
-        if (Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE)) then
+        if (Controls.check(pad, SCE_CTRL_CIRCLE_MAP) and not Controls.check(oldpad, SCE_CTRL_CIRCLE_MAP)) then
             status = System.getMessageState()
             if status ~= RUNNING then
 

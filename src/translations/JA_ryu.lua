@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "濃紫いる",
 ["Orange"] = "くにぶ",
 ["Blue"] = "おーるー",
+["Swap_X_and_O_buttons_colon"] = "XボタンとぅOボタン入りけーいん：",
 
 -- Audio
 ["Audio"] = "オーディオ",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "背景ダウンロード",
 ["Override_Category_colon"] = "カテゴリ上書き：",
 ["Press_X_to_apply_Category"] = "Xうちカテゴリ適用",
+["Press_O_to_apply_Category"] = "Oうちカテゴリ適用",
 ["Default"] = "既定",
 ["Favorite"] = "う気に入り",
 ["Rename"] = "なめー変更",

@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Mörklila",
 ["Orange"] = "Orange",
 ["Blue"] = "Blå",
+["Swap_X_and_O_buttons_colon"] = "Byt X- och O-knappar: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Ladda ner bakgrund",
 ["Override_Category_colon"] = "Åsidosätt kategori: ",
 ["Press_X_to_apply_Category"] = "Tryck på X för att tillämpa kategori",
+["Press_O_to_apply_Category"] = "Tryck på O för att tillämpa kategori",
 ["Default"] = "Standard",
 ["Favorite"] = "Favorit",
 ["Rename"] = "Döp om",

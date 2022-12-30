@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Dark Purple",
 ["Orange"] = "Orange",
 ["Blue"] = "Blue",
+["Swap_X_and_O_buttons_colon"] = "Swap X and O buttons: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Download Background",
 ["Override_Category_colon"] = "Override Category: ",
 ["Press_X_to_apply_Category"] = "Press X to apply Category",
+["Press_O_to_apply_Category"] = "Press O to apply Category",
 ["Default"] = "Default",
 ["Favorite"] = "Favorite",
 ["Rename"] = "Rename",

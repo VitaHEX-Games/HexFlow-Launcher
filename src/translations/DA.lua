@@ -31,6 +31,7 @@ return {
 ["Dark_Purple"] = "Koyu mor",
 ["Orange"] = "Turuncu",
 ["Blue"] = "Mavi",
+["Swap_X_and_O_buttons_colon"] = "Skift X- og O-knapper: ",
 
 -- Audio
 ["Audio"] = "Lyd",
@@ -188,6 +189,7 @@ return {
 ["Download_Background"] = "Download baggrund",
 ["Override_Category_colon"] = "Tilsidesæt kategori: ",
 ["Press_X_to_apply_Category"] = "Tryk på X for at anvende kategori",
+["Press_O_to_apply_Category"] = "Tryk på O for at anvende kategori",
 ["Default"] = "Misligholde",
 ["Favorite"] = "Favorit",
 ["Rename"] = "Omdøb",
