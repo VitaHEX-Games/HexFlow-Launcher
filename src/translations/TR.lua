@@ -31,7 +31,6 @@ return {
 ["Dark_Purple"] = "Koyu mor",
 ["Orange"] = "Turuncu",
 ["Blue"] = "Mavi",
-["Swap_X_and_O_buttons_colon"] = "X ve O düğmelerini değiştirin: ",
 
 -- Audio
 ["Audio"] = "Ses",
@@ -287,5 +286,28 @@ return {
 
 ["guide_6_heading"] = "Hakkında",
 ["guide_6_content"] = "jimbob4000 tarafından RetroFlow, HexFlow uygulamasının değiştirilmiş bir sürümüdür. \n\nOrijinal HexFlow uygulaması VitaHex'e aittir. VitaHex'in projelerini patreon.com/vitahex adresinde destekleyin \n\nDaha fazla bilgi:\nDaha fazla bilgi ve tam kredi için lütfen şu adresi ziyaret edin: https://github.com/jimbob4000/RetroFlow-Launcher",
+
+-- Other Settings
+["Other_Settings"] = "Diğer ayarlar",
+["Swap_X_and_O_buttons_colon"] = "X ve O düğmelerini değiştirin: ",
+["Adrenaline_PS_button_colon"] = "Adrenaline PS düğmesi: ",
+["Menu"] = "Menü",
+["LiveArea"] = "LiveArea",
+["Standard"] = "Standart",
+
+-- Game options
+["Options"] = "Seçenekler",
+["Adrenaline_options"] = "Adrenaline seçenekler",
+["Driver_colon"] = "Sürücüsü: ",
+["Execute_colon"] = "Çalıştır: ",
+["Save"] = "Kaydet",
+["Add_to_favorites"] = "Favorilere ekle",
+["Remove_from_favorites"] = "Favorilerden çıkar",
+["Show_hidden_games_colon"] = "Gizli oyunları göster:",
+["Hide_game"] = "Oyunu gizle",
+["Unhide_game"] = "Oyunu göster",
+["Remove_from_recently_played"] = "Son oynananlardan kaldır",
+["Retroarch_options"] = "RetroArch seçenekler",
+["Core_colon"] = "Core:",
 
 }

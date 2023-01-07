@@ -31,7 +31,6 @@ return {
 ["Dark_Purple"] = "Темно фиолетовый",
 ["Orange"] = "Оранжевый",
 ["Blue"] = "Синий",
-["Swap_X_and_O_buttons_colon"] = "Поменяйте местами кнопки X и O:",
 
 -- Audio
 ["Audio"] = "Аудио",
@@ -287,5 +286,28 @@ return {
 
 ["guide_6_heading"] = "О приложении",
 ["guide_6_content"] = "RetroFlow от jimbob4000 — это модифицированная версия приложения HexFlow. \n\nОригинальное приложение HexFlow разработано VitaHex. \nПоддержите проекты VitaHex на patreon.com/vitahex \n\nДополнительная информация:\nДля получения дополнительной информации и полной информации посетите: \nhttps://github.com/jimbob4000/RetroFlow-Launcher",
+
+-- Other Settings
+["Other_Settings"] = "Другие настройки",
+["Swap_X_and_O_buttons_colon"] = "Поменяйте местами кнопки X и O:",
+["Adrenaline_PS_button_colon"] = "Adrenaline кнопка PS: ",
+["Menu"] = "Меню",
+["LiveArea"] = "LiveArea",
+["Standard"] = "Стандарт",
+
+-- Game options
+["Options"] = "Параметры",
+["Adrenaline_options"] = "Параметры Adrenaline",
+["Driver_colon"] = "Драйвер: ",
+["Execute_colon"] = "Выполнить: ",
+["Save"] = "Сохранить",
+["Add_to_favorites"] = "Добавить в избранное",
+["Remove_from_favorites"] = "Удалить из Избранного",
+["Show_hidden_games_colon"] = "Показать скрытые игры:",
+["Hide_game"] = "Скрыть игру",
+["Unhide_game"] = "Показать игру",
+["Remove_from_recently_played"] = "Удалить из недавно сыграл",
+["Retroarch_options"] = "Параметры RetroArch",
+["Core_colon"] = "Core:",
 
 }

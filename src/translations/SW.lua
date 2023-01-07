@@ -31,7 +31,6 @@ return {
 ["Dark_Purple"] = "Mörklila",
 ["Orange"] = "Orange",
 ["Blue"] = "Blå",
-["Swap_X_and_O_buttons_colon"] = "Byt X- och O-knappar: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -287,5 +286,28 @@ return {
 
 ["guide_6_heading"] = "Om ansökan",
 ["guide_6_content"] = "RetroFlow av jimbob4000 är en modifierad version av HexFlow-appen. \n\nDen ursprungliga HexFlow-appen är från VitaHex. Stöd VitaHex projekt på patreon.com/vitahex \n\nMer information:\nFör mer information och fullständiga poäng, besök: https://github.com/jimbob4000/RetroFlow-Launcher",
+
+-- Other Settings
+["Other_Settings"] = "Andra inställningar",
+["Swap_X_and_O_buttons_colon"] = "Byt X- och O-knappar: ",
+["Adrenaline_PS_button_colon"] = "Adrenaline PS-knapp: ",
+["Menu"] = "Meny",
+["LiveArea"] = "LiveArea",
+["Standard"] = "Standard",
+
+-- Game options
+["Options"] = "Alternativ",
+["Adrenaline_options"] = "Adrenaline-alternativ",
+["Driver_colon"] = "Drivrutinen: ",
+["Execute_colon"] = "Utföra: ",
+["Save"] = "Spara",
+["Add_to_favorites"] = "Lägg till i favoriter",
+["Remove_from_favorites"] = "Ta bort från favoriter",
+["Show_hidden_games_colon"] = "Visa dolda spel:",
+["Hide_game"] = "Göm spelet",
+["Unhide_game"] = "Visa spelet",
+["Remove_from_recently_played"] = "Ta bort från nyligen spelade",
+["Retroarch_options"] = "RetroArch-alternativ",
+["Core_colon"] = "Core:",
 
 }

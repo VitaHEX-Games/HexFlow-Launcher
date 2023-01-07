@@ -31,7 +31,6 @@ return {
 ["Dark_Purple"] = "Dark Purple",
 ["Orange"] = "Orange",
 ["Blue"] = "Blue",
-["Swap_X_and_O_buttons_colon"] = "Swap X and O buttons: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -288,5 +287,27 @@ return {
 ["guide_6_heading"] = "About",
 ["guide_6_content"] = "RetroFlow by jimbob4000 is a modified version of the HexFlow app. \n\nThe originalHexFlow app is by VitaHex. Support VitaHex's projects on patreon.com/vitahex \n\nMore information:\nFor more information and full credits, please visit: https://github.com/jimbob4000/RetroFlow-Launcher",
 
+-- Other Settings
+["Other_Settings"] = "Other Settings",
+["Swap_X_and_O_buttons_colon"] = "Swap X and O buttons: ",
+["Adrenaline_PS_button_colon"] = "Adrenaline PS button: ",
+["Menu"] = "Menu",
+["LiveArea"] = "LiveArea",
+["Standard"] = "Standard",
+
+-- Game options
+["Options"] = "Options",
+["Adrenaline_options"] = "Adrenaline options",
+["Driver_colon"] = "Driver: ",
+["Execute_colon"] = "Execute: ",
+["Save"] = "Save",
+["Add_to_favorites"] = "Add to favorites",
+["Remove_from_favorites"] = "Remove from favorites",
+["Show_hidden_games_colon"] = "Show hidden games:",
+["Hide_game"] = "Hide game",
+["Unhide_game"] = "Unhide game",
+["Remove_from_recently_played"] = "Remove from recently played",
+["Retroarch_options"] = "RetroArch options",
+["Core_colon"] = "Core:",
 
 }

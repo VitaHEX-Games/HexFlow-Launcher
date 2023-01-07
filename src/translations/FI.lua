@@ -31,7 +31,6 @@ return {
 ["Dark_Purple"] = "Tumma violetti",
 ["Orange"] = "Oranssi",
 ["Blue"] = "Sininen",
-["Swap_X_and_O_buttons_colon"] = "Vaihda X- ja O-painikkeita: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -287,5 +286,28 @@ return {
 
 ["guide_6_heading"] = "Tietoja sovelluksesta",
 ["guide_6_content"] = "Jimbob4000:n RetroFlow on HexFlow-sovelluksen muokattu versio. \n\nAlkuperäinen HexFlow-sovellus on VitaHexin valmistama. Tue VitaHexin projekteja osoitteessa patreon.com/vitahex \n\nLisätietoja:\nLisätietoja ja täydet krediitit ovat osoitteessa https://github.com/jimbob4000/RetroFlow-Launcher",
+
+-- Other Settings
+["Other_Settings"] = "Muut asetukset",
+["Swap_X_and_O_buttons_colon"] = "Vaihda X- ja O-painikkeita: ",
+["Adrenaline_PS_button_colon"] = "Adrenaline PS-painike: ",
+["Menu"] = "Vakio",
+["LiveArea"] = "LiveArea",
+["Standard"] = "Standard",
+
+-- Game options
+["Options"] = "Vaihtoehdot",
+["Adrenaline_options"] = "Adrenaline-vaihtoehdot",
+["Driver_colon"] = "Kuljettaja:",
+["Execute_colon"] = "Suorita:",
+["Save"] = "Tallenna",
+["Add_to_favorites"] = "Lisää suosikkeihin",
+["Remove_from_favorites"] = "Poista suosikeista",
+["Show_hidden_games_colon"] = "Näytä piilotetut pelit:",
+["Hide_game"] = "Piilota peli",
+["Unhide_game"] = "Näytä peli",
+["Remove_from_recently_played"] = "Poista viimeaikaisista",
+["Retroarch_options"] = "RetroArch-vaihtoehdot",
+["Core_colon"] = "Core:",
 
 }

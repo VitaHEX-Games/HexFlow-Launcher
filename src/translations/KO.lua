@@ -31,7 +31,6 @@ return {
 ["Dark_Purple"] = "어두운 보라색",
 ["Orange"] = "주황색",
 ["Blue"] = "푸른",
-["Swap_X_and_O_buttons_colon"] = "X와 O 버튼을 교체하십시오: ",
 
 -- Audio
 ["Audio"] = "오디오",
@@ -273,7 +272,6 @@ return {
 ["guide_1_heading"] = "게임 추가",
 ["guide_1_content"] = "게임 디렉토리: \n게임을 'ux0:/data/RetroFlow/ROMS/' 에 두거나 자신의 파일 디렉토리를 사용하려면 \n'스캔 설정' 로 이동한 다음 '게임 디렉토리 편집' 로 이동하세요. \n\n게임을 추가했으면 '다시 스캔' 을 선택하여 RetroFlow에 추가하세요. \n\n파일 이름: \n'no-intro' 파일 명명 규칙을 사용하여 게임 이름을 지정하는 것이 중요합니다. 'Sonic (USA)' , \n그렇지 않으면 이미지가 다운로드되지 않습니다.",
 
-
 ["guide_2_heading"] = "Adrenaline 게임이 로드되지 않습니까?",
 ["guide_2_content"] = "아드레날린 게임이 로드되지 않고 RetroFlow Adrenaline Launcher\n를 설치했다면 AdrBubbleBooterInstaller를 설치하십시오: \nhttps://vitadb.rinnegatamante.it/#/info/307. \n\n또는 Adrenaline Bubble Manager를 설치해 보십시오: \nhttps://github.com/ONElua/AdrenalineBubbleManager/releases/",
 
@@ -287,5 +285,29 @@ return {
 ["guide_5_content"] = "위쪽 화살표 키: 즐겨찾기 카테고리로 건너뛰기 \n\n화살표 키 아래쪽 + 정사각형: 한 카테고리 뒤로 이동 \n\n화살표 키 아래쪽 + L/R 트리거: 알파벳 순으로 게임 건너뛰기",
 
 ["guide_6_heading"] = "신청 정보",
-["guide_6_content"] = "jimbob4000의 RetroFlow는 HexFlow 앱의 수정된 버전입니다. \n\n원래 HexFlow 앱은 VitaHex에서 제공합니다. \npatreon.com/vitahex에서 VitaHex의 프로젝트를 지원하세요. \n\n추가 정보:\n자세한 정보와 전체 크레딧을 보려면 \nhttps://github.com/jimbob4000/RetroFlow-Launcher를 방문하세요."
+["guide_6_content"] = "jimbob4000의 RetroFlow는 HexFlow 앱의 수정된 버전입니다. \n\n원래 HexFlow 앱은 VitaHex에서 제공합니다. \npatreon.com/vitahex에서 VitaHex의 프로젝트를 지원하세요. \n\n추가 정보:\n자세한 정보와 전체 크레딧을 보려면 \nhttps://github.com/jimbob4000/RetroFlow-Launcher를 방문하세요.",
+
+-- Other Settings
+["Other_Settings"] = "다른 설정",
+["Swap_X_and_O_buttons_colon"] = "X와 O 버튼을 교체하십시오: ",
+["Adrenaline_PS_button_colon"] = "Adrenaline PS 버튼:",
+["Menu"] = "메뉴",
+["LiveArea"] = "LiveArea",
+["Standard"] = "표준",
+
+-- Game options
+["Options"] = "옵션",
+["Adrenaline_options"] = "Adrenaline 옵션",
+["Driver_colon"] = "터 드라이버: ",
+["Execute_colon"] = "실행: ",
+["Save"] = "저장",
+["Add_to_favorites"] = "즐겨 찾기에 추가",
+["Remove_from_favorites"] = "즐겨찾기에서 제거",
+["Show_hidden_games_colon"] = "숨겨진 게임 표시:",
+["Hide_game"] = "게임 숨기기",
+["Unhide_game"] = "게임 숨기기 해제",
+["Remove_from_recently_played"] = "최근 재생에서 제거",
+["Retroarch_options"] = "RetroArch 옵션",
+["Core_colon"] = "Core:",
+
 }

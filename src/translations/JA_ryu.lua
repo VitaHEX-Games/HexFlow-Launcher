@@ -31,7 +31,6 @@ return {
 ["Dark_Purple"] = "濃紫いる",
 ["Orange"] = "くにぶ",
 ["Blue"] = "おーるー",
-["Swap_X_and_O_buttons_colon"] = "XボタンとぅOボタン入りけーいん：",
 
 -- Audio
 ["Audio"] = "オーディオ",
@@ -273,8 +272,7 @@ return {
 ["guide_1_heading"] = "ゲームぬ追加方法",
 ["guide_1_content"] = "ゲームディレクトリ: \nゲーム「ux0:/data/RetroFlow/ROMS/」 んかい配置すが、\n独自ぬファイルディレクトリ使用すんがー、\n「スキャン設定」 んかい移動しから 「ゲームディレクトリぬ編集」 んかい移動さびーん。 \n\nゲームいりしーいねー、「再スキャン」選択し RetroFlow んかいいりしーいびーん。 \n\nファイル名: \n「no-intro」ファイル命名規則使用しゲームんかいなめーちきーるくとぅが重要やいびーん。 \n「Sonic (USA)」、そうでぃねーんばー、画像ーダウンロードさりやびらん。",
 
-
-["guide_2_heading"] = "Adrenalineのゲームがロードされませんか？",
+["guide_2_heading"] = "Adrenalineぬゲームがロードされませんか？",
 ["guide_2_content"] = "Adrenalineぬゲームぬロードさりらじ、RetroFlow Adrenaline Launcher \nがインストールさりとーるばーや、AdrBubbleBooterInstaller \nhttps://vitadb.rinnegatamante.it/#/info/307 インストールしくぃみそーれー。 \n\nあらんでぃ、Adrenaline Bubble Manager インストールしんーちくぃみそーれー: \nhttps://github.com/ONElua/AdrenalineBubbleManager/releases/",
 
 ["guide_3_heading"] = "ゲームぬカバーとぅ背景ぬカスタマイズ方法",
@@ -288,5 +286,28 @@ return {
 
 ["guide_6_heading"] = "くぬアプリにちいてぃ",
 ["guide_6_content"] = "jimbob4000 にゆる RetroFlow ー、HexFlow アプリぬ修正版やいびーん。 \n\nオリジナルぬ HexFlow アプレー VitaHex にゆるむんやいびーん。 \npatreon.com/vitahex でぃ VitaHex ぬプロジェクトサポート \n\n詳細情報:\n詳細情報とぅ完全なクレジットにちいてー、\nhttps://github.com/jimbob4000/RetroFlow-Launcher んかいアクセスしくぃみそーれー。",
+
+-- Other Settings
+["Other_Settings"] = "その他の設定",
+["Swap_X_and_O_buttons_colon"] = "XボタンとぅOボタン入りけーいん：",
+["Adrenaline_PS_button_colon"] = "Adrenaline PS ボタン：",
+["Menu"] = "メニュー",
+["LiveArea"] = "LiveArea",
+["Standard"] = "標準",
+
+-- Game options
+["Options"] = "オプション",
+["Adrenaline_options"] = "Adrenaline オプション",
+["Driver_colon"] = "ドライバ：",
+["Execute_colon"] = "実行する：",
+["Save"] = "保存する",
+["Add_to_favorites"] = "お気に入りに追加",
+["Remove_from_favorites"] = "お気に入りから削除",
+["Show_hidden_games_colon"] = "非表示のゲームを表示：",
+["Hide_game"] = "ゲームを隠す",
+["Unhide_game"] = "ゲームを表示する",
+["Remove_from_recently_played"] = "最近プレイしたものから削除",
+["Retroarch_options"] = "RetroArch オプション",
+["Core_colon"] = "Core:",
 
 }

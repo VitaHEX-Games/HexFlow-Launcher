@@ -31,7 +31,6 @@ return {
 ["Dark_Purple"] = "濃紫色",
 ["Orange"] = "オレンジ",
 ["Blue"] = "青色",
-["Swap_X_and_O_buttons_colon"] = "XボタンとOボタンを入れ替える：",
 
 -- Audio
 ["Audio"] = "オーディオ",
@@ -273,7 +272,6 @@ return {
 ["guide_1_heading"] = "ゲームの追加方法",
 ["guide_1_content"] = "ゲームディレクトリ: \nゲームを「ux0:/data/RetroFlow/ROMS/」 に配置するか、\n独自のファイルディレクトリを使用するには、\n「スキャン設定」 に移動してから 「ゲームディレクトリの編集」 に移動します。 \n\nゲームを追加したら、「再スキャン」を選択して RetroFlow に追加します。 \n\nファイル名: \n「no-intro」ファイル命名規則を使用してゲームに名前を付けることが重要です。 \n「Sonic (USA)」、そうでない場合、画像はダウンロードされません。",
 
-
 ["guide_2_heading"] = "Adrenaline ゲームがロードされませんか？",
 ["guide_2_content"] = "Adrenaline ゲームがロードされず、RetroFlow Adrenaline Launcher \nがインストールされている場合は、AdrBubbleBooterInstaller \nhttps://vitadb.rinnegatamante.it/#/info/307 をインストールしてください。 \n\nまたは、Adrenaline Bubble Manager をインストールしてみてください: \nhttps://github.com/ONElua/AdrenalineBubbleManager/releases/",
 
@@ -288,5 +286,28 @@ return {
 
 ["guide_6_heading"] = "このアプリについて",
 ["guide_6_content"] = "jimbob4000 による RetroFlow は、HexFlow アプリの修正版です。 \n\nオリジナルの HexFlow アプリは VitaHex によるものです。 \npatreon.com/vitahex で VitaHex のプロジェクトをサポート \n\n詳細情報:\n詳細情報と完全なクレジットについては、\nhttps://github.com/jimbob4000/RetroFlow-Launcher にアクセスしてください。",
+
+-- Other Settings
+["Other_Settings"] = "その他の設定",
+["Swap_X_and_O_buttons_colon"] = "XボタンとOボタンを入れ替える：",
+["Adrenaline_PS_button_colon"] = "Adrenaline PS ボタン：",
+["Menu"] = "メニュー",
+["LiveArea"] = "LiveArea",
+["Standard"] = "標準",
+
+-- Game options
+["Options"] = "オプション",
+["Adrenaline_options"] = "Adrenaline オプション",
+["Driver_colon"] = "ドライバ：",
+["Execute_colon"] = "実行する：",
+["Save"] = "保存する",
+["Add_to_favorites"] = "お気に入りに追加",
+["Remove_from_favorites"] = "お気に入りから削除",
+["Show_hidden_games_colon"] = "非表示のゲームを表示：",
+["Hide_game"] = "ゲームを隠す",
+["Unhide_game"] = "ゲームを表示する",
+["Remove_from_recently_played"] = "最近プレイしたものから削除",
+["Retroarch_options"] = "RetroArch オプション",
+["Core_colon"] = "Core:",
 
 }

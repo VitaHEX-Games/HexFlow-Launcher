@@ -31,7 +31,6 @@ return {
 ["Dark_Purple"] = "深紫色",
 ["Orange"] = "橘色",
 ["Blue"] = "蓝色",
-["Swap_X_and_O_buttons_colon"] = "交换 X 和 O 按钮：",
 
 -- Audio
 ["Audio"] = "音频",
@@ -288,5 +287,27 @@ return {
 ["guide_6_heading"] = "关于",
 ["guide_6_content"] = "jimbob4000 的 RetroFlow 是 HexFlow 应用程序的修改版本。 \n\n最初的 HexFlow 应用程序是由VitaHex 开发的。\n在 patreon.com/vitahex 上支持 VitaHex 的项目 \n\n更多信息：\n更多信息和完整学分，请访问：https://github.com/jimbob4000/RetroFlow-Launcher",
 
+-- Other Settings
+["Other_Settings"] = "其他设置",
+["Swap_X_and_O_buttons_colon"] = "交换 X 和 O 按钮：",
+["Adrenaline_PS_button_colon"] = "Adrenaline PS 按钮：",
+["Menu"] = "菜单",
+["LiveArea"] = "LiveArea",
+["Standard"] = "标准",
+
+-- Game options
+["Options"] = "选项",
+["Adrenaline_options"] = "Adrenaline 选项",
+["Driver_colon"] = "驱动程序：",
+["Execute_colon"] = "运行：",
+["Save"] = "保存",
+["Add_to_favorites"] = "添加到收藏夹",
+["Remove_from_favorites"] = "从收藏夹中删除",
+["Show_hidden_games_colon"] = "显示隐藏的游戏：",
+["Hide_game"] = "隐藏游戏",
+["Unhide_game"] = "取消隐藏游戏",
+["Remove_from_recently_played"] = "最近播放的中移除",
+["Retroarch_options"] = "RetroArch 选项",
+["Core_colon"] = "Core:",
 
 }
