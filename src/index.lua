@@ -637,6 +637,8 @@ local imgFloor = Graphics.loadImage("app0:/DATA/floor.png")
 local imgFavorite_small_on = Graphics.loadImage("app0:/DATA/fav-small-on.png")
 local imgFavorite_large_on = Graphics.loadImage("app0:/DATA/fav-large-on.png")
 local imgFavorite_large_off = Graphics.loadImage("app0:/DATA/fav-large-off.png")
+local imgHidden_small_on = Graphics.loadImage("app0:/DATA/hidden-small-on.png")
+local imgHidden_large_on = Graphics.loadImage("app0:/DATA/hidden-large-on.png")
 local setting_icon_theme = Graphics.loadImage("app0:/DATA/setting-icon-theme.png")
 local setting_icon_artwork = Graphics.loadImage("app0:/DATA/setting-icon-artwork.png")
 local setting_icon_categories = Graphics.loadImage("app0:/DATA/setting-icon-categories.png")
@@ -645,6 +647,7 @@ local setting_icon_scanning = Graphics.loadImage("app0:/DATA/setting-icon-scanni
 local setting_icon_search = Graphics.loadImage("app0:/DATA/setting-icon-search.png")
 local setting_icon_sounds = Graphics.loadImage("app0:/DATA/setting-icon-sounds.png")
 local setting_icon_about = Graphics.loadImage("app0:/DATA/setting-icon-about.png")
+local setting_icon_other = Graphics.loadImage("app0:/DATA/setting-icon-other.png")
 local file_browser_folder_open = Graphics.loadImage("app0:/DATA/file-browser-folder-open.png")
 local file_browser_folder_closed = Graphics.loadImage("app0:/DATA/file-browser-folder-closed.png")
 local file_browser_file = Graphics.loadImage("app0:/DATA/file-browser-file.png")
@@ -956,6 +959,15 @@ function update_cached_table_renamed_games()
     dofile("app0:addons/printTable.lua")
     print_table_renamed_games()
 end
+function update_cached_table_hidden_games()
+    dofile("app0:addons/printTable.lua")
+    print_table_hidden_games()
+end
+function update_cached_table_launch_overrides()
+    dofile("app0:addons/printTable.lua")
+    print_table_launch_overrides()
+end
+
 
 
 local menuX = 0
@@ -988,6 +1000,8 @@ local bgscanComplete = false
 local black = Color.new(0, 0, 0)
 local grey = Color.new(45, 45, 45)
 local darkalpha = Color.new(40, 40, 40, 180)
+local dark = Color.new(40, 40, 40, 255)
+local blackalpha = Color.new(0, 0, 0, 215)
 local lightgrey = Color.new(58, 58, 58)
 local white = Color.new(255, 255, 255)
 local red = Color.new(190, 0, 0)
@@ -1016,6 +1030,9 @@ local getCovers = 0
 local getRomDir = 1
 local getSnaps = 0
 local tmpappcat = 0
+
+local game_adr_bin_driver = 0
+local game_adr_exec_bin = 0
 
 local prevX = 0
 local prevZ = 0
@@ -1046,11 +1063,13 @@ local Game_Backgrounds = 1 -- On
 local setMusicShuffle = 1 -- On
 
 local setSwap_X_O_buttons = 0 -- 0 Off
+local setAdrPSButton = 0 -- 0 Menu
+local showHidden = 0 -- 0 Off
 
 function SaveSettings()
     local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
     settings = {}
-    local settings = "Reflections=" .. setReflections .. " " .. "\nSounds=" .. setSounds .. " " .. "\nColor=" .. themeColor .. " " .. "\nBackground=" .. setBackground .. " " .. "\nLanguage=" .. setLanguage .. " " .. "\nView=" .. showView .. " " .. "\nHomebrews=" .. showHomebrews .. " " .. "\nScan=" .. startupScan .. " " .. "\nCategory=" .. startCategory .. " " .. "\nRecent=" .. showRecentlyPlayed .. " " .. "\nAll=" .. showAll .. " " .. "\nAdrenaline_rom_location=" .. Adrenaline_roms .. " " .. "\nGame_Backgrounds=" .. Game_Backgrounds .. " " .. "\nMusic=" .. setMusic .. " " .. "\nMusic_Shuffle=" .. setMusicShuffle .. " " .. "\nSwap_X_O_buttons=" .. setSwap_X_O_buttons
+    local settings = "Reflections=" .. setReflections .. " " .. "\nSounds=" .. setSounds .. " " .. "\nColor=" .. themeColor .. " " .. "\nBackground=" .. setBackground .. " " .. "\nLanguage=" .. setLanguage .. " " .. "\nView=" .. showView .. " " .. "\nHomebrews=" .. showHomebrews .. " " .. "\nScan=" .. startupScan .. " " .. "\nCategory=" .. startCategory .. " " .. "\nRecent=" .. showRecentlyPlayed .. " " .. "\nAll=" .. showAll .. " " .. "\nAdrenaline_rom_location=" .. Adrenaline_roms .. " " .. "\nGame_Backgrounds=" .. Game_Backgrounds .. " " .. "\nMusic=" .. setMusic .. " " .. "\nMusic_Shuffle=" .. setMusicShuffle .. " " .. "\nSwap_X_O_buttons=" .. setSwap_X_O_buttons .. " " .. "\nAdrenaline_PS_Button=" .. setAdrPSButton .. " " .. "\nShow_hidden_games=" .. showHidden
     file_settings = io.open(cur_dir .. "/config.dat", "w")
     file_settings:write(settings)
     file_settings:close()
@@ -1087,6 +1106,8 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
     local getMusic = settingValue[14]; if getMusic ~= nil then setMusic = getMusic end
     local getMusicShuffle = settingValue[15]; if getMusicShuffle ~= nil then setMusicShuffle = getMusicShuffle end
     local getSwap_X_O_buttons = settingValue[16]; if getSwap_X_O_buttons ~= nil then setSwap_X_O_buttons = getSwap_X_O_buttons end
+    local getAdrPSButton = settingValue[17]; if getAdrPSButton ~= nil then setAdrPSButton = getAdrPSButton end
+    local getHidden = settingValue[18]; if getHidden ~= nil then showHidden = getHidden end
 
     selectedwall = setBackground
 
@@ -1355,7 +1376,6 @@ local lang_default =
 ["Dark_Purple"] = "Dark Purple",
 ["Orange"] = "Orange",
 ["Blue"] = "Blue",
-["Swap_X_and_O_buttons_colon"] = "Swap X and O buttons: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -1612,6 +1632,28 @@ local lang_default =
 ["guide_6_heading"] = "About",
 ["guide_6_content"] = "RetroFlow by jimbob4000 is a modified version of the HexFlow app. \n\nThe originalHexFlow app is by VitaHex. Support VitaHex's projects on patreon.com/vitahex \n\nMore information:\nFor more information and full credits, please visit: https://github.com/jimbob4000/RetroFlow-Launcher",
 
+-- Other Settings
+["Other_Settings"] = "Other Settings",
+["Swap_X_and_O_buttons_colon"] = "Swap X and O buttons: ",
+["Adrenaline_PS_button_colon"] = "Adrenaline PS button:",
+["Menu"] = "Menu",
+["LiveArea"] = "LiveArea",
+["Standard"] = "Standard",
+
+-- Game options
+["Options"] = "Options",
+["Adrenaline_options"] = "Adrenaline options",
+["Driver_colon"] = "Driver: ",
+["Execute_colon"] = "Execute: ",
+["Save"] = "Save",
+["Add_to_favorites"] = "Add to favorites",
+["Remove_from_favorites"] = "Remove from favorites",
+["Show_hidden_games_colon"] = "Show hidden games:",
+["Hide_game"] = "Hide game",
+["Unhide_game"] = "Unhide game",
+["Remove_from_recently_played"] = "Remove from recently played",
+["Retroarch_options"] = "RetroArch options",
+["Core_colon"] = "Core:",
 
 }
 
@@ -1846,6 +1888,9 @@ Swap_X_O_buttons()
     -- Horizontal positions
     setting_x = 78
 
+    -- Mini menu extra margin
+    mini_menu_x_margin = 60
+
     
     if setLanguage == 3 or setLanguage == 8 or setLanguage == 9 or setLanguage == 12 or setLanguage == 19 then
     -- French, Russian, Japanese, Dutch, Japanese (Ryukyuan) language fix
@@ -1858,16 +1903,26 @@ Swap_X_O_buttons()
     setting_x_icon_offset = 115
 
     -- Vertical positions
-    setting_yh = 56
-    setting_y0 = 110
-    setting_y1 = 160
-    setting_y2 = 210
-    setting_y3 = 260
-    setting_y4 = 310
-    setting_y5 = 360
-    setting_y6 = 410
+    setting_yh = 43 -- Header
+    setting_y0 = 92
+    setting_y1 = 139
+    setting_y2 = 186
+    setting_y3 = 233
+    setting_y4 = 280
+    setting_y5 = 327
+    setting_y6 = 374
+    setting_y7 = 421
     setting_y_smallfont_offset = 2
 
+function vertically_centre_mini_menu(def_menuItems)
+    y_available_space = 496
+    y_centre_box_height = (def_menuItems + 2) *47 + 3
+    y_centre_top_margin = (y_available_space - y_centre_box_height) / 2
+    y_centre_selection_start = y_centre_top_margin + 47 + 3
+    y_centre_selection_end = y_centre_selection_start + 47
+    y_centre_white_line_start = y_centre_top_margin + 47
+    y_centre_text_offset = y_centre_top_margin - 32
+end 
 
 
 -- Message - Check if RetroFlow Adrenaline Launcher needs to be installed
@@ -1919,10 +1974,10 @@ function FreeMemory()
     Graphics.freeImage(imgBattery)
     Graphics.freeImage(imgBox)
     Graphics.freeImage(imgFavorite_small_on)
-    -- Graphics.freeImage(imgFavorite_small_off)
-    -- Graphics.freeImage(imgFavorite_small_blank)
     Graphics.freeImage(imgFavorite_large_on)
     Graphics.freeImage(imgFavorite_large_off)
+    Graphics.freeImage(imgHidden_large_on)
+    Graphics.freeImage(imgHidden_small_on)
     Graphics.freeImage(setting_icon_theme)
     Graphics.freeImage(setting_icon_artwork)
     Graphics.freeImage(setting_icon_categories)
@@ -1931,6 +1986,7 @@ function FreeMemory()
     Graphics.freeImage(setting_icon_search)
     Graphics.freeImage(setting_icon_sounds)
     Graphics.freeImage(setting_icon_about)
+    Graphics.freeImage(setting_icon_other)
     Graphics.freeImage(file_browser_folder_open)
     Graphics.freeImage(file_browser_folder_closed)
     Graphics.freeImage(file_browser_file)
@@ -2193,7 +2249,109 @@ function cleanRomNames()
 end
 
 
-function launch_Adrenaline()
+
+function AutoMakeBootBin(def_rom_location, def_driver, def_bin)
+
+    -- Driver and bin tables
+    local drivers = { "ENABLE", "INFERN0", "MARCH33", "NP9660" } -- 0,0,1,2
+    local bins = { "ENABLE", "EBOOT.BIN", "EBOOT.OLD", "BOOT.BIN" } -- 0,0,1,2
+
+    -- Cleanup game path for writing to bin (set to lowercase and gsub path)
+    local path_game = tostring(def_rom_location)
+    local path2game = path_game:gsub("/pspemu/", "pspemu/")
+    local path2game = string.lower(path2game)
+    
+    local driver = tostring(def_driver)
+    local bin = tostring(def_bin)
+
+    -- Copy boot bin for editing
+    System.copyFile("app0:payloads/boot.bin", "ux0:/app/RETROLNCR/data/boot.bin")
+
+    local fp = io.open("ux0:/app/RETROLNCR/data/boot.bin", "r+")
+    if fp then
+        local number = 0
+                            
+        -- Driver 
+        fp:seek("set",0x04)
+        if driver == "INFERN0" then number = "\x00\x00\x00\x00"
+        elseif driver == "MARCH33" then number = "\x01\x00\x00\x00"
+        elseif driver == "NP9660" then number = "\x02\x00\x00\x00"
+        end
+        fp:write(number)
+
+        number = 0
+
+        -- Bin Execute
+        fp:seek("set",0x08)
+        if bin == "EBOOT.BIN" then number = "\x00\x00\x00\x00"
+        elseif bin == "EBOOT.OLD" then number = "\x01\x00\x00\x00"
+        elseif bin == "BOOT.BIN" then number = "\x02\x00\x00\x00"
+        end
+        fp:write(number)
+
+        -- Path2game
+        fp:seek("set",0x40)
+        local fill = 256 - #path2game
+        for j=1,fill do
+            path2game = path2game..string.char(00)
+        end
+        fp:write(path2game)
+
+        -- PSbutton 00 Menu 01 LiveArea 02 Standard
+        fp:seek("set",0x14)
+        if setAdrPSButton == 0 then psbutton_number = "\x00\x00\x00\x00"
+        elseif setAdrPSButton == 1 then psbutton_number = "\x01\x00\x00\x00"
+        elseif setAdrPSButton == 2 then psbutton_number = "\x02\x00\x00\x00"
+        else
+        end
+        fp:write(psbutton_number)     
+
+        --Close
+        fp:close()
+
+    end--fp
+
+end
+
+function launch_Adrenaline(def_rom_location, def_rom_title_id, def_rom_filename)
+
+    -- Check if game has custom launch overrides
+    if #launch_overrides_table ~= nil then
+        local key = find_game_table_pos_key(launch_overrides_table, app_titleid)
+        if key ~= nil then
+            -- Overrides found
+            saved_driver = launch_overrides_table[key].driver
+            if saved_driver == 1 then 
+                driver = "INFERN0"
+            elseif saved_driver == 2 then
+                driver = "MARCH33"
+            elseif saved_driver == 3 then
+                driver = "NP9660"
+            else
+                driver = "INFERN0"
+            end
+
+            saved_bin = launch_overrides_table[key].bin
+            if saved_bin == 1 then 
+                bin = "EBOOT.BIN"
+            elseif saved_bin == 2 then
+                bin = "EBOOT.OLD"
+            elseif saved_bin == 3 then
+                bin = "BOOT.BIN"
+            else
+                bin = "EBOOT.BIN"
+            end
+
+        else
+            -- Overrides not found, use default
+            driver = "INFERN0"
+            bin = "EBOOT.BIN"
+        end
+    else
+        -- Table is empty, use default
+        driver = "INFERN0"
+        bin = "EBOOT.BIN"
+    end
 
     -- Delete the old Adrenaline inf file
     if  System.doesFileExist(launch_dir_adr .. "data/boot.inf") then
@@ -2205,14 +2363,7 @@ function launch_Adrenaline()
         System.deleteFile(launch_dir_adr .. "data/boot.bin")
     end
 
-    -- Create Boot.inf
-    local file_boot = System.openFile("ux0:/app/RETROLNCR/data/boot.inf", FCREATE)
-    System.closeFile(file_boot)
-
-    file = io.open("ux0:/app/RETROLNCR/data/boot.inf", "w")
-    file:write(rom_location)
-    file:close()
-
+    AutoMakeBootBin((def_rom_location), driver, bin)
     System.launchApp("RETROLNCR")
 
 end
@@ -2381,6 +2532,79 @@ function update_dc_regional_cover()
 end
 
 
+-- Check for hidden game names
+function check_for_hidden_tag_on_scan(def_file_name, def_app_type)
+    if #hidden_games_table ~= nil then
+        local key = find_game_table_pos_key(hidden_games_table, (def_file_name))
+        if key ~= nil then
+            -- Yes - Find in files table
+            if hidden_games_table[key].app_type == (def_app_type) then
+                return true
+            end
+        else
+          -- No
+          return false
+        end
+    else
+        return false
+    end
+end
+
+
+function create_fav_count_table(def_table_input)
+    -- Note: showHomebrews = 1 -- On
+    -- Note: showHidden = 0 -- 0 Off
+
+    fav_count = {}
+    for l, file in pairs((def_table_input)) do
+
+        -- Fav, not hidden
+        if file.favourite==true and file.hidden==false then
+
+            -- showHomebrews is off
+            if showHomebrews == 0 then
+                -- ignore homebrew apps
+                if file.app_type ~= nil then
+                    if file.favourite==true then
+                        table.insert(fav_count, file)
+                    end
+                else
+                end
+
+            -- showHomebrews is on
+            else
+                if file.favourite==true then
+                    table.insert(fav_count, file)
+                end
+            end
+
+        -- Fav hidden
+        elseif file.favourite==true and file.hidden==true then
+
+            -- Show hidden is on
+            if showHidden==1 then
+
+                -- showHomebrews is off
+                if showHomebrews == 0 then
+                    -- ignore homebrew apps
+                    if file.app_type ~= nil then
+                        if file.favourite==true then
+                            table.insert(fav_count, file)
+                        end
+                    else
+                    end
+                else
+                    if file.favourite==true then
+                        table.insert(fav_count, file)
+                    end
+                end
+            else
+            end
+        else
+        end
+    end
+end
+
 function import_recently_played()
 
     local file_over = System.openFile(cur_dir .. "/overrides.dat", FREAD)
@@ -2458,7 +2682,6 @@ function import_recently_played()
                     else
                     end
                 end
-
             end
 
             -- apply_overrides_to_recently_played
@@ -2544,9 +2767,21 @@ function import_recently_played()
                 end
             end
 
+            
         end
     else
     end
+
+    -- Remove hidden games from recent if necessary
+    if showHidden == 0 and #recently_played_table ~= nil then
+        for l, file in pairs(recently_played_table) do
+            if file.hidden == true then
+                table.remove(recently_played_table,l)
+            else
+            end
+        end
+    end
+
 end
 
 
@@ -2565,6 +2800,37 @@ function import_renamed_games()
     end
 end
 
+function import_hidden_games()
+
+    hidden_games_table = {}
+    if System.doesFileExist("ux0:/data/RetroFlow/hidden_games.lua") then
+        db_Cache_hidden_games = "ux0:/data/RetroFlow/hidden_games.lua"
+
+        local db_hidden_games = {}
+        db_hidden_games = dofile(db_Cache_hidden_games)
+
+        for k, v in ipairs(db_hidden_games) do
+            table.insert(hidden_games_table, v)
+        end
+    end
+end
+
+function import_launch_overrides()
+
+    launch_overrides_table = {}
+    if System.doesFileExist("ux0:/data/RetroFlow/launch_overrides.lua") then
+        db_Cache_launch_overrides = "ux0:/data/RetroFlow/launch_overrides.lua"
+
+        local db_launch_overrides = {}
+        db_launch_overrides = dofile(db_Cache_launch_overrides)
+
+        for k, v in ipairs(db_launch_overrides) do
+            table.insert(launch_overrides_table, v)
+        end
+    end
+end
+
+import_launch_overrides()
 
 function count_loading_tasks()
 
@@ -2765,6 +3031,7 @@ function listDirectory(dir)
     search_results_table = {}
     fav_count = {}
     renamed_games_table = {}
+    hidden_games_table = {}
 
     -- psxdbfull = {}
     -- pspdbfull = {}
@@ -2789,7 +3056,7 @@ function listDirectory(dir)
     System.closeFile(bubble_filter)
 
     import_renamed_games()
-
+    import_hidden_games()
 
     -- Import onelua sfo scanned psp and psx titles
     if System.doesFileExist (user_DB_Folder .. "sfo_scan_isos.lua") then
@@ -2875,7 +3142,6 @@ function listDirectory(dir)
             else
             end
             
-            
             -- Added for caching sfo scan results
             -- table.insert(vita_table, file)
 
@@ -2894,6 +3160,9 @@ function listDirectory(dir)
 
                         table.insert(folders_table, file)
                         file.app_type=1
+
+                        -- Check for hidden game names
+                        file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
 
                         file.cover_path_online = SystemsToScan[1].onlineCoverPathSystem
                         file.cover_path_local = SystemsToScan[1].localCoverPath
@@ -2919,6 +3188,9 @@ function listDirectory(dir)
                         table.insert(folders_table, file)
                         file.app_type=2
 
+                        -- Check for hidden game names
+                        file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
+
                         file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
                         file.cover_path_local = SystemsToScan[3].localCoverPath
                         file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
@@ -2942,6 +3214,9 @@ function listDirectory(dir)
 
                         table.insert(folders_table, file)
                         file.app_type=3
+
+                        -- Check for hidden game names
+                        file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
 
                         file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
                         file.cover_path_local = SystemsToScan[4].localCoverPath
@@ -2968,6 +3243,9 @@ function listDirectory(dir)
                         table.insert(folders_table, file)
                         file.app_type=0
 
+                        -- Check for hidden game names
+                        file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
+
                         file.cover_path_online = SystemsToScan[2].onlineCoverPathSystem
                         file.cover_path_local = SystemsToScan[2].localCoverPath
                         file.snap_path_online = SystemsToScan[2].onlineSnapPathSystem
@@ -2991,6 +3269,9 @@ function listDirectory(dir)
 
                         table.insert(folders_table, file)
                         file.app_type=1
+
+                        -- Check for hidden game names
+                        file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
 
                         file.cover_path_local = SystemsToScan[1].localCoverPath
                         file.cover_path_online = SystemsToScan[1].onlineCoverPathSystem
@@ -3017,6 +3298,9 @@ function listDirectory(dir)
 
                     table.insert(folders_table, file)
                     file.app_type=1
+
+                    -- Check for hidden game names
+                    file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
 
                     file.cover_path_online = SystemsToScan[1].onlineCoverPathSystem
                     file.cover_path_local = SystemsToScan[1].localCoverPath
@@ -3052,6 +3336,9 @@ function listDirectory(dir)
                         table.insert(folders_table, file)
                         file.app_type=1
 
+                        -- Check for hidden game names
+                        file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
+
                         file.cover_path_online = SystemsToScan[1].onlineCoverPathSystem
                         file.cover_path_local = SystemsToScan[1].localCoverPath
                         file.snap_path_online = SystemsToScan[1].onlineSnapPathSystem
@@ -3076,6 +3363,9 @@ function listDirectory(dir)
                         table.insert(folders_table, file)
                         file.app_type=2
 
+                        -- Check for hidden game names
+                        file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
+
                         file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
                         file.cover_path_local = SystemsToScan[3].localCoverPath
                         file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
@@ -3099,6 +3389,9 @@ function listDirectory(dir)
 
                         table.insert(folders_table, file)
                         file.app_type=3
+
+                        -- Check for hidden game names
+                        file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
 
                         file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
                         file.cover_path_local = SystemsToScan[4].localCoverPath
@@ -3125,6 +3418,9 @@ function listDirectory(dir)
                         table.insert(folders_table, file)
                         file.app_type=0
 
+                        -- Check for hidden game names
+                        file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
+
                         file.cover_path_online = SystemsToScan[2].onlineCoverPathSystem
                         file.cover_path_local = SystemsToScan[2].localCoverPath
                         file.snap_path_online = SystemsToScan[2].onlineSnapPathSystem
@@ -3148,6 +3444,9 @@ function listDirectory(dir)
 
                         table.insert(folders_table, file)
                         file.app_type=0
+
+                        -- Check for hidden game names
+                        file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
 
                         file.cover_path_online = SystemsToScan[2].onlineCoverPathSystem
                         file.cover_path_local = SystemsToScan[2].localCoverPath
@@ -3173,6 +3472,9 @@ function listDirectory(dir)
 
                     table.insert(folders_table, file)
                     file.app_type=0
+
+                    -- Check for hidden game names
+                    file.hidden = check_for_hidden_tag_on_scan(file.titleid, file.app_type)
 
                     file.cover_path_online = SystemsToScan[2].onlineCoverPathSystem
                     file.cover_path_local = SystemsToScan[2].localCoverPath
@@ -3292,6 +3594,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=1
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
 
@@ -3318,6 +3623,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=2
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
@@ -3346,6 +3654,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=3
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
 
@@ -3373,6 +3684,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=0
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = "ux0:/data/RetroFlow/COVERS/Homebrew/" .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
 
@@ -3399,6 +3713,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=2
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
@@ -3428,6 +3745,9 @@ function listDirectory(dir)
 
                                 table.insert(folders_table, file)
                                 file.app_type=2
+
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                 custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                 custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
@@ -3562,6 +3882,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=1
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
 
@@ -3588,6 +3911,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=2
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
@@ -3616,6 +3942,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=3
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
 
@@ -3643,6 +3972,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=0
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = "ux0:/data/RetroFlow/COVERS/Homebrew/" .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
 
@@ -3669,6 +4001,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=2
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
@@ -3698,6 +4033,9 @@ function listDirectory(dir)
 
                                 table.insert(folders_table, file)
                                 file.app_type=2
+
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                 custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                 custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
@@ -3810,7 +4148,8 @@ function listDirectory(dir)
                                   -- No
                                 end
                             else
-                            end                         
+                            end
+
 
                             -- OVERRIDES START
 
@@ -3824,6 +4163,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=1
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
@@ -3852,6 +4194,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=2
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
 
@@ -3878,6 +4223,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=3
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
@@ -3906,6 +4254,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=0
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[2].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
 
@@ -3932,6 +4283,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=2
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
@@ -3961,6 +4315,9 @@ function listDirectory(dir)
 
                                 table.insert(folders_table, file)
                                 file.app_type=2
+
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                 custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                 custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
@@ -4079,7 +4436,8 @@ function listDirectory(dir)
                                   -- No
                                 end
                             else
-                            end                         
+                            end
+
 
                             -- OVERRIDES START
 
@@ -4093,6 +4451,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=1
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
@@ -4121,6 +4482,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=2
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
 
@@ -4147,6 +4511,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=3
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
@@ -4175,6 +4542,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=0
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[2].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
 
@@ -4201,6 +4571,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=2
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
@@ -4230,6 +4603,9 @@ function listDirectory(dir)
 
                                 table.insert(folders_table, file)
                                 file.app_type=2
+
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                 custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                 custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
@@ -4357,6 +4733,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=1
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
 
@@ -4383,6 +4762,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=2
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
@@ -4411,6 +4793,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=3
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
 
@@ -4438,6 +4823,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=0
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[2].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
 
@@ -4464,6 +4852,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=3
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
@@ -4493,6 +4884,9 @@ function listDirectory(dir)
 
                                 table.insert(folders_table, file)
                                 file.app_type=3
+
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                 custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
                                 custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
@@ -4613,6 +5007,7 @@ function listDirectory(dir)
                             else
                             end
 
+
                             -- OVERRIDES START
 
                             if System.doesFileExist(cur_dir .. "/overrides.dat") then
@@ -4625,6 +5020,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=1
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
@@ -4653,6 +5051,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=2
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
 
@@ -4679,6 +5080,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=3
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
@@ -4707,6 +5111,9 @@ function listDirectory(dir)
                                     table.insert(folders_table, file)
                                     file.app_type=0
 
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                     custom_path = SystemsToScan[2].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
 
@@ -4733,6 +5140,9 @@ function listDirectory(dir)
 
                                     table.insert(folders_table, file)
                                     file.app_type=3
+
+                                    -- Check for hidden game names
+                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                     custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
                                     custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
@@ -4762,6 +5172,9 @@ function listDirectory(dir)
 
                                 table.insert(folders_table, file)
                                 file.app_type=3
+
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                                 custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
                                 custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
@@ -4900,6 +5313,9 @@ function listDirectory(dir)
                             else
                             end
 
+                            -- Check for hidden game names
+                            file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                             table.insert(psx_table, file)
                             table.insert(folders_table, file)
 
@@ -5034,6 +5450,9 @@ function listDirectory(dir)
                                 else
                                 end
 
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                                 custom_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png"
                                 custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png"
 
@@ -5117,6 +5536,9 @@ function listDirectory(dir)
                                 end
                             else
                             end
+
+                            -- Check for hidden game names
+                            file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
                             custom_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png"
                             custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png"
@@ -5236,6 +5658,9 @@ function listDirectory(dir)
                                         else
                                         end
 
+                                        -- Check for hidden game names
+                                        file_subfolder.hidden = check_for_hidden_tag_on_scan(file_subfolder.name, file_subfolder.app_type)
+
                                         custom_path = (SystemsToScan[(def)].localCoverPath) .. app_title .. ".png"
                                         custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png"
 
@@ -5318,6 +5743,9 @@ function listDirectory(dir)
                                         else
                                         end
 
+                                        -- Check for hidden game names
+                                        file_subfolder.hidden = check_for_hidden_tag_on_scan(file_subfolder.name, file_subfolder.app_type)
+
                                         custom_path = (SystemsToScan[(def)].localCoverPath) .. app_title .. ".png"
                                         custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png"
 
@@ -5397,6 +5825,10 @@ function listDirectory(dir)
                                         end
                                     else
                                     end
+
+
+                                    -- Check for hidden game names
+                                    file_subfolder.hidden = check_for_hidden_tag_on_scan(file_subfolder.name, file_subfolder.app_type)
 
                                     custom_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.title .. ".png"
                                     custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png"
@@ -5511,6 +5943,9 @@ function listDirectory(dir)
                     else
                     end
 
+                    -- Check for hidden game names
+                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                     custom_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png"
                     custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png"
 
@@ -5622,6 +6057,9 @@ function listDirectory(dir)
                     else
                     end
 
+                    -- Check for hidden game names
+                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
                     custom_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png"
                     custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png"
 
@@ -5656,8 +6094,6 @@ function listDirectory(dir)
                     file.icon_path = img_path
                     
                     table.insert(files_table, count_of_systems, file.icon) 
-                    
-                    
                     table.insert(files_table, count_of_systems, file.apptitle) 
 
                 end
@@ -5723,6 +6159,9 @@ function listDirectory(dir)
                                 end
                             else
                             end
+
+                            -- Check for hidden game names
+                            file_subfolder.hidden = check_for_hidden_tag_on_scan(file_subfolder.name, file_subfolder.app_type)
 
                             custom_path = (SystemsToScan[(def)].localCoverPath) .. app_title .. ".png"
                             custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png"
@@ -5908,6 +6347,10 @@ function listDirectory(dir)
                         end
                     else
                     end
+
+                    -- Check for hidden game names
+                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
 
                     if not string.match(title, "bios") and not string.match(title, "Bios") and not string.match(title, "BIOS") then
                         table.insert((def_table_name), file)
@@ -6098,6 +6541,61 @@ function listDirectory(dir)
         homebrews_table = {}
     end
 
+    -- Remove hidden games if hidden off
+    function remove_hidden_from_table(def_table_name)
+        if showHidden == 0 then
+            for l, file in pairs((def_table_name)) do
+                if file.hidden == true then
+                    table.remove((def_table_name),l)
+                else
+                end
+            end
+        end
+    end
+
+    remove_hidden_from_table(files_table)
+    remove_hidden_from_table(folders_table)
+    remove_hidden_from_table(games_table)
+    remove_hidden_from_table(homebrews_table)
+    remove_hidden_from_table(psp_table)
+    remove_hidden_from_table(psx_table)
+    remove_hidden_from_table(n64_table)
+    remove_hidden_from_table(snes_table)
+    remove_hidden_from_table(nes_table)
+    remove_hidden_from_table(gba_table)
+    remove_hidden_from_table(gbc_table)
+    remove_hidden_from_table(gb_table)
+    remove_hidden_from_table(dreamcast_table)
+    remove_hidden_from_table(sega_cd_table)
+    remove_hidden_from_table(s32x_table)
+    remove_hidden_from_table(md_table)
+    remove_hidden_from_table(sms_table)
+    remove_hidden_from_table(gg_table)
+    remove_hidden_from_table(tg16_table)
+    remove_hidden_from_table(tgcd_table)
+    remove_hidden_from_table(pce_table)
+    remove_hidden_from_table(pcecd_table)
+    remove_hidden_from_table(amiga_table)
+    remove_hidden_from_table(c64_table)
+    remove_hidden_from_table(wswan_col_table)
+    remove_hidden_from_table(wswan_table)
+    remove_hidden_from_table(msx2_table)
+    remove_hidden_from_table(msx1_table)
+    remove_hidden_from_table(zxs_table)
+    remove_hidden_from_table(atari_7800_table)
+    remove_hidden_from_table(atari_5200_table)
+    remove_hidden_from_table(atari_2600_table)
+    remove_hidden_from_table(atari_lynx_table)
+    remove_hidden_from_table(colecovision_table)
+    remove_hidden_from_table(vectrex_table)
+    remove_hidden_from_table(fba_table)
+    remove_hidden_from_table(mame_2003_plus_table)
+    remove_hidden_from_table(mame_2000_table)
+    remove_hidden_from_table(neogeo_table)
+    remove_hidden_from_table(ngpc_table)
+    remove_hidden_from_table(recently_played_table)
+    remove_hidden_from_table(return_table)
+
     -- print_loading(" ")
 
     total_all = #files_table
@@ -6110,7 +6608,6 @@ function listDirectory(dir)
 end
 
 
-
 function import_cached_DB_tables(def_user_db_file, def_table_name)
     if System.doesFileExist(db_Cache_Folder .. (def_user_db_file)) then
         db_Cache = db_Cache_Folder .. (def_user_db_file)
@@ -6118,17 +6615,75 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
         local db_import = {}
         db_import = dofile(db_Cache)
 
-        for k, v in ipairs(db_import) do
-            table.insert(folders_table, v)
-            table.insert((def_table_name), v)
+            for k, v in ipairs(db_import) do
 
-            --add blank icon to all
-            v.icon = imgCoverTmp
-            v.icon_path = v.icon_path
+                -- For each game to be imported, cross reference against then hidden games list
+                for l, file in ipairs(hidden_games_table) do
 
-            v.apptitle = v.apptitle
-            table.insert(files_table, count_of_systems, v.apptitle) 
-        end
+                    -- Check the app type matches
+                    if file.app_type == v.app_type then
+
+                        -- Check if hidden game is in the import table
+                        local key = {}
+                        key = find_game_table_pos_key(db_import, file.name)
+
+                        if key ~= nil then
+                            -- Game found 
+                            -- Update hidden key
+                            if file.hidden == true then
+                                db_import[key].hidden = true
+                            else
+                                db_import[key].hidden = false
+                            end
+                        else
+                            -- Game not found
+                            -- If showing hidden games, then check the game file / folder exists for adding to the import table
+                            if showHidden==1 then
+                                if v.directory == false then
+                                    if System.doesFileExist(v.game_path) then
+                                        table.insert(db_import, file)
+                                    end
+                                else
+                                    if System.doesDirExist(v.game_path) then
+                                        table.insert(db_import, file)
+                                    end
+                                end
+                            else
+                            end
+                        end
+                    else
+                    end
+
+                end
+
+                -- If hiding games, only import non-hidden games
+                if showHidden==0 then
+                    if v.hidden==false then
+                        table.insert(folders_table, v)
+                        table.insert((def_table_name), v)
+
+                        --add blank icon to all
+                        v.icon = imgCoverTmp
+                        v.icon_path = v.icon_path
+
+                        v.apptitle = v.apptitle
+                        table.insert(files_table, count_of_systems, v.apptitle)
+                    else
+                    end
+                else
+                    table.insert(folders_table, v)
+                    table.insert((def_table_name), v)
+
+                    --add blank icon to all
+                    v.icon = imgCoverTmp
+                    v.icon_path = v.icon_path
+
+                    v.apptitle = v.apptitle
+                    table.insert(files_table, count_of_systems, v.apptitle)
+                end
+
+            end
+        
     end
 end
 
@@ -6179,6 +6734,7 @@ function import_cached_DB()
     search_results_table = {}
     fav_count = {}
     renamed_games_table = {}
+    hidden_games_table = {}
 
     local file_over = System.openFile(cur_dir .. "/overrides.dat", FREAD)
     local filesize = System.sizeFile(file_over)
@@ -6186,6 +6742,7 @@ function import_cached_DB()
     System.closeFile(file_over)
 
     import_renamed_games()
+    import_hidden_games()
 
     import_cached_DB_tables("db_games.lua", games_table)
     if showHomebrews == 1 then
@@ -6450,6 +7007,7 @@ function GetInfoSelected()
             folder = games_table[p].directory
             filename = games_table[p].filename
             favourite_flag = games_table[p].favourite
+            hide_game_flag = games_table[p].hidden
             game_path = games_table[p].game_path
 
             app_titleid = games_table[p].name
@@ -6477,6 +7035,7 @@ function GetInfoSelected()
             folder = homebrews_table[p].directory
             filename = homebrews_table[p].filename
             favourite_flag = homebrews_table[p].favourite
+            hide_game_flag = homebrews_table[p].hidden
             game_path = homebrews_table[p].game_path
 
             app_titleid = homebrews_table[p].name
@@ -6496,6 +7055,7 @@ function GetInfoSelected()
             folder = psp_table[p].directory
             filename = psp_table[p].filename
             favourite_flag = psp_table[p].favourite
+            hide_game_flag = psp_table[p].hidden
             game_path = psp_table[p].game_path
 
             app_titleid = psp_table[p].name
@@ -6514,6 +7074,7 @@ function GetInfoSelected()
             folder = psx_table[p].directory
             filename = psx_table[p].filename
             favourite_flag = psx_table[p].favourite
+            hide_game_flag = psx_table[p].hidden
             game_path = psx_table[p].game_path
 
             app_titleid = psx_table[p].name
@@ -6532,6 +7093,7 @@ function GetInfoSelected()
             folder = n64_table[p].directory
             filename = n64_table[p].filename
             favourite_flag = n64_table[p].favourite
+            hide_game_flag = n64_table[p].hidden
             game_path = n64_table[p].game_path
 
             app_titleid = n64_table[p].name
@@ -6550,6 +7112,7 @@ function GetInfoSelected()
             folder = snes_table[p].directory
             filename = snes_table[p].filename
             favourite_flag = snes_table[p].favourite
+            hide_game_flag = snes_table[p].hidden
             game_path = snes_table[p].game_path
 
             app_titleid = snes_table[p].name
@@ -6568,6 +7131,7 @@ function GetInfoSelected()
             folder = nes_table[p].directory
             filename = nes_table[p].filename
             favourite_flag = nes_table[p].favourite
+            hide_game_flag = nes_table[p].hidden
             game_path = nes_table[p].game_path
 
             app_titleid = nes_table[p].name
@@ -6586,6 +7150,7 @@ function GetInfoSelected()
             folder = gba_table[p].directory
             filename = gba_table[p].filename
             favourite_flag = gba_table[p].favourite
+            hide_game_flag = gba_table[p].hidden
             game_path = gba_table[p].game_path
 
             app_titleid = gba_table[p].name
@@ -6604,6 +7169,7 @@ function GetInfoSelected()
             folder = gbc_table[p].directory
             filename = gbc_table[p].filename
             favourite_flag = gbc_table[p].favourite
+            hide_game_flag = gbc_table[p].hidden
             game_path = gbc_table[p].game_path
 
             app_titleid = gbc_table[p].name
@@ -6622,6 +7188,7 @@ function GetInfoSelected()
             folder = gb_table[p].directory
             filename = gb_table[p].filename
             favourite_flag = gb_table[p].favourite
+            hide_game_flag = gb_table[p].hidden
             game_path = gb_table[p].game_path
 
             app_titleid = gb_table[p].name
@@ -6648,6 +7215,7 @@ function GetInfoSelected()
             folder = dreamcast_table[p].directory
             filename = dreamcast_table[p].filename
             favourite_flag = dreamcast_table[p].favourite
+            hide_game_flag = dreamcast_table[p].hidden
             game_path = dreamcast_table[p].game_path
 
             app_titleid = dreamcast_table[p].name
@@ -6666,6 +7234,7 @@ function GetInfoSelected()
             folder = sega_cd_table[p].directory
             filename = sega_cd_table[p].filename
             favourite_flag = sega_cd_table[p].favourite
+            hide_game_flag = sega_cd_table[p].hidden
             game_path = sega_cd_table[p].game_path
 
             app_titleid = sega_cd_table[p].name
@@ -6684,6 +7253,7 @@ function GetInfoSelected()
             folder = s32x_table[p].directory
             filename = s32x_table[p].filename
             favourite_flag = s32x_table[p].favourite
+            hide_game_flag = s32x_table[p].hidden
             game_path = s32x_table[p].game_path
 
             app_titleid = s32x_table[p].name
@@ -6706,6 +7276,7 @@ function GetInfoSelected()
             folder = md_table[p].directory
             filename = md_table[p].filename
             favourite_flag = md_table[p].favourite
+            hide_game_flag = md_table[p].hidden
             game_path = md_table[p].game_path
 
             app_titleid = md_table[p].name
@@ -6724,6 +7295,7 @@ function GetInfoSelected()
             folder = sms_table[p].directory
             filename = sms_table[p].filename
             favourite_flag = sms_table[p].favourite
+            hide_game_flag = sms_table[p].hidden
             game_path = sms_table[p].game_path
 
             app_titleid = sms_table[p].name
@@ -6742,6 +7314,7 @@ function GetInfoSelected()
             folder = gg_table[p].directory
             filename = gg_table[p].filename
             favourite_flag = gg_table[p].favourite
+            hide_game_flag = gg_table[p].hidden
             game_path = gg_table[p].game_path
 
             app_titleid = gg_table[p].name
@@ -6760,6 +7333,7 @@ function GetInfoSelected()
             folder = tg16_table[p].directory
             filename = tg16_table[p].filename
             favourite_flag = tg16_table[p].favourite
+            hide_game_flag = tg16_table[p].hidden
             game_path = tg16_table[p].game_path
 
             app_titleid = tg16_table[p].name
@@ -6778,6 +7352,7 @@ function GetInfoSelected()
             folder = tgcd_table[p].directory
             filename = tgcd_table[p].filename
             favourite_flag = tgcd_table[p].favourite
+            hide_game_flag = tgcd_table[p].hidden
             game_path = tgcd_table[p].game_path
 
             app_titleid = tgcd_table[p].name
@@ -6796,6 +7371,7 @@ function GetInfoSelected()
             folder = pce_table[p].directory
             filename = pce_table[p].filename
             favourite_flag = pce_table[p].favourite
+            hide_game_flag = pce_table[p].hidden
             game_path = pce_table[p].game_path
 
             app_titleid = pce_table[p].name
@@ -6814,6 +7390,7 @@ function GetInfoSelected()
             folder = pcecd_table[p].directory
             filename = pcecd_table[p].filename
             favourite_flag = pcecd_table[p].favourite
+            hide_game_flag = pcecd_table[p].hidden
             game_path = pcecd_table[p].game_path
 
             app_titleid = pcecd_table[p].name
@@ -6832,6 +7409,7 @@ function GetInfoSelected()
             folder = amiga_table[p].directory
             filename = amiga_table[p].filename
             favourite_flag = amiga_table[p].favourite
+            hide_game_flag = amiga_table[p].hidden
             game_path = amiga_table[p].game_path
 
             app_titleid = amiga_table[p].name
@@ -6850,6 +7428,7 @@ function GetInfoSelected()
             folder = c64_table[p].directory
             filename = c64_table[p].filename
             favourite_flag = c64_table[p].favourite
+            hide_game_flag = c64_table[p].hidden
             game_path = c64_table[p].game_path
 
             app_titleid = c64_table[p].name
@@ -6868,6 +7447,7 @@ function GetInfoSelected()
             folder = wswan_col_table[p].directory
             filename = wswan_col_table[p].filename
             favourite_flag = wswan_col_table[p].favourite
+            hide_game_flag = wswan_col_table[p].hidden
             game_path = wswan_col_table[p].game_path
 
             app_titleid = wswan_col_table[p].name
@@ -6886,6 +7466,7 @@ function GetInfoSelected()
             folder = wswan_table[p].directory
             filename = wswan_table[p].filename
             favourite_flag = wswan_table[p].favourite
+            hide_game_flag = wswan_table[p].hidden
             game_path = wswan_table[p].game_path
 
             app_titleid = wswan_table[p].name
@@ -6904,6 +7485,7 @@ function GetInfoSelected()
             folder = msx2_table[p].directory
             filename = msx2_table[p].filename
             favourite_flag = msx2_table[p].favourite
+            hide_game_flag = msx2_table[p].hidden
             game_path = msx2_table[p].game_path
 
             app_titleid = msx2_table[p].name
@@ -6922,6 +7504,7 @@ function GetInfoSelected()
             folder = msx1_table[p].directory
             filename = msx1_table[p].filename
             favourite_flag = msx1_table[p].favourite
+            hide_game_flag = msx1_table[p].hidden
             game_path = msx1_table[p].game_path
 
             app_titleid = msx1_table[p].name
@@ -6940,6 +7523,7 @@ function GetInfoSelected()
             folder = zxs_table[p].directory
             filename = zxs_table[p].filename
             favourite_flag = zxs_table[p].favourite
+            hide_game_flag = zxs_table[p].hidden
             game_path = zxs_table[p].game_path
 
             app_titleid = zxs_table[p].name
@@ -6958,6 +7542,7 @@ function GetInfoSelected()
             folder = atari_7800_table[p].directory
             filename = atari_7800_table[p].filename
             favourite_flag = atari_7800_table[p].favourite
+            hide_game_flag = atari_7800_table[p].hidden
             game_path = atari_7800_table[p].game_path
 
             app_titleid = atari_7800_table[p].name
@@ -6976,6 +7561,7 @@ function GetInfoSelected()
             folder = atari_5200_table[p].directory
             filename = atari_5200_table[p].filename
             favourite_flag = atari_5200_table[p].favourite
+            hide_game_flag = atari_5200_table[p].hidden
             game_path = atari_5200_table[p].game_path
 
             app_titleid = atari_5200_table[p].name
@@ -6994,6 +7580,7 @@ function GetInfoSelected()
             folder = atari_2600_table[p].directory
             filename = atari_2600_table[p].filename
             favourite_flag = atari_2600_table[p].favourite
+            hide_game_flag = atari_2600_table[p].hidden
             game_path = atari_2600_table[p].game_path
 
             app_titleid = atari_2600_table[p].name
@@ -7012,6 +7599,7 @@ function GetInfoSelected()
             folder = atari_lynx_table[p].directory
             filename = atari_lynx_table[p].filename
             favourite_flag = atari_lynx_table[p].favourite
+            hide_game_flag = atari_lynx_table[p].hidden
             game_path = atari_lynx_table[p].game_path
 
             app_titleid = atari_lynx_table[p].name
@@ -7030,6 +7618,7 @@ function GetInfoSelected()
             folder = colecovision_table[p].directory
             filename = colecovision_table[p].filename
             favourite_flag = colecovision_table[p].favourite
+            hide_game_flag = colecovision_table[p].hidden
             game_path = colecovision_table[p].game_path
 
             app_titleid = colecovision_table[p].name
@@ -7048,6 +7637,7 @@ function GetInfoSelected()
             folder = vectrex_table[p].directory
             filename = vectrex_table[p].filename
             favourite_flag = vectrex_table[p].favourite
+            hide_game_flag = vectrex_table[p].hidden
             game_path = vectrex_table[p].game_path
 
             app_titleid = vectrex_table[p].name
@@ -7066,6 +7656,7 @@ function GetInfoSelected()
             folder = fba_table[p].directory
             filename = fba_table[p].filename
             favourite_flag = fba_table[p].favourite
+            hide_game_flag = fba_table[p].hidden
             game_path = fba_table[p].game_path
 
             app_titleid = fba_table[p].name
@@ -7084,6 +7675,7 @@ function GetInfoSelected()
             folder = mame_2003_plus_table[p].directory
             filename = mame_2003_plus_table[p].filename
             favourite_flag = mame_2003_plus_table[p].favourite
+            hide_game_flag = mame_2003_plus_table[p].hidden
             game_path = mame_2003_plus_table[p].game_path
 
             app_titleid = mame_2003_plus_table[p].name
@@ -7102,6 +7694,7 @@ function GetInfoSelected()
             folder = mame_2000_table[p].directory
             filename = mame_2000_table[p].filename
             favourite_flag = mame_2000_table[p].favourite
+            hide_game_flag = mame_2000_table[p].hidden
             game_path = mame_2000_table[p].game_path
 
             app_titleid = mame_2000_table[p].name
@@ -7120,6 +7713,7 @@ function GetInfoSelected()
             folder = neogeo_table[p].directory
             filename = neogeo_table[p].filename
             favourite_flag = neogeo_table[p].favourite
+            hide_game_flag = neogeo_table[p].hidden
             game_path = neogeo_table[p].game_path
 
             app_titleid = neogeo_table[p].name
@@ -7138,6 +7732,7 @@ function GetInfoSelected()
             folder = ngpc_table[p].directory
             filename = ngpc_table[p].filename
             favourite_flag = ngpc_table[p].favourite
+            hide_game_flag = ngpc_table[p].hidden
             game_path = ngpc_table[p].game_path
 
             app_titleid = ngpc_table[p].name
@@ -7149,24 +7744,7 @@ function GetInfoSelected()
     elseif showCat == 39 then
 
         -- count favorites
-        fav_count = {}
-        for l, file in pairs(files_table) do
-            if file.favourite==true then
-                if showHomebrews == 0 then
-                    -- ignore homebrew apps
-                    if file.app_type ~= nil then
-                        if file.favourite==true then
-                            table.insert(fav_count, file)
-                        end
-                    else
-                    end
-                else
-                    if file.favourite==true then
-                        table.insert(fav_count, file)
-                    end
-                end
-            end
-        end
+        create_fav_count_table(files_table)
 
         if #fav_count > 0 then
             info = fav_count[p].name
@@ -7176,6 +7754,7 @@ function GetInfoSelected()
             folder = fav_count[p].directory
             filename = fav_count[p].filename
             favourite_flag = fav_count[p].favourite
+            hide_game_flag = fav_count[p].hidden
             game_path = fav_count[p].game_path
 
             app_titleid = fav_count[p].name
@@ -7300,6 +7879,7 @@ function GetInfoSelected()
             folder = recently_played_table[p].directory
             filename = recently_played_table[p].filename
             favourite_flag = recently_played_table[p].favourite
+            hide_game_flag = recently_played_table[p].hidden
             game_path = recently_played_table[p].game_path
 
             app_titleid = recently_played_table[p].name
@@ -7425,6 +8005,7 @@ function GetInfoSelected()
             folder = search_results_table[p].directory
             filename = search_results_table[p].filename
             favourite_flag = search_results_table[p].favourite
+            hide_game_flag = search_results_table[p].hidden
             game_path = search_results_table[p].game_path
 
             app_titleid = search_results_table[p].name
@@ -7551,6 +8132,7 @@ function GetInfoSelected()
             folder = files_table[p].directory
             filename = files_table[p].filename
             favourite_flag = files_table[p].favourite
+            hide_game_flag = files_table[p].hidden
             game_path = files_table[p].game_path
 
             app_titleid = files_table[p].name
@@ -7667,7 +8249,6 @@ function GetInfoSelected()
         end
     end
 end
-
 
 function update_recently_played_table_favorite(def)
     for k, v in pairs(recently_played_table) do
@@ -7984,14 +8565,79 @@ function AddOrRemoveFavorite()
             end
 
         end
-        update_cached_table("db_files.lua", files_table)
+        -- update_cached_table("db_files.lua", files_table)
         update_cached_table_recently_played()
 
         --Reload
         -- FreeIcons()
         -- FreeMemory()
         -- Network.term()
-        showMenu = 0
+
+        
+
+    end
+
+end
+
+
+function update_hidden_games_recently_played_table(def)
+    for k, v in pairs(recently_played_table) do
+        if v.filename==filename then
+            v.hidden=(def)
+            update_cached_table_recently_played()
+        end
+    end
+end
+
+
+function AddOrRemoveHidden()
+
+    -- Recent cat
+    if showCat == 40 then
+        if recently_played_table[p].hidden == true then
+            recently_played_table[p].hidden=false
+
+            -- Update games table and cache
+            if #recently_played_table ~= nil then
+                local key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+                if key ~= nil then
+                    xAppNumTableLookup(apptype)[key].hidden=false
+                else
+                end
+            end
+
+            update_cached_table_recently_played()
+
+        else
+            recently_played_table[p].hidden=true
+
+            -- Update games table and cache
+            if #recently_played_table ~= nil then
+                local key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+                if key ~= nil then
+                    xAppNumTableLookup(apptype)[key].hidden=true
+                else
+                end
+            end
+
+            update_cached_table_recently_played()
+
+        end
+
+    -- Other cats
+    else
+        if xAppNumTableLookup(apptype)[p].hidden == true then
+
+            xAppNumTableLookup(apptype)[p].hidden=false
+            -- Update recent and cache
+            update_hidden_games_recently_played_table(false)
+
+        else
+            xAppNumTableLookup(apptype)[p].hidden=true
+            -- Update recent and cache
+            update_hidden_games_recently_played_table(true)
+
+        end
     end
 
 end
@@ -8270,6 +8916,16 @@ function QuickOverride_Category(tmpappcat)
                 end
                 homebrews_table = {}
             end
+
+            -- Remove hidden games from homebrew
+            if showHidden == 0 and #homebrews_table ~= nil then
+                for l, file in pairs(homebrews_table) do
+                    if file.hidden == true then
+                        table.remove(homebrews_table,l)
+                    else
+                    end
+                end
+            end
             
         else
 
@@ -8291,6 +8947,27 @@ function QuickOverride_Category(tmpappcat)
     showMenu = 0
 
     Render.useTexture(modBackground, imgCustomBack)
+end
+
+function check_for_out_of_bounds()
+    curTotal = #xCatLookup(showCat)
+    if curTotal == 0 then
+        p = 0 
+        master_index = p
+    end
+    if p < 1 then
+        p = curTotal
+        if p >= 1 then
+            master_index = p -- 0
+        end
+        startCovers = false
+        GetInfoSelected()
+    elseif p > curTotal then
+        p = 1
+        master_index = p
+        startCovers = false
+        GetInfoSelected()
+    end
 end
 
 function OverrideCategory()
@@ -9268,7 +9945,18 @@ function drawCategory (def)
                 if (def)[p].favourite == true then
                     Graphics.drawImage(685, 36, imgFavorite_small_on)
                 else
-                    -- Graphics.drawImage(685, 36, imgFavorite_small_blank)
+                end
+
+                -- Show hidden icon if game is hidden
+                hide_game_flag = (def)[p].hidden
+                if (def)[p].hidden == true then
+                    favourite_flag = (def)[p].favourite
+                    if (def)[p].favourite == true then
+                        Graphics.drawImage(685 - 42, 36, imgHidden_small_on)
+                    else
+                        Graphics.drawImage(685, 36, imgHidden_small_on)
+                    end
+                else
                 end
 
             else
@@ -9287,7 +9975,18 @@ function drawCategory (def)
                 if (def)[p].favourite == true then
                     Graphics.drawImage(685, 36, imgFavorite_small_on)
                 else
-                    -- Graphics.drawImage(685, 36, imgFavorite_small_blank)
+                end
+
+                -- Show hidden icon if game is hidden
+                hide_game_flag = (def)[p].hidden
+                if (def)[p].hidden == true then
+                    favourite_flag = (def)[p].favourite
+                    if (def)[p].favourite == true then
+                        Graphics.drawImage(685 - 42, 36, imgHidden_small_on)
+                    else
+                        Graphics.drawImage(685, 36, imgHidden_small_on)
+                    end
+                else
                 end
         
             end
@@ -9578,24 +10277,7 @@ while true do
                 files_table = import_cached_DB()
 
                 -- Get favourites list - so can stay on favourites category if renaming from there
-                fav_count = {}
-                for l, file in pairs(return_table) do
-                    if file.favourite==true then
-                        if showHomebrews == 0 then
-                            -- ignore homebrew apps
-                            if file.app_type ~= nil then
-                                if file.favourite==true then
-                                    table.insert(fav_count, file)
-                                end
-                            else
-                            end
-                        else
-                            if file.favourite==true then
-                                table.insert(fav_count, file)
-                            end
-                        end
-                    end
-                end
+                create_fav_count_table(return_table)
 
                 -- END updating other tables -- 
 
@@ -9796,22 +10478,8 @@ while true do
         elseif showCat == 38 then drawCategory (ngpc_table)
         elseif showCat == 39 then
             -- count favorites
-            fav_count = {}
-            for l, file in pairs(files_table) do
-                if showHomebrews == 0 then
-                    -- ignore homebrew apps
-                    if file.app_type ~= nil then
-                        if file.favourite==true then
-                            table.insert(fav_count, file)
-                        end
-                    else
-                    end
-                else
-                    if file.favourite==true then
-                        table.insert(fav_count, file)
-                    end
-                end
-            end
+            create_fav_count_table(files_table)
+            
             drawCategory (fav_count)
             GetNameAndAppTypeSelected() -- Added to refresh names as games removed from fav cat whilst on fav cat
         elseif showCat == 40 then drawCategory (recently_played_table)
@@ -9855,8 +10523,8 @@ while true do
         -- Get text widths for positioning
         label1 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
         label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
-        label3 = Font.getTextWidth(fnt20, lang_lines.Rename)--Rename
-        label4 = Font.getTextWidth(fnt20, lang_lines.Favorite)--Favourite
+        label3 = Font.getTextWidth(fnt20, lang_lines.Options)--Options
+        -- label4 = Font.getTextWidth(fnt20, lang_lines.Favorite)--Favourite
 
         Graphics.drawImage(900-label1, 510, btnO)
         Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
@@ -9864,11 +10532,11 @@ while true do
         Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
         Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
 
-        Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnS)
-        Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Rename, white)--Rename
+        Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnT)
+        Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Options, white)--Options
 
-        Graphics.drawImage(900-(btnMargin * 6)-label1-label2-label3-label4, 510, btnT)
-        Font.print(fnt20, 900+28-(btnMargin * 6)-label1-label2-label3-label4, 508, lang_lines.Favorite, white)--Favourite
+        -- Graphics.drawImage(900-(btnMargin * 6)-label1-label2-label3-label4, 510, btnT)
+        -- Font.print(fnt20, 900+28-(btnMargin * 6)-label1-label2-label3-label4, 508, lang_lines.Favorite, white)--Favourite
         
         Graphics.fillRect(24, 470, 24, 470, darkalpha)
 
@@ -10222,6 +10890,11 @@ while true do
             Graphics.drawImage(420, 50, imgFavorite_large_off)
         end
 
+        if hide_game_flag == true then
+            Graphics.drawImage(380, 50, imgHidden_large_on)
+        else
+        end
+
 
         -- 0 Homebrew, 1 vita, 2 psp, 3 psx, 5+ Retro
 
@@ -10398,13 +11071,13 @@ while true do
                     end
                 end
 
-            elseif (Controls.check(pad, SCE_CTRL_SQUARE)) and not (Controls.check(oldpad, SCE_CTRL_SQUARE)) then
-                -- Rename
-                if hasTyped==false then
-                    Keyboard.start(tostring(lang_lines.Rename), app_title:gsub("\n",""), 512, TYPE_LATIN, MODE_TEXT)
-                    hasTyped=true
-                    rename_keyboard=true
-                end
+            -- elseif (Controls.check(pad, SCE_CTRL_SQUARE)) and not (Controls.check(oldpad, SCE_CTRL_SQUARE)) then
+            --     -- Rename
+            --     if hasTyped==false then
+            --         Keyboard.start(tostring(lang_lines.Rename), app_title:gsub("\n",""), 512, TYPE_LATIN, MODE_TEXT)
+            --         hasTyped=true
+            --         rename_keyboard=true
+            --     end
             end
         end
 
@@ -10429,14 +11102,14 @@ while true do
         Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnT)
         Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Help_and_Guides, white)--Help and Guides
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.Settings, white)--SETTINGS
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
-        menuItems = 6
+        menuItems = 7
         
         -- MENU 2 / #0 Search
         Graphics.drawImage(setting_x_icon, setting_y0, setting_icon_search)
@@ -10462,13 +11135,17 @@ while true do
         Graphics.drawImage(setting_x_icon, setting_y5, setting_icon_scanning)
         Font.print(fnt22, setting_x_icon_offset, setting_y5, lang_lines.Scan_Settings, white)--Scanning
 
-        -- MENU 2 / #6 Language
-        Graphics.drawImage(setting_x_icon, setting_y6, setting_icon_language)
-        Font.print(fnt22, setting_x_icon_offset, setting_y6, lang_lines.Language_colon, white)--Language
+        -- MENU 2 / #6 Other Settings
+        Graphics.drawImage(setting_x_icon, setting_y6, setting_icon_other)
+        Font.print(fnt22, setting_x_icon_offset, setting_y6, lang_lines.Other_Settings, white)--Other Settings
 
-        -- MENU 2 / #6 Language 
+        -- MENU 2 / #7 Language
+        Graphics.drawImage(setting_x_icon, setting_y7, setting_icon_language)
+        Font.print(fnt22, setting_x_icon_offset, setting_y7, lang_lines.Language_colon, white)--Language
+
+        -- MENU 2 / #7 Language 
         if chooseLanguage == 1 then setLanguage = 1
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "English - American", white) -- English (United States)
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "English - American", white) -- English (United States)
             -- Megadrive, update regional missing cover
             for k, v in pairs(md_table) do
                   if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_md.png" then
@@ -10483,52 +11160,52 @@ while true do
             end
         elseif chooseLanguage == 2 then 
             -- setLanguage = 2
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Deutsch", white) -- German
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Deutsch", white) -- German
         elseif chooseLanguage == 3 then 
             -- setLanguage = 3
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, " Français", white) -- French
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, " Français", white) -- French
         elseif chooseLanguage == 4 then 
             -- setLanguage = 4
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, " Italiano", white) -- Italian
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Italiano", white) -- Italian
         elseif chooseLanguage == 5 then 
             -- setLanguage = 5
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Español", white) -- Spanish
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Español", white) -- Spanish
         elseif chooseLanguage == 6 then 
             -- setLanguage = 6
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Português", white) -- Portuguese
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Português", white) -- Portuguese
         elseif chooseLanguage == 7 then 
             -- setLanguage = 12
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Nederlands", white) -- Dutch
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Nederlands", white) -- Dutch
         elseif chooseLanguage == 8 then 
             -- setLanguage = 11
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Polski", white) -- Polish
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Polski", white) -- Polish
         elseif chooseLanguage == 9 then 
             -- setLanguage = 7
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Svenska", white) -- Swedish
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Svenska", white) -- Swedish
         elseif chooseLanguage == 10 then 
             -- setLanguage = 13
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Dansk", white) -- Danish
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Dansk", white) -- Danish
         elseif chooseLanguage == 11 then 
             -- setLanguage = 14
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Norsk", white) -- Norwegian
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Norsk", white) -- Norwegian
         elseif chooseLanguage == 12 then 
             -- setLanguage = 15
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Suomi", white) -- Finnish
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Suomi", white) -- Finnish
         elseif chooseLanguage == 13 then 
             -- setLanguage = 16
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Türkçe", white) -- Turkish
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Türkçe", white) -- Turkish
         elseif chooseLanguage == 14 then 
             -- setLanguage = 8
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "Pусский", white) -- Russian
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Pусский", white) -- Russian
         elseif chooseLanguage == 15 then 
             -- setLanguage = 10
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "繁體中文", white) -- Chinese (Traditional)
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "繁體中文", white) -- Chinese (Traditional)
         elseif chooseLanguage == 16 then
             -- then setLanguage = 18
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "简体中文", white) -- Chinese (Simplified)
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "简体中文", white) -- Chinese (Simplified)
         elseif chooseLanguage == 17 then 
             -- setLanguage = 9
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "日本語", white) -- Japanese
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "日本語", white) -- Japanese
             -- Dreamcast, update regional missing cover - Japan - Orange logo
             for k, v in pairs(dreamcast_table) do
                   if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" then
@@ -10537,14 +11214,14 @@ while true do
             end
         elseif chooseLanguage == 18 then
             -- then setLanguage = 18
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "琉球語派", white) -- Japanese (Ryukyuan)   
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "琉球語派", white) -- Japanese (Ryukyuan)   
         elseif chooseLanguage == 19 then 
             -- setLanguage = 17
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "T한국어", white) -- Korean
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "T한국어", white) -- Korean
         
         else 
             -- setLanguage = 0
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y6, "English", white) -- English (United Kingdom)
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "English", white) -- English (United Kingdom)
 
             -- Megadrive, update regional missing cover
             for k, v in pairs(md_table) do
@@ -10589,7 +11266,10 @@ while true do
                 elseif menuY == 5 then -- Scan Settings
                     showMenu = 6 
                     menuY = 0
-                elseif menuY == 6 then -- Language
+                elseif menuY == 6 then -- Other Settings
+                    showMenu = 19
+                    menuY = 0
+                elseif menuY == 7 then -- Language
                     if chooseLanguage < 19 then
                         chooseLanguage = chooseLanguage + 1
                     else
@@ -10643,19 +11323,19 @@ while true do
         Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
         Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.Categories, white)--Categories
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
-        menuItems = 4
+        menuItems = 5
 
         -- MENU 3 / #0 Back
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
 
-        -- MENU 4 / #1 Startup Category
+        -- MENU 3 / #1 Startup Category
         Font.print(fnt22, setting_x, setting_y1, lang_lines.Startup_Category_colon, white)--Startup Category
 
         if startCategory == 0 then
@@ -10742,7 +11422,7 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Recently_Played, white)--Recently Played
         end
 
-        -- MENU 4 / #2 Show Homebews
+        -- MENU 3 / #2 Show Homebews
         Font.print(fnt22, setting_x, setting_y2, lang_lines.Homebrews_Category_colon, white)--Show Homebrews
         if showHomebrews == 1 then
             Font.print(fnt22, setting_x_offset, setting_y2, lang_lines.On, white)--ON
@@ -10750,7 +11430,7 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y2, lang_lines.Off, white)--OFF
         end
 
-        -- MENU 4 / #3 Recently Played
+        -- MENU 3 / #3 Recently Played
         Font.print(fnt22, setting_x, setting_y3, lang_lines.Recently_Played_colon, white)--Recently Played
         if showRecentlyPlayed == 1 then
             Font.print(fnt22, setting_x_offset, setting_y3, lang_lines.On, white)--ON
@@ -10758,7 +11438,7 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y3, lang_lines.Off, white)--OFF
         end
 
-        -- MENU 4 / #4 All Category
+        -- MENU 3 / #4 All Category
         Font.print(fnt22, setting_x, setting_y4, lang_lines.All_Category, white)--All Category
         if showAll == 1 then
             Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.On, white)--ON
@@ -10766,19 +11446,23 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.Off, white)--OFF
         end
 
-        -- MENU 2 - FUNCTIONS
+        -- MENU 4 / #5 Show hidden games
+        Font.print(fnt22, setting_x, setting_y5, lang_lines.Show_hidden_games_colon, white)--Show hidden games
+        if showHidden == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y5, lang_lines.On, white)--ON
+        else
+            Font.print(fnt22, setting_x_offset, setting_y5, lang_lines.Off, white)--OFF
+        end
+
+
+        -- MENU 3 - FUNCTIONS
         status = System.getMessageState()
         if status ~= RUNNING then
             
             if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
 
                 -- count favorites
-                local fav_count_3 = {}
-                for l, file in pairs(files_table) do
-                    if file.favourite==true then
-                        table.insert(fav_count_3, file)
-                    end
-                end
+                create_fav_count_table(files_table)
 
                 if menuY == 0 then -- #0 Back
                     showMenu = 2
@@ -10829,10 +11513,10 @@ while true do
                     if startCategory == 36 then if #mame_2000_table == 0 then startCategory = startCategory + 1 end end
                     if startCategory == 37 then if #neogeo_table == 0 then startCategory = startCategory + 1 end end
                     if startCategory == 38 then if #ngpc_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 39 then if #fav_count_3 == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 39 then if #fav_count == 0 then startCategory = startCategory + 1 end end
                     -- if startCategory == 40 then if #recently_played_table == 0 then startCategory = startCategory + 1 end end
 
-                elseif menuY == 2 then -- #2 Show Homebews
+                elseif menuY == 2 then -- #2 Show Homebrews
                     if showHomebrews == 1 then
                         showHomebrews = 0
                         -- Import cache to update All games category
@@ -10879,6 +11563,27 @@ while true do
                     else
                         showAll = 1
                     end
+
+                elseif menuY == 5 then -- #5 Show hidden
+                    if showHidden == 1 then
+                        showHidden = 0
+                        -- Import cache to update All games category
+                        count_cache_and_reload()
+                        if showCat == 39 then 
+                            create_fav_count_table(files_table)
+                        end
+                        check_for_out_of_bounds()
+                        GetNameAndAppTypeSelected()
+                    else
+                        showHidden = 1
+                        -- Import cache to update All games category
+                        count_cache_and_reload()
+                        if showCat == 39 then 
+                            create_fav_count_table(files_table)
+                        end
+                        check_for_out_of_bounds()
+                        GetNameAndAppTypeSelected()
+                    end
                 end
 
                 --Save settings
@@ -10914,15 +11619,15 @@ while true do
         Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
         Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.Theme, white)--Theme
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
 
-        menuItems = 4
+        menuItems = 3
 
         -- MENU 4 / #0 Back
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
@@ -10959,14 +11664,6 @@ while true do
 
         -- MENU 4 / #3 Custom Background
         Font.print(fnt22, setting_x, setting_y3,  lang_lines.Custom_Background_colon, white)
-
-        -- MENU 4 / #4 Remap X and O buttons
-        Font.print(fnt22, setting_x, setting_y4,  lang_lines.Swap_X_and_O_buttons_colon, white)
-        if setSwap_X_O_buttons == 1 then
-            Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.On, white)--ON
-        else
-            Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.Off, white)--OFF
-        end
 
         function wallpaper_print_string (def)
             if setBackground == (def) then
@@ -11021,16 +11718,6 @@ while true do
                         Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
                         Render.useTexture(modBackground, imgCustomBack)
                     end
-                elseif menuY == 4 then -- #4 Remap X and O buttons
-                    if setSwap_X_O_buttons == 1 then
-                        setSwap_X_O_buttons = 0
-                    else
-                        setSwap_X_O_buttons = 1
-                    end
-                    Swap_X_O_buttons()
-                    oldpad = pad
-                    showMenu = 4
-                    menuY = 4
                 end
 
                 --Save settings
@@ -11067,12 +11754,12 @@ while true do
         Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
         Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.Artwork, white)--Artwork
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
         menuItems = 4
 
@@ -11529,12 +12216,12 @@ while true do
         Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
         Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.Scan_Settings, white)--Scan_Settings
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
         menuItems = 4
 
@@ -11656,12 +12343,12 @@ while true do
         Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
         Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.Help_and_Guides, white)--Help and Guides
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
         menuItems = 6
         
@@ -11777,12 +12464,12 @@ while true do
         Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
         Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.Game_directories, white)--Game_directories
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
         menuItems = 3
 
@@ -12011,12 +12698,12 @@ while true do
         Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Close, white)--Close
 
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)--dark background
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)--dark background
 
         Font.print(fnt22, setting_x, setting_yh, filebrowser_heading, white)--Game heading from menu 8
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50 +50), 150 + (menuY * 50 +50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47 +47), 129 + (menuY * 47 +47), themeCol)-- selection
 
         -- menuItems = 3
 
@@ -12186,12 +12873,13 @@ while true do
         Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Close, white)--Close
 
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)--dark background
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)--dark background
 
         Font.print(fnt22, setting_x, setting_yh, filebrowser_heading, white)--Game heading from menu 8
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50 +50), 150 + (menuY * 50 +50), themeCol)-- selection
+        -- Graphics.fillRect(60, 900, 89 + (menuY * 50 +50), 150 + (menuY * 50 +50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47 +47), 129 + (menuY * 47 +47), themeCol)-- selection
 
         menuItems = 0
 
@@ -12248,12 +12936,13 @@ while true do
         label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
         label3 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)--dark background
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)--dark background
 
         Font.print(fnt22, setting_x, setting_yh, filebrowser_heading, white)--Game heading from menu 8
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 150 + (menuY * 50), 200 + (menuY * 50), themeCol)-- selection
+        -- Graphics.fillRect(60, 900, 150 + (menuY * 46), 200 + (menuY * 46), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47 +47), 129 + (menuY * 47 +47), themeCol)-- selection
 
         -- START ROM BROWSER
 
@@ -12295,7 +12984,7 @@ while true do
                     else
                     end
 
-                    y = y + 50
+                    y = y + 47
                 end
             end
 
@@ -12557,12 +13246,12 @@ while true do
         Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
         Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.Audio, white)--Audio
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
         -- Hide skip track if no music or only 1 song
         if #music_sequential > 1 then
@@ -12699,12 +13388,12 @@ while true do
         Graphics.drawImage(900-label1, 510, btnO)
         Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.guide_1_heading, white)-- Guide 1 Heading
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
         menuItems = 1
         
@@ -12714,9 +13403,9 @@ while true do
         -- MENU 13 / #1 Content
         if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
-            Font.print(fnt20, setting_x, setting_y1, lang_lines.guide_1_content, white)-- Guide 1 Content
+            Font.print(fnt22, setting_x, setting_y1, lang_lines.guide_1_content, white)-- Guide 1 Content
         else
-            Font.print(fnt20, setting_x, setting_y1, wraptextlength(lang_lines.guide_1_content, 75), white)-- Guide 1 Content
+            Font.print(fnt22, setting_x, setting_y1, wraptextlength(lang_lines.guide_1_content, 75), white)-- Guide 1 Content
         end
         
         -- MENU 13 - FUNCTIONS
@@ -12746,12 +13435,12 @@ while true do
         Graphics.drawImage(900-label1, 510, btnO)
         Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.guide_2_heading, white)-- Guide 2 Heading
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
         menuItems = 1
         
@@ -12761,9 +13450,9 @@ while true do
         -- MENU 14 / #1 Content
         if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
-            Font.print(fnt20, setting_x, setting_y1, lang_lines.guide_2_content, white)-- Guide 2 Content
+            Font.print(fnt22, setting_x, setting_y1, lang_lines.guide_2_content, white)-- Guide 2 Content
         else
-            Font.print(fnt20, setting_x, setting_y1, wraptextlength(lang_lines.guide_2_content, 75), white)-- Guide 2 Content
+            Font.print(fnt22, setting_x, setting_y1, wraptextlength(lang_lines.guide_2_content, 75), white)-- Guide 2 Content
         end
         
         -- MENU 14 - FUNCTIONS
@@ -12793,12 +13482,12 @@ while true do
         Graphics.drawImage(900-label1, 510, btnO)
         Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.guide_3_heading, white)-- Guide 3 Heading
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
         menuItems = 1
         
@@ -12808,9 +13497,9 @@ while true do
         -- MENU 15 / #1 Content
         if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
-            Font.print(fnt20, setting_x, setting_y1, lang_lines.guide_3_content, white)-- Guide 3 Content
+            Font.print(fnt22, setting_x, setting_y1, lang_lines.guide_3_content, white)-- Guide 3 Content
         else
-            Font.print(fnt20, setting_x, setting_y1, wraptextlength(lang_lines.guide_3_content, 75), white)-- Guide 3 Content
+            Font.print(fnt22, setting_x, setting_y1, wraptextlength(lang_lines.guide_3_content, 75), white)-- Guide 3 Content
         end
 
         
@@ -12841,12 +13530,12 @@ while true do
         Graphics.drawImage(900-label1, 510, btnO)
         Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.guide_4_heading, white)-- Guide 4 Heading
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
         menuItems = 1
         
@@ -12856,9 +13545,9 @@ while true do
         -- MENU 16 / #1 Content
         if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
-            Font.print(fnt20, setting_x, setting_y1, lang_lines.guide_4_content, white)-- Guide 4 Content
+            Font.print(fnt22, setting_x, setting_y1, lang_lines.guide_4_content, white)-- Guide 4 Content
         else
-            Font.print(fnt20, setting_x, setting_y1, wraptextlength(lang_lines.guide_4_content, 75), white)-- Guide 4 Content
+            Font.print(fnt22, setting_x, setting_y1, wraptextlength(lang_lines.guide_4_content, 75), white)-- Guide 4 Content
         end
 
         
@@ -12889,12 +13578,12 @@ while true do
         Graphics.drawImage(900-label1, 510, btnO)
         Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.guide_5_heading, white)-- Guide 5 Heading
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
         menuItems = 1
         
@@ -12904,9 +13593,9 @@ while true do
         -- MENU 17 / #1 Content
         if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
-            Font.print(fnt20, setting_x, setting_y1, lang_lines.guide_5_content, white)-- Guide 5 Content
+            Font.print(fnt22, setting_x, setting_y1, lang_lines.guide_5_content, white)-- Guide 5 Content
         else
-            Font.print(fnt20, setting_x, setting_y1, wraptextlength(lang_lines.guide_5_content, 75), white)-- Guide 5 Content
+            Font.print(fnt22, setting_x, setting_y1, wraptextlength(lang_lines.guide_5_content, 75), white)-- Guide 5 Content
         end
         
         -- MENU 17 - FUNCTIONS
@@ -12936,12 +13625,12 @@ while true do
         Graphics.drawImage(900-label1, 510, btnO)
         Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
 
-        Graphics.fillRect(60, 900, 44, 450, darkalpha)
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
 
         Font.print(fnt22, setting_x, setting_yh, lang_lines.guide_6_heading, white)-- Guide 6 Heading
-        Graphics.fillRect(60, 900, 97, 100, white)
+        Graphics.fillRect(60, 900, 78, 81, white)
 
-        Graphics.fillRect(60, 900, 100 + (menuY * 50), 150 + (menuY * 50), themeCol)-- selection
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
         menuItems = 1
         
@@ -12949,13 +13638,13 @@ while true do
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
         
         -- MENU 18 / #1 Content
-        Font.print(fnt20, setting_x, setting_y1, "RetroFlow version " .. appversion, white)-- Guide 6 Content
+        Font.print(fnt22, setting_x, setting_y1, "RetroFlow version " .. appversion, white)-- Guide 6 Content
         
         if setLanguage == 8 or setLanguage == 9 or setLanguage == 10 or setLanguage == 17 or setLanguage == 18 or setLanguage == 19 then
             -- Manual text wrapping for non latin alphabets
-            Font.print(fnt20, setting_x, setting_y2, lang_lines.guide_6_content, white)-- Guide 6 Content
+            Font.print(fnt22, setting_x, setting_y2, lang_lines.guide_6_content, white)-- Guide 6 Content
         else
-            Font.print(fnt20, setting_x, setting_y2, wraptextlength(lang_lines.guide_6_content, 75), white)-- Guide 6 Content
+            Font.print(fnt22, setting_x, setting_y2, wraptextlength(lang_lines.guide_6_content, 75), white)-- Guide 6 Content
         end
 
         -- MENU 18 - FUNCTIONS
@@ -12972,6 +13661,610 @@ while true do
 
             end
         end
+
+-- MENU 19 - OTHER SETTINGS
+    elseif showMenu == 19 then
+        
+        -- SETTINGS
+        -- Footer buttons and icons
+        -- Get text widths for positioning
+        label1 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
+        label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
+
+        Graphics.drawImage(900-label1, 510, btnO)
+        Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
+
+        Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
+        Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
+
+        Graphics.fillRect(60, 900, 34, 460, darkalpha)
+
+        Font.print(fnt22, setting_x, setting_yh, lang_lines.Other_Settings, white)--Other Settings
+        Graphics.fillRect(60, 900, 78, 81, white)
+
+        Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
+
+
+        menuItems = 2
+
+        -- MENU 19 / #0 Back
+        Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
+
+        -- MENU 19 / #4 Remap X and O buttons
+        Font.print(fnt22, setting_x, setting_y1,  lang_lines.Swap_X_and_O_buttons_colon, white)
+        if setSwap_X_O_buttons == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.On, white)--ON
+        else
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Off, white)--OFF
+        end
+
+        -- MENU 19 / #5 Adrenaline PS Button
+        Font.print(fnt22, setting_x, setting_y2, lang_lines.Adrenaline_PS_button_colon, white)--Adrenaline PS Button
+        if setAdrPSButton == 0 then
+            Font.print(fnt22, setting_x_offset, setting_y2, lang_lines.Menu, white)--Menu
+        elseif setAdrPSButton == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y2, lang_lines.LiveArea, white)--LiveArea
+        elseif setAdrPSButton == 2 then
+            Font.print(fnt22, setting_x_offset, setting_y2, lang_lines.Standard, white)--Standard
+        end
+
+
+        -- MENU 19 - FUNCTIONS
+        status = System.getMessageState()
+        if status ~= RUNNING then
+    
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
+                if menuY == 0 then -- #0 Back
+                    showMenu = 2
+                    menuY = 6 -- Other Settings
+
+                elseif menuY == 1 then -- #1 Remap X and O buttons
+                    if setSwap_X_O_buttons == 1 then
+                        setSwap_X_O_buttons = 0
+                    else
+                        setSwap_X_O_buttons = 1
+                    end
+                    Swap_X_O_buttons()
+                    oldpad = pad
+                    showMenu = 19
+                    menuY = 1
+
+                elseif menuY == 2 then -- #2 Adrenaline PS Button
+                    if setAdrPSButton < 2 then
+                        setAdrPSButton = setAdrPSButton + 1
+                    else
+                        setAdrPSButton = 0
+                    end
+                end
+
+                --Save settings
+                SaveSettings()
+
+            elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
+                if menuY > 0 then
+                    menuY = menuY - 1
+                    else
+                    menuY=menuItems
+                end
+            elseif (Controls.check(pad, SCE_CTRL_DOWN)) and not (Controls.check(oldpad, SCE_CTRL_DOWN)) then
+                if menuY < menuItems then
+                    menuY = menuY + 1
+                    else
+                    menuY=0
+                end
+            end
+            
+        end
+
+
+-- MENU 20 - GAME OPTIONS
+    elseif showMenu == 20 then
+        
+        -- SETTINGS
+        -- Footer buttons and icons
+        -- Get text widths for positioning
+        label1 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
+        label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
+
+
+        -- GET MENU ITEM COUNT (Some menus app type specific)
+            
+            menuItems = 2
+            
+            -- Check for dynamic menu item
+            local adrenaline_flag = false
+            if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
+                if string.match (xCatLookup(showCat)[p].game_path, "pspemu") then
+                    
+                    adrenaline_flag = true
+                    menuItems = menuItems + 1
+                else
+                    adrenaline_flag = false
+                    menuItems = menuItems
+                end
+            end
+
+            -- Add extra for remove from recent
+            local recent_cat_flag = false
+            if showCat == 40 then
+                recent_cat_flag = true
+                menuItems = menuItems + 1
+            else
+                if #recently_played_table ~= nil then
+                    local key = find_game_table_pos_key(recently_played_table, app_titleid)
+                    if key ~= nil then
+                        recent_cat_flag = true
+                        menuItems = menuItems + 1
+                    else
+                        recent_cat_flag = false
+                    end
+                end
+            end
+
+            -- Calculate vertical centre
+            vertically_centre_mini_menu(menuItems)
+
+        -- GRAPHIC SETUP
+        
+            -- Apply mini menu margins
+            local setting_x = setting_x + mini_menu_x_margin
+
+            -- Draw black overlay
+            Graphics.fillRect(0, 960, 0, 540, blackalpha)
+
+            -- Draw footer
+            Graphics.fillRect(0, 960, 496, 544, themeCol)
+
+            Graphics.drawImage(900-label1, 510, btnO)
+            Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
+
+            Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
+            Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
+            
+            -- Draw dark overlay
+            Graphics.fillRect(60 + mini_menu_x_margin, 900 - mini_menu_x_margin, y_centre_top_margin, y_centre_top_margin + y_centre_box_height, dark)
+
+            -- Draw white line
+            Graphics.fillRect(60 + mini_menu_x_margin, 900 - mini_menu_x_margin, y_centre_white_line_start, y_centre_white_line_start + 3, white)
+            
+            -- Draw selection
+            Graphics.fillRect(60 + mini_menu_x_margin, 900 - mini_menu_x_margin, y_centre_selection_start + (menuY * 47), y_centre_selection_end + (menuY * 47), themeCol)-- selection
+
+
+        -- MENU 20 / Heading
+        GetInfoSelected() -- Get game info for heading
+        Font.print(fnt22, setting_x, setting_yh + y_centre_text_offset, app_title, white)--Game Options
+
+        -- MENU 20 / #0 Favorites
+        if favourite_flag == true then
+            Font.print(fnt22, setting_x, setting_y0 + y_centre_text_offset, lang_lines.Remove_from_favorites, white)--Remove from favourites
+        else
+            Font.print(fnt22, setting_x, setting_y0 + y_centre_text_offset, lang_lines.Add_to_favorites, white)--Add to favourites
+        end
+
+        -- MENU 20 / #1 Rename
+        Font.print(fnt22, setting_x, setting_y1 + y_centre_text_offset, lang_lines.Rename, white)--Rename
+
+        -- MENU 20 / #2 Hide Game
+        if hide_game_flag == true then
+            Font.print(fnt22, setting_x, setting_y2 + y_centre_text_offset, lang_lines.Unhide_game, white)--Unhide game
+        else
+            Font.print(fnt22, setting_x, setting_y2 + y_centre_text_offset, lang_lines.Hide_game, white)--Hide game
+        end
+        
+        -- -- MENU 20 / #3 Adrenaline options
+        -- if adrenaline_flag == true then
+        --     Font.print(fnt22, setting_x, setting_y3 + y_centre_text_offset, lang_lines.Adrenaline_options, white)--Adrenaline options
+        -- else
+        -- end
+
+        -- MENU 20 / #3 / #4 - Dynamic based on Recent Category and Adrenaline options
+        if recent_cat_flag == true then
+            if adrenaline_flag == true then
+                Font.print(fnt22, setting_x, setting_y3 + y_centre_text_offset, lang_lines.Adrenaline_options, white)--Adrenaline options
+                Font.print(fnt22, setting_x, setting_y4 + y_centre_text_offset, lang_lines.Remove_from_recently_played, white)--Remove from recently played
+            else
+                Font.print(fnt22, setting_x, setting_y3 + y_centre_text_offset, lang_lines.Remove_from_recently_played, white)--Remove from recently played
+            end
+        else
+            if adrenaline_flag == true then
+                Font.print(fnt22, setting_x, setting_y3 + y_centre_text_offset, lang_lines.Adrenaline_options, white)--Adrenaline options
+            end
+        end
+        
+        
+        
+        -- MENU 20 - FUNCTIONS
+        status = System.getMessageState()
+        if status ~= RUNNING then
+            
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
+
+                -- MENU 20
+                if menuY == 0 then -- #0 Favorites
+                    -- Favourites
+                    AddOrRemoveFavorite()
+
+                    -- Update text
+                    if favourite_flag == true then
+                        favourite_flag = false
+                    else
+                        favourite_flag = true
+                    end
+
+                    -- If on favorite category, go to main screen, otherwise the next fav game is shown
+                    if showCat == 39 then
+                        GetInfoSelected()
+                        oldpad = pad -- Prevents it from launching next game accidentally. Credit BlackSheepBoy69
+                        showMenu = 0
+                        Render.useTexture(modBackground, imgCustomBack)
+                    end
+                    
+                elseif menuY == 1 then -- #1 Rename
+                    -- Rename
+                    if hasTyped==false then
+                        Keyboard.start(tostring(lang_lines.Rename), app_title:gsub("\n",""), 512, TYPE_LATIN, MODE_TEXT)
+                        hasTyped=true
+                        rename_keyboard=true
+                    end
+                    
+                elseif menuY == 2 then -- #2 Hide Game
+                    
+                    GetInfoSelected()
+
+                    -- Update text
+                    if hide_game_flag == true then
+                        hide_game_flag = false
+                    else
+                        hide_game_flag = true
+                    end
+
+                    -- Update hidden games lua file
+
+                        -- Check if the hidden game table is empty
+                        if #hidden_games_table ~= nil then -- Is not empty
+
+                            -- Check if game is already in the list
+                            local key = find_game_table_pos_key(hidden_games_table, app_titleid)
+                            if key ~= nil then
+                                -- Game found - If set to unhide, then remove from table
+                                if hide_game_flag == false then
+                                    table.remove(hidden_games_table, key)
+                                else
+                                end
+                            else
+                                -- Game not found, it's new, add it to the hidden list
+                                
+                                -- Find game in app table, update and add to hidden
+                                local key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+                                if key ~= nil then
+                                    if hide_game_flag == true then
+                                        xAppNumTableLookup(apptype)[key].hidden = true
+                                    else
+                                        xAppNumTableLookup(apptype)[key].hidden = false
+                                    end
+                                    table.insert(hidden_games_table, xAppNumTableLookup(apptype)[key])
+                                else
+                                end
+
+                            end
+
+                        else -- Is empty, add first game to hide 
+
+                            -- Find game in app table, update and add to hidden
+                            local key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+                            if key ~= nil then
+                                if hide_game_flag == true then
+                                    xAppNumTableLookup(apptype)[key].hidden = true
+                                else
+                                    xAppNumTableLookup(apptype)[key].hidden = false
+                                end
+                                table.insert(hidden_games_table, xAppNumTableLookup(apptype)[key])
+                            else
+                            end
+                        end
+
+                        -- Save the hidden game table for importing on restart
+                        update_cached_table_hidden_games()
+
+                        
+                    -- Update other tables in realtime
+                    AddOrRemoveHidden()
+
+                    count_cache_and_reload()
+                    GetInfoSelected()
+
+                    if showHidden == 0 then
+                        oldpad = pad -- Prevents it from launching next game accidentally. Credit BlackSheepBoy69
+                        showMenu = 0
+                        Render.useTexture(modBackground, imgCustomBack)
+                        GetNameAndAppTypeSelected()
+                    else
+                        GetInfoSelected()
+                        -- Instant cover update - Credit BlackSheepBoy69
+                        Threads.addTask(xCatLookup(showCat)[p], {
+                        Type = "ImageLoad",
+                        Path = xCatLookup(showCat)[p].icon_path,
+                        Table = xCatLookup(showCat)[p],
+                        Index = "ricon"
+                        })
+                    end
+
+                elseif menuY == 3 then -- #3 - Dynamic based on Recent Category and Adrenaline options
+                    if adrenaline_flag == true then
+                        
+                        game_adr_bin_driver = 0
+                        game_adr_exec_bin = 0
+
+                        -- Get existing settings
+                        local key = find_game_table_pos_key(launch_overrides_table, app_titleid)
+                        if key ~= nil then
+                            -- Yes - it's already in the launch override list, update it.
+                            game_adr_bin_driver = launch_overrides_table[key].driver
+                            game_adr_exec_bin = launch_overrides_table[key].bin
+                        end
+
+                        showMenu = 21
+                        menuY = 0
+                    else
+                        if recent_cat_flag == true then
+
+                            -- remove recent
+                            if #recently_played_table ~= nil then
+                                if showCat == 40 then
+                                    -- We are in the recent category, remove the game and save cache
+                                    table.remove(recently_played_table, p)
+                                    update_cached_table_recently_played()
+                                    oldpad = pad -- Prevents it from launching next game accidentally
+                                    showMenu = 0
+                                    Render.useTexture(modBackground, imgCustomBack)
+                                    check_for_out_of_bounds()
+                                else
+                                    -- We are NOT the recent category, Find game in recent table and remove, then save cache
+                                    key = find_game_table_pos_key(recently_played_table, app_titleid)
+                                    if key ~= nil then
+                                        table.remove(recently_played_table, key)
+                                        update_cached_table_recently_played()
+                                        GetInfoSelected()
+                                        menuY = 0
+                                    else
+                                    end
+                                end
+                            end
+
+                        else
+                        end
+                    end
+                elseif menuY == 4 then -- #4 Remove from recent
+                    if recent_cat_flag == true then
+
+                        -- remove recent
+                        if #recently_played_table ~= nil then
+                            if showCat == 40 then
+                                -- We are in the recent category, remove the game and save cache
+                                table.remove(recently_played_table, p)
+                                update_cached_table_recently_played()
+                                oldpad = pad -- Prevents it from launching next game accidentally
+                                showMenu = 0
+                                Render.useTexture(modBackground, imgCustomBack)
+                                check_for_out_of_bounds()
+                            else
+                                -- We are NOT the recent category, Find game in recent table and remove, then save cache
+                                key = find_game_table_pos_key(recently_played_table, app_titleid)
+                                if key ~= nil then
+                                    table.remove(recently_played_table, key)
+                                    update_cached_table_recently_played()
+                                    GetInfoSelected()
+                                    menuY = 0
+                                else
+                                end
+                            end
+                        end
+
+                    else
+                    end
+                end
+
+
+            elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
+                if menuY > 0 then
+                    menuY = menuY - 1
+                    else
+                    menuY=menuItems
+                end
+            elseif (Controls.check(pad, SCE_CTRL_DOWN)) and not (Controls.check(oldpad, SCE_CTRL_DOWN)) then
+                if menuY < menuItems then
+                    menuY = menuY + 1
+                    else
+                    menuY=0
+                end
+            elseif Controls.check(pad, SCE_CTRL_CIRCLE_MAP) and not Controls.check(oldpad, SCE_CTRL_CIRCLE_MAP) then
+                oldpad = pad
+                GetInfoSelected()
+                showMenu = 1
+                menuY=0
+            end
+        end
+
+
+
+-- MENU 21 - GAME OPTIONS
+    elseif showMenu == 21 then
+        
+        -- SETTINGS
+        -- Footer buttons and icons
+        -- Get text widths for positioning
+        label1 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
+        label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
+
+
+        -- GET MENU ITEM COUNT
+            
+            menuItems = 3
+            
+        -- Calculate vertical centre
+            vertically_centre_mini_menu(menuItems)
+
+        -- GRAPHIC SETUP
+        
+            -- Apply mini menu margins
+            local setting_x = setting_x + mini_menu_x_margin
+
+            -- Draw black overlay
+            Graphics.fillRect(0, 960, 0, 540, blackalpha)
+
+            -- Draw footer
+            Graphics.fillRect(0, 960, 496, 544, themeCol)
+
+            Graphics.drawImage(900-label1, 510, btnO)
+            Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
+
+            Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
+            Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
+            
+            -- Draw dark overlay
+            Graphics.fillRect(60 + mini_menu_x_margin, 900 - mini_menu_x_margin, y_centre_top_margin, y_centre_top_margin + y_centre_box_height, dark)
+
+            -- Draw white line
+            Graphics.fillRect(60 + mini_menu_x_margin, 900 - mini_menu_x_margin, y_centre_white_line_start, y_centre_white_line_start + 3, white)
+            
+            -- Draw selection
+            Graphics.fillRect(60 + mini_menu_x_margin, 900 - mini_menu_x_margin, y_centre_selection_start + (menuY * 47), y_centre_selection_end + (menuY * 47), themeCol)-- selection
+
+
+        -- MENU 21 / Heading
+        Font.print(fnt22, setting_x, setting_yh + y_centre_text_offset, lang_lines.Adrenaline_options, white)--Adrenaline options
+
+        -- MENU 21 / #0 Back
+        Font.print(fnt22, setting_x, setting_y0 + y_centre_text_offset, lang_lines.Back_Chevron, white)--Back
+
+        -- MENU 21 / #1 Driver
+        Font.print(fnt22, setting_x, setting_y1 + y_centre_text_offset, lang_lines.Driver_colon, white)--Driver
+
+        
+
+        -- Menu
+        if game_adr_bin_driver == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. "INFERNO" .. "  >", white)
+        elseif game_adr_bin_driver == 2 then
+            Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. "MARCH33" .. "  >", white)
+        elseif game_adr_bin_driver == 3 then
+            Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. "NP9660" .."  >", white)
+        else
+            Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
+        end
+
+        -- MENU 21 / #2 Execute bin
+        Font.print(fnt22, setting_x, setting_y2 + y_centre_text_offset, lang_lines.Execute_colon, white)--Execute
+
+        -- local game_adr_exec_bin = 0 -- !!! GET VALUE FROM CORE OVERRIDE TABLE
+
+        if game_adr_exec_bin == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. "EBOOT.BIN" .. "  >", white)
+        elseif game_adr_exec_bin == 2 then
+            Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. "EBOOT.OLD" .. "  >", white)
+        elseif game_adr_exec_bin == 3 then
+            Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. "BOOT.BIN" .."  >", white)
+        else
+            Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
+        end
+
+
+        -- MENU 21 / #3 Save
+        Font.print(fnt22, setting_x, setting_y3 + y_centre_text_offset, lang_lines.Save, white)--Save
+
+        
+        -- MENU 21 - FUNCTIONS
+        status = System.getMessageState()
+        if status ~= RUNNING then
+            
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
+
+                -- MENU 21
+                if menuY == 0 then -- #0 Back
+                    showMenu = 20
+                    menuY=3
+
+                elseif menuY == 3 then -- #3 Save the setting
+                    
+                    if #launch_overrides_table ~= nil then
+                        local key = find_game_table_pos_key(launch_overrides_table, app_titleid)
+                        if key ~= nil then
+                            -- Yes - it's already in the launch override list, update it.
+                            launch_overrides_table[key].driver = game_adr_bin_driver
+                            launch_overrides_table[key].bin = game_adr_exec_bin
+                        else
+                            -- No, it's new, add it to the launch override list
+                            launch_overrides_temp = {}
+                            table.insert(launch_overrides_temp, {name = app_titleid, driver = game_adr_bin_driver, bin = game_adr_exec_bin, apptitle = app_title, app_type = apptype})
+
+                            for i, file in ipairs(launch_overrides_temp) do
+                                table.insert(launch_overrides_table, file)
+                            end
+                        end
+                        -- Save the renamed table for importing on restart
+                        update_cached_table_launch_overrides()
+                        showMenu = 20
+                        menuY=3
+                    else
+                    end
+
+                    -- Save the setting
+                else
+                end
+            elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
+                if menuY > 0 then
+                    menuY = menuY - 1
+                    else
+                    menuY=menuItems
+                end
+            elseif (Controls.check(pad, SCE_CTRL_DOWN)) and not (Controls.check(oldpad, SCE_CTRL_DOWN)) then
+                if menuY < menuItems then
+                    menuY = menuY + 1
+                    else
+                    menuY=0
+                end
+            elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
+                if menuY == 1 then -- #1 Driver
+                    if game_adr_bin_driver > 0 then
+                        game_adr_bin_driver = game_adr_bin_driver - 1
+                    else
+                        game_adr_bin_driver = 3
+                    end
+                elseif menuY == 2 then -- #2 Execute bin
+                    if game_adr_exec_bin > 0 then
+                        game_adr_exec_bin = game_adr_exec_bin - 1
+                    else
+                        game_adr_exec_bin = 3
+                    end
+                else
+                end
+            elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
+                if menuY == 1 then -- #1 Driver
+                    if game_adr_bin_driver < 3 then
+                        game_adr_bin_driver = game_adr_bin_driver + 1
+                    else
+                        game_adr_bin_driver = 0
+                    end
+
+                elseif menuY == 2 then -- #2 Execute bin
+                    if game_adr_exec_bin < 3 then
+                        game_adr_exec_bin = game_adr_exec_bin + 1
+                    else
+                        game_adr_exec_bin = 0
+                    end
+                else
+                end
+
+
+            elseif Controls.check(pad, SCE_CTRL_CIRCLE_MAP) and not Controls.check(oldpad, SCE_CTRL_CIRCLE_MAP) then
+                oldpad = pad
+                GetInfoSelected()
+                showMenu = 20
+                menuY=3
+            end
+        end
+
 
 -- END OF MENUS
     end
@@ -13051,14 +14344,24 @@ while true do
             if state ~= RUNNING and messagestate ~= RUNNING then
                 if gettingCovers == false and app_title~="-" then
                     FreeMemory()
+
+                    -- Add to recently played if game is not hidden
+                    -- if xCatLookup(showCat)[p].hidden == false then
+                    --     AddtoRecentlyPlayed()
+                    --     update_cached_table_recently_played_pre_launch()
+                    -- end
+
+                    -- Add to recently played
                     AddtoRecentlyPlayed()
                     update_cached_table_recently_played_pre_launch()
 
                     if showCat == 1 then
                         if string.match (games_table[p].game_path, "pspemu") then
                             -- Launch adrenaline
-                            rom_location = tostring(games_table[p].launch_argument)
-                            launch_Adrenaline()
+                            rom_location = tostring(games_table[p].game_path)
+                            rom_title_id = tostring(games_table[p].name)
+                            rom_filename = tostring(games_table[p].filename)
+                            launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                         else
                             if games_table[p].app_type_default == 3 then
                                 -- Launch PS1 retroarch
@@ -13072,8 +14375,10 @@ while true do
                     elseif showCat == 2 then
                         if string.match (homebrews_table[p].game_path, "pspemu") then
                             -- Launch adrenaline
-                            rom_location = tostring(homebrews_table[p].launch_argument)
-                            launch_Adrenaline()
+                            rom_location = tostring(homebrews_table[p].game_path)
+                            rom_title_id = tostring(homebrews_table[p].name)
+                            rom_filename = tostring(homebrews_table[p].filename)
+                            launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                         else
                             if homebrews_table[p].app_type_default == 3 then
                                 -- Launch PS1 retroarch
@@ -13087,8 +14392,10 @@ while true do
                     elseif showCat == 3 then
                         if string.match (psp_table[p].game_path, "pspemu") then
                             -- Launch adrenaline
-                            rom_location = tostring(psp_table[p].launch_argument)
-                            launch_Adrenaline()
+                            rom_location = tostring(psp_table[p].game_path)
+                            rom_title_id = tostring(psp_table[p].name)
+                            rom_filename = tostring(psp_table[p].filename)
+                            launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                         else
                             if psp_table[p].app_type_default == 3 then
                                 -- Launch PS1 retroarch
@@ -13103,8 +14410,10 @@ while true do
                     elseif showCat == 4 then
                         if string.match (psx_table[p].game_path, "pspemu") then
                             -- Launch adrenaline
-                            rom_location = tostring(psx_table[p].launch_argument)
-                            launch_Adrenaline()
+                            rom_location = tostring(psx_table[p].game_path)
+                            rom_title_id = tostring(psx_table[p].name)
+                            rom_filename = tostring(psx_table[p].filename)
+                            launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                         else
                             if psx_table[p].app_type_default == 3 then
                                 -- Launch PS1 retroarch
@@ -13155,8 +14464,10 @@ while true do
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (fav_count[p].game_path, "pspemu") then
                                 -- Launch adrenaline
-                                rom_location = tostring(fav_count[p].launch_argument)
-                                launch_Adrenaline()
+                                rom_location = tostring(fav_count[p].game_path)
+                                rom_title_id = tostring(fav_count[p].name)
+                                rom_filename = tostring(fav_count[p].filename)
+                                launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                             else
                                 if fav_count[p].app_type_default == 3 then
                                     -- Launch PS1 retroarch
@@ -13205,8 +14516,10 @@ while true do
                         else
                             -- Homebrew
                             if string.match (fav_count[p].game_path, "pspemu") then
-                                rom_location = (fav_count[p].launch_argument)
-                                launch_Adrenaline()
+                                rom_location = (fav_count[p].game_path)
+                                rom_title_id = (fav_count[p].name)
+                                rom_filename = (fav_count[p].filename)
+                                launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                             else
                                 System.launchApp(fav_count[p].name)
                             end
@@ -13218,8 +14531,10 @@ while true do
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (recently_played_table[p].game_path, "pspemu") then
                                  -- Launch adrenaline
-                                rom_location = tostring(recently_played_table[p].launch_argument)
-                                launch_Adrenaline()
+                                rom_location = tostring(recently_played_table[p].game_path)
+                                rom_title_id = tostring(recently_played_table[p].name)
+                                rom_filename = tostring(recently_played_table[p].filename)
+                                launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                             else
                                 if recently_played_table[p].app_type_default == 3 then
                                     -- Launch PS1 retroarch
@@ -13268,8 +14583,10 @@ while true do
                         else
                             -- Homebrew
                             if string.match (recently_played_table[p].game_path, "pspemu") then
-                                rom_location = (recently_played_table[p].launch_argument)
-                                launch_Adrenaline()
+                                rom_location = (recently_played_table[p].game_path)
+                                rom_title_id = (recently_played_table[p].name)
+                                rom_filename = (recently_played_table[p].filename)
+                                launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                             else
                                 System.launchApp(recently_played_table[p].name)
                             end
@@ -13282,8 +14599,10 @@ while true do
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (search_results_table[p].game_path, "pspemu") then
                                  -- Launch adrenaline
-                                rom_location = tostring(search_results_table[p].launch_argument)
-                                launch_Adrenaline()
+                                rom_location = tostring(search_results_table[p].game_path)
+                                rom_title_id = tostring(search_results_table[p].name)
+                                rom_filename = tostring(search_results_table[p].filename)
+                                launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                             else
                                 if search_results_table[p].app_type_default == 3 then
                                     -- Launch PS1 retroarch
@@ -13332,8 +14651,10 @@ while true do
                         else
                             -- Homebrew
                             if string.match (search_results_table[p].game_path, "pspemu") then
-                                rom_location = (search_results_table[p].launch_argument)
-                                launch_Adrenaline()
+                                rom_location = (search_results_table[p].game_path)
+                                rom_title_id = (search_results_table[p].name)
+                                rom_filename = (search_results_table[p].filename)
+                                launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                             else
                                 System.launchApp(search_results_table[p].name)
                             end
@@ -13347,8 +14668,10 @@ while true do
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (files_table[p].game_path, "pspemu") then
                                  -- Launch adrenaline
-                                rom_location = tostring(files_table[p].launch_argument)
-                                launch_Adrenaline()
+                                rom_location = tostring(files_table[p].game_path)
+                                rom_title_id = tostring(files_table[p].name)
+                                rom_filename = tostring(files_table[p].filename)
+                                launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                             else
                                 if files_table[p].app_type_default == 3 then
                                     -- Launch PS1 retroarch
@@ -13397,8 +14720,10 @@ while true do
                         else
                             -- Homebrew
                             if string.match (files_table[p].game_path, "pspemu") then
-                                rom_location = (files_table[p].launch_argument)
-                                launch_Adrenaline()
+                                rom_location = (files_table[p].game_path)
+                                rom_title_id = (files_table[p].name)
+                                rom_filename = (files_table[p].filename)
+                                launch_Adrenaline(rom_location, rom_title_id, rom_filename)
                             else
                                 System.launchApp(files_table[p].name)
                             end
@@ -13425,6 +14750,7 @@ while true do
             if state ~= RUNNING then
                 if showMenu == 0 then
                     showMenu = 2
+                    menuY = 0
                 end
             else
             end
@@ -13472,22 +14798,8 @@ while true do
 
                     if showCat == 39 then
                         -- count favorites
-                        local fav_count = {}
-                        for l, file in pairs(files_table) do
-                            if showHomebrews == 0 then
-                                -- ignore homebrew apps
-                                if file.app_type ~= nil then
-                                    if file.favourite==true then
-                                        table.insert(fav_count, file)
-                                    end
-                                else
-                                end
-                            else
-                                if file.favourite==true then
-                                    table.insert(fav_count, file)
-                                end
-                            end
-                        end
+                        create_fav_count_table(files_table)
+
                         curTotal = #fav_count
                         if #fav_count == 0 then showCat = 38
                         end
@@ -13615,22 +14927,8 @@ while true do
                     if showCat == 38 then curTotal =    #ngpc_table             if #ngpc_table == 0 then            showCat = 39 end end
                     if showCat == 39 then
                         -- count favorites
-                        local fav_count = {}
-                        for l, file in pairs(files_table) do
-                            if showHomebrews == 0 then
-                                -- ignore homebrew apps
-                                if file.app_type ~= nil then
-                                    if file.favourite==true then
-                                        table.insert(fav_count, file)
-                                    end
-                                else
-                                end
-                            else
-                                if file.favourite==true then
-                                    table.insert(fav_count, file)
-                                end
-                            end
-                        end
+                        create_fav_count_table(files_table)
+
                         curTotal = #fav_count
                         if #fav_count == 0 then showCat = 40
                         end
@@ -13840,22 +15138,7 @@ while true do
                 -- Press Up to skip to favourites
 
                 -- Check if there are favourites first
-                fav_count = {}
-                for l, file in pairs(files_table) do
-                    if showHomebrews == 0 then
-                        -- ignore homebrew apps
-                        if file.app_type ~= nil then
-                            if file.favourite==true then
-                                table.insert(fav_count, file)
-                            end
-                        else
-                        end
-                    else
-                        if file.favourite==true then
-                            table.insert(fav_count, file)
-                        end
-                    end
-                end
+                create_fav_count_table(files_table)
 
                 -- Favourites found
                 if #fav_count > 0 then
@@ -13959,6 +15242,16 @@ while true do
                 elseif showMenu == 18 then -- About - Guide 6
                     showMenu = 7
                     menuY = 6 -- Guide 6
+                elseif showMenu == 19 then -- Other Settings
+                    showMenu = 2
+                    menuY = 6 -- Other Settings
+                elseif showMenu == 20 then -- Game Options
+                    showMenu = 1
+                    menuY=0
+                elseif showMenu == 21 then -- Game Options Adrenaline
+                    showMenu = 20
+                    menuY=0
+                    
                 elseif showMenu == 2 then
                     -- If search cancelled with circle, return to settings menu
                     state = Keyboard.getState()
@@ -13982,16 +15275,9 @@ while true do
 
         -- Triangle button - Game info screen
         if (Controls.check(pad, SCE_CTRL_TRIANGLE) and not Controls.check(oldpad, SCE_CTRL_TRIANGLE)) and showMenu == 1 then
-            -- Favourites
-            AddOrRemoveFavorite()
-            status = System.getMessageState()
-            if status ~= RUNNING then
-                showMenu = 0
-                prvRotY = 0
-                if setBackground >= 1 then
-                    Render.useTexture(modBackground, imgCustomBack)
-                end
-            end
+            -- Game Options
+            showMenu = 20
+            menuY = 0
         end
 
     end
@@ -14049,14 +15335,10 @@ while true do
     elseif showCat == 38 then curTotal = #ngpc_table            if #ngpc_table == 0             then p = 0 master_index = p end    
     elseif showCat == 39 then
         -- count favorites
-        local fav_count_2 = {}
-        for l, file in pairs(files_table) do
-            if file.favourite==true then
-                table.insert(fav_count_2, file)
-            end
-        end
-        curTotal = #fav_count_2
-        if #fav_count_2 == 0 then
+        create_fav_count_table(files_table)
+        
+        curTotal = #fav_count
+        if #fav_count == 0 then
             p = 0
             master_index = p
         end

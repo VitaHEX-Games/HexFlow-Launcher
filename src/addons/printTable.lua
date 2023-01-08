@@ -314,6 +314,26 @@ function print_table_renamed_games()
     db_renamed_games:close()
 end
 
+function print_table_launch_overrides()
+    local db_Cached_File_launch_overrides = "ux0:/data/RetroFlow/launch_overrides.lua"
+
+    -- Create directories - Database Cache
+    if System.doesFileExist(db_Cached_File_launch_overrides) then System.deleteFile(db_Cached_File_launch_overrides) else end
+    local db_launch_overrides = assert(io.open(db_Cached_File_launch_overrides, "w"))
+    printTable(launch_overrides_table, db_launch_overrides)
+    db_launch_overrides:close()
+end
+
+function print_table_hidden_games()
+    local db_Cached_File_hidden_games = "ux0:/data/RetroFlow/hidden_games.lua"
+
+    -- Create directories - Database Cache
+    if System.doesFileExist(db_Cached_File_hidden_games) then System.deleteFile(db_Cached_File_hidden_games) else end
+    local db_hidden_games = assert(io.open(db_Cached_File_hidden_games, "w"))
+    printTable(hidden_games_table, db_hidden_games)
+    db_hidden_games:close()
+end
+
 function print_table_rom_dirs(def_table_name)
     local db_Cached_File_rom_directories = "ux0:/data/RetroFlow/rom_directories.lua"
 
