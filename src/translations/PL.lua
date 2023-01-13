@@ -290,7 +290,7 @@ return {
 -- Other Settings
 ["Other_Settings"] = "Inne ustawienia",
 ["Swap_X_and_O_buttons_colon"] = "Zamień przyciski X i O: ",
-["Adrenaline_PS_button_colon"] = "Adrenaline Przycisk PS: ",
+["Adrenaline_PS_button_colon"] = "Przycisk PS Adrenaline: ",
 ["Menu"] = "Menu",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Standard",
@@ -301,13 +301,13 @@ return {
 ["Driver_colon"] = "Sterownik: ",
 ["Execute_colon"] = "Wykonaj: ",
 ["Save"] = "Zapisz ustawienia",
-["Add_to_favorites"] = "Dodać do ulubionych",
-["Remove_from_favorites"] = "Usunąć z ulubionych",
-["Show_hidden_games_colon"] = "Pokaż ukryte gry:",
+["Add_to_favorites"] = "Dodaj do ulubionych",
+["Remove_from_favorites"] = "Usuń z ulubionych",
+["Show_hidden_games_colon"] = "Pokazuj ukryte gry:",
 ["Hide_game"] = "Ukryj grę",
 ["Unhide_game"] = "Pokaż grę",
 ["Remove_from_recently_played"] = "Usuń z ostatnio granych",
 ["Retroarch_options"] = "Opcje RetroArch",
-["Core_colon"] = "Core:",
+["Core_colon"] = "Rdzeń:",
 
 }
