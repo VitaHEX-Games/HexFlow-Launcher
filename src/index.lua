@@ -6,7 +6,7 @@ local oneLoopTimer = Timer.new()
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "5.1.0"
+local appversion = "5.1.1"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -2258,6 +2258,11 @@ function AutoMakeBootBin(def_rom_location, def_driver, def_bin)
 
     -- Cleanup game path for writing to bin (set to lowercase and gsub path)
     local path_game = tostring(def_rom_location)
+
+    if System.doesFileExist(path_game .. "/EBOOT.PBP") then
+        path_game = path_game .. "/EBOOT.PBP"
+    end
+
     local path2game = path_game:gsub("/pspemu/", "pspemu/")
     local path2game = string.lower(path2game)
     
@@ -2374,6 +2379,8 @@ function launch_Adrenaline(def_rom_location, def_rom_title_id, def_rom_filename)
     if  System.doesFileExist(launch_dir_adr .. "data/boot.bin") then
         System.deleteFile(launch_dir_adr .. "data/boot.bin")
     end
+
+
 
     AutoMakeBootBin((def_rom_location), driver, bin)
 
@@ -13800,7 +13807,7 @@ while true do
             -- Check for dynamic menu item
             local adrenaline_flag = false
             if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
-                if string.match (xCatLookup(showCat)[p].game_path, "pspemu") then
+                if string.match (xCatLookup(showCat)[p].game_path, "pspemu") and not System.doesFileExist(xCatLookup(showCat)[p].game_path .. "/EBOOT.PBP") then
                     
                     adrenaline_flag = true
                     menuItems = menuItems + 1
