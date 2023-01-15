@@ -10953,6 +10953,8 @@ while true do
             tmpcatText = "PS1"
         elseif tmpappcat==4 then
             tmpcatText = lang_lines.Homebrew -- "Homebrew"
+        elseif setLanguage == 11 then
+            tmpcatText = lang_lines.Default_1 -- Default
         else
             tmpcatText = lang_lines.Default -- Default
         end
@@ -14183,6 +14185,8 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. "MARCH33" .. "  >", white)
         elseif game_adr_bin_driver == 3 then
             Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. "NP9660" .."  >", white)
+        elseif setLanguage == 11 then
+            Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. lang_lines.Default_2 .. "  >", white)
         else
             Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
         end
@@ -14198,6 +14202,8 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. "EBOOT.OLD" .. "  >", white)
         elseif game_adr_exec_bin == 3 then
             Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. "BOOT.BIN" .."  >", white)
+        elseif setLanguage == 11 then
+            Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.Default_3 .. "  >", white)
         else
             Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
         end
