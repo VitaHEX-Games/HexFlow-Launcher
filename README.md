@@ -101,9 +101,9 @@ Navigate your library using the **DPad** or the **Left Stick** or with the **Tou
 
 **Cross**: Select/Launch game/app
 
-**Square**: Change Category/Rename game
+**Square**: Change Category
 
-**Triangle**: Game Details/Add or remove favorites/About
+**Triangle**: Game Details/Game options menu/About
 
 **Circle**: Change View/Cancel
 

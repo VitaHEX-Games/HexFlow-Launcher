@@ -6,7 +6,7 @@ local oneLoopTimer = Timer.new()
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "5.0.2"
+local appversion = "5.1.0"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -2265,51 +2265,63 @@ function AutoMakeBootBin(def_rom_location, def_driver, def_bin)
     local bin = tostring(def_bin)
 
     -- Copy boot bin for editing
-    System.copyFile("app0:payloads/boot.bin", "ux0:/app/RETROLNCR/data/boot.bin")
+    if System.doesDirExist("ux0:/app/RETROLNCR/data") then
 
-    local fp = io.open("ux0:/app/RETROLNCR/data/boot.bin", "r+")
-    if fp then
-        local number = 0
-                            
-        -- Driver 
-        fp:seek("set",0x04)
-        if driver == "INFERN0" then number = "\x00\x00\x00\x00"
-        elseif driver == "MARCH33" then number = "\x01\x00\x00\x00"
-        elseif driver == "NP9660" then number = "\x02\x00\x00\x00"
-        end
-        fp:write(number)
+        -- If boot.bin exists, copy and edit
+        if System.doesFileExist("app0:payloads/boot.bin") then 
+            System.copyFile("app0:payloads/boot.bin", "ux0:/app/RETROLNCR/data/boot.bin")
 
-        number = 0
+            local fp = io.open("ux0:/app/RETROLNCR/data/boot.bin", "r+")
+            if fp then
+                local number = 0
+                                    
+                -- Driver 
+                fp:seek("set",0x04)
+                if driver == "INFERN0" then number = "\x00\x00\x00\x00"
+                elseif driver == "MARCH33" then number = "\x01\x00\x00\x00"
+                elseif driver == "NP9660" then number = "\x02\x00\x00\x00"
+                end
+                fp:write(number)
 
-        -- Bin Execute
-        fp:seek("set",0x08)
-        if bin == "EBOOT.BIN" then number = "\x00\x00\x00\x00"
-        elseif bin == "EBOOT.OLD" then number = "\x01\x00\x00\x00"
-        elseif bin == "BOOT.BIN" then number = "\x02\x00\x00\x00"
-        end
-        fp:write(number)
+                number = 0
 
-        -- Path2game
-        fp:seek("set",0x40)
-        local fill = 256 - #path2game
-        for j=1,fill do
-            path2game = path2game..string.char(00)
-        end
-        fp:write(path2game)
+                -- Bin Execute
+                fp:seek("set",0x08)
+                if bin == "EBOOT.BIN" then number = "\x00\x00\x00\x00"
+                elseif bin == "EBOOT.OLD" then number = "\x01\x00\x00\x00"
+                elseif bin == "BOOT.BIN" then number = "\x02\x00\x00\x00"
+                end
+                fp:write(number)
 
-        -- PSbutton 00 Menu 01 LiveArea 02 Standard
-        fp:seek("set",0x14)
-        if setAdrPSButton == 0 then psbutton_number = "\x00\x00\x00\x00"
-        elseif setAdrPSButton == 1 then psbutton_number = "\x01\x00\x00\x00"
-        elseif setAdrPSButton == 2 then psbutton_number = "\x02\x00\x00\x00"
+                -- Path2game
+                fp:seek("set",0x40)
+                local fill = 256 - #path2game
+                for j=1,fill do
+                    path2game = path2game..string.char(00)
+                end
+                fp:write(path2game)
+
+                -- PSbutton 00 Menu 01 LiveArea 02 Standard
+                fp:seek("set",0x14)
+                if setAdrPSButton == 0 then psbutton_number = "\x00\x00\x00\x00"
+                elseif setAdrPSButton == 1 then psbutton_number = "\x01\x00\x00\x00"
+                elseif setAdrPSButton == 2 then psbutton_number = "\x02\x00\x00\x00"
+                else
+                end
+                fp:write(psbutton_number)     
+
+                --Close
+                fp:close()
+
+            end--fp
+
+            System.launchApp("RETROLNCR")
         else
+            -- boot.bin not found
         end
-        fp:write(psbutton_number)     
-
-        --Close
-        fp:close()
-
-    end--fp
+    else
+        -- Launcher not found
+    end
 
 end
 
@@ -2364,7 +2376,6 @@ function launch_Adrenaline(def_rom_location, def_rom_title_id, def_rom_filename)
     end
 
     AutoMakeBootBin((def_rom_location), driver, bin)
-    System.launchApp("RETROLNCR")
 
 end
 
@@ -8942,11 +8953,26 @@ function QuickOverride_Category(tmpappcat)
     -- force icon change. Credit BlackSheepBoy69
     -- xCatLookup(showCat)[p].ricon = Graphics.loadImage(xCatLookup(showCat)[p].icon_path)
 
+    -- Error fix for when Homebrew is off, overriding game to homebrew, and on all category - then reload files
+    if showHomebrews == 0 and (tmpappcat)==4 and showCat == 0 then
+        files_table = import_cached_DB()
+        GetInfoSelected()
+    end
+
     GetInfoSelected()
     oldpad = pad -- Prevents it from launching next game accidentally. Credit BlackSheepBoy69
     showMenu = 0
 
     Render.useTexture(modBackground, imgCustomBack)
+
+    -- Instant cover update - Credit BlackSheepBoy69
+    Threads.addTask(xCatLookup(showCat)[p], {
+    Type = "ImageLoad",
+    Path = xCatLookup(showCat)[p].icon_path,
+    Table = xCatLookup(showCat)[p],
+    Index = "ricon"
+    })
+
 end
 
 function check_for_out_of_bounds()
