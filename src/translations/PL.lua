@@ -246,7 +246,7 @@ return {
 ["Categories"] = "Kategorie",
 ["Sounds"] = "Dźwięki",
 ["Artwork"] = "Grafika",
-["Scan_Settings"] = "Ustawienia skanowania",
+["Scan_Settings"] = "Skanowanie",
 ["Adrenaline_roms"] = "Gry Adrenaline: ",
 ["All_Category"] = "Kategoria Wszystko: ",
 ["Back_Chevron"] = "<  Wstecz",
@@ -290,12 +290,12 @@ return {
 ["guide_6_content"] = "RetroFlow od jimbob4000 to zmodyfikowana wersja aplikacji HexFlow. \n\nOryginalna aplikacja HexFlow jest autorstwa VitaHex. Wesprzyj projekty VitaHex na: patreon.com/vitahex \n\nWięcej informacji:\nAby uzyskać więcej informacji na temat samego projektu oraz ludzi, którzy się do niego przyczynili, odwiedź: https://github.com/jimbob4000/RetroFlow-Launcher",
 
 -- Other Settings
-["Other_Settings"] = "Pozostałe ustawienia",
+["Other_Settings"] = "Pozostałe",
 ["Swap_X_and_O_buttons_colon"] = "Zamień przyciski X i O: ",
 ["Adrenaline_PS_button_colon"] = "Przycisk PS w Adrenaline: ",
 ["Menu"] = "Menu",
 ["LiveArea"] = "LiveArea",
-["Standard"] = "Standard",
+["Standard"] = "Standardowo",
 
 -- Game options
 ["Options"] = "Opcje",
