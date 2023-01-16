@@ -6,7 +6,7 @@ local oneLoopTimer = Timer.new()
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "5.1.1"
+local appversion = "5.1.2"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -10953,8 +10953,6 @@ while true do
             tmpcatText = "PS1"
         elseif tmpappcat==4 then
             tmpcatText = lang_lines.Homebrew -- "Homebrew"
-        elseif setLanguage == 11 then
-            tmpcatText = lang_lines.Default_1 -- Default
         else
             tmpcatText = lang_lines.Default -- Default
         end
@@ -14186,15 +14184,14 @@ while true do
         elseif game_adr_bin_driver == 3 then
             Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. "NP9660" .."  >", white)
         elseif setLanguage == 11 then
-            Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. lang_lines.Default_2 .. "  >", white)
+            -- Use alternate translation for Polish
+            Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. lang_lines.Default_alt_translation_1 .. "  >", white)
         else
             Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
         end
 
         -- MENU 21 / #2 Execute bin
         Font.print(fnt22, setting_x, setting_y2 + y_centre_text_offset, lang_lines.Execute_colon, white)--Execute
-
-        -- local game_adr_exec_bin = 0 -- !!! GET VALUE FROM CORE OVERRIDE TABLE
 
         if game_adr_exec_bin == 1 then
             Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. "EBOOT.BIN" .. "  >", white)
@@ -14203,7 +14200,8 @@ while true do
         elseif game_adr_exec_bin == 3 then
             Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. "BOOT.BIN" .."  >", white)
         elseif setLanguage == 11 then
-            Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.Default_3 .. "  >", white)
+            -- Use alternate translation for Polish
+            Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.Default_alt_translation_2 .. "  >", white)
         else
             Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
         end
