@@ -812,7 +812,6 @@ PS1 = "app0:/pcsx_rearmed_libretro.self",
 }
 
 -- Launcher App Directory
-local launch_dir = "ux0:/rePatch/" .. tostring(System.getTitleID()) .. "/"
 local launch_dir_adr = "ux0:/app/RETROLNCR/"
 local launch_app_adr = "RETROLNCR"
 
@@ -2387,96 +2386,16 @@ function launch_Adrenaline(def_rom_location, def_rom_title_id, def_rom_filename)
 end
 
 
-function clean_launch_dir()
-    
-    -- Load repatch    
-    plug_repatch_ex = System.loadKernelPlugin("ux0:/app/RETROFLOW/modules/repatch_ex.skprx")
-
-    -- Create rePatch directory if doesn't exist
-    if not System.doesDirExist("ux0:/rePatch") then
-        System.createDirectory("ux0:/rePatch")
-    end
-
-    -- Create launch directory if doesn't exist
-    if not System.doesDirExist(launch_dir) then
-        System.createDirectory(launch_dir)
-    end
-
-    -- Delete the old rom file
-    if  System.doesFileExist(launch_dir .. "rom.txt") then
-        System.deleteFile(launch_dir .. "rom.txt")
-    end
-
-    -- Delete the old core file
-    if  System.doesFileExist(launch_dir .. "core.txt") then
-        System.deleteFile(launch_dir .. "core.txt")
-    end
-
-    -- Delete the old N64 & Dreamcast args file
-    if  System.doesFileExist(launch_dir .. "args.txt") then
-        System.deleteFile(launch_dir .. "args.txt")
-    end
-
-    -- Delete the old N64 & Dreamcast args file
-    if  System.doesFileExist(launch_dir .. "boot.inf") then
-        System.deleteFile(launch_dir .. "boot.inf")
-    end
-end
-
-
-
 function launch_retroarch(def_core_name)
-
-    clean_launch_dir()
-
-    -- Create rom.txt
-    local file_over = System.openFile(launch_dir .. "rom.txt", FCREATE)
-    System.closeFile(file_over)
-
-    rom_txt_file = io.open(launch_dir .. "rom.txt", "w")
-    rom_txt_file:write(rom_location)
-    rom_txt_file:close()
-
-    -- Create core.txt
-    local file_over = System.openFile(launch_dir .. "core.txt", FCREATE)
-    System.closeFile(file_over)
-
-    core_txt_file = io.open(launch_dir .. "core.txt", "w")
-    core_txt_file:write((def_core_name))
-    core_txt_file:close()
-
-    System.launchEboot("app0:/launch_retroarch.bin")
+    System.executeUri("psgm:play?titleid=RETROVITA" .. "&param=" .. (def_core_name) .. "&param2=" .. rom_location)
 end
-
 
 function launch_DaedalusX64()
-
-    clean_launch_dir()
-
-    -- Create args.txt
-    local file_over = System.openFile(launch_dir .. "args.txt", FCREATE)
-    System.closeFile(file_over)
-
-    args_txt_file = io.open(launch_dir .. "args.txt", "w")
-    args_txt_file:write(rom_location)
-    args_txt_file:close()
-
-    System.launchEboot("app0:/launch_n64.bin")
+    System.executeUri("psgm:play?titleid=DEDALOX64" .. "&param=" .. rom_location)
 end
 
 function launch_Flycast()
-
-    clean_launch_dir()
-
-    -- Create args.txt
-    local file_over = System.openFile(launch_dir .. "args.txt", FCREATE)
-    System.closeFile(file_over)
-
-    args_txt_file = io.open(launch_dir .. "args.txt", "w")
-    args_txt_file:write(rom_location)
-    args_txt_file:close()
-
-    System.launchEboot("app0:/launch_flycast.bin")
+    System.executeUri("psgm:play?titleid=FLYCASTDC" .. "&param=" .. rom_location)
 end
 
 
