@@ -2388,14 +2388,17 @@ end
 
 function launch_retroarch(def_core_name)
     System.executeUri("psgm:play?titleid=RETROVITA" .. "&param=" .. (def_core_name) .. "&param2=" .. rom_location)
+    System.exit()
 end
 
 function launch_DaedalusX64()
     System.executeUri("psgm:play?titleid=DEDALOX64" .. "&param=" .. rom_location)
+    System.exit()
 end
 
 function launch_Flycast()
     System.executeUri("psgm:play?titleid=FLYCASTDC" .. "&param=" .. rom_location)
+    System.exit()
 end
 
 
