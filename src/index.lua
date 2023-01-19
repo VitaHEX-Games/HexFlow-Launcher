@@ -2750,7 +2750,18 @@ function import_hidden_games()
         db_hidden_games = dofile(db_Cache_hidden_games)
 
         for k, v in ipairs(db_hidden_games) do
-            table.insert(hidden_games_table, v)
+            if v.directory == false then
+                if System.doesFileExist(v.game_path) then
+                    table.insert(hidden_games_table, v)
+                else
+                end
+            else
+                if System.doesDirExist(v.game_path) then
+                    table.insert(hidden_games_table, v)
+                else
+                end
+            end
+
         end
     end
 end
@@ -3036,6 +3047,7 @@ function listDirectory(dir)
             and not string.match(file.name, "PSPEMU" .. "%d") -- Don't index PSPEMU001 games, but include PSPEMUCFW (Adrenaline)
             and not System.doesFileExist(working_dir .. "/" .. file.name .. "/data/config.bin") -- Don't scan PSP and PSX Bubbles
             and not bubble == true -- Don't scan PSP and PSX Bubbles
+            and string.len(file.name) == 9 -- Only use folders with 9 characters
             then
 
             -- get app name to match with custom cover file name
