@@ -42,6 +42,7 @@ local db_Cached_File_mame_2003_plus = (db_Cache_Folder .. "db_mame_2003_plus.lua
 local db_Cached_File_mame_2000 = (db_Cache_Folder .. "db_mame_2000.lua")
 local db_Cached_File_neogeo = (db_Cache_Folder .. "db_neogeo.lua")
 local db_Cached_File_ngpc = (db_Cache_Folder .. "db_ngpc.lua")
+local db_Cached_File_psm = (db_Cache_Folder .. "db_psm.lua")
 -- local db_Cached_File_favorites = (db_Cache_Folder .. "db_favorites.lua")
 
 
@@ -229,6 +230,10 @@ function print_tables()
     local db_ngpc = assert(io.open(db_Cached_File_ngpc, "w"))
     printTable(ngpc_table, db_ngpc)
     db_ngpc:close()
+
+    local db_psm = assert(io.open(db_Cached_File_psm, "w"))
+    printTable(psm_table, db_psm)
+    db_psm:close()
 
     -- local db_favorites = assert(io.open(db_Cached_File_favorites, "w"))
     -- printTable(favorites_table, db_favorites)

@@ -577,18 +577,20 @@ SystemsToScan =
     },
     [39] = 
     {
-        -- ["apptype"] = 39,
-        ["table"] = "fav_count",
-        -- ["user_db_file"] = "",
+        ["apptype"] = 39,
+        ["table"] = "psm_table",
+        ["user_db_file"] = "db_psm.lua",
         -- ["romFolder"] = "",
-        -- ["localCoverPath"] = "",
-        -- ["onlineCoverPathSystem"] = "",
-        -- ["Missing_Cover"] = "",
+        ["localCoverPath"] = covDir .. "Sony - PlayStation Mobile" .. "/",
+        ["localSnapPath"] = snapDir .. "Sony - PlayStation Mobile" .. "/",
+        ["onlineCoverPathSystem"] = "https://raw.githubusercontent.com/jimbob4000/hexflow-covers/main/Covers/HOMEBREW/",
+        ["onlineSnapPathSystem"] = "",
+        ["Missing_Cover"] = "missing_cover_psm.png",
     },
     [40] = 
     {
         -- ["apptype"] = 40,
-        ["table"] = "recently_played_table",
+        ["table"] = "fav_count",
         -- ["user_db_file"] = "",
         -- ["romFolder"] = "",
         -- ["localCoverPath"] = "",
@@ -598,6 +600,16 @@ SystemsToScan =
     [41] = 
     {
         -- ["apptype"] = 41,
+        ["table"] = "recently_played_table",
+        -- ["user_db_file"] = "",
+        -- ["romFolder"] = "",
+        -- ["localCoverPath"] = "",
+        -- ["onlineCoverPathSystem"] = "",
+        -- ["Missing_Cover"] = "",
+    },
+    [42] = 
+    {
+        -- ["apptype"] = 42,
         ["table"] = "search_results_table",
         -- ["user_db_file"] = "",
         -- ["romFolder"] = "",
@@ -613,8 +625,8 @@ count_of_systems = syscount - 1 -- Minus: Favorites, Recently played
 count_of_categories = syscount
 count_of_start_categories = syscount - 1  -- Minus: Search
 count_of_cache_files = syscount - 3 -- -- Minus: Search, Fav, Recent
-count_of_get_covers = syscount - 4
-count_of_get_snaps = syscount - 5 -- Minus vita too
+count_of_get_covers = syscount - 5 -- Minus psm
+count_of_get_snaps = syscount - 6 -- Minus psm and vita too
 
 
 Network.init()
@@ -1408,6 +1420,7 @@ local lang_default =
 ["PC_Engine"] = "PC Engine",
 ["PC_Engine_CD"] = "PC Engine CD",
 ["Neo_Geo_Pocket_Color"] = "Neo Geo Pocket Color",
+["Playstation_Mobile"] = "Playstation Mobile",
 ["Sega_CD"] = "Sega CD",
 ["Sega_32X"] = "Sega 32X",
 ["Commodore_64"] = "Commodore 64",
@@ -1557,6 +1570,7 @@ local lang_default =
 ["PC_Engine_Game"] = "PC Engine Game",
 ["PC_Engine_CD_Game"] = "PC Engine CD Game",
 ["Neo_Geo_Pocket_Color_Game"] = "Neo Geo Pocket Color Game",
+["Playstation_Mobile_Game"] = "Playstation Mobile Game",
 ["SCD_Game"] = "Sega CD Game",
 ["S32X_Game"] = "Sega 32X Game",
 ["C64_Game"] = "Commodore 64 Game",
@@ -2032,9 +2046,10 @@ function xCatLookup(CatNum)  -- Credit to BlackSheepBoy69 - CatNum = Showcat
     elseif CatNum == 36 then     return mame_2000_table
     elseif CatNum == 37 then     return neogeo_table
     elseif CatNum == 38 then     return ngpc_table
-    elseif CatNum == 39 then     return fav_count
-    elseif CatNum == 40 then     return recently_played_table
-    elseif CatNum == 41 then     return search_results_table
+    elseif CatNum == 39 then     return psm_table
+    elseif CatNum == 40 then     return fav_count
+    elseif CatNum == 41 then     return recently_played_table
+    elseif CatNum == 42 then     return search_results_table
     else             return files_table
     end
 end
@@ -2078,9 +2093,10 @@ function xAppNumTableLookup(AppTypeNum)
     elseif AppTypeNum == 36 then return mame_2000_table
     elseif AppTypeNum == 37 then return neogeo_table
     elseif AppTypeNum == 38 then return ngpc_table
-    elseif AppTypeNum == 39 then return fav_count
-    elseif AppTypeNum == 40 then return recently_played_table
-    elseif AppTypeNum == 41 then return search_results_table
+    elseif AppTypeNum == 39 then return psm_table
+    elseif AppTypeNum == 40 then return fav_count
+    elseif AppTypeNum == 41 then return recently_played_table
+    elseif AppTypeNum == 42 then return search_results_table
     else return homebrews_table
     end
 end
@@ -2123,6 +2139,7 @@ function xAppDbFileLookup(AppTypeNum)
     elseif AppTypeNum == 36 then return "db_mame_2000.lua"
     elseif AppTypeNum == 37 then return "db_neogeo.lua"
     elseif AppTypeNum == 38 then return "db_ngpc.lua"
+    elseif AppTypeNum == 39 then return "db_psm.lua"
     else return "db_homebrews.lua"
     end
 end
@@ -2183,6 +2200,7 @@ function xAppNumTableLookup_Missing_Cover(AppTypeNum)
     elseif AppTypeNum == 36 then return "missing_cover_mame"
     elseif AppTypeNum == 37 then return "missing_cover_neogeo"
     elseif AppTypeNum == 38 then return "missing_cover_ngpc"
+    elseif AppTypeNum == 39 then return "missing_cover_psm"
     else return "missing_cover_homebrew"
     end
 end
@@ -2401,6 +2419,11 @@ function launch_Flycast()
     System.exit()
 end
 
+function launch_psmobile(def_rom_title_id)
+    System.executeUri("psgm:play?titleid=" .. (def_rom_title_id))
+    System.exit()
+end
+
 
 function CreateUserTitleTable_for_File(def_user_db_file, def_table_name)
 
@@ -2422,20 +2445,40 @@ function CreateUserTitleTable_for_File(def_user_db_file, def_table_name)
 
 end
 
+function CreateUserTitleTable_for_PSM(def_user_db_file, def_table_name)
+
+    table.sort((def_table_name), function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+
+    local file_over = System.openFile(user_DB_Folder .. (def_user_db_file), FCREATE)
+    System.closeFile(file_over)
+
+    file = io.open(user_DB_Folder .. (def_user_db_file), "w")
+    file:write('return {' .. "\n")
+    for k, v in pairs((def_table_name)) do
+
+        file:write('["' .. v.name .. '"] = {title = "' .. v.title .. '", version = "' .. v.version .. '"},' .. "\n")
+    end
+    file:write('}')
+    file:close()
+
+end
+
+
+
 
 function update_md_regional_cover()
     -- Megadrive, update regional missing cover
 
     if setLanguage == 1 then -- USA - Genesis
         for k, v in pairs(md_table) do
-              if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_md.png" then
-                  v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_md_usa.png"
+              if v.icon_path=="app0:/DATA/missing_cover_md.png" then
+                  v.icon_path="app0:/DATA/missing_cover_md_usa.png"
               end
         end
     else -- Megadrive
         for k, v in pairs(md_table) do
-              if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_md_usa.png" then
-                  v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_md.png"
+              if v.icon_path=="app0:/DATA/missing_cover_md_usa.png" then
+                  v.icon_path="app0:/DATA/missing_cover_md.png"
               end
         end
     end
@@ -2446,26 +2489,26 @@ function update_dc_regional_cover()
 
     if setLanguage == 0 then -- EN - Blue logo
         for k, v in pairs(dreamcast_table) do
-              if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png" then
-                  v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png"
+              if v.icon_path=="app0:/DATA/missing_cover_dreamcast_usa.png" or v.icon_path=="app0:/DATA/missing_cover_dreamcast_j.png" then
+                  v.icon_path="app0:/DATA/missing_cover_dreamcast_eur.png"
               end
         end
     elseif setLanguage == 1 then -- USA - Red logo
         for k, v in pairs(dreamcast_table) do
-              if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png" then
-                  v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png"
+              if v.icon_path=="app0:/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="app0:/DATA/missing_cover_dreamcast_j.png" then
+                  v.icon_path="app0:/DATA/missing_cover_dreamcast_usa.png"
               end
         end
     elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
         for k, v in pairs(dreamcast_table) do
-              if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" then
-                  v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png"
+              if v.icon_path=="app0:/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="app0:/DATA/missing_cover_dreamcast_usa.png" then
+                  v.icon_path="app0:/DATA/missing_cover_dreamcast_j.png"
               end
         end
     else -- Blue logo
         for k, v in pairs(dreamcast_table) do
-              if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png" then
-                  v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png"
+              if v.icon_path=="app0:/DATA/missing_cover_dreamcast_usa.png" or v.icon_path=="app0:/DATA/missing_cover_dreamcast_j.png" then
+                  v.icon_path="app0:/DATA/missing_cover_dreamcast_eur.png"
               end
         end
     end
@@ -2656,8 +2699,8 @@ function import_recently_played()
                         elseif "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/" .. v.name .. ".png" and System.doesFileExist("ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/" .. v.name .. ".png") then
                             v.icon_path = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/" .. v.name .. ".png" --custom cover by app id
                         else
-                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                v.icon_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                            if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                v.icon_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                             else
                                 v.icon_path = "app0:/DATA/noimg.png" --blank grey
                             end
@@ -2673,8 +2716,8 @@ function import_recently_played()
                         elseif "ux0:/data/RetroFlow/COVERS/Sony - PlayStation/" .. v.name .. ".png" and System.doesFileExist("ux0:/data/RetroFlow/COVERS/Sony - PlayStation/" .. v.name .. ".png") then
                             v.icon_path = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation/" .. v.name .. ".png" --custom cover by app id
                         else
-                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                v.icon_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                            if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                v.icon_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                             else
                                 v.icon_path = "app0:/DATA/noimg.png" --blank grey
                             end
@@ -2801,21 +2844,12 @@ function count_loading_tasks()
 
     -- Count functions   
 
-        function count_loading_tasks_Vita()
-            local files = System.listDirectory("ux0:/app")
+        function count_loading_tasks_dir(def_adrenaline_rom_location)
+            local files = System.listDirectory((def_adrenaline_rom_location))
             for i, file in pairs(files) do
                 loading_tasks = loading_tasks + 1
             end
         end
-
-        -- function count_loading_tasks_adrenaline (def_adrenaline_rom_location)
-        --     if System.doesDirExist(def_adrenaline_rom_location) then
-        --         local files = System.listDirectory(def_adrenaline_rom_location)
-        --         for i, file in pairs(files) do
-        --             loading_tasks = loading_tasks + 1
-        --         end
-        --     end
-        -- end
 
         function count_loading_tasks_adrenaline (def_adrenaline_rom_location)
             if System.doesDirExist(def_adrenaline_rom_location) then
@@ -2851,8 +2885,6 @@ function count_loading_tasks()
             end
         end
 
-
-
         function count_loading_tasks_Rom_Simple(def, def_table_name)
             if System.doesDirExist(SystemsToScan[(def)].romFolder) then
                 local files = System.listDirectory((SystemsToScan[(def)].romFolder))
@@ -2864,8 +2896,9 @@ function count_loading_tasks()
 
     -- Count commands
 
-        -- Count Vita
-        count_loading_tasks_Vita()
+        -- Count Vita and Playstatio Mobile
+        count_loading_tasks_dir("ux0:/app")
+        count_loading_tasks_dir("ux0:/psm")
 
         -- Count Adrenaline
         count_loading_tasks_adrenaline (adr_partition  .. ":/pspemu/ISO")
@@ -2978,6 +3011,7 @@ function listDirectory(dir)
     mame_2000_table = {}
     neogeo_table = {} 
     ngpc_table = {}
+    psm_table = {}
     recently_played_table = {}
     search_results_table = {}
     fav_count = {}
@@ -3153,8 +3187,8 @@ function listDirectory(dir)
                         elseif SystemsToScan[3].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[3].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[3].localCoverPath .. file.name .. ".png" --custom cover by app id
                         else
-                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                            if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
                             end
@@ -3180,8 +3214,8 @@ function listDirectory(dir)
                         elseif SystemsToScan[4].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[4].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
                         else
-                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                            if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
                             end
@@ -3304,7 +3338,7 @@ function listDirectory(dir)
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
                             else
-                                img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png" --blank grey
+                                img_path = "app0:/DATA/missing_cover_psv.png" --blank grey
                             end
                         end
 
@@ -3328,8 +3362,8 @@ function listDirectory(dir)
                         elseif SystemsToScan[3].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[3].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[3].localCoverPath .. file.name .. ".png" --custom cover by app id
                         else
-                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                            if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
                             end
@@ -3355,8 +3389,8 @@ function listDirectory(dir)
                         elseif SystemsToScan[4].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[4].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
                         else
-                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                            if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
                             end
@@ -3562,8 +3596,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
+                                            img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -3592,8 +3626,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -3622,8 +3656,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -3652,8 +3686,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_homebrew.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
+                                            img_path = "app0:/DATA/icon_homebrew.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -3682,8 +3716,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -3714,8 +3748,8 @@ function listDirectory(dir)
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
                                 else
-                                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                    if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                        img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
                                     end
@@ -3850,8 +3884,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
+                                            img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -3880,8 +3914,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -3910,8 +3944,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -3940,8 +3974,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_homebrew.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
+                                            img_path = "app0:/DATA/icon_homebrew.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -3970,8 +4004,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4002,8 +4036,8 @@ function listDirectory(dir)
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
                                 else
-                                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                    if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                        img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
                                     end
@@ -4132,8 +4166,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
+                                            img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4162,8 +4196,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4192,8 +4226,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4222,8 +4256,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_homebrew.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
+                                            img_path = "app0:/DATA/icon_homebrew.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4252,8 +4286,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4284,8 +4318,8 @@ function listDirectory(dir)
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
                                 else
-                                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                    if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                        img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
                                     end
@@ -4420,8 +4454,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
+                                            img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4450,8 +4484,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4480,8 +4514,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4510,8 +4544,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_homebrew.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
+                                            img_path = "app0:/DATA/icon_homebrew.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4540,8 +4574,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4572,8 +4606,8 @@ function listDirectory(dir)
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
                                 else
-                                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                    if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                        img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
                                     end
@@ -4701,8 +4735,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
+                                            img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4731,8 +4765,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4761,8 +4795,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4791,8 +4825,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_homebrew.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
+                                            img_path = "app0:/DATA/icon_homebrew.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4821,8 +4855,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -4853,8 +4887,8 @@ function listDirectory(dir)
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
                                 else
-                                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                    if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                        img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
                                     end
@@ -4989,8 +5023,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
+                                            img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -5019,8 +5053,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -5049,8 +5083,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -5079,8 +5113,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_homebrew.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
+                                            img_path = "app0:/DATA/icon_homebrew.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -5109,8 +5143,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -5141,8 +5175,8 @@ function listDirectory(dir)
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
                                 else
-                                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                        img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                    if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                        img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
                                     end
@@ -5284,8 +5318,8 @@ function listDirectory(dir)
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                 img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
                             else
-                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-                                    img_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+                                if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                    img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                 else
                                     img_path = "app0:/DATA/noimg.png" --blank grey
                                 end
@@ -5418,8 +5452,8 @@ function listDirectory(dir)
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
                                 else
-                                    if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                                        img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                    if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                                        img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
                                     end
@@ -5500,8 +5534,8 @@ function listDirectory(dir)
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                 img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
                             else
-                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                                    img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                                    img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
                                 else
                                     img_path = "app0:/DATA/noimg.png" --blank grey
                                 end
@@ -5626,8 +5660,8 @@ function listDirectory(dir)
                                         elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                             img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
                                         else
-                                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                                                img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                            if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                                                img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
                                             else
                                                 img_path = "app0:/DATA/noimg.png" --blank grey
                                             end
@@ -5706,8 +5740,8 @@ function listDirectory(dir)
                                         elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                             img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
                                         else
-                                            if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                                                img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                            if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                                                img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
                                             else
                                                 img_path = "app0:/DATA/noimg.png" --blank grey
                                             end
@@ -5790,8 +5824,8 @@ function listDirectory(dir)
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
                                     else
-                                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                                            img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                        if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                                            img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
                                         end
@@ -5910,8 +5944,8 @@ function listDirectory(dir)
                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                         img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
                     else
-                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                            img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                        if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                            img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
                         else
                             img_path = "app0:/DATA/noimg.png" --blank grey
                         end
@@ -6020,8 +6054,8 @@ function listDirectory(dir)
                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                         img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
                     else
-                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                            img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                        if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                            img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
                         else
                             img_path = "app0:/DATA/noimg.png" --blank grey
                         end
@@ -6123,8 +6157,8 @@ function listDirectory(dir)
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                 img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
                             else
-                                if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                                    img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                                    img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
                                 else
                                     img_path = "app0:/DATA/noimg.png" --blank grey
                                 end
@@ -6317,8 +6351,8 @@ function listDirectory(dir)
                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                         img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
                     else
-                        if System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                            img_path = "ux0:/app/RETROFLOW/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                        if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                            img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
                         else
                             img_path = "app0:/DATA/noimg.png" --blank grey
                         end
@@ -6370,6 +6404,182 @@ function listDirectory(dir)
         end
     end
 
+    function Scan_PSM_DB_Lookup(def, def_table_name, def_user_db_file, def_sql_db_file)
+
+        local psm_directory = "ux0:/psm"
+        if System.doesDirExist(psm_directory) then
+
+            files = System.listDirectory(psm_directory)
+
+            for i, file in pairs(files) do
+            local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
+                -- Scan files only, ignore temporary files, Windows = "Thumbs.db", Mac = "DS_Store", and "._name" 
+            if file.directory 
+                and string.match(file.name, "NPNA") 
+                or string.match(file.name, "NPOA")
+                or string.match(file.name, "NPPA") then
+
+                    local psm_bubble_installed = false
+
+                    -- check if game is in the favorites list
+                    if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                        if string.find(strFav, file.name,1,true) ~= nil then
+                            file.favourite = true
+                        else
+                            file.favourite = false
+                        end
+                    end
+
+                    file.game_path = psm_directory .. "/" .. file.name
+
+                    file.titleid = tostring(file.name)
+
+                    -- LOOKUP TITLE ID: Get game name based on titleID, search saved table of data, or sql table of data if titleID not found
+
+                    -- Load previous matches
+                    if System.doesFileExist(user_DB_Folder .. (def_user_db_file)) then
+                        database_rename_PSM = user_DB_Folder .. (def_user_db_file)
+                        psmdb = dofile(database_rename_PSM)
+                    else
+                        psmdb = {}
+                    end
+
+                    -- Check if scanned titleID is a saved match
+                    psm_search = psmdb[file.name]
+
+                    -- If no
+                    if psm_search == nil then
+
+                        -- Load the full sql database to find the new titleID
+
+                        db = Database.open("ur0:shell/db/app.db")
+
+                        sql_db_search_mame = "\"" .. file.name .. "\""
+                        local query_string = "SELECT title FROM tbl_appinfo_icon where titleid is "  .. sql_db_search_mame
+                        sql_db_search_result = Database.execQuery(db, query_string)
+
+                        if next(sql_db_search_result) == nil then
+                            -- Not found; use the name without adding a game name
+                            title = file.name
+                        else
+                            -- Found; use the game name from the full database
+                            psm_bubble_installed = true
+                            title = sql_db_search_result[1].title
+                        end
+                        Database.close(db)
+
+
+                        db = Database.open("ur0:shell/db/app.db")
+
+                        sql_db_search_mame = "\"" .. file.name .. "\""
+                        local query_string = "SELECT val FROM tbl_appinfo where key=3168212510 and (tbl_appinfo.titleID is  " .. sql_db_search_mame .. ")"
+                        sql_db_search_result = Database.execQuery(db, query_string)
+
+                        if next(sql_db_search_result) == nil then
+                            -- Not found; use the name without adding a game name
+                            version = " "
+                        else
+                            -- Found; use the game name from the full database
+                            version = sql_db_search_result[1].val
+                        end
+                        Database.close(db)
+
+
+                    -- If found; use the game name from the saved match
+                    else
+                        psm_bubble_installed = true
+                        title = psmdb[file.name].title
+                        version = psmdb[file.name].version
+                    end
+                    
+                    if psm_bubble_installed == true then
+                        table.insert(folders_table, file)
+
+                        -- file.filename = file.name
+                        file.filename = file.name
+                        file.name = file.name
+                        file.title = title
+                        file.name_online = file.name
+                        file.version = version
+                        file.name_title_search = file.name
+                        file.apptitle = title
+                        file.date_played = 0
+                        file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
+                        file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+                        file.app_type=((def))
+                        file.app_type_default=((def))
+
+                        custom_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png"
+                        custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png"
+
+                        -- Check for renamed game names
+                        if #renamed_games_table ~= nil then
+                            local key = find_game_table_pos_key(renamed_games_table, file.name)
+                            if key ~= nil then
+                              -- Yes - Found in files table
+                              file.title = renamed_games_table[key].title
+                              file.apptitle = renamed_games_table[key].title
+                            else
+                              -- No
+                            end
+                        else
+                        end
+
+                        -- Check for hidden game names
+                        file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
+                        table.insert((def_table_name), file)
+                        update_loading_screen_progress()
+
+                        if custom_path and System.doesFileExist(custom_path) then
+                            img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
+                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                            img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
+                        else
+                            if System.doesFileExist("ur0:appmeta/" .. file.name .. "/pic0.png") then
+                                img_path = "ur0:appmeta/" .. file.name .. "/pic0.png"  --app icon
+                            elseif System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                                img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                            else
+                                img_path = "app0:/DATA/noimg.png" --blank grey
+                            end
+                        end
+                        
+                        file.app_type=((def))
+                        file.app_type_default=((def))
+
+                        -- file.filename = file.name 
+                        file.filename = file.titleid
+                        file.name = file.titleid
+                        file.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
+                        file.cover_path_local = (SystemsToScan[(def)].localCoverPath)
+                        file.snap_path_local = (SystemsToScan[(def)].localSnapPath)
+                        file.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+
+                        --add blank icon to all
+                        file.icon = imgCoverTmp
+                        file.icon_path = img_path
+                        
+                        table.insert(files_table, count_of_systems, file.icon) 
+                        table.insert(files_table, count_of_systems, file.apptitle)
+
+                    else
+                    end
+
+                end
+            end
+
+            -- LOOKUP TITLE ID: Delete old file and save new list of matches
+            if not System.doesFileExist(user_DB_Folder .. (def_user_db_file)) then
+                CreateUserTitleTable_for_PSM((def_user_db_file), (def_table_name))
+            else
+                System.deleteFile(user_DB_Folder .. (def_user_db_file))
+                CreateUserTitleTable_for_PSM((def_user_db_file), (def_table_name))
+            end
+
+        else
+        end
+    end
     
     -- SCAN ROMS
     -- Scan_Type        (def,  def_table_name)
@@ -6413,6 +6623,7 @@ function listDirectory(dir)
     Scan_Rom_DB_Lookup  (36, mame_2000_table, "mame_2000.lua", "mame_2000.db")
     Scan_Rom_DB_Lookup  (37, neogeo_table, "neogeo.lua", "neogeo.db")
     Scan_Rom_Simple     (38, ngpc_table)
+    Scan_PSM_DB_Lookup  (39, psm_table, "psm.lua")
   
     import_recently_played()
     update_md_regional_cover()
@@ -6459,6 +6670,7 @@ function listDirectory(dir)
     table.sort(mame_2000_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(neogeo_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(ngpc_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(psm_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
 
     table.sort(recently_played_table, function(a, b) return (tonumber(a.date_played) > tonumber(b.date_played)) end)
     
@@ -6545,6 +6757,7 @@ function listDirectory(dir)
     remove_hidden_from_table(mame_2000_table)
     remove_hidden_from_table(neogeo_table)
     remove_hidden_from_table(ngpc_table)
+    remove_hidden_from_table(psm_table)
     remove_hidden_from_table(recently_played_table)
     remove_hidden_from_table(return_table)
 
@@ -6682,6 +6895,7 @@ function import_cached_DB()
     mame_2000_table = {}
     neogeo_table = {} 
     ngpc_table = {}
+    psm_table = {}
     recently_played_table = {}
     search_results_table = {}
     fav_count = {}
@@ -6737,6 +6951,7 @@ function import_cached_DB()
     import_cached_DB_tables("db_mame_2000.lua", mame_2000_table)
     import_cached_DB_tables("db_neogeo.lua", neogeo_table)
     import_cached_DB_tables("db_ngpc.lua", ngpc_table)
+    import_cached_DB_tables("db_psm.lua", psm_table)
     import_recently_played()
     update_md_regional_cover()
     update_dc_regional_cover()
@@ -6783,6 +6998,7 @@ function import_cached_DB()
     table.sort(mame_2000_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(neogeo_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
     table.sort(ngpc_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
+    table.sort(psm_table, function(a, b) return (a.apptitle:lower() < b.apptitle:lower()) end)
 
     table.sort(recently_played_table, function(a, b) return (tonumber(a.date_played) > tonumber(b.date_played)) end)
 
@@ -6933,7 +7149,7 @@ function GetNameAndAppTypeSelected() -- Credit to BlackSheepBoy69 - This gives a
         app_title = "-"
     end
 
-    if showCat == 41 and #search_results_table == 0 then
+    if showCat == 42 and #search_results_table == 0 then
         app_title = lang_lines.Search_No_Results
     end
 
@@ -6945,7 +7161,7 @@ function GetInfoSelected()
             info = games_table[p].name
 
             if string.match (games_table[p].game_path, "pspemu") or games_table[p].app_type_default == 3 then
-                icon_path = "ux0:/app/RETROFLOW/DATA/icon_psv.png"
+                icon_path = "app0:/DATA/icon_psv.png"
             else
                 icon_path = "ur0:/appmeta/" .. games_table[p].name .. "/icon0.png"
             end
@@ -6973,7 +7189,7 @@ function GetInfoSelected()
             icon_path = homebrews_table[p].icon_path
 
             -- if string.match (homebrews_table[p].icon_path, "pspemu") then
-            --     icon_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"
+            --     icon_path = "app0:/DATA/icon_homebrew.png"
             -- else
             --     icon_path = homebrews_table[p].icon_path
             -- end
@@ -6999,7 +7215,7 @@ function GetInfoSelected()
     elseif showCat == 3 then
         if #psp_table > 0 then
             info = psp_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_psp.png"
+            icon_path = "app0:/DATA/icon_psp.png"
             pic_path = psp_table[p].snap_path_local .. psp_table[p].name .. ".png"
             app_title = psp_table[p].title
             apptype = psp_table[p].app_type
@@ -7018,7 +7234,7 @@ function GetInfoSelected()
     elseif showCat == 4 then
         if #psx_table > 0 then
             info = psx_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_psx.png"
+            icon_path = "app0:/DATA/icon_psx.png"
             pic_path = psx_table[p].snap_path_local .. psx_table[p].name .. ".png"
             app_title = psx_table[p].title
             apptype = psx_table[p].app_type
@@ -7037,7 +7253,7 @@ function GetInfoSelected()
     elseif showCat == 5 then
         if #n64_table > 0 then
             info = n64_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_n64.png"
+            icon_path = "app0:/DATA/icon_n64.png"
             pic_path = n64_table[p].snap_path_local .. n64_table[p].name .. ".png"
             app_title = n64_table[p].title
             apptype = n64_table[p].app_type
@@ -7056,7 +7272,7 @@ function GetInfoSelected()
     elseif showCat == 6 then
         if #snes_table > 0 then
             info = snes_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_snes.png"
+            icon_path = "app0:/DATA/icon_snes.png"
             pic_path = snes_table[p].snap_path_local .. snes_table[p].name .. ".png"
             app_title = snes_table[p].title
             apptype = snes_table[p].app_type
@@ -7075,7 +7291,7 @@ function GetInfoSelected()
     elseif showCat == 7 then
         if #nes_table > 0 then
             info = nes_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_nes.png"
+            icon_path = "app0:/DATA/icon_nes.png"
             pic_path = nes_table[p].snap_path_local .. nes_table[p].name .. ".png"
             app_title = nes_table[p].title
             apptype = nes_table[p].app_type
@@ -7094,7 +7310,7 @@ function GetInfoSelected()
     elseif showCat == 8 then
         if #gba_table > 0 then
             info = gba_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_gba.png"
+            icon_path = "app0:/DATA/icon_gba.png"
             pic_path = gba_table[p].snap_path_local .. gba_table[p].name .. ".png"
             app_title = gba_table[p].title
             apptype = gba_table[p].app_type
@@ -7113,7 +7329,7 @@ function GetInfoSelected()
     elseif showCat == 9 then
         if #gbc_table > 0 then
             info = gbc_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"
+            icon_path = "app0:/DATA/icon_gbc.png"
             pic_path = gbc_table[p].snap_path_local .. gbc_table[p].name .. ".png"
             app_title = gbc_table[p].title
             apptype = gbc_table[p].app_type
@@ -7132,7 +7348,7 @@ function GetInfoSelected()
     elseif showCat == 10 then
         if #gb_table > 0 then
             info = gb_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"
+            icon_path = "app0:/DATA/icon_gb.png"
             pic_path = gb_table[p].snap_path_local .. gb_table[p].name .. ".png"
             app_title = gb_table[p].title
             apptype = gb_table[p].app_type
@@ -7152,13 +7368,13 @@ function GetInfoSelected()
         if #dreamcast_table > 0 then
             info = dreamcast_table[p].name
             if setLanguage == 0 then -- EN - Blue logo
-                icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                icon_path = "app0:/DATA/icon_dreamcast_eur.png"
             elseif setLanguage == 1 then -- USA - Red logo
-                icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
+                icon_path = "app0:/DATA/icon_dreamcast_usa.png"
             elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
-                icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
+                icon_path = "app0:/DATA/icon_dreamcast_j.png"
             else -- Blue logo
-                icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                icon_path = "app0:/DATA/icon_dreamcast_eur.png"
             end
             pic_path = dreamcast_table[p].snap_path_local .. dreamcast_table[p].name .. ".png"
             app_title = dreamcast_table[p].title
@@ -7178,7 +7394,7 @@ function GetInfoSelected()
     elseif showCat == 12 then
         if #sega_cd_table > 0 then
             info = sega_cd_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_sega_cd.png"
+            icon_path = "app0:/DATA/icon_sega_cd.png"
             pic_path = sega_cd_table[p].snap_path_local .. sega_cd_table[p].name .. ".png"
             app_title = sega_cd_table[p].title
             apptype = sega_cd_table[p].app_type
@@ -7197,7 +7413,7 @@ function GetInfoSelected()
     elseif showCat == 13 then
         if #s32x_table > 0 then
             info = s32x_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_32x.png"
+            icon_path = "app0:/DATA/icon_32x.png"
             pic_path = s32x_table[p].snap_path_local .. s32x_table[p].name .. ".png"
             app_title = s32x_table[p].title
             apptype = s32x_table[p].app_type
@@ -7217,9 +7433,9 @@ function GetInfoSelected()
         if #md_table > 0 then
             info = md_table[p].name
             if setLanguage == 1 then
-                icon_path = "ux0:/app/RETROFLOW/DATA/icon_md_usa.png"
+                icon_path = "app0:/DATA/icon_md_usa.png"
             else
-                icon_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"
+                icon_path = "app0:/DATA/icon_md.png"
             end
             pic_path = md_table[p].snap_path_local .. md_table[p].name .. ".png"
             app_title = md_table[p].title
@@ -7239,7 +7455,7 @@ function GetInfoSelected()
     elseif showCat == 15 then
         if #sms_table > 0 then
             info = sms_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
+            icon_path = "app0:/DATA/icon_sms.png"
             pic_path = sms_table[p].snap_path_local .. sms_table[p].name .. ".png"
             app_title = sms_table[p].title
             apptype = sms_table[p].app_type
@@ -7258,7 +7474,7 @@ function GetInfoSelected()
     elseif showCat == 16 then
         if #gg_table > 0 then
             info = gg_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
+            icon_path = "app0:/DATA/icon_gg.png"
             pic_path = gg_table[p].snap_path_local .. gg_table[p].name .. ".png"
             app_title = gg_table[p].title
             apptype = gg_table[p].app_type
@@ -7277,7 +7493,7 @@ function GetInfoSelected()
     elseif showCat == 17 then
         if #tg16_table > 0 then
             info = tg16_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
+            icon_path = "app0:/DATA/icon_tg16.png"
             pic_path = tg16_table[p].snap_path_local .. tg16_table[p].name .. ".png"
             app_title = tg16_table[p].title
             apptype = tg16_table[p].app_type
@@ -7296,7 +7512,7 @@ function GetInfoSelected()
     elseif showCat == 18 then
         if #tgcd_table > 0 then
             info = tgcd_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_tgcd.png"
+            icon_path = "app0:/DATA/icon_tgcd.png"
             pic_path = tgcd_table[p].snap_path_local .. tgcd_table[p].name .. ".png"
             app_title = tgcd_table[p].title
             apptype = tgcd_table[p].app_type
@@ -7315,7 +7531,7 @@ function GetInfoSelected()
     elseif showCat == 19 then
         if #pce_table > 0 then
             info = pce_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
+            icon_path = "app0:/DATA/icon_pce.png"
             pic_path = pce_table[p].snap_path_local .. pce_table[p].name .. ".png"
             app_title = pce_table[p].title
             apptype = pce_table[p].app_type
@@ -7334,7 +7550,7 @@ function GetInfoSelected()
     elseif showCat == 20 then
         if #pcecd_table > 0 then
             info = pcecd_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_pcecd.png"
+            icon_path = "app0:/DATA/icon_pcecd.png"
             pic_path = pcecd_table[p].snap_path_local .. pcecd_table[p].name .. ".png"
             app_title = pcecd_table[p].title
             apptype = pcecd_table[p].app_type
@@ -7353,7 +7569,7 @@ function GetInfoSelected()
     elseif showCat == 21 then
         if #amiga_table > 0 then
             info = amiga_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
+            icon_path = "app0:/DATA/icon_amiga.png"
             pic_path = amiga_table[p].snap_path_local .. amiga_table[p].name .. ".png"
             app_title = amiga_table[p].title
             apptype = amiga_table[p].app_type
@@ -7372,7 +7588,7 @@ function GetInfoSelected()
     elseif showCat == 22 then
         if #c64_table > 0 then
             info = c64_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_c64.png"
+            icon_path = "app0:/DATA/icon_c64.png"
             pic_path = c64_table[p].snap_path_local .. c64_table[p].name .. ".png"
             app_title = c64_table[p].title
             apptype = c64_table[p].app_type
@@ -7391,7 +7607,7 @@ function GetInfoSelected()
     elseif showCat == 23 then
         if #wswan_col_table > 0 then
             info = wswan_col_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan_col.png"
+            icon_path = "app0:/DATA/icon_wswan_col.png"
             pic_path = wswan_col_table[p].snap_path_local .. wswan_col_table[p].name .. ".png"
             app_title = wswan_col_table[p].title
             apptype = wswan_col_table[p].app_type
@@ -7410,7 +7626,7 @@ function GetInfoSelected()
     elseif showCat == 24 then
         if #wswan_table > 0 then
             info = wswan_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan.png"
+            icon_path = "app0:/DATA/icon_wswan.png"
             pic_path = wswan_table[p].snap_path_local .. wswan_table[p].name .. ".png"
             app_title = wswan_table[p].title
             apptype = wswan_table[p].app_type
@@ -7429,7 +7645,7 @@ function GetInfoSelected()
     elseif showCat == 25 then
         if #msx2_table > 0 then
             info = msx2_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx2.png"
+            icon_path = "app0:/DATA/icon_msx2.png"
             pic_path = msx2_table[p].snap_path_local .. msx2_table[p].name .. ".png"
             app_title = msx2_table[p].title
             apptype = msx2_table[p].app_type
@@ -7448,7 +7664,7 @@ function GetInfoSelected()
     elseif showCat == 26 then
         if #msx1_table > 0 then
             info = msx1_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx1.png"
+            icon_path = "app0:/DATA/icon_msx1.png"
             pic_path = msx1_table[p].snap_path_local .. msx1_table[p].name .. ".png"
             app_title = msx1_table[p].title
             apptype = msx1_table[p].app_type
@@ -7467,7 +7683,7 @@ function GetInfoSelected()
     elseif showCat == 27 then
         if #zxs_table > 0 then
             info = zxs_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_zxs.png"
+            icon_path = "app0:/DATA/icon_zxs.png"
             pic_path = zxs_table[p].snap_path_local .. zxs_table[p].name .. ".png"
             app_title = zxs_table[p].title
             apptype = zxs_table[p].app_type
@@ -7486,7 +7702,7 @@ function GetInfoSelected()
     elseif showCat == 28 then
         if #atari_7800_table > 0 then
             info = atari_7800_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_7800.png"
+            icon_path = "app0:/DATA/icon_atari_7800.png"
             pic_path = atari_7800_table[p].snap_path_local .. atari_7800_table[p].name .. ".png"
             app_title = atari_7800_table[p].title
             apptype = atari_7800_table[p].app_type
@@ -7505,7 +7721,7 @@ function GetInfoSelected()
     elseif showCat == 29 then
         if #atari_5200_table > 0 then
             info = atari_5200_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_5200.png"
+            icon_path = "app0:/DATA/icon_atari_5200.png"
             pic_path = atari_5200_table[p].snap_path_local .. atari_5200_table[p].name .. ".png"
             app_title = atari_5200_table[p].title
             apptype = atari_5200_table[p].app_type
@@ -7524,7 +7740,7 @@ function GetInfoSelected()
     elseif showCat == 30 then
         if #atari_2600_table > 0 then
             info = atari_2600_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_2600.png"
+            icon_path = "app0:/DATA/icon_atari_2600.png"
             pic_path = atari_2600_table[p].snap_path_local .. atari_2600_table[p].name .. ".png"
             app_title = atari_2600_table[p].title
             apptype = atari_2600_table[p].app_type
@@ -7543,7 +7759,7 @@ function GetInfoSelected()
     elseif showCat == 31 then
         if #atari_lynx_table > 0 then
             info = atari_lynx_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_lynx.png"
+            icon_path = "app0:/DATA/icon_atari_lynx.png"
             pic_path = atari_lynx_table[p].snap_path_local .. atari_lynx_table[p].name .. ".png"
             app_title = atari_lynx_table[p].title
             apptype = atari_lynx_table[p].app_type
@@ -7562,7 +7778,7 @@ function GetInfoSelected()
     elseif showCat == 32 then
         if #colecovision_table > 0 then
             info = colecovision_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_colecovision.png"
+            icon_path = "app0:/DATA/icon_colecovision.png"
             pic_path = colecovision_table[p].snap_path_local .. colecovision_table[p].name .. ".png"
             app_title = colecovision_table[p].title
             apptype = colecovision_table[p].app_type
@@ -7581,7 +7797,7 @@ function GetInfoSelected()
     elseif showCat == 33 then
         if #vectrex_table > 0 then
             info = vectrex_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_vectrex.png"
+            icon_path = "app0:/DATA/icon_vectrex.png"
             pic_path = vectrex_table[p].snap_path_local .. vectrex_table[p].name .. ".png"
             app_title = vectrex_table[p].title
             apptype = vectrex_table[p].app_type
@@ -7600,7 +7816,7 @@ function GetInfoSelected()
     elseif showCat == 34 then
         if #fba_table > 0 then
             info = fba_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_fba.png"
+            icon_path = "app0:/DATA/icon_fba.png"
             pic_path = fba_table[p].snap_path_local .. fba_table[p].name .. ".png"
             app_title = fba_table[p].title
             apptype = fba_table[p].app_type
@@ -7619,7 +7835,7 @@ function GetInfoSelected()
     elseif showCat == 35 then
         if #mame_2003_plus_table > 0 then
             info = mame_2003_plus_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+            icon_path = "app0:/DATA/icon_mame.png"
             pic_path = mame_2003_plus_table[p].snap_path_local .. mame_2003_plus_table[p].name .. ".png"
             app_title = mame_2003_plus_table[p].title
             apptype = mame_2003_plus_table[p].app_type
@@ -7638,7 +7854,7 @@ function GetInfoSelected()
     elseif showCat == 36 then
         if #mame_2000_table > 0 then
             info = mame_2000_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+            icon_path = "app0:/DATA/icon_mame.png"
             pic_path = mame_2000_table[p].snap_path_local .. mame_2000_table[p].name .. ".png"
             app_title = mame_2000_table[p].title
             apptype = mame_2000_table[p].app_type
@@ -7657,7 +7873,7 @@ function GetInfoSelected()
     elseif showCat == 37 then
         if #neogeo_table > 0 then
             info = neogeo_table[p].name            
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_neogeo.png"
+            icon_path = "app0:/DATA/icon_neogeo.png"
             pic_path = neogeo_table[p].snap_path_local .. neogeo_table[p].name .. ".png"
             app_title = neogeo_table[p].title
             apptype = neogeo_table[p].app_type
@@ -7676,7 +7892,7 @@ function GetInfoSelected()
     elseif showCat == 38 then
         if #ngpc_table > 0 then
             info = ngpc_table[p].name
-            icon_path = "ux0:/app/RETROFLOW/DATA/icon_ngpc.png"
+            icon_path = "app0:/DATA/icon_ngpc.png"
             pic_path = ngpc_table[p].snap_path_local .. ngpc_table[p].name .. ".png"
             app_title = ngpc_table[p].title
             apptype = ngpc_table[p].app_type
@@ -7692,8 +7908,30 @@ function GetInfoSelected()
         else
             app_title = "-"
         end
-
     elseif showCat == 39 then
+        if #psm_table > 0 then
+            info = psm_table[p].name
+            icon_path = psm_table[p].icon_path
+
+            -- Get pic
+            GetPicPath(psm_table)
+
+            app_title = psm_table[p].title
+            apptype = psm_table[p].app_type
+            appdir = psm_table[p].game_path
+            folder = psm_table[p].directory
+            filename = psm_table[p].filename
+            favourite_flag = psm_table[p].favourite
+            hide_game_flag = psm_table[p].hidden
+            game_path = psm_table[p].game_path
+
+            app_titleid = psm_table[p].name
+            app_version = psm_table[p].version
+        else
+            app_title = "-"
+        end
+
+    elseif showCat == 40 then
 
         -- count favorites
         create_fav_count_table(files_table)
@@ -7727,91 +7965,91 @@ function GetInfoSelected()
                 icon_path = fav_count[p].icon_path
 
                 if apptype==1 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psv.png"
+                    icon_path = "app0:/DATA/icon_psv.png"
                 elseif apptype==2 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psp.png"
+                    icon_path = "app0:/DATA/icon_psp.png"
                 elseif apptype==3 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psx.png"
+                    icon_path = "app0:/DATA/icon_psx.png"
                 elseif apptype==5 then -- N64
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_n64.png"
+                    icon_path = "app0:/DATA/icon_n64.png"
                 elseif apptype==6 then -- SNES
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_snes.png"
+                    icon_path = "app0:/DATA/icon_snes.png"
                 elseif apptype==7 then -- NES
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_nes.png"
+                    icon_path = "app0:/DATA/icon_nes.png"
                 elseif apptype==8 then -- GBA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gba.png"
+                    icon_path = "app0:/DATA/icon_gba.png"
                 elseif apptype==9 then -- GBC
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"
+                    icon_path = "app0:/DATA/icon_gbc.png"
                 elseif apptype==10 then -- GB
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"
+                    icon_path = "app0:/DATA/icon_gb.png"
                 elseif apptype==11 then -- DC
                     if setLanguage == 0 then -- EN - Blue logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_eur.png"
                     elseif setLanguage == 1 then -- USA - Red logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_usa.png"
                     elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_j.png"
                     else -- Blue logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_eur.png"
                     end
                 elseif apptype==12 then -- SEGA_CD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_sega_cd.png"
+                    icon_path = "app0:/DATA/icon_sega_cd.png"
                 elseif apptype==13 then -- 32X
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_32x.png"
+                    icon_path = "app0:/DATA/icon_32x.png"
                 elseif apptype==14 then -- MD
                     if setLanguage == 1 then
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_md_usa.png"
+                        icon_path = "app0:/DATA/icon_md_usa.png"
                     else
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"
+                        icon_path = "app0:/DATA/icon_md.png"
                     end
                 elseif apptype==15 then -- SMS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
+                    icon_path = "app0:/DATA/icon_sms.png"
                 elseif apptype==16 then -- GG
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
+                    icon_path = "app0:/DATA/icon_gg.png"
                 elseif apptype==17 then -- TG16
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
+                    icon_path = "app0:/DATA/icon_tg16.png"
                 elseif apptype==18 then -- TGCD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_tgcd.png"
+                    icon_path = "app0:/DATA/icon_tgcd.png"
                 elseif apptype==19 then -- PCE
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
+                    icon_path = "app0:/DATA/icon_pce.png"
                 elseif apptype==20 then -- PCECD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_pcecd.png"
+                    icon_path = "app0:/DATA/icon_pcecd.png"
                 elseif apptype==21 then -- AMIGA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
+                    icon_path = "app0:/DATA/icon_amiga.png"
                 elseif apptype==22 then -- C64
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_c64.png"
+                    icon_path = "app0:/DATA/icon_c64.png"
                 elseif apptype==23 then -- WSWAN_COL
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan_col.png"
+                    icon_path = "app0:/DATA/icon_wswan_col.png"
                 elseif apptype==24 then -- WSWAN
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan.png"
+                    icon_path = "app0:/DATA/icon_wswan.png"
                 elseif apptype==25 then -- MSX2
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx2.png"
+                    icon_path = "app0:/DATA/icon_msx2.png"
                 elseif apptype==26 then -- MSX1
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx1.png"
+                    icon_path = "app0:/DATA/icon_msx1.png"
                 elseif apptype==27 then -- ZXS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_zxs.png"
+                    icon_path = "app0:/DATA/icon_zxs.png"
                 elseif apptype==28 then -- ATARI_7800
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_7800.png"
+                    icon_path = "app0:/DATA/icon_atari_7800.png"
                 elseif apptype==29 then -- ATARI_5200
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_5200.png"
+                    icon_path = "app0:/DATA/icon_atari_5200.png"
                 elseif apptype==30 then -- ATARI_2600
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_2600.png"
+                    icon_path = "app0:/DATA/icon_atari_2600.png"
                 elseif apptype==31 then -- ATARI_LYNX
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_lynx.png"
+                    icon_path = "app0:/DATA/icon_atari_lynx.png"
                 elseif apptype==32 then -- COLECOVISION
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_colecovision.png"
+                    icon_path = "app0:/DATA/icon_colecovision.png"
                 elseif apptype==33 then -- VECTREX
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_vectrex.png"
+                    icon_path = "app0:/DATA/icon_vectrex.png"
                 elseif apptype==34 then -- FBA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_fba.png"
+                    icon_path = "app0:/DATA/icon_fba.png"
                 elseif apptype==35 then -- MAME_2003_PLUS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+                    icon_path = "app0:/DATA/icon_mame.png"
                 elseif apptype==36 then -- MAME_2000
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+                    icon_path = "app0:/DATA/icon_mame.png"
                 elseif apptype==37 then -- NEOGEO
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_neogeo.png"
+                    icon_path = "app0:/DATA/icon_neogeo.png"
                 elseif apptype==38 then -- NGPC
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_ngpc.png"
+                    icon_path = "app0:/DATA/icon_ngpc.png"
                 else
                     icon_path = fav_count[p].icon_path
                 end
@@ -7821,7 +8059,7 @@ function GetInfoSelected()
             -- app_title = "-"
         end
 
-    elseif showCat == 40 then
+    elseif showCat == 41 then
 
         if #recently_played_table > 0 then
             info = recently_played_table[p].name
@@ -7853,91 +8091,91 @@ function GetInfoSelected()
                 icon_path = recently_played_table[p].icon_path
 
                 if apptype==1 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psv.png"
+                    icon_path = "app0:/DATA/icon_psv.png"
                 elseif apptype==2 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psp.png"
+                    icon_path = "app0:/DATA/icon_psp.png"
                 elseif apptype==3 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psx.png"
+                    icon_path = "app0:/DATA/icon_psx.png"
                 elseif apptype==5 then -- N64
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_n64.png"
+                    icon_path = "app0:/DATA/icon_n64.png"
                 elseif apptype==6 then -- SNES
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_snes.png"
+                    icon_path = "app0:/DATA/icon_snes.png"
                 elseif apptype==7 then -- NES
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_nes.png"
+                    icon_path = "app0:/DATA/icon_nes.png"
                 elseif apptype==8 then -- GBA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gba.png"
+                    icon_path = "app0:/DATA/icon_gba.png"
                 elseif apptype==9 then -- GBC
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"
+                    icon_path = "app0:/DATA/icon_gbc.png"
                 elseif apptype==10 then -- GB
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"
+                    icon_path = "app0:/DATA/icon_gb.png"
                 elseif apptype==11 then -- DC
                     if setLanguage == 0 then -- EN - Blue logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_eur.png"
                     elseif setLanguage == 1 then -- USA - Red logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_usa.png"
                     elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_j.png"
                     else -- Blue logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_eur.png"
                     end
                 elseif apptype==12 then -- SEGA_CD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_sega_cd.png"
+                    icon_path = "app0:/DATA/icon_sega_cd.png"
                 elseif apptype==13 then -- 32X
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_32x.png"
+                    icon_path = "app0:/DATA/icon_32x.png"
                 elseif apptype==14 then -- MD
                     if setLanguage == 1 then
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_md_usa.png"
+                        icon_path = "app0:/DATA/icon_md_usa.png"
                     else
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"
+                        icon_path = "app0:/DATA/icon_md.png"
                     end
                 elseif apptype==15 then -- SMS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
+                    icon_path = "app0:/DATA/icon_sms.png"
                 elseif apptype==16 then -- GG
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
+                    icon_path = "app0:/DATA/icon_gg.png"
                 elseif apptype==17 then -- TG16
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
+                    icon_path = "app0:/DATA/icon_tg16.png"
                 elseif apptype==18 then -- TGCD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_tgcd.png"
+                    icon_path = "app0:/DATA/icon_tgcd.png"
                 elseif apptype==19 then -- PCE
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
+                    icon_path = "app0:/DATA/icon_pce.png"
                 elseif apptype==20 then -- PCECD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_pcecd.png"
+                    icon_path = "app0:/DATA/icon_pcecd.png"
                 elseif apptype==21 then -- AMIGA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
+                    icon_path = "app0:/DATA/icon_amiga.png"
                 elseif apptype==22 then -- C64
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_c64.png"
+                    icon_path = "app0:/DATA/icon_c64.png"
                 elseif apptype==23 then -- WSWAN_COL
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan_col.png"
+                    icon_path = "app0:/DATA/icon_wswan_col.png"
                 elseif apptype==24 then -- WSWAN
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan.png"
+                    icon_path = "app0:/DATA/icon_wswan.png"
                 elseif apptype==25 then -- MSX2
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx2.png"
+                    icon_path = "app0:/DATA/icon_msx2.png"
                 elseif apptype==26 then -- MSX1
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx1.png"
+                    icon_path = "app0:/DATA/icon_msx1.png"
                 elseif apptype==27 then -- ZXS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_zxs.png"
+                    icon_path = "app0:/DATA/icon_zxs.png"
                 elseif apptype==28 then -- ATARI_7800
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_7800.png"
+                    icon_path = "app0:/DATA/icon_atari_7800.png"
                 elseif apptype==29 then -- ATARI_5200
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_5200.png"
+                    icon_path = "app0:/DATA/icon_atari_5200.png"
                 elseif apptype==30 then -- ATARI_2600
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_2600.png"
+                    icon_path = "app0:/DATA/icon_atari_2600.png"
                 elseif apptype==31 then -- ATARI_LYNX
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_lynx.png"
+                    icon_path = "app0:/DATA/icon_atari_lynx.png"
                 elseif apptype==32 then -- COLECOVISION
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_colecovision.png"
+                    icon_path = "app0:/DATA/icon_colecovision.png"
                 elseif apptype==33 then -- VECTREX
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_vectrex.png"
+                    icon_path = "app0:/DATA/icon_vectrex.png"
                 elseif apptype==34 then -- FBA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_fba.png"
+                    icon_path = "app0:/DATA/icon_fba.png"
                 elseif apptype==35 then -- MAME_2003_PLUS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+                    icon_path = "app0:/DATA/icon_mame.png"
                 elseif apptype==36 then -- MAME_2000
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+                    icon_path = "app0:/DATA/icon_mame.png"
                 elseif apptype==37 then -- NEOGEO
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_neogeo.png"
+                    icon_path = "app0:/DATA/icon_neogeo.png"
                 elseif apptype==38 then -- NGPC
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_ngpc.png"
+                    icon_path = "app0:/DATA/icon_ngpc.png"
                 else
                     icon_path = recently_played_table[p].icon_path
                 end
@@ -7947,7 +8185,7 @@ function GetInfoSelected()
             -- app_title = "-"
         end
             
-    elseif showCat == 41 then
+    elseif showCat == 42 then
 
         if #search_results_table > 0 then
             info = search_results_table[p].name
@@ -7979,91 +8217,91 @@ function GetInfoSelected()
                 icon_path = search_results_table[p].icon_path
 
                 if apptype==1 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psv.png"
+                    icon_path = "app0:/DATA/icon_psv.png"
                 elseif apptype==2 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psp.png"
+                    icon_path = "app0:/DATA/icon_psp.png"
                 elseif apptype==3 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psx.png"
+                    icon_path = "app0:/DATA/icon_psx.png"
                 elseif apptype==5 then -- N64
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_n64.png"
+                    icon_path = "app0:/DATA/icon_n64.png"
                 elseif apptype==6 then -- SNES
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_snes.png"
+                    icon_path = "app0:/DATA/icon_snes.png"
                 elseif apptype==7 then -- NES
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_nes.png"
+                    icon_path = "app0:/DATA/icon_nes.png"
                 elseif apptype==8 then -- GBA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gba.png"
+                    icon_path = "app0:/DATA/icon_gba.png"
                 elseif apptype==9 then -- GBC
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"
+                    icon_path = "app0:/DATA/icon_gbc.png"
                 elseif apptype==10 then -- GB
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"
+                    icon_path = "app0:/DATA/icon_gb.png"
                 elseif apptype==11 then -- DC
                     if setLanguage == 0 then -- EN - Blue logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_eur.png"
                     elseif setLanguage == 1 then -- USA - Red logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_usa.png"
                     elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_j.png"
                     else -- Blue logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_eur.png"
                     end
                 elseif apptype==12 then -- SEGA_CD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_sega_cd.png"
+                    icon_path = "app0:/DATA/icon_sega_cd.png"
                 elseif apptype==13 then -- 32X
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_32x.png"
+                    icon_path = "app0:/DATA/icon_32x.png"
                 elseif apptype==14 then -- MD
                     if setLanguage == 1 then
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_md_usa.png"
+                        icon_path = "app0:/DATA/icon_md_usa.png"
                     else
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"
+                        icon_path = "app0:/DATA/icon_md.png"
                     end
                 elseif apptype==15 then -- SMS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
+                    icon_path = "app0:/DATA/icon_sms.png"
                 elseif apptype==16 then -- GG
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
+                    icon_path = "app0:/DATA/icon_gg.png"
                 elseif apptype==17 then -- TG16
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
+                    icon_path = "app0:/DATA/icon_tg16.png"
                 elseif apptype==18 then -- TGCD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_tgcd.png"
+                    icon_path = "app0:/DATA/icon_tgcd.png"
                 elseif apptype==19 then -- PCE
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
+                    icon_path = "app0:/DATA/icon_pce.png"
                 elseif apptype==20 then -- PCECD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_pcecd.png"
+                    icon_path = "app0:/DATA/icon_pcecd.png"
                 elseif apptype==21 then -- AMIGA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
+                    icon_path = "app0:/DATA/icon_amiga.png"
                 elseif apptype==22 then -- C64
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_c64.png"
+                    icon_path = "app0:/DATA/icon_c64.png"
                 elseif apptype==23 then -- WSWAN_COL
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan_col.png"
+                    icon_path = "app0:/DATA/icon_wswan_col.png"
                 elseif apptype==24 then -- WSWAN
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan.png"
+                    icon_path = "app0:/DATA/icon_wswan.png"
                 elseif apptype==25 then -- MSX2
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx2.png"
+                    icon_path = "app0:/DATA/icon_msx2.png"
                 elseif apptype==26 then -- MSX1
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx1.png"
+                    icon_path = "app0:/DATA/icon_msx1.png"
                 elseif apptype==27 then -- ZXS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_zxs.png"
+                    icon_path = "app0:/DATA/icon_zxs.png"
                 elseif apptype==28 then -- ATARI_7800
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_7800.png"
+                    icon_path = "app0:/DATA/icon_atari_7800.png"
                 elseif apptype==29 then -- ATARI_5200
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_5200.png"
+                    icon_path = "app0:/DATA/icon_atari_5200.png"
                 elseif apptype==30 then -- ATARI_2600
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_2600.png"
+                    icon_path = "app0:/DATA/icon_atari_2600.png"
                 elseif apptype==31 then -- ATARI_LYNX
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_lynx.png"
+                    icon_path = "app0:/DATA/icon_atari_lynx.png"
                 elseif apptype==32 then -- COLECOVISION
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_colecovision.png"
+                    icon_path = "app0:/DATA/icon_colecovision.png"
                 elseif apptype==33 then -- VECTREX
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_vectrex.png"
+                    icon_path = "app0:/DATA/icon_vectrex.png"
                 elseif apptype==34 then -- FBA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_fba.png"
+                    icon_path = "app0:/DATA/icon_fba.png"
                 elseif apptype==35 then -- MAME_2003_PLUS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+                    icon_path = "app0:/DATA/icon_mame.png"
                 elseif apptype==36 then -- MAME_2000
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+                    icon_path = "app0:/DATA/icon_mame.png"
                 elseif apptype==37 then -- NEOGEO
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_neogeo.png"
+                    icon_path = "app0:/DATA/icon_neogeo.png"
                 elseif apptype==38 then -- NGPC
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_ngpc.png"
+                    icon_path = "app0:/DATA/icon_ngpc.png"
                 else
                     icon_path = search_results_table[p].icon_path
                 end
@@ -8106,91 +8344,91 @@ function GetInfoSelected()
                 icon_path = files_table[p].icon_path
 
                 if apptype==1 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psv.png"
+                    icon_path = "app0:/DATA/icon_psv.png"
                 elseif apptype==2 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psp.png"
+                    icon_path = "app0:/DATA/icon_psp.png"
                 elseif apptype==3 then
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_psx.png"
+                    icon_path = "app0:/DATA/icon_psx.png"
                 elseif apptype==5 then -- N64
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_n64.png"
+                    icon_path = "app0:/DATA/icon_n64.png"
                 elseif apptype==6 then -- SNES
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_snes.png"
+                    icon_path = "app0:/DATA/icon_snes.png"
                 elseif apptype==7 then -- NES
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_nes.png"
+                    icon_path = "app0:/DATA/icon_nes.png"
                 elseif apptype==8 then -- GBA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gba.png"
+                    icon_path = "app0:/DATA/icon_gba.png"
                 elseif apptype==9 then -- GBC
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gbc.png"
+                    icon_path = "app0:/DATA/icon_gbc.png"
                 elseif apptype==10 then -- GB
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gb.png"
+                    icon_path = "app0:/DATA/icon_gb.png"
                 elseif apptype==11 then -- DC
                     if setLanguage == 0 then -- EN - Blue logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_eur.png"
                     elseif setLanguage == 1 then -- USA - Red logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_usa.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_usa.png"
                     elseif setLanguage == 9 or setLanguage == 19 then -- Japan - Orange logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_j.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_j.png"
                     else -- Blue logo
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_dreamcast_eur.png"
+                        icon_path = "app0:/DATA/icon_dreamcast_eur.png"
                     end
                 elseif apptype==12 then -- SEGA_CD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_sega_cd.png"
+                    icon_path = "app0:/DATA/icon_sega_cd.png"
                 elseif apptype==13 then -- 32X
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_32x.png"
+                    icon_path = "app0:/DATA/icon_32x.png"
                 elseif apptype==14 then -- MD
                     if setLanguage == 1 then
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_md_usa.png"
+                        icon_path = "app0:/DATA/icon_md_usa.png"
                     else
-                        icon_path = "ux0:/app/RETROFLOW/DATA/icon_md.png"
+                        icon_path = "app0:/DATA/icon_md.png"
                     end
                 elseif apptype==15 then -- SMS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_sms.png"
+                    icon_path = "app0:/DATA/icon_sms.png"
                 elseif apptype==16 then -- GG
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_gg.png"
+                    icon_path = "app0:/DATA/icon_gg.png"
                 elseif apptype==17 then -- TG16
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_tg16.png"
+                    icon_path = "app0:/DATA/icon_tg16.png"
                 elseif apptype==18 then -- TGCD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_tgcd.png"
+                    icon_path = "app0:/DATA/icon_tgcd.png"
                 elseif apptype==19 then -- PCE
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_pce.png"
+                    icon_path = "app0:/DATA/icon_pce.png"
                 elseif apptype==20 then -- PCECD
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_pcecd.png"
+                    icon_path = "app0:/DATA/icon_pcecd.png"
                 elseif apptype==21 then -- AMIGA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_amiga.png"
+                    icon_path = "app0:/DATA/icon_amiga.png"
                 elseif apptype==22 then -- C64
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_c64.png"
+                    icon_path = "app0:/DATA/icon_c64.png"
                 elseif apptype==23 then -- WSWAN_COL
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan_col.png"
+                    icon_path = "app0:/DATA/icon_wswan_col.png"
                 elseif apptype==24 then -- WSWAN
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_wswan.png"
+                    icon_path = "app0:/DATA/icon_wswan.png"
                 elseif apptype==25 then -- MSX2
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx2.png"
+                    icon_path = "app0:/DATA/icon_msx2.png"
                 elseif apptype==26 then -- MSX1
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_msx1.png"
+                    icon_path = "app0:/DATA/icon_msx1.png"
                 elseif apptype==27 then -- ZXS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_zxs.png"
+                    icon_path = "app0:/DATA/icon_zxs.png"
                 elseif apptype==28 then -- ATARI_7800
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_7800.png"
+                    icon_path = "app0:/DATA/icon_atari_7800.png"
                 elseif apptype==29 then -- ATARI_5200
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_5200.png"
+                    icon_path = "app0:/DATA/icon_atari_5200.png"
                 elseif apptype==30 then -- ATARI_2600
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_2600.png"
+                    icon_path = "app0:/DATA/icon_atari_2600.png"
                 elseif apptype==31 then -- ATARI_LYNX
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_atari_lynx.png"
+                    icon_path = "app0:/DATA/icon_atari_lynx.png"
                 elseif apptype==32 then -- COLECOVISION
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_colecovision.png"
+                    icon_path = "app0:/DATA/icon_colecovision.png"
                 elseif apptype==33 then -- VECTREX
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_vectrex.png"
+                    icon_path = "app0:/DATA/icon_vectrex.png"
                 elseif apptype==34 then -- FBA
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_fba.png"
+                    icon_path = "app0:/DATA/icon_fba.png"
                 elseif apptype==35 then -- MAME_2003_PLUS
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+                    icon_path = "app0:/DATA/icon_mame.png"
                 elseif apptype==36 then -- MAME_2000
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_mame.png"
+                    icon_path = "app0:/DATA/icon_mame.png"
                 elseif apptype==37 then -- NEOGEO
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_neogeo.png"
+                    icon_path = "app0:/DATA/icon_neogeo.png"
                 elseif apptype==38 then -- NGPC
-                    icon_path = "ux0:/app/RETROFLOW/DATA/icon_ngpc.png"
+                    icon_path = "app0:/DATA/icon_ngpc.png"
                 else
                     icon_path = files_table[p].icon_path
                 end
@@ -8341,10 +8579,11 @@ function AddOrRemoveFavorite()
         elseif showCat == 36 then   update_favorites_table_system(mame_2000_table)      update_cached_table("db_mame_2000.lua", mame_2000_table)
         elseif showCat == 37 then   update_favorites_table_system(neogeo_table)         update_cached_table("db_neogeo.lua", neogeo_table)
         elseif showCat == 38 then   update_favorites_table_system(ngpc_table)           update_cached_table("db_ngpc.lua", ngpc_table)
-        elseif showCat == 41 then   update_favorites_table_system(search_results_table)
+        elseif showCat == 39 then   update_favorites_table_system(psm_table)            update_cached_table("db_psm.lua", psm_table)
+        elseif showCat == 42 then   update_favorites_table_system(search_results_table)
 
         
-        elseif showCat == 39 then
+        elseif showCat == 40 then
             -- Find game in other tables and update
             if apptype == 0 then        update_favorites_table_favorites(homebrews_table)       update_cached_table("db_homebrews.lua", homebrews_table)
             elseif apptype == 1 then    update_favorites_table_favorites(games_table)           update_cached_table("db_games.lua", games_table)
@@ -8384,10 +8623,11 @@ function AddOrRemoveFavorite()
             elseif apptype == 36 then   update_favorites_table_favorites(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
             elseif apptype == 37 then   update_favorites_table_favorites(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
             elseif apptype == 38 then   update_favorites_table_favorites(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
+            elseif showCat == 39 then   update_favorites_table_favorites(psm_table)             update_cached_table("db_psm.lua", psm_table)
             else    
             end
 
-        elseif showCat == 40 then
+        elseif showCat == 41 then
             -- Find game in other tables and update
             if apptype == 0 then        update_favorites_table_recent(homebrews_table)       update_cached_table("db_homebrews.lua", homebrews_table)    
             elseif apptype == 1 then    update_favorites_table_recent(games_table)           update_cached_table("db_games.lua", games_table)
@@ -8427,10 +8667,11 @@ function AddOrRemoveFavorite()
             elseif apptype == 36 then   update_favorites_table_recent(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
             elseif apptype == 37 then   update_favorites_table_recent(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
             elseif apptype == 38 then   update_favorites_table_recent(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
+            elseif apptype == 39 then   update_favorites_table_recent(psm_table)             update_cached_table("db_psm.lua", psm_table)
             else    
             end
 
-        elseif showCat == 41 then
+        elseif showCat == 42 then
             -- Find game in other tables and update
             if apptype == 0 then        update_favorites_table_recent(homebrews_table)       update_cached_table("db_homebrews.lua", homebrews_table) 
             elseif apptype == 1 then    update_favorites_table_recent(games_table)           update_cached_table("db_games.lua", games_table)
@@ -8470,6 +8711,7 @@ function AddOrRemoveFavorite()
             elseif apptype == 36 then   update_favorites_table_recent(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
             elseif apptype == 37 then   update_favorites_table_recent(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
             elseif apptype == 38 then   update_favorites_table_recent(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
+            elseif apptype == 39 then   update_favorites_table_recent(psm_table)             update_cached_table("db_psm.lua", psm_table)
             else    
             end
 
@@ -8513,6 +8755,7 @@ function AddOrRemoveFavorite()
             elseif apptype == 36 then   update_favorites_table_files(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
             elseif apptype == 37 then   update_favorites_table_files(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
             elseif apptype == 38 then   update_favorites_table_files(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
+            elseif apptype == 39 then   update_favorites_table_files(psm_table)             update_cached_table("db_psm.lua", psm_table)
             else    
             end
 
@@ -8545,7 +8788,7 @@ end
 function AddOrRemoveHidden()
 
     -- Recent cat
-    if showCat == 40 then
+    if showCat == 41 then
         if recently_played_table[p].hidden == true then
             recently_played_table[p].hidden=false
 
@@ -8677,8 +8920,8 @@ function QuickOverride_Vita()
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[1].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
     elseif System.doesFileExist("ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png") then
         xAppNumTableLookup(apptype)[key].icon_path = "ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png"  --app icon
-    elseif System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psv.png") then
-        xAppNumTableLookup(apptype)[key].icon_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psv.png"
+    elseif System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
+        xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/missing_cover_psv.png"
     else
         xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png"
     end
@@ -8695,8 +8938,8 @@ function QuickOverride_PSP()
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[3].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png" --custom cover by app name
     elseif System.doesFileExist(SystemsToScan[3].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png") then
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[3].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
-    elseif System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psp.png") then
-        xAppNumTableLookup(apptype)[key].icon_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psp.png"  --app icon
+    elseif System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+        xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/missing_cover_psp.png"  --app icon
     else
         xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png" --blank grey
     end
@@ -8713,8 +8956,8 @@ function QuickOverride_PSX()
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[4].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png" --custom cover by app name
     elseif System.doesFileExist(SystemsToScan[4].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png") then
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[4].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
-    elseif System.doesFileExist("ux0:/app/RETROFLOW/DATA/missing_cover_psx.png") then
-        xAppNumTableLookup(apptype)[key].icon_path = "ux0:/app/RETROFLOW/DATA/missing_cover_psx.png"  --app icon
+    elseif System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+        xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/missing_cover_psx.png"  --app icon
     else
         xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png" --blank grey
     end
@@ -8733,8 +8976,8 @@ function QuickOverride_Homebrew()
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[2].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
     elseif System.doesFileExist("ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png") then
         xAppNumTableLookup(apptype)[key].icon_path = "ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png"  --app icon
-    elseif System.doesFileExist("ux0:/app/RETROFLOW/DATA/icon_homebrew.png") then
-        xAppNumTableLookup(apptype)[key].icon_path = "ux0:/app/RETROFLOW/DATA/icon_homebrew.png"
+    elseif System.doesFileExist("app0:/DATA/icon_homebrew.png") then
+        xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/icon_homebrew.png"
     else
         xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png" --blank grey
     end
@@ -9718,9 +9961,10 @@ function DownloadSingleCover()
             elseif showCat == 36 then update_cvrfound_showcats(mame_2000_table, "db_mame_2000.lua")
             elseif showCat == 37 then update_cvrfound_showcats(neogeo_table, "db_neogeo.lua")
             elseif showCat == 38 then update_cvrfound_showcats(ngpc_table, "db_ngpc.lua")
-            elseif showCat == 39 then update_cvrfound_showcats(fav_count, "db_files.lua")
-            elseif showCat == 40 then update_cvrfound_showcats_recent()
-            elseif showCat == 41 then update_cvrfound_showcats(search_results_table, "db_files.lua")
+            elseif showCat == 39 then update_cvrfound_showcats(psm_table, "db_psm.lua")
+            elseif showCat == 40 then update_cvrfound_showcats(fav_count, "db_files.lua")
+            elseif showCat == 41 then update_cvrfound_showcats_recent()
+            elseif showCat == 42 then update_cvrfound_showcats(search_results_table, "db_files.lua")
             else update_cvrfound_showcats(files_table, "db_files.lua")
             end
 
@@ -9828,9 +10072,10 @@ function DownloadSingleSnap()
             elseif showCat == 36 then pic_path = mame_2000_table[p].snap_path_local .. mame_2000_table[p].name .. ".png"
             elseif showCat == 37 then pic_path = neogeo_table[p].snap_path_local .. neogeo_table[p].name .. ".png"
             elseif showCat == 38 then pic_path = ngpc_table[p].snap_path_local .. ngpc_table[p].name .. ".png"
-            elseif showCat == 39 then pic_path = fav_count[p].snap_path_local .. fav_count[p].name .. ".png"
-            elseif showCat == 40 then pic_path = recently_played_table[p].snap_path_local .. recently_played_table[p].name .. ".png"
-            elseif showCat == 41 then pic_path = search_results_table[p].snap_path_local .. search_results_table[p].name .. ".png"
+            elseif showCat == 39 then pic_path = psm_table[p].snap_path_local .. psm_table[p].name .. ".png"
+            elseif showCat == 40 then pic_path = fav_count[p].snap_path_local .. fav_count[p].name .. ".png"
+            elseif showCat == 41 then pic_path = recently_played_table[p].snap_path_local .. recently_played_table[p].name .. ".png"
+            elseif showCat == 42 then pic_path = search_results_table[p].snap_path_local .. search_results_table[p].name .. ".png"
             else pic_path = files_table[p].snap_path_local .. files_table[p].name .. ".png"
             end
 
@@ -10050,7 +10295,7 @@ while true do
 
                 search_results_table = {}
                 -- If already on search category, move away
-                if showCat == 41 then 
+                if showCat == 42 then 
                     showCat = 0
                 end
 
@@ -10133,8 +10378,8 @@ while true do
                                 recently_played_table[key].icon_path = "ur0:/appmeta/" .. recently_played_table[key].name .. "/icon0.png"
 
                             -- Missing cover png -- find me
-                            elseif System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. xAppNumTableLookup_Missing_Cover(recently_played_table[key].app_type) .. ".png") then
-                                recently_played_table[key].icon_path = "ux0:/app/RETROFLOW/DATA/" .. xAppNumTableLookup_Missing_Cover(recently_played_table[key].app_type) .. ".png"
+                            elseif System.doesFileExist("app0:/DATA/" .. xAppNumTableLookup_Missing_Cover(recently_played_table[key].app_type) .. ".png") then
+                                recently_played_table[key].icon_path = "app0:/DATA/" .. xAppNumTableLookup_Missing_Cover(recently_played_table[key].app_type) .. ".png"
 
                             -- Fallback - blank grey
                             else
@@ -10160,8 +10405,8 @@ while true do
                                     xAppNumTableLookup(apptype)[key2].icon_path = "ur0:/appmeta/" .. recently_played_table[key].name .. "/icon0.png"
 
                                 -- Missing cover png -- find me
-                                elseif System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. xAppNumTableLookup_Missing_Cover(recently_played_table[key].app_type) .. ".png") then
-                                    xAppNumTableLookup(apptype)[key2].icon_path = "ux0:/app/RETROFLOW/DATA/" .. xAppNumTableLookup_Missing_Cover(recently_played_table[key].app_type) .. ".png"
+                                elseif System.doesFileExist("app0:/DATA/" .. xAppNumTableLookup_Missing_Cover(recently_played_table[key].app_type) .. ".png") then
+                                    xAppNumTableLookup(apptype)[key2].icon_path = "app0:/DATA/" .. xAppNumTableLookup_Missing_Cover(recently_played_table[key].app_type) .. ".png"
 
                                 -- Fallback - blank grey
                                 else
@@ -10206,8 +10451,8 @@ while true do
                         xCatLookup(showCat)[p].icon_path = "ur0:/appmeta/" .. xCatLookup(showCat)[p].name .. "/icon0.png"
 
                     -- Missing cover png -- find me
-                    elseif System.doesFileExist("ux0:/app/RETROFLOW/DATA/" .. xAppNumTableLookup_Missing_Cover(xAppNumTableLookup(showCat)[p].app_type) .. ".png") then
-                        xCatLookup(showCat)[p].icon_path = "ux0:/app/RETROFLOW/DATA/" .. xAppNumTableLookup_Missing_Cover(xAppNumTableLookup(showCat)[p].app_type) .. ".png"
+                    elseif System.doesFileExist("app0:/DATA/" .. xAppNumTableLookup_Missing_Cover(xAppNumTableLookup(showCat)[p].app_type) .. ".png") then
+                        xCatLookup(showCat)[p].icon_path = "app0:/DATA/" .. xAppNumTableLookup_Missing_Cover(xAppNumTableLookup(showCat)[p].app_type) .. ".png"
 
                     -- Fallback - blank grey
                     else
@@ -10366,9 +10611,10 @@ while true do
         elseif showCat == 36 then Font.print(fnt22, 32, 34, lang_lines.MAME_2000, white)
         elseif showCat == 37 then Font.print(fnt22, 32, 34, lang_lines.Neo_Geo, white)
         elseif showCat == 38 then Font.print(fnt22, 32, 34, lang_lines.Neo_Geo_Pocket_Color, white)
-        elseif showCat == 39 then Font.print(fnt22, 32, 34, lang_lines.Favorites, white)
-        elseif showCat == 40 then Font.print(fnt22, 32, 34, lang_lines.Recently_Played, white)
-        elseif showCat == 41 then Font.print(fnt22, 32, 34, lang_lines.Search_Results, white)
+        elseif showCat == 39 then Font.print(fnt22, 32, 34, lang_lines.Playstation_Mobile, white)
+        elseif showCat == 40 then Font.print(fnt22, 32, 34, lang_lines.Favorites, white)
+        elseif showCat == 41 then Font.print(fnt22, 32, 34, lang_lines.Recently_Played, white)
+        elseif showCat == 42 then Font.print(fnt22, 32, 34, lang_lines.Search_Results, white)
         else Font.print(fnt22, 32, 34, lang_lines.All, white)
         end
         if Network.isWifiEnabled() then
@@ -10443,14 +10689,15 @@ while true do
         elseif showCat == 36 then drawCategory (mame_2000_table)
         elseif showCat == 37 then drawCategory (neogeo_table)
         elseif showCat == 38 then drawCategory (ngpc_table)
-        elseif showCat == 39 then
+        elseif showCat == 39 then drawCategory (psm_table)
+        elseif showCat == 40 then
             -- count favorites
             create_fav_count_table(files_table)
             
             drawCategory (fav_count)
             GetNameAndAppTypeSelected() -- Added to refresh names as games removed from fav cat whilst on fav cat
-        elseif showCat == 40 then drawCategory (recently_played_table)
-        elseif showCat == 41 then drawCategory (search_results_table)
+        elseif showCat == 41 then drawCategory (recently_played_table)
+        elseif showCat == 42 then drawCategory (search_results_table)
         else drawCategory (files_table)
         end
 
@@ -10629,6 +10876,7 @@ while true do
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].ricon) -- mame_2000_table
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].ricon) -- neogeo_table
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].ricon) -- ngpc_table
+                Render.useTexture(modCoverHbrNoref, (def_table_name)[p].ricon) -- psm_table
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].ricon) -- fav_count
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].ricon) -- recently played
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].ricon) -- search
@@ -10672,6 +10920,7 @@ while true do
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].icon) -- mame_2000_table
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].icon) -- neogeo_table
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].icon) -- ngpc_table
+                Render.useTexture(modCoverHbrNoref, (def_table_name)[p].icon) -- psm_table
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].icon) -- fav_count
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].icon) -- recently played
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].icon) -- search
@@ -10718,9 +10967,10 @@ while true do
         elseif showCat == 36 then set_cover_image (mame_2000_table)
         elseif showCat == 37 then set_cover_image (neogeo_table)
         elseif showCat == 38 then set_cover_image (ngpc_table)
-        elseif showCat == 39 then set_cover_image (fav_count)
-        elseif showCat == 40 then set_cover_image (recently_played_table)
-        elseif showCat == 41 then set_cover_image (search_results_table)
+        elseif showCat == 39 then set_cover_image (psm_table)
+        elseif showCat == 40 then set_cover_image (fav_count)
+        elseif showCat == 41 then set_cover_image (recently_played_table)
+        elseif showCat == 42 then set_cover_image (search_results_table)
         else set_cover_image (files_table)
         end
         
@@ -10842,6 +11092,9 @@ while true do
         elseif apptype==38 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.Neo_Geo_Pocket_Color_Game 
+        elseif apptype==39 then
+            Render.drawModel(modCoverHbrNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            tmpapptype = lang_lines.Playstation_Mobile_Game 
         else
             Render.drawModel(modCoverHbrNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.Homebrew 
@@ -10863,10 +11116,10 @@ while true do
         end
 
 
-        -- 0 Homebrew, 1 vita, 2 psp, 3 psx, 5+ Retro
+        -- 0 Homebrew, 1 vita, 2 psp, 3 psx, 5+ Retro, 39 ps mobile
 
-        if apptype == 0 or apptype == 1 or apptype == 2 or apptype == 3 then
-            if string.match (game_path, "pspemu") or string.match (game_path, "ux0:/app/") then
+        if apptype == 0 or apptype == 1 or apptype == 2 or apptype == 3 or apptype == 39 then
+            if string.match (game_path, "pspemu") or string.match (game_path, "ux0:/app/") or string.match (game_path, "ux0:/psm/") then
                 Font.print(fnt22, 50, 240, tmpapptype .. "\n" .. lang_lines.App_ID_colon .. app_titleid .. "\n" .. lang_lines.Version_colon .. app_version .. "\n" .. lang_lines.Size_colon .. game_size, white)-- Draw info
                 --                                               App ID:                                           Version:                                           Size:
             else
@@ -10891,9 +11144,13 @@ while true do
             tmpcatText = lang_lines.Default -- Default
         end
 
+
         -- Download background - don't show on vita or homebrew
+
         if apptype == 0 or apptype == 1 then
             tmpimageText = lang_lines.Download_Cover
+        elseif apptype == 39 then
+            -- don't show anything for ps mobile
         else
             if tmpimagecat==1 then
                 tmpimageText = lang_lines.Download_Background -- Backgrounds
@@ -10945,6 +11202,8 @@ while true do
 
 
         -- All other systems
+        elseif apptype == 39 then
+            -- dont show anything
         else
             if menuY==1 then
             else
@@ -10953,8 +11212,8 @@ while true do
             Font.print(fnt22, 50, 352, "< " .. tmpimageText .. " >", white)
         end
 
-        -- Download background - don't show on vita or homebrew
-        if apptype == 0 or apptype == 1 then
+        -- Download background - don't show on vita, homebrew or ps mobile
+        if apptype == 0 or apptype == 1 or apptype == 39 then
             Font.print(fnt22, 50, 352, tmpimageText, white)
         else
             Font.print(fnt22, 50, 352, "< " .. tmpimageText .. " >", white)
@@ -11115,14 +11374,14 @@ while true do
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "English - American", white) -- English (United States)
             -- Megadrive, update regional missing cover
             for k, v in pairs(md_table) do
-                  if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_md.png" then
-                      v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_md_usa.png"
+                  if v.icon_path=="app0:/DATA/missing_cover_md.png" then
+                      v.icon_path="app0:/DATA/missing_cover_md_usa.png"
                   end
             end
             -- Dreamcast, update regional missing cover - USA - Red logo
             for k, v in pairs(dreamcast_table) do 
-                  if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png" then
-                      v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png"
+                  if v.icon_path=="app0:/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="app0:/DATA/missing_cover_dreamcast_j.png" then
+                      v.icon_path="app0:/DATA/missing_cover_dreamcast_usa.png"
                   end
             end
         elseif chooseLanguage == 2 then 
@@ -11175,8 +11434,8 @@ while true do
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "日本語", white) -- Japanese
             -- Dreamcast, update regional missing cover - Japan - Orange logo
             for k, v in pairs(dreamcast_table) do
-                  if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" then
-                      v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png"
+                  if v.icon_path=="app0:/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="app0:/DATA/missing_cover_dreamcast_usa.png" then
+                      v.icon_path="app0:/DATA/missing_cover_dreamcast_j.png"
                   end
             end
         elseif chooseLanguage == 18 then
@@ -11192,14 +11451,14 @@ while true do
 
             -- Megadrive, update regional missing cover
             for k, v in pairs(md_table) do
-                  if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_md_usa.png" then
-                      v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_md.png"
+                  if v.icon_path=="app0:/DATA/missing_cover_md_usa.png" then
+                      v.icon_path="app0:/DATA/missing_cover_md.png"
                   end
             end
             -- Dreamcast, update regional missing cover - Blue logo
             for k, v in pairs(dreamcast_table) do
-                  if v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_usa.png" or v.icon_path=="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_j.png" then
-                      v.icon_path="ux0:/app/RETROFLOW/DATA/missing_cover_dreamcast_eur.png"
+                  if v.icon_path=="app0:/DATA/missing_cover_dreamcast_usa.png" or v.icon_path=="app0:/DATA/missing_cover_dreamcast_j.png" then
+                      v.icon_path="app0:/DATA/missing_cover_dreamcast_eur.png"
                   end
             end
         end
@@ -11384,8 +11643,10 @@ while true do
         elseif startCategory == 38 then
             Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Neo_Geo_Pocket_Color, white)--Neo_Geo_Pocket_Color
         elseif startCategory == 39 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Favorites, white)--Favorite
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Playstation_Mobile, white)--Playstation_Mobile
         elseif startCategory == 40 then
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Favorites, white)--Favorite
+        elseif startCategory == 41 then
             Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Recently_Played, white)--Recently Played
         end
 
@@ -11480,7 +11741,8 @@ while true do
                     if startCategory == 36 then if #mame_2000_table == 0 then startCategory = startCategory + 1 end end
                     if startCategory == 37 then if #neogeo_table == 0 then startCategory = startCategory + 1 end end
                     if startCategory == 38 then if #ngpc_table == 0 then startCategory = startCategory + 1 end end
-                    if startCategory == 39 then if #fav_count == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 39 then if #psm_table == 0 then startCategory = startCategory + 1 end end
+                    if startCategory == 40 then if #fav_count == 0 then startCategory = startCategory + 1 end end
                     -- if startCategory == 40 then if #recently_played_table == 0 then startCategory = startCategory + 1 end end
 
                 elseif menuY == 2 then -- #2 Show Homebrews
@@ -11507,7 +11769,7 @@ while true do
                         -- Import cache to update All games category
                         count_cache_and_reload()
                         -- If currently on recent category view, move to Vita category to hide empty recent category
-                        if showCat == 40 then
+                        if showCat == 41 then
                             curTotal = #recently_played_table
                             if #recently_played_table == 0 then
                                 showCat = 1
@@ -11536,7 +11798,7 @@ while true do
                         showHidden = 0
                         -- Import cache to update All games category
                         count_cache_and_reload()
-                        if showCat == 39 then 
+                        if showCat == 40 then 
                             create_fav_count_table(files_table)
                         end
                         check_for_out_of_bounds()
@@ -11545,7 +11807,7 @@ while true do
                         showHidden = 1
                         -- Import cache to update All games category
                         count_cache_and_reload()
-                        if showCat == 39 then 
+                        if showCat == 40 then 
                             create_fav_count_table(files_table)
                         end
                         check_for_out_of_bounds()
@@ -13753,7 +14015,7 @@ while true do
 
             -- Add extra for remove from recent
             local recent_cat_flag = false
-            if showCat == 40 then
+            if showCat == 41 then
                 recent_cat_flag = true
                 menuItems = menuItems + 1
             else
@@ -13860,7 +14122,7 @@ while true do
                     end
 
                     -- If on favorite category, go to main screen, otherwise the next fav game is shown
-                    if showCat == 39 then
+                    if showCat == 40 then
                         GetInfoSelected()
                         oldpad = pad -- Prevents it from launching next game accidentally. Credit BlackSheepBoy69
                         showMenu = 0
@@ -13978,7 +14240,7 @@ while true do
 
                             -- remove recent
                             if #recently_played_table ~= nil then
-                                if showCat == 40 then
+                                if showCat == 41 then
                                     -- We are in the recent category, remove the game and save cache
                                     table.remove(recently_played_table, p)
                                     update_cached_table_recently_played()
@@ -14007,7 +14269,7 @@ while true do
 
                         -- remove recent
                         if #recently_played_table ~= nil then
-                            if showCat == 40 then
+                            if showCat == 41 then
                                 -- We are in the recent category, remove the game and save cache
                                 table.remove(recently_played_table, p)
                                 update_cached_table_recently_played()
@@ -14430,8 +14692,9 @@ while true do
                     elseif showCat == 36 then rom_location = (mame_2000_table[p].game_path) launch_retroarch(core.MAME_2000)
                     elseif showCat == 37 then rom_location = (neogeo_table[p].game_path) launch_retroarch(core.NEOGEO)
                     elseif showCat == 38 then rom_location = (ngpc_table[p].game_path) launch_retroarch(core.NGPC)
+                    elseif showCat == 39 then rom_title_id = tostring(psm_table[p].name) launch_psmobile(rom_title_id)
 
-                    elseif showCat == 39 then
+                    elseif showCat == 40 then
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (fav_count[p].game_path, "pspemu") then
                                 -- Launch adrenaline
@@ -14484,6 +14747,7 @@ while true do
                         elseif apptype == 36 then rom_location = (fav_count[p].game_path) launch_retroarch(core.MAME_2000)
                         elseif apptype == 37 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NEOGEO)
                         elseif apptype == 38 then rom_location = (fav_count[p].game_path) launch_retroarch(core.NGPC)
+                        elseif apptype == 39 then rom_title_id = tostring(fav_count[p].name) launch_psmobile(rom_title_id)
                         else
                             -- Homebrew
                             if string.match (fav_count[p].game_path, "pspemu") then
@@ -14498,7 +14762,7 @@ while true do
                             appdir=working_dir .. "/" .. fav_count[p].name
                         end
 
-                    elseif showCat == 40 then
+                    elseif showCat == 41 then
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (recently_played_table[p].game_path, "pspemu") then
                                  -- Launch adrenaline
@@ -14551,6 +14815,7 @@ while true do
                         elseif apptype == 36 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.MAME_2000)
                         elseif apptype == 37 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NEOGEO)
                         elseif apptype == 38 then rom_location = (recently_played_table[p].game_path) launch_retroarch(core.NGPC)
+                        elseif apptype == 39 then rom_title_id = tostring(recently_played_table[p].name) launch_psmobile(rom_title_id)
                         else
                             -- Homebrew
                             if string.match (recently_played_table[p].game_path, "pspemu") then
@@ -14566,7 +14831,7 @@ while true do
                         end
 
                     
-                    elseif showCat == 41 then
+                    elseif showCat == 42 then
                         if apptype == 1 or apptype == 2 or apptype == 3 or apptype == 4 then
                             if string.match (search_results_table[p].game_path, "pspemu") then
                                  -- Launch adrenaline
@@ -14619,6 +14884,7 @@ while true do
                         elseif apptype == 36 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.MAME_2000)
                         elseif apptype == 37 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NEOGEO)
                         elseif apptype == 38 then rom_location = (search_results_table[p].game_path) launch_retroarch(core.NGPC)
+                        elseif apptype == 39 then rom_title_id = tostring(search_results_table[p].name) launch_psmobile(rom_title_id)
                         else
                             -- Homebrew
                             if string.match (search_results_table[p].game_path, "pspemu") then
@@ -14688,6 +14954,7 @@ while true do
                         elseif apptype == 36 then rom_location = (files_table[p].game_path) launch_retroarch(core.MAME_2000)
                         elseif apptype == 37 then rom_location = (files_table[p].game_path) launch_retroarch(core.NEOGEO)
                         elseif apptype == 38 then rom_location = (files_table[p].game_path) launch_retroarch(core.NGPC)
+                        elseif apptype == 39 then rom_title_id = tostring(files_table[p].name) launch_psmobile(rom_title_id)
                         else
                             -- Homebrew
                             if string.match (files_table[p].game_path, "pspemu") then
@@ -14753,29 +15020,30 @@ while true do
 
                     -- Start skip empty categories
 
-                    if showCat == 41 then
+                    if showCat == 42 then
                         curTotal = #search_results_table   
                         if #search_results_table == 0 then 
                             showCat = 40
                         end
                     end
 
-                    if showCat == 40 then 
+                    if showCat == 41 then 
                         curTotal = #recently_played_table
                         if #recently_played_table == 0 then 
                             showCat = 39
                         end
                     end
 
-                    if showCat == 39 then
+                    if showCat == 40 then
                         -- count favorites
                         create_fav_count_table(files_table)
 
                         curTotal = #fav_count
-                        if #fav_count == 0 then showCat = 38
+                        if #fav_count == 0 then showCat = 39
                         end
                     end
 
+                    if showCat == 39 then curTotal =    #psm_table              if #psm_table == 0 then        showCat = 38 end end
                     if showCat == 38 then curTotal =    #ngpc_table             if #ngpc_table == 0 then            showCat = 37 end end
                     if showCat == 37 then curTotal =    #neogeo_table           if #neogeo_table == 0 then          showCat = 36 end end
                     if showCat == 36 then curTotal =    #mame_2000_table        if #mame_2000_table == 0 then       showCat = 35 end end
@@ -14896,7 +15164,8 @@ while true do
                     if showCat == 36 then curTotal =    #mame_2000_table        if #mame_2000_table == 0 then       showCat = 37 end end
                     if showCat == 37 then curTotal =    #neogeo_table           if #neogeo_table == 0 then          showCat = 38 end end
                     if showCat == 38 then curTotal =    #ngpc_table             if #ngpc_table == 0 then            showCat = 39 end end
-                    if showCat == 39 then
+                    if showCat == 39 then curTotal =    #psm_table              if #psm_table == 0 then        showCat = 40 end end
+                    if showCat == 40 then
                         -- count favorites
                         create_fav_count_table(files_table)
 
@@ -14904,13 +15173,13 @@ while true do
                         if #fav_count == 0 then showCat = 40
                         end
                     end
-                    if showCat == 40 then 
+                    if showCat == 41 then 
                         curTotal = #recently_played_table
                         if #recently_played_table == 0 then showCat = 41
                         end
                     end
                     
-                    if showCat == 41 then
+                    if showCat == 42 then
                         curTotal = #search_results_table   
                         if #search_results_table == 0 and showAll==1 then 
                             showCat = 0
@@ -15114,7 +15383,7 @@ while true do
                 -- Favourites found
                 if #fav_count > 0 then
                     -- Skip to favorites
-                    if showCat == 39 then
+                    if showCat == 40 then
                     else
                         showCat = 39
                         p = 1
@@ -15303,8 +15572,9 @@ while true do
     elseif showCat == 35 then curTotal = #mame_2003_plus_table  if #mame_2003_plus_table == 0   then p = 0 master_index = p end
     elseif showCat == 36 then curTotal = #mame_2000_table       if #mame_2000_table == 0        then p = 0 master_index = p end
     elseif showCat == 37 then curTotal = #neogeo_table          if #neogeo_table == 0           then p = 0 master_index = p end
-    elseif showCat == 38 then curTotal = #ngpc_table            if #ngpc_table == 0             then p = 0 master_index = p end    
-    elseif showCat == 39 then
+    elseif showCat == 38 then curTotal = #ngpc_table            if #ngpc_table == 0             then p = 0 master_index = p end 
+    elseif showCat == 39 then curTotal = #psm_table             if #psm_table == 0              then p = 0 master_index = p end    
+    elseif showCat == 40 then
         -- count favorites
         create_fav_count_table(files_table)
         
@@ -15313,13 +15583,13 @@ while true do
             p = 0
             master_index = p
         end
-    elseif showCat == 40 then
+    elseif showCat == 41 then
         curTotal = #recently_played_table
         if #recently_played_table == 0 then
             p = 0
             master_index = p
         end
-    elseif showCat == 41 then
+    elseif showCat == 42 then
         curTotal = #search_results_table
         if #search_results_table == 0 then
             p = 0
