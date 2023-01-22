@@ -15024,14 +15024,14 @@ while true do
                     if showCat == 42 then
                         curTotal = #search_results_table   
                         if #search_results_table == 0 then 
-                            showCat = 40
+                            showCat = 41
                         end
                     end
 
                     if showCat == 41 then 
                         curTotal = #recently_played_table
                         if #recently_played_table == 0 then 
-                            showCat = 39
+                            showCat = 40
                         end
                     end
 
@@ -15093,9 +15093,9 @@ while true do
 
                         -- Skip Recent category if disabled
                         if showRecentlyPlayed == 0 then
-                            showCat = 39
-                        else
                             showCat = 40
+                        else
+                            showCat = 41
                         end
 
                     end
