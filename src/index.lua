@@ -9806,6 +9806,7 @@ function FreeIcons()
     for k, v in pairs(mame_2000_table)          do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end
     for k, v in pairs(neogeo_table)             do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end
     for k, v in pairs(ngpc_table)               do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end
+    for k, v in pairs(psm_table)                do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end
 
     for k, v in pairs(recently_played_table)    do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end
     for k, v in pairs(homebrews_table)          do FileLoad[v] = nil Threads.remove(v) if v.ricon then Graphics.freeImage(v.ricon) v.ricon = nil end end
@@ -15043,7 +15044,7 @@ while true do
                         end
                     end
 
-                    if showCat == 39 then curTotal =    #psm_table              if #psm_table == 0 then        showCat = 38 end end
+                    if showCat == 39 then curTotal =    #psm_table              if #psm_table == 0 then             showCat = 38 end end
                     if showCat == 38 then curTotal =    #ngpc_table             if #ngpc_table == 0 then            showCat = 37 end end
                     if showCat == 37 then curTotal =    #neogeo_table           if #neogeo_table == 0 then          showCat = 36 end end
                     if showCat == 36 then curTotal =    #mame_2000_table        if #mame_2000_table == 0 then       showCat = 35 end end
@@ -15164,7 +15165,7 @@ while true do
                     if showCat == 36 then curTotal =    #mame_2000_table        if #mame_2000_table == 0 then       showCat = 37 end end
                     if showCat == 37 then curTotal =    #neogeo_table           if #neogeo_table == 0 then          showCat = 38 end end
                     if showCat == 38 then curTotal =    #ngpc_table             if #ngpc_table == 0 then            showCat = 39 end end
-                    if showCat == 39 then curTotal =    #psm_table              if #psm_table == 0 then        showCat = 40 end end
+                    if showCat == 39 then curTotal =    #psm_table              if #psm_table == 0 then             showCat = 40 end end
                     if showCat == 40 then
                         -- count favorites
                         create_fav_count_table(files_table)
