@@ -2904,7 +2904,10 @@ function count_loading_tasks()
 
         -- Count Vita and Playstatio Mobile
         count_loading_tasks_dir("ux0:/app")
-        count_loading_tasks_dir("ux0:/psm")
+        if System.doesDirExist("ux0:/psm") then
+            count_loading_tasks_dir("ux0:/psm")
+        else
+        end
 
         -- Count Adrenaline
         count_loading_tasks_adrenaline (adr_partition  .. ":/pspemu/ISO")
