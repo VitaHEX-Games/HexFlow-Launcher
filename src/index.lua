@@ -2522,7 +2522,13 @@ function check_for_hidden_tag_on_scan(def_file_name, def_app_type)
         if key ~= nil then
             -- Yes - Find in files table
             if hidden_games_table[key].app_type == (def_app_type) then
-                return true
+                
+                if hidden_games_table[key].hidden == true then
+                    return true
+                else
+                    return false
+                end
+
             end
         else
           -- No
@@ -6674,102 +6680,11 @@ function listDirectory(dir)
 
     table.sort(recently_played_table, function(a, b) return (tonumber(a.date_played) > tonumber(b.date_played)) end)
     
-
     update_loading_screen_complete()
 
     -- CACHE ALL TABLES - PRINT AND SAVE
     cache_all_tables()
 
-    return_table = TableConcat(folders_table, files_table)
-
-    -- Remove homebrew if hidden
-    if showHomebrews == 0 then
-        for l, file in pairs(files_table) do
-            if file.app_type == 0 then
-                table.remove(files_table,l)
-            else
-            end
-        end
-        for l, file in pairs(folders_table) do
-            if file.app_type == 0 then
-                table.remove(folders_table,l)
-            else
-            end
-        end
-        for l, file in pairs(return_table) do
-            if file.app_type == 0 then
-                table.remove(return_table,l)
-            else
-            end
-        end
-        homebrews_table = {}
-    end
-
-    -- Remove hidden games if hidden off
-    function remove_hidden_from_table(def_table_name)
-        if showHidden == 0 then
-            for l, file in pairs((def_table_name)) do
-                if file.hidden == true then
-                    table.remove((def_table_name),l)
-                else
-                end
-            end
-        end
-    end
-
-    remove_hidden_from_table(files_table)
-    remove_hidden_from_table(folders_table)
-    remove_hidden_from_table(games_table)
-    remove_hidden_from_table(homebrews_table)
-    remove_hidden_from_table(psp_table)
-    remove_hidden_from_table(psx_table)
-    remove_hidden_from_table(n64_table)
-    remove_hidden_from_table(snes_table)
-    remove_hidden_from_table(nes_table)
-    remove_hidden_from_table(gba_table)
-    remove_hidden_from_table(gbc_table)
-    remove_hidden_from_table(gb_table)
-    remove_hidden_from_table(dreamcast_table)
-    remove_hidden_from_table(sega_cd_table)
-    remove_hidden_from_table(s32x_table)
-    remove_hidden_from_table(md_table)
-    remove_hidden_from_table(sms_table)
-    remove_hidden_from_table(gg_table)
-    remove_hidden_from_table(tg16_table)
-    remove_hidden_from_table(tgcd_table)
-    remove_hidden_from_table(pce_table)
-    remove_hidden_from_table(pcecd_table)
-    remove_hidden_from_table(amiga_table)
-    remove_hidden_from_table(c64_table)
-    remove_hidden_from_table(wswan_col_table)
-    remove_hidden_from_table(wswan_table)
-    remove_hidden_from_table(msx2_table)
-    remove_hidden_from_table(msx1_table)
-    remove_hidden_from_table(zxs_table)
-    remove_hidden_from_table(atari_7800_table)
-    remove_hidden_from_table(atari_5200_table)
-    remove_hidden_from_table(atari_2600_table)
-    remove_hidden_from_table(atari_lynx_table)
-    remove_hidden_from_table(colecovision_table)
-    remove_hidden_from_table(vectrex_table)
-    remove_hidden_from_table(fba_table)
-    remove_hidden_from_table(mame_2003_plus_table)
-    remove_hidden_from_table(mame_2000_table)
-    remove_hidden_from_table(neogeo_table)
-    remove_hidden_from_table(ngpc_table)
-    remove_hidden_from_table(psm_table)
-    remove_hidden_from_table(recently_played_table)
-    remove_hidden_from_table(return_table)
-
-    -- print_loading(" ")
-
-    total_all = #files_table
-    total_games = #games_table
-    total_homebrews = #homebrews_table
-    total_recently_played = #recently_played_table
-
-    return return_table
-    
 end
 
 
@@ -7026,6 +6941,7 @@ if startupScan == 1 then
     -- Scan folders and games
     count_loading_tasks()
     files_table = listDirectory(System.currentDirectory())
+    files_table = import_cached_DB()
 else
     -- Startup scan is OFF
 
@@ -7038,6 +6954,7 @@ else
             -- Files missing - rescan
             count_loading_tasks()
             files_table = listDirectory(System.currentDirectory())
+            files_table = import_cached_DB()
         else
             -- Files all pesent - Import Cached Database
             files_table = import_cached_DB()
@@ -7046,6 +6963,7 @@ else
         -- Folder missing - rescan
         count_loading_tasks()
         files_table = listDirectory(System.currentDirectory())
+        files_table = import_cached_DB()
     end
 end
 
@@ -8775,64 +8693,42 @@ function AddOrRemoveFavorite()
 end
 
 
-function update_hidden_games_recently_played_table(def)
-    for k, v in pairs(recently_played_table) do
-        if v.filename==filename then
-            v.hidden=(def)
-            update_cached_table_recently_played()
-        end
-    end
-end
-
-
-function AddOrRemoveHidden()
+function AddOrRemoveHidden(def_hide_game_flag)
 
     -- Recent cat
     if showCat == 41 then
-        if recently_played_table[p].hidden == true then
-            recently_played_table[p].hidden=false
 
-            -- Update games table and cache
-            if #recently_played_table ~= nil then
-                local key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
-                if key ~= nil then
-                    xAppNumTableLookup(apptype)[key].hidden=false
-                else
-                end
-            end
+        -- Update recent table
+        if #recently_played_table ~= nil then
+            recently_played_table[p].hidden=(def_hide_game_flag)
+        end
+        update_cached_table_recently_played()
 
-            update_cached_table_recently_played()
-
+        -- Update app type table
+        local key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+        if key ~= nil then
+            xAppNumTableLookup(apptype)[key].hidden=(def_hide_game_flag)
+            update_cached_table(xAppDbFileLookup(apptype), xAppNumTableLookup(apptype))
         else
-            recently_played_table[p].hidden=true
-
-            -- Update games table and cache
-            if #recently_played_table ~= nil then
-                local key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
-                if key ~= nil then
-                    xAppNumTableLookup(apptype)[key].hidden=true
-                else
-                end
-            end
-
-            update_cached_table_recently_played()
-
         end
 
     -- Other cats
     else
-        if xAppNumTableLookup(apptype)[p].hidden == true then
+        -- Update app type table
+        xAppNumTableLookup(apptype)[p].hidden=(def_hide_game_flag)
+        update_cached_table(xAppDbFileLookup(apptype), xAppNumTableLookup(apptype))
 
-            xAppNumTableLookup(apptype)[p].hidden=false
-            -- Update recent and cache
-            update_hidden_games_recently_played_table(false)
-
+        -- Update recent table
+        if #recently_played_table ~= nil then
+            local key = find_game_table_pos_key(recently_played_table, app_titleid)
+            if key ~= nil then
+                recently_played_table[key].hidden=(def_hide_game_flag)
+                update_cached_table_recently_played()
+            else
+            end
         else
-            xAppNumTableLookup(apptype)[p].hidden=true
-            -- Update recent and cache
-            update_hidden_games_recently_played_table(true)
-
         end
+        
     end
 
 end
@@ -11750,6 +11646,7 @@ while true do
                     if showHomebrews == 1 then
                         showHomebrews = 0
                         -- Import cache to update All games category
+                        FreeIcons()
                         count_cache_and_reload()
                         GetInfoSelected()
                         -- If currently on homebrew category view, move to Vita category to hide empty homebrew category
@@ -11760,6 +11657,7 @@ while true do
                     else
                         showHomebrews = 1
                         -- Import cache to update All games category
+                        FreeIcons()
                         count_cache_and_reload()
                         GetInfoSelected()
                     end
@@ -11768,6 +11666,7 @@ while true do
                     if showRecentlyPlayed == 1 then -- 0 Off, 1 On
                         showRecentlyPlayed = 0
                         -- Import cache to update All games category
+                        FreeIcons()
                         count_cache_and_reload()
                         -- If currently on recent category view, move to Vita category to hide empty recent category
                         if showCat == 41 then
@@ -11779,12 +11678,14 @@ while true do
                     else
                         showRecentlyPlayed = 1
                         -- Import cache to update All games category
+                        FreeIcons()
                         count_cache_and_reload()
                     end
                 elseif menuY == 4 then -- #4 All Category
                     if showAll == 1 then -- 0 Off, 1 On
                         showAll = 0
                         -- Import cache to update All games category
+                        FreeIcons()
                         count_cache_and_reload()
                         -- If currently on recent category view, move to Vita category to hide empty recent category
                         if showCat == 0 then
@@ -11798,6 +11699,7 @@ while true do
                     if showHidden == 1 then
                         showHidden = 0
                         -- Import cache to update All games category
+                        FreeIcons()
                         count_cache_and_reload()
                         if showCat == 40 then 
                             create_fav_count_table(files_table)
@@ -11807,6 +11709,7 @@ while true do
                     else
                         showHidden = 1
                         -- Import cache to update All games category
+                        FreeIcons()
                         count_cache_and_reload()
                         if showCat == 40 then 
                             create_fav_count_table(files_table)
@@ -12509,11 +12412,13 @@ while true do
                         --Save settings
                         SaveSettings()
                         -- Print to Cache folder
+                        FreeIcons()
                         count_cache_and_reload()
                     else
                         startupScan = 1
                         --Save settings
                         SaveSettings()
+                        FreeIcons()
                         count_cache_and_reload()
                     end
                 elseif menuY == 4 then -- #4 Rescan
@@ -14151,6 +14056,9 @@ while true do
 
                     -- Update hidden games lua file
 
+                    -- Update other tables in realtime
+                    AddOrRemoveHidden(hide_game_flag)
+
                         -- Check if the hidden game table is empty
                         if #hidden_games_table ~= nil then -- Is not empty
 
@@ -14158,21 +14066,13 @@ while true do
                             local key = find_game_table_pos_key(hidden_games_table, app_titleid)
                             if key ~= nil then
                                 -- Game found - If set to unhide, then remove from table
-                                if hide_game_flag == false then
-                                    table.remove(hidden_games_table, key)
-                                else
-                                end
+                                hidden_games_table[key].hidden = hide_game_flag
                             else
                                 -- Game not found, it's new, add it to the hidden list
-                                
+
                                 -- Find game in app table, update and add to hidden
                                 local key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
                                 if key ~= nil then
-                                    if hide_game_flag == true then
-                                        xAppNumTableLookup(apptype)[key].hidden = true
-                                    else
-                                        xAppNumTableLookup(apptype)[key].hidden = false
-                                    end
                                     table.insert(hidden_games_table, xAppNumTableLookup(apptype)[key])
                                 else
                                 end
@@ -14180,15 +14080,9 @@ while true do
                             end
 
                         else -- Is empty, add first game to hide 
-
                             -- Find game in app table, update and add to hidden
                             local key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
                             if key ~= nil then
-                                if hide_game_flag == true then
-                                    xAppNumTableLookup(apptype)[key].hidden = true
-                                else
-                                    xAppNumTableLookup(apptype)[key].hidden = false
-                                end
                                 table.insert(hidden_games_table, xAppNumTableLookup(apptype)[key])
                             else
                             end
@@ -14197,10 +14091,7 @@ while true do
                         -- Save the hidden game table for importing on restart
                         update_cached_table_hidden_games()
 
-                        
-                    -- Update other tables in realtime
-                    AddOrRemoveHidden()
-
+                    FreeIcons()
                     count_cache_and_reload()
                     GetInfoSelected()
 
@@ -15386,7 +15277,7 @@ while true do
                     -- Skip to favorites
                     if showCat == 40 then
                     else
-                        showCat = 39
+                        showCat = 40
                         p = 1
                         master_index = p
                         GetNameAndAppTypeSelected()
