@@ -1164,19 +1164,19 @@ end
         elseif setLanguage == 5     then return 5  -- Spanish
         elseif setLanguage == 6     then return 6  -- Portuguese
         elseif setLanguage == 7     then return 9  -- Swedish
-        elseif setLanguage == 8     then return 14 -- Russian
-        elseif setLanguage == 9     then return 17 -- Japanese
-        elseif setLanguage == 10    then return 15 -- Chinese (Traditional)
+        elseif setLanguage == 8     then return 15 -- Russian
+        elseif setLanguage == 9     then return 18 -- Japanese
+        elseif setLanguage == 10    then return 16 -- Chinese (Traditional)
         elseif setLanguage == 11    then return 8  -- Polski
         elseif setLanguage == 12    then return 7  -- Dutch
         elseif setLanguage == 13    then return 10 -- Danish
         elseif setLanguage == 14    then return 11 -- Norwegian
         elseif setLanguage == 15    then return 12 -- Finnish
         elseif setLanguage == 16    then return 13 -- Turkish
-        elseif setLanguage == 17    then return 19 -- Korean
-        elseif setLanguage == 18    then return 16 -- Chinese (Simplified)
-        elseif setLanguage == 19    then return 18 -- Japanese (Ryukyuan)
-        elseif setLanguage == 20    then return 20 -- Japanese (Ryukyuan)
+        elseif setLanguage == 17    then return 20 -- Korean
+        elseif setLanguage == 18    then return 17 -- Chinese (Simplified)
+        elseif setLanguage == 19    then return 19 -- Japanese (Ryukyuan)
+        elseif setLanguage == 20    then return 14 -- Hungarian
         else                             return 0  -- English (United Kingdom)
         end
     end
@@ -1197,13 +1197,14 @@ end
         elseif chooseLanguage == 11 then return 14 -- Norwegian
         elseif chooseLanguage == 12 then return 15 -- Finnish
         elseif chooseLanguage == 13 then return 16 -- Turkish
-        elseif chooseLanguage == 14 then return 8  -- Russian
-        elseif chooseLanguage == 15 then return 10 -- Chinese (Traditional)
-        elseif chooseLanguage == 16 then return 18 -- Chinese (Simplified)
-        elseif chooseLanguage == 17 then return 9  -- Japanese
-        elseif chooseLanguage == 18 then return 19 -- Japanese (Ryukyuan)        
-        elseif chooseLanguage == 19 then return 17 -- Korean
-        elseif chooseLanguage == 20 then return 20 -- Korean
+        elseif chooseLanguage == 14 then return 20 -- Hungarian
+        elseif chooseLanguage == 15 then return 8  -- Russian
+        elseif chooseLanguage == 16 then return 10 -- Chinese (Traditional)
+        elseif chooseLanguage == 17 then return 18 -- Chinese (Simplified)
+        elseif chooseLanguage == 18 then return 9  -- Japanese
+        elseif chooseLanguage == 19 then return 19 -- Japanese (Ryukyuan)        
+        elseif chooseLanguage == 20 then return 17 -- Korean
+        
         else                             return 0  -- English (United Kingdom)
         end
     end
@@ -1212,6 +1213,14 @@ end
 local chooseLanguage = 0
 chooseLanguage = xchooseLanguageLookup(setLanguage)
 
+-- Check if the get info screen needs to be wider for long translations
+local wide_getinfoscreen = false
+-- Hungarian
+if setLanguage == 20 then
+    wide_getinfoscreen = true
+else
+    wide_getinfoscreen = false
+end
 
 
 -- Check for PSP and PSX titles for scanning
@@ -1771,6 +1780,7 @@ end
 
 
 function ChangeLanguage(def)
+
     setLanguage = (def)
     if #lang_lines>0 then
         for k in pairs (lang_lines) do
@@ -1866,8 +1876,17 @@ function ChangeLanguage(def)
     -- Update wallpaper table string for 'Off'
     wallpaper_table_settings[1].wallpaper_string = lang_lines.Off
 
+    -- Check if the get info screen needs to be wider for long translations
+    -- Hungarian
+    if setLanguage == 20 then
+        wide_getinfoscreen = true
+    else
+        wide_getinfoscreen = false
+    end
 
 end
+
+
 ChangeLanguage(xsetLanguageLookup(chooseLanguage))
 
 
@@ -10652,11 +10671,12 @@ while true do
 
         Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnT)
         Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Options, white)--Options
-
-        -- Graphics.drawImage(900-(btnMargin * 6)-label1-label2-label3-label4, 510, btnT)
-        -- Font.print(fnt20, 900+28-(btnMargin * 6)-label1-label2-label3-label4, 508, lang_lines.Favorite, white)--Favourite
         
-        Graphics.fillRect(24, 470, 24, 470, darkalpha)
+        if wide_getinfoscreen == true then
+            Graphics.fillRect(24, 470+24, 24, 470, darkalpha)
+        else
+            Graphics.fillRect(24, 470, 24, 470, darkalpha)
+        end
 
         Render.setCamera(0, 0, 0, 0.0, 0.0, 0.0)
         if inPreview == false then
@@ -11009,13 +11029,25 @@ while true do
 
         -- Show fav icon if game if a favourite
         if favourite_flag == true then
-            Graphics.drawImage(420, 50, imgFavorite_large_on)
+            if wide_getinfoscreen == true then
+                Graphics.drawImage(420+24, 50, imgFavorite_large_on)
+            else
+                Graphics.drawImage(420, 50, imgFavorite_large_on)
+            end
         else
-            Graphics.drawImage(420, 50, imgFavorite_large_off)
+            if wide_getinfoscreen == true then
+                Graphics.drawImage(420+24, 50, imgFavorite_large_off)
+            else
+                Graphics.drawImage(420, 50, imgFavorite_large_off)
+            end
         end
 
         if hide_game_flag == true then
-            Graphics.drawImage(380, 50, imgHidden_large_on)
+            if wide_getinfoscreen == true then
+                Graphics.drawImage(380+24, 50, imgHidden_large_on)
+            else
+                Graphics.drawImage(380, 50, imgHidden_large_on)
+            end
         else
         end
 
@@ -11084,9 +11116,17 @@ while true do
         or string.match (game_path, "ux0:/app/") then
              -- start Disable category override for retro
             if menuY==1 then
-                Graphics.fillRect(24, 470, 350 + (menuY * 40), 430 + (menuY * 40), themeCol)-- selection two lines
+                if wide_getinfoscreen == true then
+                    Graphics.fillRect(24, 470+24, 350 + (menuY * 40), 430 + (menuY * 40), themeCol)-- selection two lines
+                else
+                    Graphics.fillRect(24, 470, 350 + (menuY * 40), 430 + (menuY * 40), themeCol)-- selection two lines
+                end
             else
-                Graphics.fillRect(24, 470, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
+                if wide_getinfoscreen == true then
+                    Graphics.fillRect(24, 470+24, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
+                else
+                    Graphics.fillRect(24, 470, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
+                end
             end
 
             if setSwap_X_O_buttons == 1 then 
@@ -11097,11 +11137,11 @@ while true do
                 Press_Button_to_apply_Category = tostring(lang_lines.Press_X_to_apply_Category)
             end
 
-            -- Make box wider for German, French, Russian, Portuguese, Dutch, Turkish
-            if setLanguage == 2 or setLanguage == 3 or setLanguage == 6 or setLanguage == 8 or setLanguage == 12 or setLanguage == 16 then
+            -- Wrap text for wider languages: German, French, Russian, Portuguese, Dutch, Turkish, Hungarian
+            if setLanguage == 2 or setLanguage == 3 or setLanguage == 6 or setLanguage == 8 or setLanguage == 12 or setLanguage == 16 or setLanguage == 20 then
                 Font.print(fnt22, 50, 352+40, lang_lines.Override_Category_colon.. "\n< " .. tmpcatText .. " >\n( " .. Press_Button_to_apply_Category .. ")", white)
             else
-                Font.print(fnt22, 50, 352+40, lang_lines.Override_Category_colon.. "< " .. tmpcatText .. " >\n( " .. Press_Button_to_apply_Category .. ")", white)
+                Font.print(fnt22, 50, 352+50, lang_lines.Override_Category_colon.. "< " .. tmpcatText .. " >\n( " .. Press_Button_to_apply_Category .. ")", white)
             end
 
 
@@ -11111,16 +11151,20 @@ while true do
         else
             if menuY==1 then
             else
-                Graphics.fillRect(24, 470, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
+                if wide_getinfoscreen == true then
+                    Graphics.fillRect(24, 470+24, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
+                else
+                    Graphics.fillRect(24, 470, 350 + (menuY * 40), 390 + (menuY * 40), themeCol)-- selection
+                end
             end
-            Font.print(fnt22, 50, 352, "< " .. tmpimageText .. " >", white)
+            -- Font.print(fnt22, 50, 352+3, "< " .. tmpimageText .. " >", white)
         end
 
         -- Download background - don't show on vita, homebrew or ps mobile
         if apptype == 0 or apptype == 1 or apptype == 39 then
-            Font.print(fnt22, 50, 352, tmpimageText, white)
+            Font.print(fnt22, 50, 352+3, tmpimageText, white)
         else
-            Font.print(fnt22, 50, 352, "< " .. tmpimageText .. " >", white)
+            Font.print(fnt22, 50, 352+3, "< " .. tmpimageText .. " >", white)
         end
         
 
@@ -11201,13 +11245,6 @@ while true do
                     end
                 end
 
-            -- elseif (Controls.check(pad, SCE_CTRL_SQUARE)) and not (Controls.check(oldpad, SCE_CTRL_SQUARE)) then
-            --     -- Rename
-            --     if hasTyped==false then
-            --         Keyboard.start(tostring(lang_lines.Rename), app_title:gsub("\n",""), 512, TYPE_LATIN, MODE_TEXT)
-            --         hasTyped=true
-            --         rename_keyboard=true
-            --     end
             end
         end
 
@@ -11324,16 +11361,19 @@ while true do
         elseif chooseLanguage == 13 then 
             -- setLanguage = 16
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Türkçe", white) -- Turkish
-        elseif chooseLanguage == 14 then 
+        elseif chooseLanguage == 14 then
+            -- setLanguage = 20
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Magyar", white) -- Hungarian
+        elseif chooseLanguage == 15 then 
             -- setLanguage = 8
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Pусский", white) -- Russian
-        elseif chooseLanguage == 15 then 
+        elseif chooseLanguage == 16 then 
             -- setLanguage = 10
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "繁體中文", white) -- Chinese (Traditional)
-        elseif chooseLanguage == 16 then
+        elseif chooseLanguage == 17 then
             -- then setLanguage = 18
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "简体中文", white) -- Chinese (Simplified)
-        elseif chooseLanguage == 17 then 
+        elseif chooseLanguage == 18 then 
             -- setLanguage = 9
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "日本語", white) -- Japanese
             -- Dreamcast, update regional missing cover - Japan - Orange logo
@@ -11342,14 +11382,13 @@ while true do
                       v.icon_path="app0:/DATA/missing_cover_dreamcast_j.png"
                   end
             end
-        elseif chooseLanguage == 18 then
+        elseif chooseLanguage == 19 then
             -- then setLanguage = 18
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "琉球語派", white) -- Japanese (Ryukyuan)   
-        elseif chooseLanguage == 19 then 
+        elseif chooseLanguage == 20 then 
             -- setLanguage = 17
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "T한국어", white) -- Korean
-        elseif chooseLanguage == 20 then 
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Magyar", white) -- Korean
+        
         
         else 
             -- setLanguage = 0

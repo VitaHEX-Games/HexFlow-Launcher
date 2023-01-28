@@ -93,7 +93,7 @@
 	        lang = "CN_S.lua"
 	    elseif setLanguage == 19 then
         	lang = "JA_ryu.lua"
-		elseif setLanguage == 20 then
+        elseif setLanguage == 20 then
         	lang = "HU.lua"
 	    else
 	        lang = "EN.lua"
