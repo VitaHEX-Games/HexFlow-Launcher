@@ -1176,6 +1176,7 @@ end
         elseif setLanguage == 17    then return 19 -- Korean
         elseif setLanguage == 18    then return 16 -- Chinese (Simplified)
         elseif setLanguage == 19    then return 18 -- Japanese (Ryukyuan)
+        elseif setLanguage == 20    then return 20 -- Japanese (Ryukyuan)
         else                             return 0  -- English (United Kingdom)
         end
     end
@@ -1202,7 +1203,7 @@ end
         elseif chooseLanguage == 17 then return 9  -- Japanese
         elseif chooseLanguage == 18 then return 19 -- Japanese (Ryukyuan)        
         elseif chooseLanguage == 19 then return 17 -- Korean
-        
+        elseif chooseLanguage == 20 then return 20 -- Korean
         else                             return 0  -- English (United Kingdom)
         end
     end
@@ -1834,6 +1835,9 @@ function ChangeLanguage(def)
         ChangeFont(font_chinese_simplified)
     elseif setLanguage == 19 then
         lang = "JA_ryu.lua"
+        ChangeFont(font_default)
+    elseif setLanguage == 20 then
+        lang = "HU.lua"
         ChangeFont(font_default)
     else
         lang = "EN.lua"
@@ -11344,6 +11348,8 @@ while true do
         elseif chooseLanguage == 19 then 
             -- setLanguage = 17
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "T한국어", white) -- Korean
+        elseif chooseLanguage == 20 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Magyar", white) -- Korean
         
         else 
             -- setLanguage = 0
@@ -11396,7 +11402,7 @@ while true do
                     showMenu = 19
                     menuY = 0
                 elseif menuY == 7 then -- Language
-                    if chooseLanguage < 19 then
+                    if chooseLanguage < 20 then
                         chooseLanguage = chooseLanguage + 1
                     else
                         chooseLanguage = 0
