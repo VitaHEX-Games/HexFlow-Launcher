@@ -1835,6 +1835,9 @@ function ChangeLanguage(def)
     elseif setLanguage == 19 then
         lang = "JA_ryu.lua"
         ChangeFont(font_default)
+    elseif setLanguage == 20 then
+        lang = "HU.lua"
+        ChangeFont(font_default)
     else
         lang = "EN.lua"
         ChangeFont(font_default)
@@ -11344,6 +11347,8 @@ while true do
         elseif chooseLanguage == 19 then 
             -- setLanguage = 17
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "T한국어", white) -- Korean
+        elseif chooseLanguage == 20 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Magyar", white) -- Korean
         
         else 
             -- setLanguage = 0
