@@ -188,8 +188,8 @@ return {
 ["Download_Cover"] = "Borító Letöltése",
 ["Download_Background"] = "Háttér Letöltése",
 ["Override_Category_colon"] = "Kategória Felülírása: ",
-["Press_X_to_apply_Category"] = "Nyomj X -t a Kategória alkalmazásához",
-["Press_O_to_apply_Category"] = "Nyomj O -t a Kategória alkalmazásához",
+["Press_X_to_apply_Category"] = "Nyomj X-t a Kategória alkalmazásához",
+["Press_O_to_apply_Category"] = "Nyomj O-t a Kategória alkalmazásához",
 ["Default"] = "Alapértelmezett",
 ["Favorite"] = "Kedvenc",
 ["Rename"] = "Átnevezés",
@@ -238,7 +238,7 @@ return {
 ["The_VPK_is_saved_here"] = "A VPK itt van elmentve",
 
 -- Search
-["Search"] = "Kersés",
+["Search"] = "Keresés",
 ["Search_Results"] = "Keresési Eredmények",
 ["Search_No_Results"] = "Nyomj SELECT-t az újboli kereséshez",
 
