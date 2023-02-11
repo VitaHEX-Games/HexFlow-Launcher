@@ -69,6 +69,15 @@ romDir_Default =
 
 }
 
+adr_partition_table =
+{
+[1] = "ux0",
+[2] = "ur0",
+[3] = "imc0",
+[4] = "xmc0",
+[5] = "uma0",
+}
+
 -- Create directory: Main
 local cur_dir = "ux0:/data/RetroFlow/"
 System.createDirectory("ux0:/data/RetroFlow/")
@@ -1069,7 +1078,7 @@ local showHomebrews = 1 -- On
 local startupScan = 0 -- 0 Off, 1 On
 local showRecentlyPlayed = 1 -- On
 local showAll = 1 -- On
-local Adrenaline_roms = 1 -- ux0
+local Adrenaline_roms = 5 -- All partitions
 local Game_Backgrounds = 1 -- On
 local setMusicShuffle = 1 -- On
 
@@ -2617,6 +2626,51 @@ function create_fav_count_table(def_table_input)
     end
 end
 
+
+function include_game_in_recent(def_app_type, def_game_path)
+    local adr_partition_string = ""
+
+    -- Adrenaline partition settings
+    if Adrenaline_roms == 1 then
+        adr_partition_string = "ux0:/pspemu"
+    elseif Adrenaline_roms == 2 then
+        adr_partition_string = "ur0:/pspemu"
+    elseif Adrenaline_roms == 3 then
+        adr_partition_string = "imc0:/pspemu"
+    elseif Adrenaline_roms == 4 then
+        adr_partition_string = "xmc0:/pspemu"
+    elseif Adrenaline_roms == 5 then
+        adr_partition_string = "" -- All partitions
+    else 
+        adr_partition_string = "uma0:/pspemu"
+    end
+
+    -- If adrenaline game and partition selected (not all)
+    if (def_app_type) == 2 or (def_app_type) == 3 and Adrenaline_roms <= 4 then
+        if string.match((def_game_path), adr_partition_string) then
+            -- If game path includes adrenaline partition name, then include
+            return true
+        else
+            -- If game path does not include partition name, then exclude
+            return false
+        end
+    -- If homebrew
+    elseif (def_app_type) == 0 then
+        if showHomebrews == 1 then
+            -- If show homebrew on, include
+            return true
+        else
+            -- If show homebrew off, exclude
+            return false
+        end
+    else
+        -- Include
+        return true
+    end
+
+
+end
+
 function import_recently_played()
 
     local file_over = System.openFile(cur_dir .. "/overrides.dat", FREAD)
@@ -2645,53 +2699,28 @@ function import_recently_played()
                     end
                 end
 
-
                 -- Check rom exists
                 -- If file
                 if v.directory == false then
                     if System.doesFileExist(v.game_path) then
-                        if showHomebrews == 0 then
-                             -- ignore homebrew apps
-                            if v.app_type > 0 then
-                                table.insert(recently_played_table, v)
-                                --add blank icon to all
-                                v.icon = imgCoverTmp
-                                v.icon_path = v.icon_path
-                                v.apptitle = v.apptitle
-                            else
-                            end
-                        else
-                        -- Import all
+                        if include_game_in_recent(v.app_type, v.game_path) == true then
                             table.insert(recently_played_table, v)
                             --add blank icon to all
                             v.icon = imgCoverTmp
                             v.icon_path = v.icon_path
                             v.apptitle = v.apptitle
                         end
-                    else
                     end
                 else
                     -- Not file, is folder
                     if System.doesDirExist(v.game_path) then
-                        if showHomebrews == 0 then
-                             -- ignore homebrew apps
-                            if v.app_type > 0 then
-                                table.insert(recently_played_table, v)
-                                --add blank icon to all
-                                v.icon = imgCoverTmp
-                                v.icon_path = v.icon_path
-                                v.apptitle = v.apptitle
-                            else
-                            end
-                        else
-                        -- Import all
+                        if include_game_in_recent(v.app_type, v.game_path) == true then
                             table.insert(recently_played_table, v)
                             --add blank icon to all
                             v.icon = imgCoverTmp
                             v.icon_path = v.icon_path
                             v.apptitle = v.apptitle
                         end
-                    else
                     end
                 end
             end
@@ -2933,8 +2962,14 @@ function count_loading_tasks()
         end
 
         -- Count Adrenaline
-        count_loading_tasks_adrenaline (adr_partition  .. ":/pspemu/ISO")
-        count_loading_tasks_adrenaline (adr_partition  .. ":/pspemu/PSP/GAME")
+        if Adrenaline_roms == 5 then
+            for k, v in pairs(adr_partition_table) do
+                count_loading_tasks_adrenaline (tostring(v)  .. ":/pspemu/ISO")
+                count_loading_tasks_adrenaline (tostring(v)  .. ":/pspemu/ISO")
+            end
+        else
+            count_loading_tasks_adrenaline (adr_partition  .. ":/pspemu/ISO")
+        end
 
         -- Count retro systems
         for k, v in pairs(SystemsToScan) do
@@ -5254,9 +5289,17 @@ function listDirectory(dir)
         adr_partition = "uma0"
     end
 
-    scan_PSP_iso_folder     (adr_partition  .. ":/pspemu/ISO",       "psp_iso_"     .. adr_partition .. ".lua")
-    scan_PSP_game_folder    (adr_partition  .. ":/pspemu/PSP/GAME",  "psp_game_"    .. adr_partition .. ".lua")
-    scan_PS1_game_folder    (adr_partition  .. ":/pspemu/PSP/GAME",  "psx_"         .. adr_partition .. ".lua")
+    if Adrenaline_roms == 5 then
+        for k, v in pairs(adr_partition_table) do
+            scan_PSP_iso_folder     (tostring(v)  .. ":/pspemu/ISO",       "psp_iso_"     .. tostring(v) .. ".lua")
+            scan_PSP_game_folder    (tostring(v)  .. ":/pspemu/PSP/GAME",  "psp_game_"    .. tostring(v) .. ".lua")
+            scan_PS1_game_folder    (tostring(v)  .. ":/pspemu/PSP/GAME",  "psx_"         .. tostring(v) .. ".lua")
+        end
+    else
+        scan_PSP_iso_folder     (adr_partition  .. ":/pspemu/ISO",       "psp_iso_"     .. adr_partition .. ".lua")
+        scan_PSP_game_folder    (adr_partition  .. ":/pspemu/PSP/GAME",  "psp_game_"    .. adr_partition .. ".lua")
+        scan_PS1_game_folder    (adr_partition  .. ":/pspemu/PSP/GAME",  "psx_"         .. adr_partition .. ".lua")
+    end
 
 
     function scan_Rom_PS1_Eboot (def_ps1_rom_location, def_user_db_file)
@@ -12432,6 +12475,8 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y3, "<  " .. "imc0" .. ":/pspemu" .. "  >", white)
         elseif Adrenaline_roms == 4 then
             Font.print(fnt22, setting_x_offset, setting_y3, "<  " .. "xmc0" .. ":/pspemu" .. "  >", white)
+        elseif Adrenaline_roms == 5 then
+            Font.print(fnt22, setting_x_offset, setting_y3, "<  " .. lang_lines.All .. "  >", white)   
         else
             Font.print(fnt22, setting_x_offset, setting_y3, "<  " .. "uma0" .. ":/pspemu" .. "  >", white)
         end
@@ -12493,13 +12538,13 @@ while true do
                     if Adrenaline_roms > 0 then
                         Adrenaline_roms = Adrenaline_roms - 1
                     else
-                        Adrenaline_roms = 4
+                        Adrenaline_roms = 5
                     end
                     SaveSettings()
                 end
             elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
                 if menuY==3 then -- #3 Adrenaline_roms selection
-                    if Adrenaline_roms < 4 then
+                    if Adrenaline_roms < 5 then
                         Adrenaline_roms = Adrenaline_roms + 1
                     else
                         Adrenaline_roms=0
@@ -15110,12 +15155,12 @@ while true do
                         create_fav_count_table(files_table)
 
                         curTotal = #fav_count
-                        if #fav_count == 0 then showCat = 40
+                        if #fav_count == 0 then showCat = 41
                         end
                     end
                     if showCat == 41 then 
                         curTotal = #recently_played_table
-                        if #recently_played_table == 0 then showCat = 41
+                        if #recently_played_table == 0 then showCat = 42
                         end
                     end
                     
