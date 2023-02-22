@@ -1131,6 +1131,11 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
 
     selectedwall = setBackground
 
+    if startCategory > 41 then
+        startCategory = 1
+    else
+    end
+
 else
 
     -- Get language number from Vita OS and to translation file number
