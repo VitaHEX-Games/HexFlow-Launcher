@@ -41,8 +41,8 @@ return {
 
 -- Startup Categories
 ["Startup_Category_colon"] = "Indítási Kategória: ",
-["Favorites"] = "Favorites",
-["Recently_Played"] = "Recently Played",
+["Favorites"] = "Kedvencek",
+["Recently_Played"] = "Nemrég Játszott",
 ["PS_Vita"] = "PS Vita",
 ["Homebrews"] = "Homebrews",
 ["PSP"] = "PSP",
@@ -245,7 +245,7 @@ return {
 -- Settings Menu
 ["Categories"] = "Kategóriák",
 ["Sounds"] = "Hangok",
-["Artwork"] = "Artwork",
+["Artwork"] = "Borítók és Hátterek",
 ["Scan_Settings"] = "Keresési Beállítások",
 ["Adrenaline_roms"] = "Adrenaline játékok: ",
 ["All_Category"] = "Összes Kategória: ",
@@ -272,13 +272,13 @@ return {
 ["Help_and_Guides"] = "Segítség",
 
 ["guide_1_heading"] = "Játék hozzáadás",
-["guide_1_content"] = "Játék mappák: \nHelyezd el a játékaidat a 'ux0:/data/RetroFlow/ROMS/' mappába, vagy használd a saját mappádat, menj a 'Keresési beállítások'-ba, majd 'Játék mappák szerkesztése...'. \n\nMiután hozzáadtad a játékaidat, nyomj az 'Újra keresés'-re, hogy hozzá dd a RetroFlow-hoz. \n\nFájlnevek: \nFontos, hogy a játékaid a 'no-intro' elnevezést kövessék, mint pl.: 'Sonic (USA)', különben a képek nem töltődnek le.",
+["guide_1_content"] = "Játék mappák: \nHelyezd el a játékaidat a 'ux0:/data/RetroFlow/ROMS/' mappába, vagy használd a saját mappádat, menj a 'Keresési beállítások'-ba, majd 'Játék mappák szerkesztése...'. \n\nMiután hozzáadtad a játékaidat, nyomj az 'Újra keresés'-re, hogy hozzáadd a RetroFlow-hoz. \n\nFájlnevek: \nFontos, hogy a játékaid a 'no-intro' elnevezést kövessék, mint pl.: 'Sonic (USA)', különben a képek nem töltődnek le.",
 
 ["guide_2_heading"] = "Adrenaline játékok nem indulnak?",
-["guide_2_content"] = "Ha az Adrenaline játékok nem indulnak, és fel van telepítva a RetroFlow Adrenaline Launcher, akkor kérlek telepísd fel a AdrBubbleBooterInstaller-t: https://vitadb.rinnegatamante.it/#/info/307. \n\nVagy próbáld meg a Adrenaline Bubble Manager-t: https://github.com/ONElua/AdrenalineBubbleManager/releases/",
+["guide_2_content"] = "Ha az Adrenaline játékok nem indulnak, és fel van telepítve a RetroFlow Adrenaline Launcher, akkor kérlek telepítsd fel a AdrBubbleBooterInstaller-t: https://vitadb.rinnegatamante.it/#/info/307. \n\nVagy próbáld meg a Adrenaline Bubble Manager-t: https://github.com/ONElua/AdrenalineBubbleManager/releases/",
 
 ["guide_3_heading"] = "Saját játék borítók és hátterek",
-["guide_3_content"] = "Borítók: \nSaját játék borítókat ebbe a mappába rakhatsz: 'ux0:/data/RetroFlow/COVERS/'. \n\nHátterek: \nSaját játék háttereket ebbe a mappába rakhatsz: 'ux0:/data/RetroFlow/BACKGROUNDS/'. \n\nFájlnevek:\nA fájlnévnek egyeznie kell az App ID-vel vagy az App Name képeknek .png formátumban kell lennie.",
+["guide_3_content"] = "Borítók: \nSaját játék borítókat ebbe a mappába rakhatsz: 'ux0:/data/RetroFlow/COVERS/'. \n\nHátterek: \nSaját háttereket ebbe a mappába rakhatsz: 'ux0:/data/RetroFlow/BACKGROUNDS/'. \n\nFájlnevek:\nA fájlnévnek egyeznie kell az App ID-vel vagy az App Name képeknek .png formátumban kell lennie.",
 
 ["guide_4_heading"] = "Saját háttérkép és zene",
 ["guide_4_content"] = "Háttérkép: \nSaját háttereidet a következő mappába rakhatod: 'ux0:/data/RetroFlow/WALLPAPER/'. \nA képeknek .jpg vagy .png formátumban és 960px x 544px felbontásban kell lenniük.\n\nZenék: \nZenéket a következő mappába rakhatsz: 'ux0:/data/RetroFlow/MUSIC/'. \nA zenéknek .ogg formátumnak kell lenniük.",
@@ -291,7 +291,7 @@ return {
 
 -- Other Settings
 ["Other_Settings"] = "Egyéb beállítások",
-["Swap_X_and_O_buttons_colon"] = "X és O gombok megcserlésése: ",
+["Swap_X_and_O_buttons_colon"] = "X és O gomb megcserlésése: ",
 ["Adrenaline_PS_button_colon"] = "Adrenaline PS gomb: ",
 ["Menu"] = "Menü",
 ["LiveArea"] = "LiveArea",
