@@ -8615,7 +8615,7 @@ function AddOrRemoveFavorite()
             elseif apptype == 36 then   update_favorites_table_favorites(mame_2000_table)       update_cached_table("db_mame_2000.lua", mame_2000_table)
             elseif apptype == 37 then   update_favorites_table_favorites(neogeo_table)          update_cached_table("db_neogeo.lua", neogeo_table)
             elseif apptype == 38 then   update_favorites_table_favorites(ngpc_table)            update_cached_table("db_ngpc.lua", ngpc_table)
-            elseif showCat == 39 then   update_favorites_table_favorites(psm_table)             update_cached_table("db_psm.lua", psm_table)
+            elseif apptype == 39 then   update_favorites_table_favorites(psm_table)             update_cached_table("db_psm.lua", psm_table)
             else    
             end
 
