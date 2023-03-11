@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Pobierz okładki: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "Pobieranie okładek FBA2012",
 ["Downloading_MAME_2003_covers"] = "Pobieranie okładek MAME 2003",
 ["Downloading_NG_covers"] = "Pobieranie okładek NG",
+["Downloading_SCUMMVM_covers"] = "Pobieranie okładek SCUMMVM",
+["Downloading_PICO8_covers"] = "Pobieranie okładek PICO-8",
 
 ["Downloading_backgrounds"] = "Pobieranie tła",
 ["Downloading_all_backgrounds"] = "Pobieram wszystkie tła",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "Pobieranie tła FBA2012",
 ["Downloading_MAME_2003_backgrounds"] = "Pobieranie tła MAME 2003",
 ["Downloading_NG_backgrounds"] = "Pobieranie tła NG",
+["Downloading_SCUMMVM_backgrounds"] = "Pobieranie tła SCUMMVM",
+["Downloading_PICO8_backgrounds"] = "Pobieranie tła PICO-8",
 
 -- Info Screen
 ["App_ID_colon"] = "ID: ",
@@ -234,6 +240,8 @@ return {
 ["FBA2012_Game"] = "Gra FBA 2012",
 ["MAME2003_Game"] = "Gra MAME 2003 Plus",
 ["Neo_Geo_Game"] = "Gra Neo Geo",
+["ScummVM_Game"] = "Gra ScummVM",
+["PICO8_Game"] = "Gra PICO-8",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Zainstaluj proszę RetroFlow Adrenaline Launcher.",
@@ -313,5 +321,18 @@ return {
 ["Remove_from_recently_played"] = "Usuń z ostatnio granych",
 ["Retroarch_options"] = "Opcje RetroArch",
 ["Core_colon"] = "Rdzeń:",
+
+-- Collections
+["Collections"] = "Kolekcje",
+["Collections_colon"] = "Kolekcje:",
+["Add_to_collection"] = "Dodać do kolekcji",
+["New_collection"] = "Nowa kolekcja",
+["New_collection_name"] = "Nowa nazwa kolekcji",
+["Create"] = "Utworzyć",
+["Remove_from_collection"] = "Usuń z kolekcji",
+["No_collections"] = "Żadnych kolekcji",
+["Delete"] = "Usuwać",
+["Edit_collections"] = "Edytuj kolekcje",
+["Show_collections_colon"] = "Pokazuj kolekcje:",
 
 }
