@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "下載封面 : ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "下載 FBA2012 封面",
 ["Downloading_MAME_2003_covers"] = "下載 MAME 2003 封面",
 ["Downloading_NG_covers"] = "下載 NG 封面",
+["Downloading_SCUMMVM_covers"] = "下載 SCUMMVM 封面",
+["Downloading_PICO8_covers"] = "下載 PICO-8 封面",
 
 ["Downloading_backgrounds"] = "下載背景",
 ["Downloading_all_backgrounds"] = "下載所有背景",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "下載 FBA2012 背景",
 ["Downloading_MAME_2003_backgrounds"] = "下載 MAME 2003 背景",
 ["Downloading_NG_backgrounds"] = "下載 NG 背景",
+["Downloading_SCUMMVM_backgrounds"] = "下載 SCUMMVM 背景",
+["Downloading_PICO8_backgrounds"] = "下載 PICO-8 背景",
 
 -- Info Screen
 ["App_ID_colon"] = "申請編號 : ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "FBA 2012 遊戲",
 ["MAME2003_Game"] = "MAME 2003 Plus 遊戲",
 ["Neo_Geo_Game"] = "Neo Geo 遊戲",
+["ScummVM_Game"] = "ScummVM 遊戲",
+["PICO8_Game"] = "PICO-8 遊戲",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "請安裝 RetroFlow Adrenaline Launcher。",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "最近播放的中移除",
 ["Retroarch_options"] = "RetroArch 選項",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "收藏品",
+["Collections_colon"] = "收藏品：",
+["Add_to_collection"] = "添加到集合",
+["New_collection"] = "新的集合",
+["New_collection_name"] = "新收藏名稱",
+["Create"] = "創建",
+["Remove_from_collection"] = "從集合中刪除",
+["No_collections"] = "未找到任何集合",
+["Delete"] = "刪除",
+["Edit_collections"] = "編輯集合",
+["Show_collections_colon"] = "顯示集合：",
 
 }

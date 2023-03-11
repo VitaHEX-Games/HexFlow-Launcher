@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "メイム 2003 Plus",
 ["Neo_Geo"] = "ネオジオ",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "カバーダウンロード：",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "FBA2012カバーぬダウンロード",
 ["Downloading_MAME_2003_covers"] = "MAME2003カバーぬダウンロード",
 ["Downloading_NG_covers"] = "NGカバーぬダウンロード",
+["Downloading_SCUMMVM_covers"] = "SCUMMVMカバーぬダウンロード",
+["Downloading_PICO8_covers"] = "PICO-8カバーぬダウンロード",
 
 ["Downloading_backgrounds"] = "背景ダウンロードそーいびーん",
 ["Downloading_all_backgrounds"] = "まじりぬ背景ダウンロードすん",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "FBA2012ぬ背景ダウンロードすん",
 ["Downloading_MAME_2003_backgrounds"] = "MAME 2003ぬ背景ダウンロードすん",
 ["Downloading_NG_backgrounds"] = "NGぬ背景ダウンロードすん",
+["Downloading_SCUMMVM_backgrounds"] = "SCUMMVMぬ背景ダウンロードすん",
+["Downloading_PICO8_backgrounds"] = "PICO-8ぬ背景ダウンロードすん",
 
 -- Info Screen
 ["App_ID_colon"] = "アプリID：",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "FBA 2012ぬゲーム",
 ["MAME2003_Game"] = "メイム 2003 Plusぬゲーム",
 ["Neo_Geo_Game"] = "ネオジオぬゲーム",
+["ScummVM_Game"] = "ScummVMぬゲーム",
+["PICO8_Game"] = "PICO-8ぬゲーム",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "RetroFlowアドレナリンランチャーインストールさびーん。",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "最近プレイしたものから削除",
 ["Retroarch_options"] = "RetroArch オプション",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "コレクション",
+["Collections_colon"] = "コレクション：",
+["Add_to_collection"] = "コレクションに追加",
+["New_collection"] = "新しいコレクション",
+["New_collection_name"] = "新しいコレクション名",
+["Create"] = "を作成",
+["Remove_from_collection"] = "コレクションから削除",
+["No_collections"] = "コレクションなし",
+["Delete"] = "削除",
+["Edit_collections"] = "コレクションを編集する",
+["Show_collections_colon"] = "コレクションを表示：",
 
 }
