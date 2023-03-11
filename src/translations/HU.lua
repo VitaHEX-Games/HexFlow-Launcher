@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Borítók Letöltése: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "FBA2012 borítók letöltése",
 ["Downloading_MAME_2003_covers"] = "MAME 2003 borítók letöltése",
 ["Downloading_NG_covers"] = "NG borítók letöltése",
+["Downloading_SCUMMVM_covers"] = "SCUMMVM borítók letöltése",
+["Downloading_PICO8_covers"] = "PICO-8 borítók letöltése",
 
 ["Downloading_backgrounds"] = "Hátterek letöltése",
 ["Downloading_all_backgrounds"] = "Összes háttér letöltése",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "FBA2012 hátterek letöltése",
 ["Downloading_MAME_2003_backgrounds"] = "MAME 2003 hátterek letöltése",
 ["Downloading_NG_backgrounds"] = "NG hátterek letöltése",
+["Downloading_SCUMMVM_backgrounds"] = "SCUMMVM hátterek letöltése",
+["Downloading_PICO8_backgrounds"] = "PICO-8 hátterek letöltése",
 
 -- Info Screen
 ["App_ID_colon"] = "App ID: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "FBA 2012 Játék",
 ["MAME2003_Game"] = "MAME 2003 Plus Játék",
 ["Neo_Geo_Game"] = "Neo Geo Játék",
+["ScummVM_Game"] = "ScummVM Játék",
+["PICO8_Game"] = "PICO-8 Játék",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Kérlek telepítsd RetroFlow Adrenaline Launcher.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Eltávolítás a nemrég játszottból",
 ["Retroarch_options"] = "RetroArch beállítások",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Gyűjtemények",
+["Collections_colon"] = "Gyűjtemények:",
+["Add_to_collection"] = "Gyűjteményhez adás",
+["New_collection"] = "Új kollekció",
+["New_collection_name"] = "Új gyűjteménynév",
+["Create"] = "Teremt",
+["Remove_from_collection"] = "Eltávolítás a gyűjteményből",
+["No_collections"] = "Nincsenek gyűjtemények",
+["Delete"] = "Töröl",
+["Edit_collections"] = "Szerkessze a gyűjteményeket",
+["Show_collections_colon"] = "Mutasd a gyűjteményeket:",
 
 }
