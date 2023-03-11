@@ -324,14 +324,14 @@ return {
 
 -- Collections
 ["Collections"] = "Kolekcje",
-["Collections_colon"] = "Kolekcje:",
-["Add_to_collection"] = "Dodać do kolekcji",
+["Collections_colon"] = "Kolekcja:",
+["Add_to_collection"] = "Dodaj do kolekcji",
 ["New_collection"] = "Nowa kolekcja",
-["New_collection_name"] = "Nowa nazwa kolekcji",
-["Create"] = "Utworzyć",
+["New_collection_name"] = "Nazwa nowej kolekcji",
+["Create"] = "Utwórz",
 ["Remove_from_collection"] = "Usuń z kolekcji",
-["No_collections"] = "Żadnych kolekcji",
-["Delete"] = "Usuwać",
+["No_collections"] = "Brak kolekcji",
+["Delete"] = "Usuń",
 ["Edit_collections"] = "Edytuj kolekcje",
 ["Show_collections_colon"] = "Pokazuj kolekcje:",
 
