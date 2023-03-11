@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Kapakları İndirin: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "FBA2012 kapaklarını indiriliyor",
 ["Downloading_MAME_2003_covers"] = "MAME 2003 kapaklarını indiriliyor",
 ["Downloading_NG_covers"] = "NG kapaklarını indiriliyor",
+["Downloading_SCUMMVM_covers"] = "SCUMMVM kapaklarını indiriliyor",
+["Downloading_PICO8_covers"] = "PICO-8 kapaklarını indiriliyor",
 
 ["Downloading_backgrounds"] = "Arka planlar indiriliyor",
 ["Downloading_all_backgrounds"] = "Tüm arka planlar indiriliyor",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "FBA2012 arka planlarını indirme",
 ["Downloading_MAME_2003_backgrounds"] = "MAME 2003 arka planlarını indirme",
 ["Downloading_NG_backgrounds"] = "NG arka planlarını indirme",
+["Downloading_SCUMMVM_backgrounds"] = "SCUMMVM arka planlarını indirme",
+["Downloading_PICO8_backgrounds"] = "PICO-8 arka planlarını indirme",
 
 -- Info Screen
 ["App_ID_colon"] = "Uygulama Kimliği: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "FBA 2012 oyunu",
 ["MAME2003_Game"] = "MAME 2003 Plus oyunu",
 ["Neo_Geo_Game"] = "Neo Geo oyunu",
+["ScummVM_Game"] = "ScummVM oyunu",
+["PICO8_Game"] = "PICO-8 oyunu",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Lütfen RetroFlow Adrenaline Launcher yükleyin.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Son oynananlardan kaldır",
 ["Retroarch_options"] = "RetroArch seçenekler",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Koleksiyonlar",
+["Collections_colon"] = "Koleksiyonlar:",
+["Add_to_collection"] = "Koleksiyona ekle",
+["New_collection"] = "Yeni koleksiyon",
+["New_collection_name"] = "Yeni koleksiyon adı",
+["Create"] = "Oluştur",
+["Remove_from_collection"] = "Koleksiyondan kaldır",
+["No_collections"] = "Koleksiyon yok",
+["Delete"] = "Sil",
+["Edit_collections"] = "Koleksiyonları düzenle",
+["Show_collections_colon"] = "Koleksiyonları göster:",
 
 }

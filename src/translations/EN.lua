@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Download Covers: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "Downloading FBA2012 covers",
 ["Downloading_MAME_2003_covers"] = "Downloading MAME 2003 covers",
 ["Downloading_NG_covers"] = "Downloading NG covers",
+["Downloading_SCUMMVM_covers"] = "Downloading SCUMMVM covers",
+["Downloading_PICO8_covers"] = "Downloading PICO-8 covers",
 
 ["Downloading_backgrounds"] = "Downloading backgrounds",
 ["Downloading_all_backgrounds"] = "Downloading all backgrounds",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "Downloading FBA2012 backgrounds",
 ["Downloading_MAME_2003_backgrounds"] = "Downloading MAME 2003 backgrounds",
 ["Downloading_NG_backgrounds"] = "Downloading NG backgrounds",
+["Downloading_SCUMMVM_backgrounds"] = "Downloading SCUMMVM backgrounds",
+["Downloading_PICO8_backgrounds"] = "Downloading PICO-8 backgrounds",
 
 -- Info Screen
 ["App_ID_colon"] = "App ID: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "FBA 2012 Game",
 ["MAME2003_Game"] = "MAME 2003 Plus Game",
 ["Neo_Geo_Game"] = "Neo Geo Game",
+["ScummVM_Game"] = "ScummVM Game",
+["PICO8_Game"] = "PICO-8 Game",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Please install RetroFlow Adrenaline Launcher.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Remove from recently played",
 ["Retroarch_options"] = "RetroArch options",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Collections",
+["Collections_colon"] = "Collections:",
+["Add_to_collection"] = "Add to collection",
+["New_collection"] = "New collection",
+["New_collection_name"] = "New collection name",
+["Create"] = "Create",
+["Remove_from_collection"] = "Remove from collection",
+["No_collections"] = "No collections",
+["Delete"] = "Delete",
+["Edit_collections"] = "Edit collections",
+["Show_collections_colon"] = "Show collections:",
 
 }

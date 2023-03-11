@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Скачать Обложки: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "Скачивание обложек для FBA2012",
 ["Downloading_MAME_2003_covers"] = "Скачивание обложек для MAME 2003",
 ["Downloading_NG_covers"] = "Скачивание обложек для NG",
+["Downloading_SCUMMVM_covers"] = "Скачивание обложек для SCUMMVM",
+["Downloading_PICO8_covers"] = "Скачивание обложек для PICO-8",
 
 ["Downloading_backgrounds"] = "Скачивание фонов",
 ["Downloading_all_backgrounds"] = "Скачивание всех фонов",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "Скачивание фонов FBA2012",
 ["Downloading_MAME_2003_backgrounds"] = "Скачивание фонов MAME 2003",
 ["Downloading_NG_backgrounds"] = "Скачивание фонов NG",
+["Downloading_SCUMMVM_backgrounds"] = "Скачивание фонов SCUMMVM",
+["Downloading_PICO8_backgrounds"] = "Скачивание фонов PICO-8",
 
 -- Info Screen
 ["App_ID_colon"] = "ID приложения: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "Игра FBA 2012",
 ["MAME2003_Game"] = "Игра MAME 2003 Plus",
 ["Neo_Geo_Game"] = "Игра Neo Geo",
+["ScummVM_Game"] = "Игра ScummVM",
+["PICO8_Game"] = "Игра PICO-8",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Пожалуйста, установите RetroFlow Adrenaline Launcher.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Удалить из недавно сыграл",
 ["Retroarch_options"] = "Параметры RetroArch",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Коллекции",
+["Collections_colon"] = "Коллекции:",
+["Add_to_collection"] = "Добавить в коллекцию",
+["New_collection"] = "Новая коллекция",
+["New_collection_name"] = "Новое название коллекции",
+["Create"] = "Создать",
+["Remove_from_collection"] = "Удалить из коллекции",
+["No_collections"] = "Нет коллекций",
+["Delete"] = "Удалить",
+["Edit_collections"] = "Редактировать коллекции",
+["Show_collections_colon"] = "Показать коллекции:",
 
 }

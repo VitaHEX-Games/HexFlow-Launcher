@@ -741,6 +741,54 @@
 		end
 
 
+	-- Scan Function - Scummvm
+
+		function readAll(file)
+		    local f = assert(io.open(file, "rb"))
+		    local content = f:read("*all")
+		    f:close()
+		    return content
+		end
+
+		function scan_scummvm()
+			if files.exists ("ux0:/data/scummvm/scummvm.ini") then
+				scummvm_ini_contents = readAll("ux0:/data/scummvm/scummvm.ini")
+
+				local function tovector(s)
+					scummvm_ini_section = {}
+					-- s:gsub("\n", " "):gsub("%[(%w*)%]", function(n) scummvm_ini_section[#scummvm_ini_section+1] = tostring(n) end)
+					s:gsub("\n", " "):gsub("(%[.-%])", function(n) scummvm_ini_section[#scummvm_ini_section+1] = tostring(n:gsub("%[", ""):gsub("%]", "")) end)
+					return scummvm_ini_section
+			    end
+
+				scummvm_ini_section = tovector(scummvm_ini_contents)
+				
+				for k, v in pairs (scummvm_ini_section) do
+					file = {}
+					file.gameid = ini.read("ux0:/data/scummvm/scummvm.ini",tostring(v),"gameid","exclude_game")
+					file.description = ini.read("ux0:/data/scummvm/scummvm.ini",tostring(v),"description","exclude_game")
+					file.path = ini.read("ux0:/data/scummvm/scummvm.ini",tostring(v),"path","exclude_game")
+					if not string.match(file.gameid, "exclude_game") then
+						table.insert(scummvm_info, file)
+					end
+				end
+
+			end
+		end
+
+		function write_ini_scummvm(pathini, tbl)
+		    file = io.open(pathini, "w+")
+			file:write("return" .. "\n" .. "{" .. "\n")
+		    for k, v in pairs((tbl)) do
+				file:write('[' .. k .. '] = {gameid = "' .. v.gameid .. '", description = "' .. v.description .. '", path = "' .. v.path .. '"},' .. "\n")
+
+		    end
+		    file:write('}')
+		    file:close()
+		end
+
+
+
 -- FUNCTION IMPORT
 
 	-- Import cached tables into live tables when new game is found
@@ -842,9 +890,27 @@
 		update_debug_message("Saving table: retroarch")
 		write_ini(tostring(titles_dir .. sfo_scan_retroarch_lua), table_retroarch)
 
+	-- Scan scummvm
+
+		-- ScummVM scan working but disabled
 		
+		scummvm_info = {}
+
+		update_debug_message("Scanning: ScummVM")
+		scan_scummvm()
+
+		update_debug_message("Sorting table: ScummVM")
+		if #scummvm_info > 0 then
+			table.sort(scummvm_info, function(a, b) return (a.description:lower() < b.description:lower()) end)
+		end
+
+		update_debug_message("Saving table: ScummVM")
+		write_ini_scummvm(tostring(titles_dir .. "scan_scummvm.lua"), scummvm_info)
+
+	-- All scans complete
+
 		print_loading_complete()
-		
+
 
 
 -- COMMAND - LAUNCH

@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Omslagen downloaden: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "FBA2012-omslagen downloaden",
 ["Downloading_MAME_2003_covers"] = "MAME 2003-omslagen downloaden",
 ["Downloading_NG_covers"] = "NG-omslagen downloaden",
+["Downloading_SCUMMVM_covers"] = "SCUMMVM-omslagen downloaden",
+["Downloading_PICO8_covers"] = "PICO-8-omslagen downloaden",
 
 ["Downloading_backgrounds"] = "Achtergronden downloaden",
 ["Downloading_all_backgrounds"] = "Alle achtergronden downloaden",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "FBA2012-achtergronden downloaden",
 ["Downloading_MAME_2003_backgrounds"] = "MAME 2003-achtergronden downloaden",
 ["Downloading_NG_backgrounds"] = "NG-achtergronden downloaden",
+["Downloading_SCUMMVM_backgrounds"] = "SCUMMVM-achtergronden downloaden",
+["Downloading_PICO8_backgrounds"] = "PICO-8-achtergronden downloaden",
 
 -- Info Screen
 ["App_ID_colon"] = "App-ID: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "FBA 2012 spel",
 ["MAME2003_Game"] = "MAME 2003 Plus spel",
 ["Neo_Geo_Game"] = "Neo Geo spel",
+["ScummVM_Game"] = "ScummVM spel",
+["PICO8_Game"] = "PICO-8 spel",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Installeer RetroFlow Adrenaline Launcher alstublieft.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Verwijderen uit recent afgespeeld",
 ["Retroarch_options"] = "RetroArch alternativer",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Collecties",
+["Collections_colon"] = "Collecties:",
+["Add_to_collection"] = "Voeg aan collectie toe",
+["New_collection"] = "Nieuwe collectie",
+["New_collection_name"] = "Nieuwe collectienaam",
+["Create"] = "Maak",
+["Remove_from_collection"] = "Verwijderen uit collectie",
+["No_collections"] = "Geen collecties",
+["Delete"] = "Verwijderen",
+["Edit_collections"] = "Collecties bewerken",
+["Show_collections_colon"] = "Toon collecties:",
 
 }

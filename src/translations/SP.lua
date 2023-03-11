@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Descargar portadas: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "Descargando FBA2012 portadas",
 ["Downloading_MAME_2003_covers"] = "Descargando MAME 2003 portadas",
 ["Downloading_NG_covers"] = "Descargando NG portadas",
+["Downloading_SCUMMVM_covers"] = "Descargando SCUMMVM portadas",
+["Downloading_PICO8_covers"] = "Descargando PICO-8 portadas",
 
 ["Downloading_backgrounds"] = "Descargando fondos",
 ["Downloading_all_backgrounds"] = "Descargando todos los fondos",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "Descargar fondos de FBA2012",
 ["Downloading_MAME_2003_backgrounds"] = "Descargar fondos de MAME 2003",
 ["Downloading_NG_backgrounds"] = "Descargar fondos de NG",
+["Downloading_SCUMMVM_backgrounds"] = "Descargar fondos de SCUMMVM",
+["Downloading_PICO8_backgrounds"] = "Descargar fondos de PICO-8",
 
 -- Info Screen
 ["App_ID_colon"] = "ID de aplicación: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "Juego de FBA 2012",
 ["MAME2003_Game"] = "Juego de MAME 2003 Plus",
 ["Neo_Geo_Game"] = "Juego de Neo Geo",
+["ScummVM_Game"] = "Juego de ScummVM",
+["PICO8_Game"] = "Juego de PICO-8",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Instale RetroFlow Adrenaline Launcher.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Quitar de jugado recientemente",
 ["Retroarch_options"] = "Opciones de RetroArch",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Colecciones",
+["Collections_colon"] = "Colecciones:",
+["Add_to_collection"] = "Añadir a la colección",
+["New_collection"] = "Nueva colección",
+["New_collection_name"] = "Nombre de la nueva colección",
+["Create"] = "Crear",
+["Remove_from_collection"] = "Eliminar de la colección",
+["No_collections"] = "Sin colecciones",
+["Delete"] = "Borrar",
+["Edit_collections"] = "Editar colecciones",
+["Show_collections_colon"] = "Mostrar colecciones:",
 
 }

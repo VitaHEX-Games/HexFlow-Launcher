@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Ladda ner omslag: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "Ladda ner FBA2012-omslag",
 ["Downloading_MAME_2003_covers"] = "Ladda ner MAME 2003-omslag",
 ["Downloading_NG_covers"] = "Ladda ner NG-omslag",
+["Downloading_SCUMMVM_covers"] = "Ladda ner SCUMMVM-omslag",
+["Downloading_PICO8_covers"] = "Ladda ner PICO-8-omslag",
 
 ["Downloading_backgrounds"] = "Laddar ner bakgrunder",
 ["Downloading_all_backgrounds"] = "Laddar ner alla bakgrunder",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "Ladda ner FBA2012-bakgrunder",
 ["Downloading_MAME_2003_backgrounds"] = "Ladda ner MAME 2003-bakgrunder",
 ["Downloading_NG_backgrounds"] = "Ladda ner NG-bakgrunder",
+["Downloading_SCUMMVM_backgrounds"] = "Ladda ner SCUMMVM-bakgrunder",
+["Downloading_PICO8_backgrounds"] = "Ladda ner PICO-8-bakgrunder",
 
 -- Info Screen
 ["App_ID_colon"] = "App-ID: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "FBA 2012-Spel",
 ["MAME2003_Game"] = "MAME 2003 Plus-Spel",
 ["Neo_Geo_Game"] = "Neo Geo-Spel",
+["ScummVM_Game"] = "ScummVM-Spel",
+["PICO8_Game"] = "PICO-8-Spel",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Installera RetroFlow Adrenaline Launcher.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Ta bort från nyligen spelade",
 ["Retroarch_options"] = "RetroArch-alternativ",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Samlingar",
+["Collections_colon"] = "Samlingar:",
+["Add_to_collection"] = "Lägg till i samlingen",
+["New_collection"] = "Ny samling",
+["New_collection_name"] = "Nytt samlingsnamn",
+["Create"] = "Skapa",
+["Remove_from_collection"] = "Ta bort från samlingen",
+["No_collections"] = "Inga samlingar",
+["Delete"] = "Radera",
+["Edit_collections"] = "Redigera samlingar",
+["Show_collections_colon"] = "Visa samlingar:",
 
 }

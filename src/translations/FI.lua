@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Lataa kannet: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "FBA2012-kansien lataaminen",
 ["Downloading_MAME_2003_covers"] = "MAME 2003-kansien lataaminen",
 ["Downloading_NG_covers"] = "NG-kansien lataaminen",
+["Downloading_SCUMMVM_covers"] = "SCUMMVM-kansien lataaminen",
+["Downloading_PICO8_covers"] = "PICO-8-kansien lataaminen",
 
 ["Downloading_backgrounds"] = "Lataa taustat",
 ["Downloading_all_backgrounds"] = "Ladataan kaikki taustat",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "FBA2012-taustan lataaminen",
 ["Downloading_MAME_2003_backgrounds"] = "MAME 2003-taustan lataaminen",
 ["Downloading_NG_backgrounds"] = "NG-taustan lataaminen",
+["Downloading_SCUMMVM_backgrounds"] = "SCUMMVM-taustan lataaminen",
+["Downloading_PICO8_backgrounds"] = "PICO-8-taustan lataaminen",
 
 -- Info Screen
 ["App_ID_colon"] = "Sovellustunnus: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "FBA 2012 peli",
 ["MAME2003_Game"] = "MAME 2003 Plus peli",
 ["Neo_Geo_Game"] = "Neo Geo peli",
+["ScummVM_Game"] = "ScummVM peli",
+["PICO8_Game"] = "PICO-8 peli",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Ole hyvä ja asenna RetroFlow Adrenaline Launcher.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Poista viimeaikaisista",
 ["Retroarch_options"] = "RetroArch-vaihtoehdot",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Kokoelmia",
+["Collections_colon"] = "Kokoelmia:",
+["Add_to_collection"] = "Lisää kokoelmaan",
+["New_collection"] = "Uusi kokoelma",
+["New_collection_name"] = "Uusi kokoelman nimi",
+["Create"] = "Luoda",
+["Remove_from_collection"] = "Poista kokoelmasta",
+["No_collections"] = "Ei kokoelmia",
+["Delete"] = "Poista",
+["Edit_collections"] = "Muokkaa kokoelmia",
+["Show_collections_colon"] = "Näytä kokoelmat:",
 
 }

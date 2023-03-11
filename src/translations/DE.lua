@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Covers downloaden: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "FBA2012 Cover herunterladen",
 ["Downloading_MAME_2003_covers"] = "MAME 2003 Cover herunterladen",
 ["Downloading_NG_covers"] = "NG Cover herunterladen",
+["Downloading_SCUMMVM_covers"] = "SCUMMVM Cover herunterladen",
+["Downloading_PICO8_covers"] = "PICO-8 Cover herunterladen",
 
 ["Downloading_backgrounds"] = "Hintergründe herunterladen",
 ["Downloading_all_backgrounds"] = "Herunterladen aller Hintergründe",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "Herunterladen von FBA2012-Hintergründen",
 ["Downloading_MAME_2003_backgrounds"] = "Herunterladen von MAME 2003-Hintergründen",
 ["Downloading_NG_backgrounds"] = "Herunterladen von NG-Hintergründen",
+["Downloading_SCUMMVM_backgrounds"] = "Herunterladen von SCUMMVM-Hintergründen",
+["Downloading_PICO8_backgrounds"] = "Herunterladen von PICO-8-Hintergründen",
 
 -- Info Screen
 ["App_ID_colon"] = "App-ID: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "FBA 2012 Spiel",
 ["MAME2003_Game"] = "MAME 2003 Plus Spiel",
 ["Neo_Geo_Game"] = "Neo Geo Spiel",
+["ScummVM_Game"] = "ScummVM Spiel",
+["PICO8_Game"] = "PICO-8 Spiel",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Bitte installieren Sie RetroFlow Adrenaline Launcher.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Aus kürzlich gespielt entfernen",
 ["Retroarch_options"] = "RetroArch-Optionen",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Sammlungen",
+["Collections_colon"] = "Sammlungen:",
+["Add_to_collection"] = "Zur Sammlung hinzufügen",
+["New_collection"] = "Neue Sammlung",
+["New_collection_name"] = "Neuer Sammlungsname",
+["Create"] = "Erstellen",
+["Remove_from_collection"] = "Aus Sammlung entfernen",
+["No_collections"] = "Keine Sammlungen",
+["Delete"] = "Löschen",
+["Edit_collections"] = "Sammlungen bearbeiten",
+["Show_collections_colon"] = "Sammlungen anzeigen:",
 
 }

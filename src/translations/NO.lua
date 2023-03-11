@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Last ned omslag: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "Laster ned FBA2012-omslag",
 ["Downloading_MAME_2003_covers"] = "Laster ned MAME 2003-omslag",
 ["Downloading_NG_covers"] = "Laster ned NG-omslag",
+["Downloading_SCUMMVM_covers"] = "Laster ned SCUMMVM-omslag",
+["Downloading_PICO8_covers"] = "Laster ned PICO-8-omslag",
 
 ["Downloading_backgrounds"] = "Laster ned bakgrunner",
 ["Downloading_all_backgrounds"] = "Laster ned alle-bakgrunner",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "Laster ned FBA2012-bakgrunner",
 ["Downloading_MAME_2003_backgrounds"] = "Laster ned MAME 2003-bakgrunner",
 ["Downloading_NG_backgrounds"] = "Laster ned NG-bakgrunner",
+["Downloading_SCUMMVM_backgrounds"] = "Laster ned SCUMMVM-bakgrunner",
+["Downloading_PICO8_backgrounds"] = "Laster ned PICO-8-bakgrunner",
 
 -- Info Screen
 ["App_ID_colon"] = "App-ID:: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "FBA 2012 spill",
 ["MAME2003_Game"] = "MAME 2003 Plus spill",
 ["Neo_Geo_Game"] = "Neo Geo spill",
+["ScummVM_Game"] = "ScummVM spill",
+["PICO8_Game"] = "PICO-8 spill",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Vennligst installer RetroFlow Adrenaline Launcher.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Fjern fra nylig spilt",
 ["Retroarch_options"] = "RetroArch options",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Samlinger",
+["Collections_colon"] = "Samlinger:",
+["Add_to_collection"] = "Legg til i samlingen",
+["New_collection"] = "Ny samling",
+["New_collection_name"] = "Nytt samlingsnavn",
+["Create"] = "Opprett",
+["Remove_from_collection"] = "Fjern fra samlingen",
+["No_collections"] = "Ingen samlinger",
+["Delete"] = "Slett",
+["Edit_collections"] = "Rediger samlinger",
+["Show_collections_colon"] = "Vis samlinger:",
 
 }

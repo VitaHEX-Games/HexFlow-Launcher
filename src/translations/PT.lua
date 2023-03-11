@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Baixar Capas: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "Baixando capa FBA2012",
 ["Downloading_MAME_2003_covers"] = "Baixando capa MAME 2003",
 ["Downloading_NG_covers"] = "Baixando capa NG",
+["Downloading_SCUMMVM_covers"] = "Baixando capa SCUMMVM",
+["Downloading_PICO8_covers"] = "Baixando capa SCUMMVM",
 
 ["Downloading_backgrounds"] = "Baixando planos de fundo",
 ["Downloading_all_backgrounds"] = "Baixando todos os fundos",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "Baixando fundos do FBA2012",
 ["Downloading_MAME_2003_backgrounds"] = "Baixando fundos do MAME 2003",
 ["Downloading_NG_backgrounds"] = "Baixando fundos do NG",
+["Downloading_SCUMMVM_backgrounds"] = "Baixando fundos do SCUMMVM",
+["Downloading_PICO8_backgrounds"] = "Baixando fundos do PICO-8",
 
 -- Info Screen
 ["App_ID_colon"] = "ID do aplicativo: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "Jogo FBA 2012",
 ["MAME2003_Game"] = "Jogo MAME 2003 Plus",
 ["Neo_Geo_Game"] = "Jogo Neo Geo",
+["ScummVM_Game"] = "Jogo ScummVM",
+["PICO8_Game"] = "Jogo PICO-8",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Instale o RetroFlow Adrenaline Launcher.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Remover dos tocado recentemente",
 ["Retroarch_options"] = "Opções de RetroArch",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Coleções",
+["Collections_colon"] = "Coleções:",
+["Add_to_collection"] = "Adicionar a coleção",
+["New_collection"] = "Nova coleção",
+["New_collection_name"] = "Nome da nova coleção",
+["Create"] = "Criar",
+["Remove_from_collection"] = "Remover da coleção",
+["No_collections"] = "Nenhuma coleção",
+["Delete"] = "Excluir",
+["Edit_collections"] = "Editar coleções",
+["Show_collections_colon"] = "Mostrar coleções:",
 
 }

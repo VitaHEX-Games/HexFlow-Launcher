@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "Téléchargement des jaquettes :",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "Téléchargement de FBA2012 les jaquettes",
 ["Downloading_MAME_2003_covers"] = "Téléchargement de MAME 2003 les jaquettes",
 ["Downloading_NG_covers"] = "Téléchargement de NG les jaquettes",
+["Downloading_SCUMMVM_covers"] = "Téléchargement de SCUMMVM les jaquettes",
+["Downloading_PICO8_covers"] = "Téléchargement de PICO-8 les jaquettes",
 
 ["Downloading_backgrounds"] = "Téléchargement d'arrière-plans",
 ["Downloading_all_backgrounds"] = "Téléchargement de tous les arrière-plans",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "Téléchargement d'arrière-plans FBA2012",
 ["Downloading_MAME_2003_backgrounds"] = "Téléchargement d'arrière-plans MAME 2003",
 ["Downloading_NG_backgrounds"] = "Téléchargement d'arrière-plans NG",
+["Downloading_SCUMMVM_backgrounds"] = "Téléchargement d'arrière-plans SCUMMVM",
+["Downloading_PICO8_backgrounds"] = "Téléchargement d'arrière-plans PICO-8",
 
 -- Info Screen
 ["App_ID_colon"] = "Identifiant de l'application :",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "Jeu FBA 2012",
 ["MAME2003_Game"] = "Jeu MAME 2003 Plus",
 ["Neo_Geo_Game"] = "Jeu Neo Geo",
+["ScummVM_Game"] = "Jeu ScummVM",
+["PICO8_Game"] = "Jeu PICO-8",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "Veuillez installer RetroFlow Adrenaline Launcher.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "Supprimer de récemment joué",
 ["Retroarch_options"] = "Options de RetroArch",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "Collections",
+["Collections_colon"] = "Collections :",
+["Add_to_collection"] = "Ajouter à la collection",
+["New_collection"] = "Nouvelle collection",
+["New_collection_name"] = "Nouveau nom de collection",
+["Create"] = "Créer",
+["Remove_from_collection"] = "Supprimer de la collection",
+["No_collections"] = "Pas de collections",
+["Delete"] = "Supprimer",
+["Edit_collections"] = "Modifier les collections",
+["Show_collections_colon"] = "Afficher les collections :",
 
 }

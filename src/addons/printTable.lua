@@ -43,6 +43,8 @@ local db_Cached_File_mame_2000 = (db_Cache_Folder .. "db_mame_2000.lua")
 local db_Cached_File_neogeo = (db_Cache_Folder .. "db_neogeo.lua")
 local db_Cached_File_ngpc = (db_Cache_Folder .. "db_ngpc.lua")
 local db_Cached_File_psm = (db_Cache_Folder .. "db_psm.lua")
+local db_Cached_File_scummvm = (db_Cache_Folder .. "db_scummvm.lua")
+local db_Cached_File_pico8 = (db_Cache_Folder .. "db_pico8.lua")
 -- local db_Cached_File_favorites = (db_Cache_Folder .. "db_favorites.lua")
 
 
@@ -235,6 +237,14 @@ function print_tables()
     printTable(psm_table, db_psm)
     db_psm:close()
 
+    local db_scummvm = assert(io.open(db_Cached_File_scummvm, "w"))
+    printTable(scummvm_table, db_scummvm)
+    db_scummvm:close()
+
+    local db_pico8 = assert(io.open(db_Cached_File_pico8, "w"))
+    printTable(pico8_table, db_pico8)
+    db_pico8:close()
+
     -- local db_favorites = assert(io.open(db_Cached_File_favorites, "w"))
     -- printTable(favorites_table, db_favorites)
     -- db_favorites:close()
@@ -316,6 +326,27 @@ function print_table_rom_dirs(def_table_name)
     printTable((def_table_name), db_rom_directories)
     db_rom_directories:close()
 end
+
+function print_table_collection_files(def_table_name)
+    local db_Cached_File_collections = "ux0:/data/RetroFlow/collections.lua"
+
+    -- Create directories - Database Cache
+    if System.doesFileExist(db_Cached_File_collections) then System.deleteFile(db_Cached_File_collections) else end
+    local db_collections = assert(io.open(db_Cached_File_collections, "w"))
+    -- table.sort((def_table_name), function(a, b) return (a.v:lower() < b.v:lower()) end)
+    printTable((def_table_name), db_collections)
+    db_collections:close()
+end
+
+function print_table_collection(def_user_db_file, def_table_name)
+    local db_Cached_Folder_collections = "ux0:/data/RetroFlow/COLLECTIONS/"
+    if System.doesFileExist(db_Cached_Folder_collections .. (def_user_db_file)) then System.deleteFile(db_Cached_Folder_collections .. (def_user_db_file)) else end
+    local db_Cached_File_collections = (db_Cached_Folder_collections .. (def_user_db_file))
+    local db_file_collection = assert(io.open(db_Cached_File_collections, "w"))
+    printTable((def_table_name), db_file_collection)
+    db_file_collection:close()
+end
+
 
 -- MAIN PRINT FUNCTION
 

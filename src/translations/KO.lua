@@ -82,6 +82,8 @@ return {
 ["FBA_2012"] = "FBA 2012",
 ["MAME_2003Plus"] = "MAME 2003 Plus",
 ["Neo_Geo"] = "Neo Geo",
+["ScummVM"] = "ScummVM",
+["PICO8"] = "PICO-8",
 
 -- Download
 ["Download_Covers_colon"] = "커버 다운로드: ",
@@ -140,6 +142,8 @@ return {
 ["Downloading_FBA2012_covers"] = "FBA2012 표지 다운로드",
 ["Downloading_MAME_2003_covers"] = "MAME 2003 표지 다운로드",
 ["Downloading_NG_covers"] = "NG 표지 다운로드",
+["Downloading_SCUMMVM_covers"] = "SCUMMVM 표지 다운로드",
+["Downloading_PICO8_covers"] = "PICO-8 표지 다운로드",
 
 ["Downloading_backgrounds"] = "배경 다운로드",
 ["Downloading_all_backgrounds"] = "모든 배경 다운로드",
@@ -180,6 +184,8 @@ return {
 ["Downloading_FBA2012_backgrounds"] = "FBA2012 배경 다운로드",
 ["Downloading_MAME_2003_backgrounds"] = "MAME 2003 배경 다운로드",
 ["Downloading_NG_backgrounds"] = "NG 배경 다운로드",
+["Downloading_SCUMMVM_backgrounds"] = "SCUMMVM 배경 다운로드",
+["Downloading_PICO8_backgrounds"] = "PICO-8 배경 다운로드",
 
 -- Info Screen
 ["App_ID_colon"] = "앱 ID: ",
@@ -232,6 +238,8 @@ return {
 ["FBA2012_Game"] = "FBA 2012 게임",
 ["MAME2003_Game"] = "MAME 2003 Plus 게임",
 ["Neo_Geo_Game"] = "Neo Geo 게임",
+["ScummVM_Game"] = "ScummVM 게임",
+["PICO8_Game"] = "PICO-8 게임",
 
 -- Missing launcher message
 ["Please_install_RetroFlow_Adrenaline_Launcher"] = "RetroFlow Adrenaline Launcher 를 설치하세요.",
@@ -311,5 +319,18 @@ return {
 ["Remove_from_recently_played"] = "최근 재생에서 제거",
 ["Retroarch_options"] = "RetroArch 옵션",
 ["Core_colon"] = "Core:",
+
+-- Collections
+["Collections"] = "컬렉션",
+["Collections_colon"] = "컬렉션:",
+["Add_to_collection"] = "컬렉션에 추가",
+["New_collection"] = "새 컬렉션",
+["New_collection_name"] = "새 컬렉션 이름",
+["Create"] = "생성",
+["Remove_from_collection"] = "컬렉션에서 제거",
+["No_collections"] = "컬렉션 없음",
+["Delete"] = "삭제",
+["Edit_collections"] = "컬렉션 편집",
+["Show_collections_colon"] = "컬렉션 표시:",
 
 }
