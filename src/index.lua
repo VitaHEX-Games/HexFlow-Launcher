@@ -13751,7 +13751,8 @@ while true do
                         end
                     end
                 elseif menuY == 5 then
-                    if adrenaline_flag == true then
+                    if remove_from_collection_flag == true then
+                        if adrenaline_flag == true then
                             dynamic_menu_adrenaline_menu()
                         else
                             if recent_cat_flag == true then
@@ -13759,6 +13760,10 @@ while true do
                             else
                             end
                         end
+                    else
+                        dynamic_menu_remove_from_recent()
+                    end    
+                        
                 elseif menuY == 6 then -- #5 - Dynamic based on Recent Category and Adrenaline options
                     if recent_cat_flag == true then
                         dynamic_menu_remove_from_recent()
