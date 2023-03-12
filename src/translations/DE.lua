@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Covers downloaden: ",
 ["Download_Covers"] = "Covers downloaden",
 ["Download_Backgrounds_colon"] = "Hintergründe herunterladen: ",
+["Extract_PS_Vita_backgrounds"] = "PS Vita-Hintergründe extrahieren",
 ["Extract_PSP_backgrounds"] = "PSP-Hintergründe extrahieren",
+["Extract_PICO8_backgrounds"] = "PICO-8-Hintergründe extrahieren",
 
 ["All"] = "Alle",
 ["Reload_Covers_Database"] = "Cover-Datenbank neu laden",

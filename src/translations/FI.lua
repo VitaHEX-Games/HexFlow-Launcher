@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Lataa kannet: ",
 ["Download_Covers"] = "Lataa kannet",
 ["Download_Backgrounds_colon"] = "Lataa taustat: ",
+["Extract_PS_Vita_backgrounds"] = "Pura PS Vita-taustat",
 ["Extract_PSP_backgrounds"] = "Pura PSP-taustat",
+["Extract_PICO8_backgrounds"] = "Pura PICO-8-taustat",
 
 ["All"] = "Kaikki",
 ["Reload_Covers_Database"] = "Lataa kansien tietokanta uudelleen",

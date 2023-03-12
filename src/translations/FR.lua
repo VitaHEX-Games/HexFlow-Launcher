@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Téléchargement des jaquettes :",
 ["Download_Covers"] = "Téléchargement des jaquettes",
 ["Download_Backgrounds_colon"] = "Télécharger les arrière-plans : ",
+["Extract_PS_Vita_backgrounds"] = "Extraire les arrière-plans PS Vita",
 ["Extract_PSP_backgrounds"] = "Extraire les arrière-plans PSP",
+["Extract_PICO8_backgrounds"] = "Extraire les arrière-plans PICO-8",
 
 ["All"] = "Tout",
 ["Reload_Covers_Database"] = "Rafraîchir la base de donnée",

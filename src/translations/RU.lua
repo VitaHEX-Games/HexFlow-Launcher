@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Скачать Обложки: ",
 ["Download_Covers"] = "Скачать Обложки",
 ["Download_Backgrounds_colon"] = "Скачать фонов: ",
+["Extract_PS_Vita_backgrounds"] = "Извлечь фоны PS Vita",
 ["Extract_PSP_backgrounds"] = "Извлечь фоны PSP",
+["Extract_PICO8_backgrounds"] = "Извлечь фоны PICO-8",
 
 ["All"] = "Все",
 ["Reload_Covers_Database"] = "Перезагрузка Дата Базы Обложек",

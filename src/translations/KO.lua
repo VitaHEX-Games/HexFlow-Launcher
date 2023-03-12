@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "커버 다운로드: ",
 ["Download_Covers"] = "커버 다운로드",
 ["Download_Backgrounds_colon"] = "배경 다운로드: ",
+["Extract_PS_Vita_backgrounds"] = "PS Vita 배경을 추출합니다",
 ["Extract_PSP_backgrounds"] = "PSP 배경을 추출합니다",
+["Extract_PICO8_backgrounds"] = "PICO-8 배경을 추출합니다",
 
 ["All"] = "모두",
 ["Reload_Covers_Database"] = "커버 데이터베이스 새로고침",

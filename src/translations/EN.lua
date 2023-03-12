@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Download Covers: ",
 ["Download_Covers"] = "Download Covers",
 ["Download_Backgrounds_colon"] = "Download Backgrounds: ",
+["Extract_PS_Vita_backgrounds"] = "Extract PS Vita backgrounds",
 ["Extract_PSP_backgrounds"] = "Extract PSP backgrounds",
+["Extract_PICO8_backgrounds"] = "Extract PICO-8 backgrounds",
 
 ["All"] = "All",
 ["Reload_Covers_Database"] = "Reload Covers Database",

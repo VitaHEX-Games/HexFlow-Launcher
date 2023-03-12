@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Last ned omslag: ",
 ["Download_Covers"] = "Last ned omslag",
 ["Download_Backgrounds_colon"] = "Last ned bakgrunner: ",
+["Extract_PS_Vita_backgrounds"] = "Pakk ut PS Vita-bakgrunnene",
 ["Extract_PSP_backgrounds"] = "Pakk ut PSP-bakgrunnene",
+["Extract_PICO8_backgrounds"] = "Pakk ut PICO-8-bakgrunnene",
 
 ["All"] = "Alle",
 ["Reload_Covers_Database"] = "Last inn dekker database på nytt",

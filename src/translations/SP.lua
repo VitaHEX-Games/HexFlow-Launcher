@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Descargar portadas: ",
 ["Download_Covers"] = "Descargar portadas",
 ["Download_Backgrounds_colon"] = "Descargar Fondos: ",
+["Extract_PS_Vita_backgrounds"] = "Extraer fondos de PS Vita",
 ["Extract_PSP_backgrounds"] = "Extraer fondos de PSP",
+["Extract_PICO8_backgrounds"] = "Extraer fondos de PICO-8",
 
 ["All"] = "Todos",
 ["Reload_Covers_Database"] = "Actualizar lista de portadas",

@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Omslagen downloaden: ",
 ["Download_Covers"] = "Omslagen downloaden",
 ["Download_Backgrounds_colon"] = "Achtergronden downloaden: ",
+["Extract_PS_Vita_backgrounds"] = "Pak de PS Vita-achtergronden uit",
 ["Extract_PSP_backgrounds"] = "Pak de PSP-achtergronden uit",
+["Extract_PICO8_backgrounds"] = "Pak de PICO-8-achtergronden uit",
 
 ["All"] = "Allemaal",
 ["Reload_Covers_Database"] = "Herlaad Covers-database",

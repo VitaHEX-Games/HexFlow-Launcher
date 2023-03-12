@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "カバーダウンロード：",
 ["Download_Covers"] = "カバーダウンロード",
 ["Download_Backgrounds_colon"] = "背景ダウンロード：",
+["Extract_PS_Vita_backgrounds"] = "PS Vitaぬ背景抽出",
 ["Extract_PSP_backgrounds"] = "PSPぬ背景抽出",
+["Extract_PICO8_backgrounds"] = "PICO-8ぬ背景抽出",
 
 ["All"] = "まじり",
 ["Reload_Covers_Database"] = "カバーDB再読み込み",

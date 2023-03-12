@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Kapakları İndirin: ",
 ["Download_Covers"] = "Kapakları İndirin",
 ["Download_Backgrounds_colon"] = "Arka Planları İndirin: ",
+["Extract_PS_Vita_backgrounds"] = "PS Vita arka planlarını ayıklayın",
 ["Extract_PSP_backgrounds"] = "PSP arka planlarını ayıklayın",
+["Extract_PICO8_backgrounds"] = "PICO-8 arka planlarını ayıklayın",
 
 ["All"] = "Tüm",
 ["Reload_Covers_Database"] = "Kapağı Veritabanını Yeniden Yükle",

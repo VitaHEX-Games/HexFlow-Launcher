@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Borítók Letöltése: ",
 ["Download_Covers"] = "Birító Letöltése",
 ["Download_Backgrounds_colon"] = "Hátterek Letöltése: ",
+["Extract_PS_Vita_backgrounds"] = "PS Vita hátterek kibontása",
 ["Extract_PSP_backgrounds"] = "PSP hátterek kibontása",
+["Extract_PICO8_backgrounds"] = "PICO-8 hátterek kibontása",
 
 ["All"] = "Összes",
 ["Reload_Covers_Database"] = "Borítók adatbázís újratöltése",

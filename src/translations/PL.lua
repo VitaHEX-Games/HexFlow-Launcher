@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Pobierz okładki: ",
 ["Download_Covers"] = "Pobierz okładki",
 ["Download_Backgrounds_colon"] = "Pobierz tła: ",
+["Extract_PS_Vita_backgrounds"] = "Wyodrębnij tła PS Vita",
 ["Extract_PSP_backgrounds"] = "Wyodrębnij tła PSP",
+["Extract_PICO8_backgrounds"] = "Wyodrębnij tła PICO-8",
 
 ["All"] = "Wszystko",
 ["Reload_Covers_Database"] = "Przeładuj bazę danych okładek",

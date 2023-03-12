@@ -23,6 +23,7 @@ loadingImage = Graphics.loadImage("app0:DATA/loading.png")
 romsMainDir = "ux0:/data/RetroFlow/ROMS/"
 covDir = "ux0:/data/RetroFlow/COVERS/"
 snapDir = "ux0:/data/RetroFlow/BACKGROUNDS/"
+iconDir = "ux0:/data/RetroFlow/ICONS/"
 
 -- Tidy up legacy COVER folder structure to a more standard naming convention
 if System.doesDirExist("ux0:/data/RetroFlow/COVERS/MAME") then System.rename("ux0:/data/RetroFlow/COVERS/MAME", "ux0:/data/RetroFlow/COVERS/MAME 2000") end
@@ -91,6 +92,10 @@ end
 
 -- Create directory: Roms
 System.createDirectory(romsMainDir)
+
+-- Create directory: Icons
+System.createDirectory(iconDir)
+System.createDirectory(iconDir .. "Sony - PlayStation Vita/")
 
 -- Create default rom sub folders
 for k, v in pairs(romDir_Default) do
@@ -1628,7 +1633,9 @@ local lang_default =
 ["Download_Covers_colon"] = "Download Covers: ",
 ["Download_Covers"] = "Download Covers",
 ["Download_Backgrounds_colon"] = "Download Backgrounds: ",
+["Extract_PS_Vita_backgrounds"] = "Extract PS Vita backgrounds",
 ["Extract_PSP_backgrounds"] = "Extract PSP backgrounds",
+["Extract_PICO8_backgrounds"] = "Extract PICO-8 backgrounds",
 
 ["All"] = "All",
 ["Reload_Covers_Database"] = "Reload Covers Database",
@@ -2059,8 +2066,8 @@ function ChangeLanguage(def)
         lang_lines = lang_default
     end
 
-    if setLanguage == 3 or setLanguage == 8 or setLanguage == 9 or setLanguage == 12 or setLanguage == 19 then
-    -- French, Russian, Japanese, Dutch, Japanese (Ryukyuan) language fix
+    if setLanguage == 2 or setLanguage == 3 or setLanguage == 6 or setLanguage == 8 or setLanguage == 9 or setLanguage == 12 or setLanguage == 16 or setLanguage == 19 then
+    -- German, French, Portugeuse, Russian, Japanese, Turkish, Dutch, Japanese (Ryukyuan) language fix
         setting_x_offset = 460
     else
         -- setting_x_offset = 365
@@ -2122,8 +2129,8 @@ Swap_X_O_buttons()
     mini_menu_x_margin = 60
 
     
-    if setLanguage == 3 or setLanguage == 8 or setLanguage == 9 or setLanguage == 12 or setLanguage == 19 then
-    -- French, Russian, Japanese, Dutch, Japanese (Ryukyuan) language fix
+    if setLanguage == 2 or setLanguage == 3 or setLanguage == 6 or setLanguage == 8 or setLanguage == 9 or setLanguage == 12 or setLanguage == 16 or setLanguage == 19 then
+    -- German, French, Portugeuse, Russian, Japanese, Turkish, Dutch, Japanese (Ryukyuan) language fix
         setting_x_offset = 460
     else
         -- setting_x_offset = 365
@@ -6636,7 +6643,7 @@ function listDirectory(dir)
                     romname_withExtension = file.name
                     cleanRomNames()
 
-                    romname_noExtension = romname_noExtension:gsub(".p8", "")
+                    -- romname_noExtension = romname_noExtension:gsub(".p8", "")
                     romname_noRegion_noExtension = romname_noRegion_noExtension:gsub(".p8", "")
 
                     info = romname_noRegion_noExtension
@@ -7717,10 +7724,40 @@ function GetPicPath(def_table_name)
             pic_path = ""
         end
 
+    -- Homebrew
+    elseif (def_table_name)[p].app_type == 0 then
+        -- Check backgrounds folder
+        if System.doesFileExist((def_table_name)[p].snap_path_local .. (def_table_name)[p].title .. ".png") then
+            pic_path = (def_table_name)[p].snap_path_local .. (def_table_name)[p].title .. ".png"
+
+        elseif System.doesFileExist((def_table_name)[p].snap_path_local .. (def_table_name)[p].name .. ".png") then
+            pic_path = (def_table_name)[p].snap_path_local .. (def_table_name)[p].name .. ".png"
+
+        -- Not found? Then check ur0 pic
+        elseif System.doesFileExist("ur0:/appmeta/" .. (def_table_name)[p].name .. "/pic0.png") then
+            pic_path = "ur0:/appmeta/" .. (def_table_name)[p].name .. "/pic0.png"
+
+        -- Not found? Check homebew snap folder
+        elseif System.doesFileExist((def_table_name)[p].snap_path_local .. (def_table_name)[p].name .. ".png") then
+            pic_path = (def_table_name)[p].snap_path_local .. (def_table_name)[p].name .. ".png"
+
+        -- Not found? Check vita snap folder
+        elseif System.doesFileExist("ux0:/data/RetroFlow/BACKGROUNDS/Sony - PlayStation Vita/" .. (def_table_name)[p].name .. ".png") then
+            pic_path = "ux0:/data/RetroFlow/BACKGROUNDS/Sony - PlayStation Vita/" .. (def_table_name)[p].name .. ".png"
+
+        else
+            pic_path = ""
+
+        end 
+
+
     -- Other systems
     else
         -- Check backgrounds folder
-        if System.doesFileExist((def_table_name)[p].snap_path_local .. (def_table_name)[p].name .. ".png") then
+        if System.doesFileExist((def_table_name)[p].snap_path_local .. (def_table_name)[p].title .. ".png") then
+            pic_path = (def_table_name)[p].snap_path_local .. (def_table_name)[p].title .. ".png"
+
+        elseif System.doesFileExist((def_table_name)[p].snap_path_local .. (def_table_name)[p].name .. ".png") then
             pic_path = (def_table_name)[p].snap_path_local .. (def_table_name)[p].name .. ".png"
 
         -- Not found? Then check ur0 pic
@@ -7740,9 +7777,15 @@ end
 
 function xAppIconPathLookup(AppTypeNum)
     if     apptype==1   then 
+
         -- Vita
+        -- Check appmeta first
         if System.doesFileExist(working_dir .. "/" .. xCatLookup(showCat)[p].name .. "/sce_sys/param.sfo") then
             return "ur0:/appmeta/" .. xCatLookup(showCat)[p].name .. "/icon0.png"
+        -- If not found, check icons dir
+        elseif System.doesFileExist(iconDir .. "Sony - PlayStation Vita/" .. xCatLookup(showCat)[p].name .. ".png") then
+            return iconDir .. "Sony - PlayStation Vita/" .. xCatLookup(showCat)[p].name .. ".png"
+        -- Still not found, use placeholder icon
         else
             return "app0:/DATA/icon_psv.png"
         end
@@ -9881,6 +9924,7 @@ while true do
 -- MENU 0 - GAMES SCREEN
     if showMenu == 0 then
         -- MAIN VIEW
+
         -- Header
         h, m, s = System.getTime()
         Font.print(fnt20, 726, 34, string.format("%02d:%02d", h, m), white)-- Draw time
@@ -11287,7 +11331,7 @@ while true do
 
         Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
-        menuItems = 4
+        menuItems = 6
 
         -- MENU 5 / #0 Back
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
@@ -11459,15 +11503,23 @@ while true do
         end
 
         -- MENU 5 / #3 Game Backgrounds
-        Font.print(fnt22, setting_x, setting_y3, lang_lines.Extract_PSP_backgrounds, white) -- Game backgounds
-
-        -- MENU 5 / #4 Game Backgrounds
-        Font.print(fnt22, setting_x, setting_y4, lang_lines.Game_backgounds_colon, white) -- Game backgounds
+        Font.print(fnt22, setting_x, setting_y3, lang_lines.Game_backgounds_colon, white) -- Game backgounds
         if Game_Backgrounds == 1 then
-            Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.On, white)--ON
+            Font.print(fnt22, setting_x_offset, setting_y3, lang_lines.On, white)--ON
         else
             Font.print(fnt22, setting_x_offset, setting_y3, lang_lines.Off, white)--OFF
         end
+
+        -- MENU 5 / #4 Extract Vita backgounds
+        Font.print(fnt22, setting_x, setting_y4, lang_lines.Extract_PS_Vita_backgrounds, white) -- Extract PS Vita backgounds
+
+        -- MENU 5 / #5 Extract PSP backgounds
+        Font.print(fnt22, setting_x, setting_y5, lang_lines.Extract_PSP_backgrounds, white) -- Extract PSP backgounds
+
+        -- MENU 5 / #6 Extract PICO-8 backgounds
+        Font.print(fnt22, setting_x, setting_y6, lang_lines.Extract_PICO8_backgrounds, white) -- Extract PICO-8 backgounds
+
+        
 
         -- MENU 5 - FUNCTIONS
         status = System.getMessageState()
@@ -11506,7 +11558,22 @@ while true do
 
                         DownloadSnaps()
                     end
-                elseif menuY == 3 then -- #3 Extract PSP backgrounds from iso files
+
+                elseif menuY == 3 then -- #3 Game Backgrounds
+                    if Game_Backgrounds == 1 then
+                        Game_Backgrounds = 0
+                    else
+                        Game_Backgrounds = 1
+                    end
+                elseif menuY == 4 then -- #4 Extract PS Vita backgrounds
+                    FreeIcons()
+                    FreeMemory()
+                    Network.term()
+                    -- Bin file based on copyicons by @cy33hc: https://github.com/cy33hc/copyicons
+                    -- Copies icon, pic0, bg, bg0
+                    System.launchEboot("app0:/launch_copy_vita_images.bin")
+
+                elseif menuY == 5 then -- #5 Extract PSP backgrounds from iso files
                     -- Create temporary file for Onelua to recognise as an instruction (OneLua will delete it after finding)
                     if not System.doesFileExist(cur_dir .. "/TITLES/onelua_extract_psp.dat") then
                         local file_over = System.openFile(cur_dir .. "/TITLES/onelua_extract_psp.dat", FCREATE)
@@ -11516,12 +11583,52 @@ while true do
                     -- Relaunch so OneLua eboot can extract the images
                     System.launchEboot("app0:/launch_scan.bin")
 
-                elseif menuY == 4 then -- #3 Game Backgrounds
-                    if Game_Backgrounds == 1 then
-                        Game_Backgrounds = 0
-                    else
-                        Game_Backgrounds = 1
+                elseif menuY == 6 then -- #6 Pico backgrounds
+                    curTotal = #pico8_table
+                    if #pico8_table >= 1 then
+
+                        Graphics.initBlend()
+                        Screen.clear()
+                        Graphics.termBlend()
+                        Screen.flip()
+
+                        for i, file in pairs(pico8_table) do
+
+                            -- Create pico8 background from image
+                            
+                            if not System.doesFileExist(file.snap_path_local .. file.name .. ".png") then
+                                -- Missing background - crop pico-8 cart, resize and take screenshot
+                                local pico_image = Graphics.loadImage(file.game_path)
+                                Graphics.initBlend()
+                                Screen.clear()
+
+                                Graphics.drawImageExtended(480, 270, pico_image, 16, 24, 128, 128, 0, 7.5, 4.2)
+
+                                Graphics.termBlend()
+                                Screen.flip()
+                                System.takeScreenshot(file.snap_path_local .. file.name .. ".png", FORMAT_PNG)
+                            else
+                                -- Image exists, display it and move onto next
+                                local pico_image = Graphics.loadImage(file.snap_path_local .. file.name .. ".png")
+                                Graphics.initBlend()
+                                Screen.clear()
+
+                                -- Rescale image to fill screen
+                                original_w = Graphics.getImageWidth(pico_image)
+                                original_h = Graphics.getImageHeight(pico_image)
+                                if original_w == 960 then ratio_w = 1.0 else ratio_w = 960 / original_w end
+                                if original_h == 544 then ratio_h = 1.0 else ratio_h = 544 / original_h end
+
+                                Graphics.drawScaleImage(0, 0, pico_image, ratio_w, ratio_h)
+
+                                Graphics.termBlend()
+                                Screen.flip()
+                            end
+                            
+                        end
+                        
                     end
+
                 end
                 
             elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
@@ -14342,7 +14449,7 @@ while true do
 
 
                         if string.match(startCategory_collection, collection_files[xcollection_number].table_name) then
-                            startCategory_collection_renamed = {}
+                            -- startCategory_collection_renamed = {} -- commented out, bug fix for removing coll when coll is set as startcat 
                             startCategory_collection = "not_set"
                             startCategory = 1
                             SaveSettings()
@@ -14675,6 +14782,7 @@ while true do
             if state ~= RUNNING then
                 if showMenu == 0 and app_title~="-" then
                     prvRotY = 0
+
                     GetInfoSelected() -- Credit to BlackSheepBoy69 - get all info when triangle pressed
                     showMenu = 1
                 end

@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "Download covers: ",
 ["Download_Covers"] = "Download covers",
 ["Download_Backgrounds_colon"] = "Download baggrunde: ",
+["Extract_PS_Vita_backgrounds"] = "Uddrag PS Vita-baggrunde",
 ["Extract_PSP_backgrounds"] = "Uddrag PSP-baggrunde",
+["Extract_PICO8_backgrounds"] = "Uddrag PICO-8-baggrunde",
 
 ["All"] = "Alle",
 ["Reload_Covers_Database"] = "Genindlæs coversdatabase",

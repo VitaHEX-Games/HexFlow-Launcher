@@ -89,7 +89,9 @@ return {
 ["Download_Covers_colon"] = "下载封面 : ",
 ["Download_Covers"] = "下载封面",
 ["Download_Backgrounds_colon"] = "下载背景: ",
+["Extract_PS_Vita_backgrounds"] = "提取 PS Vita 背景",
 ["Extract_PSP_backgrounds"] = "提取 PSP 背景",
+["Extract_PICO8_backgrounds"] = "提取 PICO-8 背景",
 
 ["All"] = "全部",
 ["Reload_Covers_Database"] = "重新载入封面数据库",
