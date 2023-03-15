@@ -3902,521 +3902,190 @@ function listDirectory(dir)
     end
 
 
-    -- SCAN ROMS
+    -- SCAN ROMS 
 
-    function scan_PSP_iso_subfolder (def_adrenaline_rom_location, def_user_db_file, def_subfolder_name)
-        if  System.doesDirExist(def_adrenaline_rom_location .. "/" .. def_subfolder_name) then
 
-            files_PSP = System.listDirectory(def_adrenaline_rom_location .. "/" .. def_subfolder_name)
+    function scan_PSP_iso_folder (def_adrenaline_rom_location)
 
-            for i, file in pairs(files_PSP) do
-            local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-                if not file.directory 
-                    and string.match(file.name, "%.") -- has an extension
-                    and not string.match(file.name, "Thumbs%.db") 
-                    and not string.match(file.name, "DS_Store") 
-                    and not string.match(file.name, "%.sav") 
-                    and not string.match(file.name, "%.srm") 
-                    and not string.match(file.name, "%.mpk") 
-                    and not string.match(file.name, "%.eep") 
-                    and not string.match(file.name, "%.st0") 
-                    and not string.match(file.name, "%.sta") 
-                    and not string.match(file.name, "%.sr0") 
-                    and not string.match(file.name, "%.ss0") 
-                    and not string.match(file.name, "%._") then
-
-                        if sfo_scan_isos_db[file.name] ~= nil then
-
-                            -- check if game is in the favorites list
-                            if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                                if string.find(strFav, file.name,1,true) ~= nil then
-                                    file.favourite = true
-                                else
-                                    file.favourite = false
-                                end
-                            end
-
-                            file.launch_argument = ("PATH=ms0:/ISO/" .. def_subfolder_name .. "/" .. file.name)
-                            file.game_path = (def_adrenaline_rom_location .. "/" .. def_subfolder_name .. "/" .. file.name)
-                            file.date_played = 0
-                            file.app_type_default=2
-
-                            -- import map_onelua_sfos(sfo_scan_isos_db)
-                            romname_withExtension = tostring(file.name)
-                            info = sfo_scan_isos_db[romname_withExtension].title
-                            app_title = sfo_scan_isos_db[romname_withExtension].title
-                            file.filename = romname_withExtension
-                            file.name = sfo_scan_isos_db[romname_withExtension].titleid
-                            file.title = sfo_scan_isos_db[romname_withExtension].title
-                            file.name_online = sfo_scan_isos_db[romname_withExtension].titleid
-                            file.version = sfo_scan_isos_db[romname_withExtension].region
-                            file.name_title_search = sfo_scan_isos_db[romname_withExtension].title
-                            file.apptitle = sfo_scan_isos_db[romname_withExtension].title
-
-                            -- Check for renamed game names
-                            if #renamed_games_table ~= nil then
-                                local key = find_game_table_pos_key(renamed_games_table, file.name)
-                                if key ~= nil then
-                                  -- Yes - Find in files table
-                                  app_title = renamed_games_table[key].title
-                                  file.title = renamed_games_table[key].title
-                                  file.apptitle = renamed_games_table[key].title
-                                else
-                                  -- No
-                                end
-                            else
-                            end
-
-                            custom_path = SystemsToScan[3].localCoverPath .. file.title .. ".png"
-                            custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
-
-                            -- OVERRIDES START
-
-                            if System.doesFileExist(cur_dir .. "/overrides.dat") then
-                                --String:   1 vita, 2 psp, 3 psx, 4 homebrew
-                                --App_type: 1 vita, 2 psp, 3 psx, 0 homebrew                         
-
-                                -- VITA
-                                if string.match(str, file.name .. "=1") then
-                                    table.insert(games_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=1
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[1].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[1].localCoverPath
-                                    file.snap_path_online = SystemsToScan[1].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[1].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
-                                            img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- PSP
-                                elseif string.match(str, file.name .. "=2") then
-                                    table.insert(psp_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=2
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[3].localCoverPath
-                                    file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[3].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
-                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-                                
-                                -- PSX
-                                elseif string.match(str, file.name .. "=3") then
-                                    table.insert(psx_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=3
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[4].localCoverPath
-                                    file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[4].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
-                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- HOMEBREW
-                                elseif string.match(str, file.name .. "=4") then
-                                    table.insert(homebrews_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=0
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = "ux0:/data/RetroFlow/COVERS/Homebrew/" .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[2].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[2].localCoverPath
-                                    file.snap_path_online = SystemsToScan[2].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[2].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
-                                            img_path = "app0:/DATA/icon_homebrew.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- DEFAULT - PSP
-                                else
-                                    table.insert(psp_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=2
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[3].localCoverPath
-                                    file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[3].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
-                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-                                end
-                            -- OVERRIDES END
-
-                            -- NO OVERRIDE - PSP
-                            else
-                                table.insert(psp_table, file)
-
-                                table.insert(folders_table, file)
-                                file.app_type=2
-
-                                -- Check for hidden game names
-                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
-                                custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
-
-                                file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
-                                file.cover_path_local = SystemsToScan[3].localCoverPath
-                                file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
-                                file.snap_path_local = SystemsToScan[3].localSnapPath
-
-                                if custom_path and System.doesFileExist(custom_path) then
-                                    img_path = custom_path --custom cover by app name
-                                elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                    img_path = custom_path_id --custom cover by app id
-                                else
-                                    if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
-                                        img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
-                                    else
-                                        img_path = "app0:/DATA/noimg.png" --blank grey
-                                    end
-                                end
-                            end
-
-                            update_loading_screen_progress()
-
-                            table.insert(files_table, count_of_systems, file.app_type) 
-                            table.insert(files_table, count_of_systems, file.name)
-                            table.insert(files_table, count_of_systems, file.title)
-                            table.insert(files_table, count_of_systems, file.name_online)
-                            table.insert(files_table, count_of_systems, file.version)
-                            table.insert(files_table, count_of_systems, file.name_title_search)
-
-                            --add blank icon to all
-                            file.icon = imgCoverTmp
-                            file.icon_path = img_path
-                            
-                            table.insert(files_table, count_of_systems, file.icon)                     
-                            table.insert(files_table, count_of_systems, file.apptitle) 
-
-                        else
-                        end
-
-                    else
-                    
-                end
-            end
-
-        end
-    end
-
-    function scan_PSP_iso_folder (def_adrenaline_rom_location, def_user_db_file)
         if  System.doesDirExist(def_adrenaline_rom_location) then
 
-            files_PSP = System.listDirectory(def_adrenaline_rom_location)
+            if next(sfo_scan_isos_db) == nil then
+            else
 
-            for i, file in pairs(files_PSP) do
-            local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-                
-                -- Scan subfolder for categories lite
-                if file.directory then
-                    scan_PSP_iso_subfolder (def_adrenaline_rom_location, def_user_db_file, file.name)
-                end
+                for i, file in pairs(sfo_scan_isos_db) do
+                    -- local custom_path, custom_path_id, app_type, name, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil
 
-                if not file.directory 
-                        and string.match(file.name, "%.") -- has an extension
-                        and not string.match(file.name, "Thumbs%.db") 
-                        and not string.match(file.name, "DS_Store") 
-                        and not string.match(file.name, "%.sav") 
-                        and not string.match(file.name, "%.srm") 
-                        and not string.match(file.name, "%.mpk") 
-                        and not string.match(file.name, "%.eep") 
-                        and not string.match(file.name, "%.st0") 
-                        and not string.match(file.name, "%.sta") 
-                        and not string.match(file.name, "%.sr0") 
-                        and not string.match(file.name, "%.ss0") 
-                        and not string.match(file.name, "%._") then
+                    if string.match(file.path, def_adrenaline_rom_location) then
 
-                        if sfo_scan_isos_db[file.name] ~= nil then
-
-                            -- check if game is in the favorites list
-                            if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                                if string.find(strFav, file.name,1,true) ~= nil then
-                                    file.favourite = true
-                                else
-                                    file.favourite = false
-                                end
-                            end
-
-                            file.launch_argument = ("PATH=ms0:/ISO/" .. file.name)
-                            file.game_path = (def_adrenaline_rom_location .. "/" .. file.name)
-                            file.date_played = 0
-                            file.app_type_default=2
-
-                            -- import map_onelua_sfos(sfo_scan_isos_db)
-                            romname_withExtension = tostring(file.name)
-                            info = sfo_scan_isos_db[romname_withExtension].title
-                            app_title = sfo_scan_isos_db[romname_withExtension].title
-                            file.filename = romname_withExtension
-                            file.name = sfo_scan_isos_db[romname_withExtension].titleid
-                            file.title = sfo_scan_isos_db[romname_withExtension].title
-                            file.name_online = sfo_scan_isos_db[romname_withExtension].titleid
-                            file.version = sfo_scan_isos_db[romname_withExtension].region
-                            file.name_title_search = sfo_scan_isos_db[romname_withExtension].title
-                            file.apptitle = sfo_scan_isos_db[romname_withExtension].title
-
-                            -- Check for renamed game names
-                            if #renamed_games_table ~= nil then
-                                local key = find_game_table_pos_key(renamed_games_table, file.name)
-                                if key ~= nil then
-                                  -- Yes - Find in files table
-                                  app_title = renamed_games_table[key].title
-                                  file.title = renamed_games_table[key].title
-                                  file.apptitle = renamed_games_table[key].title
-                                else
-                                  -- No
-                                end
+                        -- check if game is in the favorites list
+                        if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                            if string.find(strFav, file.titleid,1,true) ~= nil then
+                                file.favourite = true
                             else
+                                file.favourite = false
                             end
+                        end
 
-                            custom_path = SystemsToScan[3].localCoverPath .. file.title .. ".png"
-                            custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
+                        file.launch_argument = ("PATH=ms0:/ISO/" .. i)
+                        file.game_path = file.path
+                        file.date_played = 0
+                        file.app_type_default=2
 
-                            -- OVERRIDES START
+                        info = file.title
+                        app_title = file.title
+                        file.filename = i
+                        file.name = file.titleid
+                        file.title = file.title
+                        file.name_online = file.titleid
+                        file.version = file.region
+                        file.name_title_search = file.title
+                        file.apptitle = file.title
+                        file.directory = false
 
-                            if System.doesFileExist(cur_dir .. "/overrides.dat") then
-                                --String:   1 vita, 2 psp, 3 psx, 4 homebrew
-                                --App_type: 1 vita, 2 psp, 3 psx, 0 homebrew                         
+                        -- Check for renamed game names
+                        if #renamed_games_table ~= nil then
+                            local key = find_game_table_pos_key(renamed_games_table, file.name)
+                            if key ~= nil then
+                              -- Yes - Find in files table
+                              app_title = renamed_games_table[key].title
+                              file.title = renamed_games_table[key].title
+                              file.apptitle = renamed_games_table[key].title
+                            else
+                              -- No
+                            end
+                        else
+                        end
 
-                                -- VITA
-                                if string.match(str, file.name .. "=1") then
-                                    table.insert(games_table, file)
+                        custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
+                        custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
 
-                                    table.insert(folders_table, file)
-                                    file.app_type=1
+                        -- OVERRIDES START
 
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+                        if System.doesFileExist(cur_dir .. "/overrides.dat") then
+                            --String:   1 vita, 2 psp, 3 psx, 4 homebrew
+                            --App_type: 1 vita, 2 psp, 3 psx, 0 homebrew                         
 
-                                    custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
+                            -- VITA
+                            if string.match(str, file.name .. "=1") then
+                                table.insert(games_table, file)
 
-                                    file.cover_path_online = SystemsToScan[1].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[1].localCoverPath
-                                    file.snap_path_online = SystemsToScan[1].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[1].localSnapPath
+                                table.insert(folders_table, file)
+                                file.app_type=1
 
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
-                                            img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
-                                -- PSP
-                                elseif string.match(str, file.name .. "=2") then
-                                    table.insert(psp_table, file)
+                                custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
+                                custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
 
-                                    table.insert(folders_table, file)
-                                    file.app_type=2
+                                file.cover_path_online = SystemsToScan[1].onlineCoverPathSystem
+                                file.cover_path_local = SystemsToScan[1].localCoverPath
+                                file.snap_path_online = SystemsToScan[1].onlineSnapPathSystem
+                                file.snap_path_local = SystemsToScan[1].localSnapPath
 
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[3].localCoverPath
-                                    file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[3].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
-                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-                                
-                                -- PSX
-                                elseif string.match(str, file.name .. "=3") then
-                                    table.insert(psx_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=3
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[4].localCoverPath
-                                    file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[4].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
-                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- HOMEBREW
-                                elseif string.match(str, file.name .. "=4") then
-                                    table.insert(homebrews_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=0
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = "ux0:/data/RetroFlow/COVERS/Homebrew/" .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[2].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[2].localCoverPath
-                                    file.snap_path_online = SystemsToScan[2].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[2].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
-                                            img_path = "app0:/DATA/icon_homebrew.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- DEFAULT - PSP
+                                if custom_path and System.doesFileExist(custom_path) then
+                                    img_path = custom_path --custom cover by app name
+                                elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                    img_path = custom_path_id --custom cover by app id
                                 else
-                                    table.insert(psp_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=2
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[3].localCoverPath
-                                    file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[3].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
+                                    if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
+                                        img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
                                     else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
-                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
+                                        img_path = "app0:/DATA/noimg.png" --blank grey
                                     end
                                 end
-                            -- OVERRIDES END
 
-                            -- NO OVERRIDE - PSP
+                            -- PSP
+                            elseif string.match(str, file.name .. "=2") then
+                                table.insert(psp_table, file)
+
+                                table.insert(folders_table, file)
+                                file.app_type=2
+
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
+                                custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
+                                custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
+
+                                file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
+                                file.cover_path_local = SystemsToScan[3].localCoverPath
+                                file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
+                                file.snap_path_local = SystemsToScan[3].localSnapPath
+
+                                if custom_path and System.doesFileExist(custom_path) then
+                                    img_path = custom_path --custom cover by app name
+                                elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                    img_path = custom_path_id --custom cover by app id
+                                else
+                                    if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                        img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                    else
+                                        img_path = "app0:/DATA/noimg.png" --blank grey
+                                    end
+                                end
+                            
+                            -- PSX
+                            elseif string.match(str, file.name .. "=3") then
+                                table.insert(psx_table, file)
+
+                                table.insert(folders_table, file)
+                                file.app_type=3
+
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
+                                custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
+                                custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
+
+                                file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
+                                file.cover_path_local = SystemsToScan[4].localCoverPath
+                                file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
+                                file.snap_path_local = SystemsToScan[4].localSnapPath
+
+                                if custom_path and System.doesFileExist(custom_path) then
+                                    img_path = custom_path --custom cover by app name
+                                elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                    img_path = custom_path_id --custom cover by app id
+                                else
+                                    if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                        img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+                                    else
+                                        img_path = "app0:/DATA/noimg.png" --blank grey
+                                    end
+                                end
+
+                            -- HOMEBREW
+                            elseif string.match(str, file.name .. "=4") then
+                                table.insert(homebrews_table, file)
+
+                                table.insert(folders_table, file)
+                                file.app_type=0
+
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
+                                custom_path = "ux0:/data/RetroFlow/COVERS/Homebrew/" .. app_title .. ".png"
+                                custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
+
+                                file.cover_path_online = SystemsToScan[2].onlineCoverPathSystem
+                                file.cover_path_local = SystemsToScan[2].localCoverPath
+                                file.snap_path_online = SystemsToScan[2].onlineSnapPathSystem
+                                file.snap_path_local = SystemsToScan[2].localSnapPath
+
+                                if custom_path and System.doesFileExist(custom_path) then
+                                    img_path = custom_path --custom cover by app name
+                                elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                    img_path = custom_path_id --custom cover by app id
+                                else
+                                    if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
+                                        img_path = "app0:/DATA/icon_homebrew.png"  --app icon
+                                    else
+                                        img_path = "app0:/DATA/noimg.png" --blank grey
+                                    end
+                                end
+
+                            -- DEFAULT - PSP
                             else
                                 table.insert(psp_table, file)
 
@@ -4446,101 +4115,132 @@ function listDirectory(dir)
                                     end
                                 end
                             end
+                        -- OVERRIDES END
 
-                            update_loading_screen_progress()
-
-                            table.insert(files_table, count_of_systems, file.app_type) 
-                            table.insert(files_table, count_of_systems, file.name)
-                            table.insert(files_table, count_of_systems, file.title)
-                            table.insert(files_table, count_of_systems, file.name_online)
-                            table.insert(files_table, count_of_systems, file.version)
-                            table.insert(files_table, count_of_systems, file.name_title_search)
-
-                            --add blank icon to all
-                            file.icon = imgCoverTmp
-                            file.icon_path = img_path
-                            
-                            table.insert(files_table, count_of_systems, file.icon)                     
-                            table.insert(files_table, count_of_systems, file.apptitle) 
-
+                        -- NO OVERRIDE - PSP
                         else
+                            table.insert(psp_table, file)
+
+                            table.insert(folders_table, file)
+                            file.app_type=2
+
+                            -- Check for hidden game names
+                            file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
+                            custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
+                            custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
+
+                            file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
+                            file.cover_path_local = SystemsToScan[3].localCoverPath
+                            file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
+                            file.snap_path_local = SystemsToScan[3].localSnapPath
+
+                            if custom_path and System.doesFileExist(custom_path) then
+                                img_path = custom_path --custom cover by app name
+                            elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                img_path = custom_path_id --custom cover by app id
+                            else
+                                if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
+                                    img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                else
+                                    img_path = "app0:/DATA/noimg.png" --blank grey
+                                end
+                            end
                         end
 
-                    else
-                    
+                        update_loading_screen_progress()
+
+                        table.insert(files_table, count_of_systems, file.app_type) 
+                        table.insert(files_table, count_of_systems, file.name)
+                        table.insert(files_table, count_of_systems, file.title)
+                        table.insert(files_table, count_of_systems, file.name_online)
+                        table.insert(files_table, count_of_systems, file.version)
+                        table.insert(files_table, count_of_systems, file.name_title_search)
+
+                        --add blank icon to all
+                        file.icon = imgCoverTmp
+                        file.icon_path = img_path
+                        
+                        table.insert(files_table, count_of_systems, file.icon)                     
+                        table.insert(files_table, count_of_systems, file.apptitle) 
+
+
+                        
+                    end
                 end
+            
             end
 
         end
     end
 
-    function scan_PSP_game_folder_subfolder (def_adrenaline_rom_location, def_user_db_file, def_subfolder_name)
-        if  System.doesDirExist(def_adrenaline_rom_location .. "/" .. def_subfolder_name) then
+    function scan_PSP_game_folder (def_adrenaline_rom_location)
 
-            files_PSP = System.listDirectory(def_adrenaline_rom_location .. "/" .. def_subfolder_name)
+        if  System.doesDirExist(def_adrenaline_rom_location) then
 
-            for i, file in pairs(files_PSP) do
-            local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-                if file.directory and System.doesFileExist(def_adrenaline_rom_location .. "/" .. def_subfolder_name .. "/" .. file.name .. "/EBOOT.PBP") then
+            if next(sfo_scan_games_db) == nil then
+            else
 
-                    if string.match(file.name, "NPEG")
-                    or string.match(file.name, "NPEH")
-                    or string.match(file.name, "UCES")
-                    or string.match(file.name, "ULES")
-                    or string.match(file.name, "NPUG")
-                    or string.match(file.name, "NPUH")
-                    or string.match(file.name, "UCUS")
-                    or string.match(file.name, "ULUS")
-                    or string.match(file.name, "NPJG")
-                    or string.match(file.name, "NPJH")
-                    or string.match(file.name, "NPHG")
-                    or string.match(file.name, "NPHH")
-                    or string.match(file.name, "UCAS") then
+                for i, file in pairs(sfo_scan_games_db) do
+                    -- local custom_path, custom_path_id, app_type, name, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil
+                    
+                    if string.match(file.path, def_adrenaline_rom_location) then
 
-                        if sfo_scan_games_db[file.name] ~= nil then
+                        if string.match(file.titleid, "NPEG")
+                        or string.match(file.titleid, "NPEH")
+                        or string.match(file.titleid, "UCES")
+                        or string.match(file.titleid, "ULES")
+                        or string.match(file.titleid, "NPUG")
+                        or string.match(file.titleid, "NPUH")
+                        or string.match(file.titleid, "UCUS")
+                        or string.match(file.titleid, "ULUS")
+                        or string.match(file.titleid, "NPJG")
+                        or string.match(file.titleid, "NPJH")
+                        or string.match(file.titleid, "NPHG")
+                        or string.match(file.titleid, "NPHH")
+                        or string.match(file.titleid, "UCAS") then        
 
-                            -- check if game is in the favorites list
-                            if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                                if string.find(strFav, file.name,1,true) ~= nil then
-                                    file.favourite = true
-                                else
-                                    file.favourite = false
-                                end
-                            end
-
-                            file.launch_argument = ("PATH=ms0:/PSP/GAME/" .. def_subfolder_name .. "/" .. file.name .. "/EBOOT.PBP")
-                            file.game_path = (def_adrenaline_rom_location .. "/" .. def_subfolder_name .. "/" .. file.name)
-                            file.date_played = 0
-                            file.app_type_default=2
-
-                            -- import map_onelua_sfos(sfo_scan_games_db)
-                            romname_withExtension = tostring(file.name)
-                            info = sfo_scan_games_db[romname_withExtension].title
-                            app_title = sfo_scan_games_db[romname_withExtension].title
-                            file.filename = romname_withExtension
-                            file.name = sfo_scan_games_db[romname_withExtension].titleid
-                            file.title = sfo_scan_games_db[romname_withExtension].title
-                            file.name_online = sfo_scan_games_db[romname_withExtension].titleid
-                            file.version = sfo_scan_games_db[romname_withExtension].region
-                            file.name_title_search = sfo_scan_games_db[romname_withExtension].title
-                            file.apptitle = sfo_scan_games_db[romname_withExtension].title
-
-                            -- Check for renamed game names
-                            if #renamed_games_table ~= nil then
-                                local key = find_game_table_pos_key(renamed_games_table, file.name)
-                                if key ~= nil then
-                                  -- Yes - Find in files table
-                                  app_title = renamed_games_table[key].title
-                                  file.title = renamed_games_table[key].title
-                                  file.apptitle = renamed_games_table[key].title
-                                else
-                                  -- No
-                                end
+                        -- check if game is in the favorites list
+                        if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                            if string.find(strFav, file.titleid,1,true) ~= nil then
+                                file.favourite = true
                             else
+                                file.favourite = false
                             end
+                        end
+
+                        file.launch_argument = "PATH=ms0:/PSP/GAME/" .. file.titleid .. "/EBOOT.PBP"
+                        file.game_path = file.path:gsub("/EBOOT.pbp","")
+                        file.date_played = 0
+                        file.app_type_default=2
+
+                        info = file.title
+                        app_title = file.title
+                        file.filename = file.titleid
+                        file.name = file.titleid
+                        file.title = file.title
+                        file.name_online = file.titleid
+                        file.version = file.region
+                        file.name_title_search = file.title
+                        file.apptitle = file.title
+                        file.directory = true
+
+                        -- Check for renamed game names
+                        if #renamed_games_table ~= nil then
+                            local key = find_game_table_pos_key(renamed_games_table, file.name)
+                            if key ~= nil then
+                              -- Yes - Find in files table
+                              app_title = renamed_games_table[key].title
+                              file.title = renamed_games_table[key].title
+                              file.apptitle = renamed_games_table[key].title
+                            else
+                              -- No
+                            end
+                        else
+                        end
 
 
-                            -- OVERRIDES START
+                        -- OVERRIDES START
 
                             if System.doesFileExist(cur_dir .. "/overrides.dat") then
                                 --String:   1 vita, 2 psp, 3 psx, 4 homebrew
@@ -4744,250 +4444,123 @@ function listDirectory(dir)
                             
                             table.insert(files_table, count_of_systems, file.icon)                     
                             table.insert(files_table, count_of_systems, file.apptitle)
-                        else
-                        end
 
-                    else
+
+                            else
+                            end
+                        
                     end
-                    
                 end
+
             end
 
         end
     end
 
-    function scan_PSP_game_folder (def_adrenaline_rom_location, def_user_db_file)
+    function scan_PS1_game_folder (def_adrenaline_rom_location)
+
         if  System.doesDirExist(def_adrenaline_rom_location) then
 
-            files_PSP = System.listDirectory(def_adrenaline_rom_location)
-
-            for i, file in pairs(files_PSP) do
-            local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
+            if next(sfo_scan_games_db) == nil then
+            else
                 
-                -- Scan subfolder for categories lite
-                if file.directory and not System.doesFileExist(def_adrenaline_rom_location .. "/" .. file.name .. "/EBOOT.PBP") then
-                    scan_PSP_game_folder_subfolder (def_adrenaline_rom_location, def_user_db_file, file.name)
-                end
+                for i, file in pairs(sfo_scan_games_db) do
+                    -- local custom_path, custom_path_id, app_type, name, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil
 
-                if file.directory and System.doesFileExist(def_adrenaline_rom_location .. "/" .. file.name .. "/EBOOT.PBP") then
+                    if string.match(file.path, def_adrenaline_rom_location) then
 
-                    if string.match(file.name, "NPEG")
-                    or string.match(file.name, "NPEH")
-                    or string.match(file.name, "UCES")
-                    or string.match(file.name, "ULES")
-                    or string.match(file.name, "NPUG")
-                    or string.match(file.name, "NPUH")
-                    or string.match(file.name, "UCUS")
-                    or string.match(file.name, "ULUS")
-                    or string.match(file.name, "NPJG")
-                    or string.match(file.name, "NPJH")
-                    or string.match(file.name, "NPHG")
-                    or string.match(file.name, "NPHH")
-                    or string.match(file.name, "UCAS") then
+                        if not string.match(file.titleid, "NPEG")
+                        and not string.match(file.titleid, "NPEH")
+                        and not string.match(file.titleid, "UCES")
+                        and not string.match(file.titleid, "ULES")
+                        and not string.match(file.titleid, "NPUG")
+                        and not string.match(file.titleid, "NPUH")
+                        and not string.match(file.titleid, "UCUS")
+                        and not string.match(file.titleid, "ULUS")
+                        and not string.match(file.titleid, "NPJG")
+                        and not string.match(file.titleid, "NPJH")
+                        and not string.match(file.titleid, "NPHG")
+                        and not string.match(file.titleid, "NPHH")
+                        and not string.match(file.titleid, "UCAS") then
 
-                        if sfo_scan_games_db[file.name] ~= nil then
-
-                            -- check if game is in the favorites list
-                            if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                                if string.find(strFav, file.name,1,true) ~= nil then
-                                    file.favourite = true
-                                else
-                                    file.favourite = false
-                                end
-                            end
-
-                            file.launch_argument = ("PATH=ms0:/PSP/GAME/" .. file.name .. "/EBOOT.PBP")
-                            file.game_path = (def_adrenaline_rom_location .. "/" .. file.name)
-                            file.date_played = 0
-                            file.app_type_default=2
-
-                            -- import map_onelua_sfos(sfo_scan_games_db)
-                            romname_withExtension = tostring(file.name)
-                            info = sfo_scan_games_db[romname_withExtension].title
-                            app_title = sfo_scan_games_db[romname_withExtension].title
-                            file.filename = romname_withExtension
-                            file.name = sfo_scan_games_db[romname_withExtension].titleid
-                            file.title = sfo_scan_games_db[romname_withExtension].title
-                            file.name_online = sfo_scan_games_db[romname_withExtension].titleid
-                            file.version = sfo_scan_games_db[romname_withExtension].region
-                            file.name_title_search = sfo_scan_games_db[romname_withExtension].title
-                            file.apptitle = sfo_scan_games_db[romname_withExtension].title
-
-                            -- Check for renamed game names
-                            if #renamed_games_table ~= nil then
-                                local key = find_game_table_pos_key(renamed_games_table, file.name)
-                                if key ~= nil then
-                                  -- Yes - Find in files table
-                                  app_title = renamed_games_table[key].title
-                                  file.title = renamed_games_table[key].title
-                                  file.apptitle = renamed_games_table[key].title
-                                else
-                                  -- No
-                                end
+                        -- check if game is in the favorites list
+                        if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                            if string.find(strFav, file.titleid,1,true) ~= nil then
+                                file.favourite = true
                             else
+                                file.favourite = false
                             end
+                        end
+
+                        file.launch_argument = ("PATH=ms0:/PSP/GAME/" .. file.titleid .. "/EBOOT.PBP")
+                        file.game_path = file.path:gsub("/EBOOT.pbp","")
+                        file.date_played = 0
+                        file.app_type_default=3
+
+                        info = file.title
+                        app_title = file.title
+                        file.filename = file.titleid
+                        file.name = file.titleid
+                        file.title = file.title
+                        file.name_online = file.titleid
+                        file.version = file.region
+                        file.name_title_search = file.title
+                        file.apptitle = file.title
+                        file.directory = true
+
+                        -- Check for renamed game names
+                        if #renamed_games_table ~= nil then
+                            local key = find_game_table_pos_key(renamed_games_table, file.name)
+                            if key ~= nil then
+                              -- Yes - Find in files table
+                              app_title = renamed_games_table[key].title
+                              file.title = renamed_games_table[key].title
+                              file.apptitle = renamed_games_table[key].title
+                            else
+                              -- No
+                            end
+                        else
+                        end
 
 
-                            -- OVERRIDES START
+                        -- OVERRIDES START
 
-                            if System.doesFileExist(cur_dir .. "/overrides.dat") then
-                                --String:   1 vita, 2 psp, 3 psx, 4 homebrew
-                                --App_type: 1 vita, 2 psp, 3 psx, 0 homebrew                         
+                        if System.doesFileExist(cur_dir .. "/overrides.dat") then
+                            --String:   1 vita, 2 psp, 3 psx, 4 homebrew
+                            --App_type: 1 vita, 2 psp, 3 psx, 0 homebrew                         
 
-                                -- VITA
-                                if string.match(str, file.name .. "=1") then
-                                    table.insert(games_table, file)
+                            -- VITA
+                            if string.match(str, file.name .. "=1") then
+                                table.insert(games_table, file)
 
-                                    table.insert(folders_table, file)
-                                    file.app_type=1
+                                table.insert(folders_table, file)
+                                file.app_type=1
 
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
-                                    custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
+                                custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
+                                custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
 
-                                    file.cover_path_online = SystemsToScan[1].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[1].localCoverPath
-                                    file.snap_path_online = SystemsToScan[1].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[1].localSnapPath
+                                file.cover_path_online = SystemsToScan[1].onlineCoverPathSystem
+                                file.cover_path_local = SystemsToScan[1].localCoverPath
+                                file.snap_path_online = SystemsToScan[1].onlineSnapPathSystem
+                                file.snap_path_local = SystemsToScan[1].localSnapPath
 
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
-                                            img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- PSP
-                                elseif string.match(str, file.name .. "=2") then
-                                    table.insert(psp_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=2
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[3].localCoverPath
-                                    file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[3].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
-                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-                                
-                                -- PSX
-                                elseif string.match(str, file.name .. "=3") then
-                                    table.insert(psx_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=3
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[4].localCoverPath
-                                    file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[4].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
-                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- HOMEBREW
-                                elseif string.match(str, file.name .. "=4") then
-                                    table.insert(homebrews_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=0
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[2].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[2].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[2].localCoverPath
-                                    file.snap_path_online = SystemsToScan[2].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[2].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
-                                            img_path = "app0:/DATA/icon_homebrew.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- DEFAULT - PSP
+                                if custom_path and System.doesFileExist(custom_path) then
+                                    img_path = custom_path --custom cover by app name
+                                elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                    img_path = custom_path_id --custom cover by app id
                                 else
-                                    table.insert(psp_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=2
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[3].localCoverPath
-                                    file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[3].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
+                                    if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
+                                        img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
                                     else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
-                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
+                                        img_path = "app0:/DATA/noimg.png" --blank grey
                                     end
                                 end
-                            -- OVERRIDES END
 
-                            -- NO OVERRIDE - PSP
-                            else
+                            -- PSP
+                            elseif string.match(str, file.name .. "=2") then
                                 table.insert(psp_table, file)
 
                                 table.insert(folders_table, file)
@@ -5015,259 +4588,68 @@ function listDirectory(dir)
                                         img_path = "app0:/DATA/noimg.png" --blank grey
                                     end
                                 end
-                            end
-
-                            update_loading_screen_progress()
-
-                            table.insert(files_table, count_of_systems, file.app_type) 
-                            table.insert(files_table, count_of_systems, file.name)
-                            table.insert(files_table, count_of_systems, file.title)
-                            table.insert(files_table, count_of_systems, file.name_online)
-                            table.insert(files_table, count_of_systems, file.version)
-                            table.insert(files_table, count_of_systems, file.name_title_search)
-
-                            --add blank icon to all
-                            file.icon = imgCoverTmp
-                            file.icon_path = img_path
                             
-                            table.insert(files_table, count_of_systems, file.icon)                     
-                            table.insert(files_table, count_of_systems, file.apptitle)
-                        else
-                        end
+                            -- PSX
+                            elseif string.match(str, file.name .. "=3") then
+                                table.insert(psx_table, file)
 
-                    else
-                    end
-                    
-                end
-            end
+                                table.insert(folders_table, file)
+                                file.app_type=3
 
-        end
-    end
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
 
-    function scan_PS1_game_folder_subfolder (def_adrenaline_rom_location, def_user_db_file, def_subfolder_name)
-        if  System.doesDirExist(def_adrenaline_rom_location .. "/" .. def_subfolder_name) then
+                                custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
+                                custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
 
-            files_PSX = System.listDirectory(def_adrenaline_rom_location .. "/" .. def_subfolder_name)
+                                file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
+                                file.cover_path_local = SystemsToScan[4].localCoverPath
+                                file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
+                                file.snap_path_local = SystemsToScan[4].localSnapPath
 
-            for i, file in pairs(files_PSX) do
-            local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-                if file.directory and System.doesFileExist(def_adrenaline_rom_location .. "/" .. def_subfolder_name .. "/" .. file.name .. "/EBOOT.PBP") then
-
-                    if not string.match(file.name, "NPEG")
-                    and not string.match(file.name, "NPEH")
-                    and not string.match(file.name, "UCES")
-                    and not string.match(file.name, "ULES")
-                    and not string.match(file.name, "NPUG")
-                    and not string.match(file.name, "NPUH")
-                    and not string.match(file.name, "UCUS")
-                    and not string.match(file.name, "ULUS")
-                    and not string.match(file.name, "NPJG")
-                    and not string.match(file.name, "NPJH")
-                    and not string.match(file.name, "NPHG")
-                    and not string.match(file.name, "NPHH")
-                    and not string.match(file.name, "UCAS") then
-
-                        if sfo_scan_games_db[file.name] ~= nil then
-
-                            -- check if game is in the favorites list
-                            if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                                if string.find(strFav, file.name,1,true) ~= nil then
-                                    file.favourite = true
+                                if custom_path and System.doesFileExist(custom_path) then
+                                    img_path = custom_path --custom cover by app name
+                                elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                    img_path = custom_path_id --custom cover by app id
                                 else
-                                    file.favourite = false
-                                end
-                            end
-
-                            file.launch_argument = ("PATH=ms0:/PSP/GAME/" .. def_subfolder_name .. "/" .. file.name .. "/EBOOT.PBP")
-                            file.game_path = (def_adrenaline_rom_location .. "/" .. def_subfolder_name .. "/" .. file.name)
-                            file.date_played = 0
-                            file.app_type_default=3
-
-                            -- import map_onelua_sfos(sfo_scan_games_db)
-                            romname_withExtension = tostring(file.name)
-                            info = sfo_scan_games_db[romname_withExtension].title
-                            app_title = sfo_scan_games_db[romname_withExtension].title
-                            file.filename = romname_withExtension
-                            file.name = sfo_scan_games_db[romname_withExtension].titleid
-                            file.title = sfo_scan_games_db[romname_withExtension].title
-                            file.name_online = sfo_scan_games_db[romname_withExtension].titleid
-                            file.version = sfo_scan_games_db[romname_withExtension].region
-                            file.name_title_search = sfo_scan_games_db[romname_withExtension].title
-                            file.apptitle = sfo_scan_games_db[romname_withExtension].title
-
-                            -- Check for renamed game names
-                            if #renamed_games_table ~= nil then
-                                local key = find_game_table_pos_key(renamed_games_table, file.name)
-                                if key ~= nil then
-                                  -- Yes - Find in files table
-                                  app_title = renamed_games_table[key].title
-                                  file.title = renamed_games_table[key].title
-                                  file.apptitle = renamed_games_table[key].title
-                                else
-                                  -- No
-                                end
-                            else
-                            end
-
-                            -- OVERRIDES START
-
-                            if System.doesFileExist(cur_dir .. "/overrides.dat") then
-                                --String:   1 vita, 2 psp, 3 psx, 4 homebrew
-                                --App_type: 1 vita, 2 psp, 3 psx, 0 homebrew                         
-
-                                -- VITA
-                                if string.match(str, file.name .. "=1") then
-                                    table.insert(games_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=1
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[1].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[1].localCoverPath
-                                    file.snap_path_online = SystemsToScan[1].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[1].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
+                                    if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                        img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
                                     else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
-                                            img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- PSP
-                                elseif string.match(str, file.name .. "=2") then
-                                    table.insert(psp_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=2
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[3].localCoverPath
-                                    file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[3].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
-                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-                                
-                                -- PSX
-                                elseif string.match(str, file.name .. "=3") then
-                                    table.insert(psx_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=3
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[4].localCoverPath
-                                    file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[4].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
-                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- HOMEBREW
-                                elseif string.match(str, file.name .. "=4") then
-                                    table.insert(homebrews_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=0
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[2].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[2].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[2].localCoverPath
-                                    file.snap_path_online = SystemsToScan[2].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[2].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
-                                            img_path = "app0:/DATA/icon_homebrew.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- DEFAULT - PSX
-                                else
-                                    table.insert(psx_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=3
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[4].localCoverPath
-                                    file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[4].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
-                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
+                                        img_path = "app0:/DATA/noimg.png" --blank grey
                                     end
                                 end
-                            -- OVERRIDES END
 
-                            -- NO OVERRIDE
+                            -- HOMEBREW
+                            elseif string.match(str, file.name .. "=4") then
+                                table.insert(homebrews_table, file)
+
+                                table.insert(folders_table, file)
+                                file.app_type=0
+
+                                -- Check for hidden game names
+                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
+                                custom_path = SystemsToScan[2].localCoverPath .. app_title .. ".png"
+                                custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
+
+                                file.cover_path_online = SystemsToScan[2].onlineCoverPathSystem
+                                file.cover_path_local = SystemsToScan[2].localCoverPath
+                                file.snap_path_online = SystemsToScan[2].onlineSnapPathSystem
+                                file.snap_path_local = SystemsToScan[2].localSnapPath
+
+                                if custom_path and System.doesFileExist(custom_path) then
+                                    img_path = custom_path --custom cover by app name
+                                elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                    img_path = custom_path_id --custom cover by app id
+                                else
+                                    if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
+                                        img_path = "app0:/DATA/icon_homebrew.png"  --app icon
+                                    else
+                                        img_path = "app0:/DATA/noimg.png" --blank grey
+                                    end
+                                end
+
+                            -- DEFAULT - PSX
                             else
                                 table.insert(psx_table, file)
 
@@ -5284,11 +4666,11 @@ function listDirectory(dir)
                                 file.cover_path_local = SystemsToScan[4].localCoverPath
                                 file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
                                 file.snap_path_local = SystemsToScan[4].localSnapPath
-                                
+
                                 if custom_path and System.doesFileExist(custom_path) then
-                                    img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app name
+                                    img_path = custom_path --custom cover by app name
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                    img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
+                                    img_path = custom_path_id --custom cover by app id
                                 else
                                     if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
                                         img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
@@ -5297,319 +4679,63 @@ function listDirectory(dir)
                                     end
                                 end
                             end
+                        -- OVERRIDES END
 
-                            update_loading_screen_progress()
+                        -- NO OVERRIDE
+                        else
+                            table.insert(psx_table, file)
 
-                            table.insert(files_table, count_of_systems, file.app_type) 
-                            table.insert(files_table, count_of_systems, file.name)
-                            table.insert(files_table, count_of_systems, file.title)
-                            table.insert(files_table, count_of_systems, file.name_online)
-                            table.insert(files_table, count_of_systems, file.version)
-                            table.insert(files_table, count_of_systems, file.name_title_search)
+                            table.insert(folders_table, file)
+                            file.app_type=3
 
-                            --add blank icon to all
-                            file.icon = imgCoverTmp
-                            file.icon_path = img_path
+                            -- Check for hidden game names
+                            file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
+
+                            custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
+                            custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
+
+                            file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
+                            file.cover_path_local = SystemsToScan[4].localCoverPath
+                            file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
+                            file.snap_path_local = SystemsToScan[4].localSnapPath
                             
-                            table.insert(files_table, count_of_systems, file.icon)                     
-                            table.insert(files_table, count_of_systems, file.apptitle)
+                            if custom_path and System.doesFileExist(custom_path) then
+                                img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app name
+                            elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
+                            else
+                                if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
+                                    img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+                                else
+                                    img_path = "app0:/DATA/noimg.png" --blank grey
+                                end
+                            end
+                        end
+
+                        update_loading_screen_progress()
+
+                        table.insert(files_table, count_of_systems, file.app_type) 
+                        table.insert(files_table, count_of_systems, file.name)
+                        table.insert(files_table, count_of_systems, file.title)
+                        table.insert(files_table, count_of_systems, file.name_online)
+                        table.insert(files_table, count_of_systems, file.version)
+                        table.insert(files_table, count_of_systems, file.name_title_search)
+
+                        --add blank icon to all
+                        file.icon = imgCoverTmp
+                        file.icon_path = img_path
+                        
+                        table.insert(files_table, count_of_systems, file.icon)                     
+                        table.insert(files_table, count_of_systems, file.apptitle)
+
                         else
                         end
 
-                    else
                     end
-
-                    
                 end
+
             end
-        end
-    end
 
-    function scan_PS1_game_folder (def_adrenaline_rom_location, def_user_db_file)
-        if  System.doesDirExist(def_adrenaline_rom_location) then
-
-            files_PSX = System.listDirectory(def_adrenaline_rom_location)
-
-            for i, file in pairs(files_PSX) do
-            local custom_path, custom_path_id, app_type, name, title, name_online, version, name_title_search = nil, nil, nil, nil, nil, nil, nil, nil
-                
-                -- Scan subfolder for categories lite
-                if file.directory and not System.doesFileExist(def_adrenaline_rom_location .. "/" .. file.name .. "/EBOOT.PBP") then
-                    scan_PS1_game_folder_subfolder (def_adrenaline_rom_location, def_user_db_file, file.name)
-                end
-
-                if file.directory and System.doesFileExist(def_adrenaline_rom_location .. "/" .. file.name .. "/EBOOT.PBP") then
-
-                    if not string.match(file.name, "NPEG")
-                    and not string.match(file.name, "NPEH")
-                    and not string.match(file.name, "UCES")
-                    and not string.match(file.name, "ULES")
-                    and not string.match(file.name, "NPUG")
-                    and not string.match(file.name, "NPUH")
-                    and not string.match(file.name, "UCUS")
-                    and not string.match(file.name, "ULUS")
-                    and not string.match(file.name, "NPJG")
-                    and not string.match(file.name, "NPJH")
-                    and not string.match(file.name, "NPHG")
-                    and not string.match(file.name, "NPHH")
-                    and not string.match(file.name, "UCAS") then
-
-                        if sfo_scan_games_db[file.name] ~= nil then
-
-                            -- check if game is in the favorites list
-                            if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                                if string.find(strFav, file.name,1,true) ~= nil then
-                                    file.favourite = true
-                                else
-                                    file.favourite = false
-                                end
-                            end
-
-                            file.launch_argument = ("PATH=ms0:/PSP/GAME/" .. file.name .. "/EBOOT.PBP")
-                            file.game_path = (def_adrenaline_rom_location .. "/" .. file.name)
-                            file.date_played = 0
-                            file.app_type_default=3
-
-                            -- import map_onelua_sfos(sfo_scan_games_db)
-                            romname_withExtension = tostring(file.name)
-                            info = sfo_scan_games_db[romname_withExtension].title
-                            app_title = sfo_scan_games_db[romname_withExtension].title
-                            file.filename = romname_withExtension
-                            file.name = sfo_scan_games_db[romname_withExtension].titleid
-                            file.title = sfo_scan_games_db[romname_withExtension].title
-                            file.name_online = sfo_scan_games_db[romname_withExtension].titleid
-                            file.version = sfo_scan_games_db[romname_withExtension].region
-                            file.name_title_search = sfo_scan_games_db[romname_withExtension].title
-                            file.apptitle = sfo_scan_games_db[romname_withExtension].title
-
-                            -- Check for renamed game names
-                            if #renamed_games_table ~= nil then
-                                local key = find_game_table_pos_key(renamed_games_table, file.name)
-                                if key ~= nil then
-                                  -- Yes - Find in files table
-                                  app_title = renamed_games_table[key].title
-                                  file.title = renamed_games_table[key].title
-                                  file.apptitle = renamed_games_table[key].title
-                                else
-                                  -- No
-                                end
-                            else
-                            end
-
-
-                            -- OVERRIDES START
-
-                            if System.doesFileExist(cur_dir .. "/overrides.dat") then
-                                --String:   1 vita, 2 psp, 3 psx, 4 homebrew
-                                --App_type: 1 vita, 2 psp, 3 psx, 0 homebrew                         
-
-                                -- VITA
-                                if string.match(str, file.name .. "=1") then
-                                    table.insert(games_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=1
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[1].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[1].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[1].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[1].localCoverPath
-                                    file.snap_path_online = SystemsToScan[1].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[1].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
-                                            img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- PSP
-                                elseif string.match(str, file.name .. "=2") then
-                                    table.insert(psp_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=2
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[3].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[3].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[3].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[3].localCoverPath
-                                    file.snap_path_online = SystemsToScan[3].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[3].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
-                                            img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-                                
-                                -- PSX
-                                elseif string.match(str, file.name .. "=3") then
-                                    table.insert(psx_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=3
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[4].localCoverPath
-                                    file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[4].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
-                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- HOMEBREW
-                                elseif string.match(str, file.name .. "=4") then
-                                    table.insert(homebrews_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=0
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[2].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[2].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[2].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[2].localCoverPath
-                                    file.snap_path_online = SystemsToScan[2].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[2].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
-                                            img_path = "app0:/DATA/icon_homebrew.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-
-                                -- DEFAULT - PSX
-                                else
-                                    table.insert(psx_table, file)
-
-                                    table.insert(folders_table, file)
-                                    file.app_type=3
-
-                                    -- Check for hidden game names
-                                    file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                    custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
-                                    custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
-
-                                    file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
-                                    file.cover_path_local = SystemsToScan[4].localCoverPath
-                                    file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
-                                    file.snap_path_local = SystemsToScan[4].localSnapPath
-
-                                    if custom_path and System.doesFileExist(custom_path) then
-                                        img_path = custom_path --custom cover by app name
-                                    elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                        img_path = custom_path_id --custom cover by app id
-                                    else
-                                        if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
-                                            img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
-                                        else
-                                            img_path = "app0:/DATA/noimg.png" --blank grey
-                                        end
-                                    end
-                                end
-                            -- OVERRIDES END
-
-                            -- NO OVERRIDE
-                            else
-                                table.insert(psx_table, file)
-
-                                table.insert(folders_table, file)
-                                file.app_type=3
-
-                                -- Check for hidden game names
-                                file.hidden = check_for_hidden_tag_on_scan(file.name, file.app_type)
-
-                                custom_path = SystemsToScan[4].localCoverPath .. app_title .. ".png"
-                                custom_path_id = SystemsToScan[4].localCoverPath .. file.name .. ".png"
-
-                                file.cover_path_online = SystemsToScan[4].onlineCoverPathSystem
-                                file.cover_path_local = SystemsToScan[4].localCoverPath
-                                file.snap_path_online = SystemsToScan[4].onlineSnapPathSystem
-                                file.snap_path_local = SystemsToScan[4].localSnapPath
-                                
-                                if custom_path and System.doesFileExist(custom_path) then
-                                    img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app name
-                                elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                    img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
-                                else
-                                    if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
-                                        img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
-                                    else
-                                        img_path = "app0:/DATA/noimg.png" --blank grey
-                                    end
-                                end
-                            end
-
-                            update_loading_screen_progress()
-
-                            table.insert(files_table, count_of_systems, file.app_type) 
-                            table.insert(files_table, count_of_systems, file.name)
-                            table.insert(files_table, count_of_systems, file.title)
-                            table.insert(files_table, count_of_systems, file.name_online)
-                            table.insert(files_table, count_of_systems, file.version)
-                            table.insert(files_table, count_of_systems, file.name_title_search)
-
-                            --add blank icon to all
-                            file.icon = imgCoverTmp
-                            file.icon_path = img_path
-                            
-                            table.insert(files_table, count_of_systems, file.icon)                     
-                            table.insert(files_table, count_of_systems, file.apptitle)
-                        else
-                        end
-
-                    else
-                    end
-
-                    
-                end
-            end
         end
     end
 
@@ -5627,14 +4753,14 @@ function listDirectory(dir)
 
     if Adrenaline_roms == 5 then
         for k, v in pairs(adr_partition_table) do
-            scan_PSP_iso_folder     (tostring(v)  .. ":/pspemu/ISO",       "psp_iso_"     .. tostring(v) .. ".lua")
-            scan_PSP_game_folder    (tostring(v)  .. ":/pspemu/PSP/GAME",  "psp_game_"    .. tostring(v) .. ".lua")
-            scan_PS1_game_folder    (tostring(v)  .. ":/pspemu/PSP/GAME",  "psx_"         .. tostring(v) .. ".lua")
+            scan_PSP_iso_folder     (tostring(v)  .. ":/pspemu/ISO")
+            scan_PSP_game_folder    (tostring(v)  .. ":/pspemu/PSP/GAME")
+            scan_PS1_game_folder    (tostring(v)  .. ":/pspemu/PSP/GAME")
         end
     else
-        scan_PSP_iso_folder     (adr_partition  .. ":/pspemu/ISO",       "psp_iso_"     .. adr_partition .. ".lua")
-        scan_PSP_game_folder    (adr_partition  .. ":/pspemu/PSP/GAME",  "psp_game_"    .. adr_partition .. ".lua")
-        scan_PS1_game_folder    (adr_partition  .. ":/pspemu/PSP/GAME",  "psx_"         .. adr_partition .. ".lua")
+        scan_PSP_iso_folder     (adr_partition  .. ":/pspemu/ISO")
+        scan_PSP_game_folder    (adr_partition  .. ":/pspemu/PSP/GAME")
+        scan_PS1_game_folder    (adr_partition  .. ":/pspemu/PSP/GAME")
     end
 
 

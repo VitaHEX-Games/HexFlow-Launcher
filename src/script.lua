@@ -165,11 +165,14 @@
 
 			for k, v in pairs(image_extraction_table) do
 
+
 				-- Extract image
 				local pic1 = {}
-				local pic1 = game.getpic1(v.path)
 
-				if pic1 ~= nil then
+				-- If image already exists, display it
+				if files.exists (backgrounds_psp_dir .. v.titleid .. ".png") then
+
+					local pic1 = image.load(backgrounds_psp_dir .. v.titleid .. ".png")
 
 					-- Draw image
 					image.resize(pic1, 960, 544)
@@ -179,9 +182,6 @@
 					-- draw.fillrect (0,0,960,544,color.new(0,0,0, 150))
 					draw.gradrect (0, 0, 960, 150, gradient_start, gradient_end, 0)
 
-					-- Save
-					image.save(pic1, backgrounds_psp_dir .. v.titleid .. ".png", 1)
-
 					-- Update progress and reset screen
 					extracted = extracted + 1
 					screen.print(10,30,tostring(v.title))
@@ -190,14 +190,43 @@
 					screen.flip()
 
 				else
-					-- No image
-					-- Update progress and reset screen
-					extracted = extracted + 1
-					screen.print(10,30,tostring(v.title))
-					screen.print(10,50,math.floor((extracted/image_total)*100).."%")
-					draw.fillrect(0,534,((extracted/image_total)*960),10,green)
-					screen.flip()
+
+					-- Image not found, try and extract
+					local pic1 = game.getpic1(v.path)
+
+					if pic1 ~= nil then
+
+						-- Draw image
+						image.resize(pic1, 960, 544)
+						image.blit(pic1, 0, 0)
+
+						-- Add dark overlay
+						-- draw.fillrect (0,0,960,544,color.new(0,0,0, 150))
+						draw.gradrect (0, 0, 960, 150, gradient_start, gradient_end, 0)
+
+						-- Save
+						image.save(pic1, backgrounds_psp_dir .. v.titleid .. ".png", 1)
+
+						-- Update progress and reset screen
+						extracted = extracted + 1
+						screen.print(10,30,tostring(v.title))
+						screen.print(10,50,math.floor((extracted/image_total)*100).."%")
+						draw.fillrect(0,534,((extracted/image_total)*960),10,green)
+						screen.flip()
+
+					else
+						-- No image
+						-- Update progress and reset screen
+						extracted = extracted + 1
+						screen.print(10,30,tostring(v.title))
+						screen.print(10,50,math.floor((extracted/image_total)*100).."%")
+						draw.fillrect(0,534,((extracted/image_total)*960),10,green)
+						screen.flip()
+					end
+
 				end
+
+				
 
 		    end
 
@@ -301,16 +330,25 @@
 			end
 		end
 
+		function count_loading_tasks_game_dir(dir)
+			if files.exists((dir)) then
+				local dir_count = {}
+				local dir_count = files.listdirs((dir))
+
+				loading_tasks = loading_tasks + #dir_count
+			end
+		end
+
 		count_loading_tasks("ux0:/pspemu/ISO")
 		count_loading_tasks("ur0:/pspemu/ISO")
 		count_loading_tasks("imc0:/pspemu/ISO")
 		count_loading_tasks("xmc0:/pspemu/ISO")
 		count_loading_tasks("uma0:/pspemu/ISO")
-		count_loading_tasks("ux0:/pspemu/PSP/GAME")
-		count_loading_tasks("ur0:/pspemu/PSP/GAME")
-		count_loading_tasks("imc0:/pspemu/PSP/GAME")
-		count_loading_tasks("xmc0:/pspemu/PSP/GAME")
-		count_loading_tasks("uma0:/pspemu/PSP/GAME")
+		count_loading_tasks_game_dir("ux0:/pspemu/PSP/GAME")
+		count_loading_tasks_game_dir("ur0:/pspemu/PSP/GAME")
+		count_loading_tasks_game_dir("imc0:/pspemu/PSP/GAME")
+		count_loading_tasks_game_dir("xmc0:/pspemu/PSP/GAME")
+		count_loading_tasks_game_dir("uma0:/pspemu/PSP/GAME")
 		count_loading_tasks(tostring((romUserDir.PlayStation)))
 
 		local loading_progress = 0
@@ -355,8 +393,8 @@
 		loading_percent = (loading_progress/loading_tasks)*100
 
 		-- Set max width
-	    if loading_percent >= loading_bar_width then
-	        loading_percent = loading_bar_width
+	    if loading_percent >= 100 then 
+	        loading_percent = 100
 	    end
     
 		-- Progress bar background
