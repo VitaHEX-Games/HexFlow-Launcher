@@ -3919,7 +3919,9 @@ function listDirectory(dir)
 
                         -- check if game is in the favorites list
                         if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                            if string.find(strFav, file.titleid,1,true) ~= nil then
+                            if string.find(strFav, i,1,true) ~= nil then
+                                file.favourite = true
+                            elseif string.find(strFav, file.titleid,1,true) ~= nil then
                                 file.favourite = true
                             else
                                 file.favourite = false
@@ -6996,9 +6998,9 @@ end
 function GetInfoSelected()
 
     if next(xCatLookup(showCat)) ~= nil then
-        if showCat == 42 then
-            create_fav_count_table(files_table)
-        end
+        -- if showCat == 42 then
+        --     create_fav_count_table(files_table)
+        -- end
 
         info = xCatLookup(showCat)[p].name
         app_title = xCatLookup(showCat)[p].title
@@ -10733,6 +10735,8 @@ while true do
                                 Graphics.termBlend()
                                 Screen.flip()
                                 System.takeScreenshot(file.snap_path_local .. file.name .. ".png", FORMAT_PNG)
+
+                                
                             else
                                 -- Image exists, display it and move onto next
                                 local pico_image = Graphics.loadImage(file.snap_path_local .. file.name .. ".png")
@@ -10749,6 +10753,8 @@ while true do
 
                                 Graphics.termBlend()
                                 Screen.flip()
+
+                                Graphics.freeImage(pico_image)
                             end
                             
                         end
@@ -12777,6 +12783,7 @@ while true do
 
                     -- If on favorite category, go to main screen, otherwise the next fav game is shown
                     if showCat == 42 then
+                        check_for_out_of_bounds()
                         GetInfoSelected()
                         oldpad = pad -- Prevents it from launching next game accidentally. Credit BlackSheepBoy69
                         showMenu = 0
@@ -14124,8 +14131,8 @@ while true do
                     if showCat == 37 then curTotal =    #fba_table              if      #fba_table == 0 then            showCat = 38 end end
                     if showCat == 38 then curTotal =    #mame_2003_plus_table   if      #mame_2003_plus_table == 0 then showCat = 39 end end
                     if showCat == 39 then curTotal =    #mame_2000_table        if      #mame_2000_table == 0 then      showCat = 40 end end
-                    if showCat == 40 then curTotal =    #neogeo_table           if      #neogeo_table == 0 then         showCat = 42 end end
-                    if showCat == 41 then curTotal =    #ngpc_table             if      #ngpc_table == 0 then           showCat = 43 end end
+                    if showCat == 40 then curTotal =    #neogeo_table           if      #neogeo_table == 0 then         showCat = 41 end end
+                    if showCat == 41 then curTotal =    #ngpc_table             if      #ngpc_table == 0 then           showCat = 42 end end
                     if showCat == 42 then
                         -- count favorites
                         create_fav_count_table(files_table)
@@ -14154,7 +14161,11 @@ while true do
                                     showCat = 45
                                 end
                             else
-                                showCat = 0
+                                if showAll==0 then
+                                    showCat = 1
+                                else
+                                    showCat = 0
+                                end
                             end
                         end
                     end

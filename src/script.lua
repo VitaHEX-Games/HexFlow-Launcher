@@ -172,15 +172,15 @@
 				-- If image already exists, display it
 				if files.exists (backgrounds_psp_dir .. v.titleid .. ".png") then
 
-					local pic1 = image.load(backgrounds_psp_dir .. v.titleid .. ".png")
+					-- local pic1 = image.load(backgrounds_psp_dir .. v.titleid .. ".png")
 
-					-- Draw image
-					image.resize(pic1, 960, 544)
-					image.blit(pic1, 0, 0)
+					-- -- Draw image
+					-- image.resize(pic1, 960, 544)
+					-- image.blit(pic1, 0, 0)
 
 					-- Add dark overlay
 					-- draw.fillrect (0,0,960,544,color.new(0,0,0, 150))
-					draw.gradrect (0, 0, 960, 150, gradient_start, gradient_end, 0)
+					-- draw.gradrect (0, 0, 960, 150, gradient_start, gradient_end, 0)
 
 					-- Update progress and reset screen
 					extracted = extracted + 1
@@ -197,12 +197,12 @@
 					if pic1 ~= nil then
 
 						-- Draw image
-						image.resize(pic1, 960, 544)
-						image.blit(pic1, 0, 0)
+						-- image.resize(pic1, 960, 544)
+						-- image.blit(pic1, 0, 0)
 
 						-- Add dark overlay
 						-- draw.fillrect (0,0,960,544,color.new(0,0,0, 150))
-						draw.gradrect (0, 0, 960, 150, gradient_start, gradient_end, 0)
+						-- draw.gradrect (0, 0, 960, 150, gradient_start, gradient_end, 0)
 
 						-- Save
 						image.save(pic1, backgrounds_psp_dir .. v.titleid .. ".png", 1)
