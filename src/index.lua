@@ -8053,14 +8053,14 @@ function DownloadCovers()
         end
 
         -- If not showing missing covers - temporarily re-enable and import cache so can download - then disable again
-        if showMissingCovers == 1 then
-            showMissingCovers = 0
+        if showMissingCovers == 0 then
+            showMissingCovers = 1
             -- Import cache to update
             FreeIcons()
             count_cache_and_reload()
             check_for_out_of_bounds()
             GetNameAndAppTypeSelected()
-            showMissingCovers = 1
+            showMissingCovers = 0
         end
 
         -- def_getCovers, def_table_name, def_lang_lines_Downloading_SysName_covers)
