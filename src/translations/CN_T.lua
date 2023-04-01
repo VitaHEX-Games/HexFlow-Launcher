@@ -306,6 +306,7 @@ return {
 ["Menu"] = "菜單",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "標準",
+["Show_missing_covers_colon"] = "顯示缺失的封面：",
 
 -- Game options
 ["Options"] = "選項",

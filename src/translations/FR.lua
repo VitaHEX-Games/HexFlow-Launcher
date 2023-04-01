@@ -306,6 +306,7 @@ return {
 ["Menu"] = "Menu",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Standard",
+["Show_missing_covers_colon"] = "Afficher les jaquettes manquantes :",
 
 -- Game options
 ["Options"] = "Options",

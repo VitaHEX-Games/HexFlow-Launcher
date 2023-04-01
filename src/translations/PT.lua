@@ -306,6 +306,7 @@ return {
 ["Menu"] = "Cardápio",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Padrões",
+["Show_missing_covers_colon"] = "Mostrar capas ausentes:",
 
 -- Game options
 ["Options"] = "Opções",

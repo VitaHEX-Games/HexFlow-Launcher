@@ -746,20 +746,24 @@ local imgFavorite_large_on = Graphics.loadImage("app0:/DATA/fav-large-on.png")
 local imgFavorite_large_off = Graphics.loadImage("app0:/DATA/fav-large-off.png")
 local imgHidden_small_on = Graphics.loadImage("app0:/DATA/hidden-small-on.png")
 local imgHidden_large_on = Graphics.loadImage("app0:/DATA/hidden-large-on.png")
-local setting_icon_theme = Graphics.loadImage("app0:/DATA/setting-icon-theme.png")
-local setting_icon_artwork = Graphics.loadImage("app0:/DATA/setting-icon-artwork.png")
-local setting_icon_categories = Graphics.loadImage("app0:/DATA/setting-icon-categories.png")
-local setting_icon_language = Graphics.loadImage("app0:/DATA/setting-icon-language.png")
-local setting_icon_scanning = Graphics.loadImage("app0:/DATA/setting-icon-scanning.png")
-local setting_icon_search = Graphics.loadImage("app0:/DATA/setting-icon-search.png")
-local setting_icon_sounds = Graphics.loadImage("app0:/DATA/setting-icon-sounds.png")
-local setting_icon_about = Graphics.loadImage("app0:/DATA/setting-icon-about.png")
-local setting_icon_other = Graphics.loadImage("app0:/DATA/setting-icon-other.png")
+
 local file_browser_folder_open = Graphics.loadImage("app0:/DATA/file-browser-folder-open.png")
 local file_browser_folder_closed = Graphics.loadImage("app0:/DATA/file-browser-folder-closed.png")
 local file_browser_file = Graphics.loadImage("app0:/DATA/file-browser-file.png")
 local footer_gradient = Graphics.loadImage("app0:/DATA/footer_gradient.png")
 
+setting_icon_theme = Graphics.loadImage("app0:/DATA/setting-icon-theme.png")
+setting_icon_artwork = Graphics.loadImage("app0:/DATA/setting-icon-artwork.png")
+setting_icon_categories = Graphics.loadImage("app0:/DATA/setting-icon-categories.png")
+setting_icon_language = Graphics.loadImage("app0:/DATA/setting-icon-language.png")
+setting_icon_scanning = Graphics.loadImage("app0:/DATA/setting-icon-scanning.png")
+setting_icon_search = Graphics.loadImage("app0:/DATA/setting-icon-search.png")
+setting_icon_sounds = Graphics.loadImage("app0:/DATA/setting-icon-sounds.png")
+setting_icon_about = Graphics.loadImage("app0:/DATA/setting-icon-about.png")
+setting_icon_other = Graphics.loadImage("app0:/DATA/setting-icon-other.png")
+
+setting_icon_heart = Graphics.loadImage("app0:/DATA/setting-icon-heart.png")
+setting_icon_filter = Graphics.loadImage("app0:/DATA/setting-icon-filter.png")
 
 -- Start of ROM Browser setup
 
@@ -998,6 +1002,13 @@ local modBackground = Render.loadObject("app0:/DATA/planebg.obj", imgBack)
 local modDefaultBackground = Render.loadObject("app0:/DATA/planebg.obj", imgBack)
 local modFloor = Render.loadObject("app0:/DATA/planefloor.obj", imgFloor)
 
+local modCoverSNESJapan = Render.loadObject("app0:/DATA/covernsnesjapan.obj", imgCoverTmp)
+local modCoverSNESJapanNoref = Render.loadObject("app0:/DATA/covernsnesjapan_noreflx.obj", imgCoverTmp)
+
+local modCoverMiddle = Render.loadObject("app0:/DATA/covermiddle.obj", imgCoverTmp)
+local modCoverMiddleNoref = Render.loadObject("app0:/DATA/covermiddle_noreflix.obj", imgCoverTmp)
+
+
 local img_path = ""
 
 fontname = "font-SawarabiGothic-Regular.woff"
@@ -1206,6 +1217,9 @@ local showHidden = 0 -- 0 Off
 local showCollections = 1 -- On
 startCategory_collection = "not_set"
 
+local filterGames = 0 -- All
+local showMissingCovers = 1 -- On
+
 function SaveSettings()
     local file_config = System.openFile(cur_dir .. "/config.dat", FCREATE)
     settings = {}    
@@ -1226,7 +1240,31 @@ function SaveSettings()
         startCategory_collection = "not_set"
     end
 
-    local settings = "Reflections=" .. setReflections .. " " .. "\nSounds=" .. setSounds .. " " .. "\nColor=" .. themeColor .. " " .. "\nBackground=" .. setBackground .. " " .. "\nLanguage=" .. setLanguage .. " " .. "\nView=" .. showView .. " " .. "\nHomebrews=" .. showHomebrews .. " " .. "\nScan=" .. startupScan .. " " .. "\nCategory=" .. startCategory .. " " .. "\nRecent=" .. showRecentlyPlayed .. " " .. "\nAll=" .. showAll .. " " .. "\nAdrenaline_rom_location=" .. Adrenaline_roms .. " " .. "\nGame_Backgrounds=" .. Game_Backgrounds .. " " .. "\nMusic=" .. setMusic .. " " .. "\nMusic_Shuffle=" .. setMusicShuffle .. " " .. "\nSwap_X_O_buttons=" .. setSwap_X_O_buttons .. " " .. "\nAdrenaline_PS_Button=" .. setAdrPSButton .. " " .. "\nShow_hidden_games=" .. showHidden .. " " .. "\nShow_collections=" .. showCollections .. " " .. "\nStartup_Collection=" .. startCategory_collection
+    local settings = 
+    "Reflections=" .. setReflections .. " " .. 
+    "\nSounds=" .. setSounds .. " " .. 
+    "\nColor=" .. themeColor .. " " .. 
+    "\nBackground=" .. setBackground .. " " .. 
+    "\nLanguage=" .. setLanguage .. " " .. 
+    "\nView=" .. showView .. " " .. 
+    "\nHomebrews=" .. showHomebrews .. " " .. 
+    "\nScan=" .. startupScan .. " " .. 
+    "\nCategory=" .. startCategory .. " " .. 
+    "\nRecent=" .. showRecentlyPlayed .. " " .. 
+    "\nAll=" .. showAll .. " " .. 
+    "\nAdrenaline_rom_location=" .. Adrenaline_roms .. " " .. 
+    "\nGame_Backgrounds=" .. Game_Backgrounds .. " " .. 
+    "\nMusic=" .. setMusic .. " " .. 
+    "\nMusic_Shuffle=" .. setMusicShuffle .. " " .. 
+    "\nSwap_X_O_buttons=" .. setSwap_X_O_buttons .. " " .. 
+    "\nAdrenaline_PS_Button=" .. setAdrPSButton .. " " .. 
+    "\nShow_hidden_games=" .. showHidden .. " " .. 
+    "\nShow_collections=" .. showCollections .. " " .. 
+    "\nStartup_Collection=" .. startCategory_collection .. " " .. 
+    "\nFilter_Games=" .. filterGames .. " " .. 
+    "\nShow_missing_covers=" .. showMissingCovers
+
+
     file_settings = io.open(cur_dir .. "/config.dat", "w")
     file_settings:write(settings)
     file_settings:close()
@@ -1266,6 +1304,8 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
     local getAdrPSButton = settingValue[17]; if getAdrPSButton ~= nil then setAdrPSButton = getAdrPSButton end
     local getHidden = settingValue[18]; if getHidden ~= nil then showHidden = getHidden end
     local getCollections = settingValue[19]; if getCollections ~= nil then showCollections = getCollections end
+    local getFilterGames = settingValue[20]; if getFilterGames ~= nil then filterGames = getFilterGames end
+    local getshowMissingCovers = settingValue[21]; if getshowMissingCovers ~= nil then showMissingCovers = getshowMissingCovers end
 
     selectedwall = setBackground
 
@@ -1850,6 +1890,7 @@ local lang_default =
 ["Menu"] = "Menu",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Standard",
+["Show_missing_covers_colon"] = "Show missing covers:",
 
 -- Game options
 ["Options"] = "Options",
@@ -2160,7 +2201,6 @@ function vertically_centre_mini_menu(def_menuItems)
     y_centre_white_line_start = y_centre_top_margin + 47
     y_centre_text_offset = y_centre_top_margin - 32
 end 
-
 
 -- Message - Check if RetroFlow Adrenaline Launcher needs to be installed
     if not System.doesAppExist("RETROLNCR") then
@@ -2978,15 +3018,37 @@ function import_recently_played()
 
             for k, v in ipairs(db_recently_played) do
 
-                -- Legacy fix, add default app type to recently played table
-                if v.app_type_default ~= nil then
-                    -- do nothing
-                else
-                    local key = find_game_table_pos_key(xAppNumTableLookup(v.app_type), v.name)
-                    if key ~= nil then
+                -- Various fixes on import
+                local key = find_game_table_pos_key(xAppNumTableLookup(v.app_type), v.name)
+                if key ~= nil then
+
+                    -- Legacy fix - Add default app type to recently played table
+                    if v.app_type_default ~= nil then
                         v.app_type_default = xAppNumTableLookup(v.app_type)[key].app_type_default
-                    else
                     end
+
+                    -- Legacy fix - Add hidden to recently played table
+                    if v.hidden ~= nil then
+                        v.hidden = xAppNumTableLookup(v.app_type)[key].hidden
+                    end
+
+                    -- Sync hidden with cached files
+                    cached_hidden = xAppNumTableLookup(v.app_type)[key].hidden
+                    if cached_hidden == true and v.hidden == false then
+                        v.hidden = true
+                    end
+
+                    -- Sync favourites with cached files
+                    cached_fav = xAppNumTableLookup(v.app_type)[key].favourite
+                    if cached_fav == true and v.favourite == false then
+                        v.favourite = true
+                    end
+
+                    -- Sync cover found with cached files
+                    cached_cover = xAppNumTableLookup(v.app_type)[key].cover
+                    v.cover = cached_cover
+
+                else
                 end
 
                 -- Check rom exists
@@ -3027,13 +3089,17 @@ function import_recently_played()
 
                         if "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Vita/" .. v.apptitle .. ".png" and System.doesFileExist("ux0:/data/RetroFlow/COVERS/Sony - PlayStation Vita/" .. v.apptitle .. ".png") then
                             v.icon_path = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Vita/" .. v.apptitle .. ".png" --custom cover by app name
+                            v.cover = true
                         elseif "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Vita/" .. v.name .. ".png" and System.doesFileExist("ux0:/data/RetroFlow/COVERS/Sony - PlayStation Vita/" .. v.name .. ".png") then
                             v.icon_path = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Vita/" .. v.name .. ".png" --custom cover by app id
+                            v.cover = true
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. v.name .. "/icon0.png") then
                                 v.icon_path = "ur0:/appmeta/" .. v.name .. "/icon0.png"  --app icon
+                                v.cover = true
                             else
                                 v.icon_path = "app0:/DATA/noimg.png" --blank grey
+                                v.cover = false
                             end
                         end
 
@@ -3044,13 +3110,17 @@ function import_recently_played()
 
                         if "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/" .. v.apptitle .. ".png" and System.doesFileExist("ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/" .. v.apptitle .. ".png") then
                             v.icon_path = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/" .. v.apptitle .. ".png" --custom cover by app name
+                            v.cover = true
                         elseif "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/" .. v.name .. ".png" and System.doesFileExist("ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/" .. v.name .. ".png") then
                             v.icon_path = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation Portable/" .. v.name .. ".png" --custom cover by app id
+                            v.cover = true
                         else
                             if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
                                 v.icon_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                v.cover = false
                             else
                                 v.icon_path = "app0:/DATA/noimg.png" --blank grey
+                                v.cover = false
                             end
                         end
 
@@ -3061,13 +3131,17 @@ function import_recently_played()
 
                         if "ux0:/data/RetroFlow/COVERS/Sony - PlayStation/" .. v.apptitle .. ".png" and System.doesFileExist("ux0:/data/RetroFlow/COVERS/Sony - PlayStation/" .. v.apptitle .. ".png") then
                             v.icon_path = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation/" .. v.apptitle .. ".png" --custom cover by app name
+                            v.cover = true
                         elseif "ux0:/data/RetroFlow/COVERS/Sony - PlayStation/" .. v.name .. ".png" and System.doesFileExist("ux0:/data/RetroFlow/COVERS/Sony - PlayStation/" .. v.name .. ".png") then
                             v.icon_path = "ux0:/data/RetroFlow/COVERS/Sony - PlayStation/" .. v.name .. ".png" --custom cover by app id
+                            v.cover = true
                         else
                             if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
                                 v.icon_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+                                v.cover = false
                             else
                                 v.icon_path = "app0:/DATA/noimg.png" --blank grey
+                                v.cover = false
                             end
                         end
 
@@ -3078,13 +3152,17 @@ function import_recently_played()
 
                         if "ux0:/data/RetroFlow/COVERS/Homebrew/" .. v.apptitle .. ".png" and System.doesFileExist("ux0:/data/RetroFlow/COVERS/Homebrew/" .. v.apptitle .. ".png") then
                             v.icon_path = "ux0:/data/RetroFlow/COVERS/Homebrew/" .. v.apptitle .. ".png" --custom cover by app name
+                            v.cover = true
                         elseif "ux0:/data/RetroFlow/COVERS/Homebrew/" .. v.name .. ".png" and System.doesFileExist("ux0:/data/RetroFlow/COVERS/Homebrew/" .. v.name .. ".png") then
                             v.icon_path = "ux0:/data/RetroFlow/COVERS/Homebrew/" .. v.name .. ".png" --custom cover by app id
+                            v.cover = true
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. v.name .. "/icon0.png") then
                                 v.icon_path = "ur0:/appmeta/" .. v.name .. "/icon0.png"  --app icon
+                                v.cover = true
                             else
                                 v.icon_path = "app0:/DATA/noimg.png" --blank grey
+                                v.cover = false
                             end
                         end
 
@@ -3560,13 +3638,17 @@ function listDirectory(dir)
 
                         if SystemsToScan[1].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[1].localCoverPath .. app_title .. ".png") then
                             img_path = SystemsToScan[1].localCoverPath .. app_title .. ".png" --custom cover by app name
+                            file.cover = true
                         elseif SystemsToScan[1].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[1].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[1].localCoverPath .. file.name .. ".png" --custom cover by app id
+                            file.cover = true
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
+                                file.cover = true
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                file.cover = false
                             end
                         end
 
@@ -3587,13 +3669,17 @@ function listDirectory(dir)
 
                         if SystemsToScan[3].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[3].localCoverPath .. app_title .. ".png") then
                             img_path = SystemsToScan[3].localCoverPath .. app_title .. ".png" --custom cover by app name
+                            file.cover = true
                         elseif SystemsToScan[3].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[3].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[3].localCoverPath .. file.name .. ".png" --custom cover by app id
+                            file.cover = true
                         else
                             if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
                                 img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                file.cover = false
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                file.cover = false
                             end
                         end
 
@@ -3614,13 +3700,17 @@ function listDirectory(dir)
 
                         if SystemsToScan[4].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[4].localCoverPath .. app_title .. ".png") then
                             img_path = SystemsToScan[4].localCoverPath .. app_title .. ".png" --custom cover by app name
+                            file.cover = true
                         elseif SystemsToScan[4].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[4].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
+                            file.cover = true
                         else
                             if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
                                 img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+                                file.cover = false
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                file.cover = false
                             end
                         end
 
@@ -3642,13 +3732,17 @@ function listDirectory(dir)
 
                         if SystemsToScan[2].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[2].localCoverPath .. app_title .. ".png") then
                             img_path = SystemsToScan[2].localCoverPath .. app_title .. ".png" --custom cover by app name
+                            file.cover = true
                         elseif SystemsToScan[2].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[2].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[2].localCoverPath .. file.name .. ".png" --custom cover by app id
+                            file.cover = true
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
+                                file.cover = true
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                file.cover = false
                             end
                         end
 
@@ -3669,13 +3763,17 @@ function listDirectory(dir)
 
                         if SystemsToScan[1].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[1].localCoverPath .. app_title .. ".png") then
                             img_path = SystemsToScan[1].localCoverPath .. app_title .. ".png" --custom cover by app name
+                            file.cover = true
                         elseif SystemsToScan[1].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[1].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[1].localCoverPath .. file.name .. ".png" --custom cover by app id
+                            file.cover = true
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
+                                file.cover = true
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                file.cover = false
                             end
                         end
 
@@ -3698,13 +3796,17 @@ function listDirectory(dir)
 
                     if SystemsToScan[1].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[1].localCoverPath .. app_title .. ".png") then
                         img_path = SystemsToScan[1].localCoverPath .. app_title .. ".png" --custom cover by app name
+                        file.cover = true
                     elseif SystemsToScan[1].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[1].localCoverPath .. file.name .. ".png") then
                         img_path = SystemsToScan[1].localCoverPath .. file.name .. ".png" --custom cover by app id
+                        file.cover = true
                     else
                         if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                             img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
+                            file.cover = true
                         else
                             img_path = "app0:/DATA/noimg.png" --blank grey
+                            file.cover = false
                         end
                     end
 
@@ -3735,13 +3837,16 @@ function listDirectory(dir)
 
                         if SystemsToScan[1].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[1].localCoverPath .. app_title .. ".png") then
                             img_path = SystemsToScan[1].localCoverPath .. app_title .. ".png" --custom cover by app name
+                            file.cover = true
                         elseif SystemsToScan[1].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[1].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[1].localCoverPath .. file.name .. ".png" --custom cover by app id
+                            file.cover = true
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
                             else
                                 img_path = "app0:/DATA/missing_cover_psv.png" --blank grey
+                                file.cover = false
                             end
                         end
 
@@ -3762,13 +3867,17 @@ function listDirectory(dir)
 
                         if SystemsToScan[3].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[3].localCoverPath .. app_title .. ".png") then
                             img_path = SystemsToScan[3].localCoverPath .. app_title .. ".png" --custom cover by app name
+                            file.cover = true
                         elseif SystemsToScan[3].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[3].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[3].localCoverPath .. file.name .. ".png" --custom cover by app id
+                            file.cover = true
                         else
                             if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
                                 img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                file.cover = false
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                file.cover = false
                             end
                         end
                     
@@ -3789,13 +3898,17 @@ function listDirectory(dir)
 
                         if SystemsToScan[4].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[4].localCoverPath .. app_title .. ".png") then
                             img_path = SystemsToScan[4].localCoverPath .. app_title .. ".png" --custom cover by app name
+                            file.cover = true
                         elseif SystemsToScan[4].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[4].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
+                            file.cover = true
                         else
                             if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
                                 img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+                                file.cover = false
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                file.cover = false
                             end
                         end
 
@@ -3817,13 +3930,17 @@ function listDirectory(dir)
 
                         if SystemsToScan[2].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[2].localCoverPath .. app_title .. ".png") then
                             img_path = SystemsToScan[2].localCoverPath .. app_title .. ".png" --custom cover by app name
+                            file.cover = true
                         elseif SystemsToScan[2].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[2].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[2].localCoverPath .. file.name .. ".png" --custom cover by app id
+                            file.cover = true
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
+                                file.cover = true
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                file.cover = false
                             end
                         end
 
@@ -3844,13 +3961,17 @@ function listDirectory(dir)
 
                         if SystemsToScan[2].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[2].localCoverPath .. app_title .. ".png") then
                             img_path = SystemsToScan[2].localCoverPath .. app_title .. ".png" --custom cover by app name
+                            file.cover = true
                         elseif SystemsToScan[2].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[2].localCoverPath .. file.name .. ".png") then
                             img_path = SystemsToScan[2].localCoverPath .. file.name .. ".png" --custom cover by app id
+                            file.cover = true
                         else
                             if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                                 img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
+                                file.cover = true
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                file.cover = false
                             end
                         end
                     end
@@ -3872,13 +3993,17 @@ function listDirectory(dir)
 
                     if SystemsToScan[2].localCoverPath .. app_title .. ".png" and System.doesFileExist(SystemsToScan[2].localCoverPath .. app_title .. ".png") then
                         img_path = SystemsToScan[2].localCoverPath .. app_title .. ".png" --custom cover by app name
+                        file.cover = true
                     elseif SystemsToScan[2].localCoverPath .. file.name .. ".png" and System.doesFileExist(SystemsToScan[2].localCoverPath .. file.name .. ".png") then
                         img_path = SystemsToScan[2].localCoverPath .. file.name .. ".png" --custom cover by app id
+                        file.cover = true
                     else
                         if System.doesFileExist("ur0:/appmeta/" .. file.name .. "/icon0.png") then
                             img_path = "ur0:/appmeta/" .. file.name .. "/icon0.png"  --app icon
+                            file.cover = true
                         else
                             img_path = "app0:/DATA/noimg.png" --blank grey
+                            file.cover = false
                         end
                     end
 
@@ -3987,13 +4112,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = custom_path --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
                                         img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
 
@@ -4017,13 +4146,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = custom_path --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
                                         img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
                             
@@ -4047,13 +4180,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = custom_path --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
                                         img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
 
@@ -4077,13 +4214,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = custom_path --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
                                         img_path = "app0:/DATA/icon_homebrew.png"  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
 
@@ -4107,13 +4248,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = custom_path --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
                                         img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
                             end
@@ -4139,13 +4284,17 @@ function listDirectory(dir)
 
                             if custom_path and System.doesFileExist(custom_path) then
                                 img_path = custom_path --custom cover by app name
+                                file.cover = true
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                 img_path = custom_path_id --custom cover by app id
+                                file.cover = true
                             else
                                 if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
                                     img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                    file.cover = false
                                 else
                                     img_path = "app0:/DATA/noimg.png" --blank grey
+                                    file.cover = false
                                 end
                             end
                         end
@@ -4268,13 +4417,17 @@ function listDirectory(dir)
 
                                     if custom_path and System.doesFileExist(custom_path) then
                                         img_path = custom_path --custom cover by app name
+                                        file.cover = true
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
+                                        file.cover = true
                                     else
                                         if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
                                             img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
+                                            file.cover = false
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
+                                            file.cover = false
                                         end
                                     end
 
@@ -4298,13 +4451,17 @@ function listDirectory(dir)
 
                                     if custom_path and System.doesFileExist(custom_path) then
                                         img_path = custom_path --custom cover by app name
+                                        file.cover = true
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
+                                        file.cover = true
                                     else
                                         if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
                                             img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                            file.cover = false
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
+                                            file.cover = false
                                         end
                                     end
                                 
@@ -4328,13 +4485,17 @@ function listDirectory(dir)
 
                                     if custom_path and System.doesFileExist(custom_path) then
                                         img_path = custom_path --custom cover by app name
+                                        file.cover = true
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
+                                        file.cover = true
                                     else
                                         if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
                                             img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+                                            file.cover = false
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
+                                            file.cover = false
                                         end
                                     end
 
@@ -4358,13 +4519,17 @@ function listDirectory(dir)
 
                                     if custom_path and System.doesFileExist(custom_path) then
                                         img_path = custom_path --custom cover by app name
+                                        file.cover = true
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
+                                        file.cover = true
                                     else
                                         if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
                                             img_path = "app0:/DATA/icon_homebrew.png"  --app icon
+                                            file.cover = false
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
+                                            file.cover = false
                                         end
                                     end
 
@@ -4388,13 +4553,17 @@ function listDirectory(dir)
 
                                     if custom_path and System.doesFileExist(custom_path) then
                                         img_path = custom_path --custom cover by app name
+                                        file.cover = true
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = custom_path_id --custom cover by app id
+                                        file.cover = true
                                     else
                                         if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
                                             img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                            file.cover = false
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
+                                            file.cover = false
                                         end
                                     end
                                 end
@@ -4420,13 +4589,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = custom_path --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
                                         img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
                             end
@@ -4551,13 +4724,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = custom_path --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
                                         img_path = "app0:/DATA/missing_cover_psv.png"  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
 
@@ -4581,13 +4758,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = custom_path --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
                                         img_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
                             
@@ -4611,13 +4792,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = custom_path --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
                                         img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
 
@@ -4641,13 +4826,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = custom_path --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/icon_homebrew.png") then
                                         img_path = "app0:/DATA/icon_homebrew.png"  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
 
@@ -4671,13 +4860,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = custom_path --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = custom_path_id --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
                                         img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
                             end
@@ -4703,13 +4896,17 @@ function listDirectory(dir)
                             
                             if custom_path and System.doesFileExist(custom_path) then
                                 img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app name
+                                file.cover = true
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                 img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
+                                file.cover = true
                             else
                                 if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
                                     img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+                                    file.cover = false
                                 else
                                     img_path = "app0:/DATA/noimg.png" --blank grey
+                                    file.cover = false
                                 end
                             end
                         end
@@ -4854,13 +5051,17 @@ function listDirectory(dir)
                             
                             if custom_path and System.doesFileExist(custom_path) then
                                 img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app name
+                                file.cover = true
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                 img_path = SystemsToScan[4].localCoverPath .. file.name .. ".png" --custom cover by app id
+                                file.cover = true
                             else
                                 if System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
                                     img_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+                                    file.cover = false
                                 else
                                     img_path = "app0:/DATA/noimg.png" --blank grey
+                                    file.cover = false
                                 end
                             end
 
@@ -4988,13 +5189,17 @@ function listDirectory(dir)
 
                                 if custom_path and System.doesFileExist(custom_path) then
                                     img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
+                                    file.cover = true
                                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                     img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
+                                    file.cover = true
                                 else
                                     if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                                         img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                        file.cover = false
                                     else
                                         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        file.cover = false
                                     end
                                 end
 
@@ -5070,13 +5275,17 @@ function listDirectory(dir)
 
                             if custom_path and System.doesFileExist(custom_path) then
                                 img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
+                                file.cover = true
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                 img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
+                                file.cover = true
                             else
                                 if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                                     img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                    file.cover = false
                                 else
                                     img_path = "app0:/DATA/noimg.png" --blank grey
+                                    file.cover = false
                                 end
                             end
 
@@ -5196,13 +5405,17 @@ function listDirectory(dir)
 
                                         if custom_path and System.doesFileExist(custom_path) then
                                             img_path = (SystemsToScan[(def)].localCoverPath) .. app_title .. ".png" --custom cover by app name
+                                            file_subfolder.cover = true
                                         elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                             img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
+                                            file_subfolder.cover = true
                                         else
                                             if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                                                 img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                                file_subfolder.cover = false
                                             else
                                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                                file_subfolder.cover = false
                                             end
                                         end
 
@@ -5276,13 +5489,17 @@ function listDirectory(dir)
 
                                         if custom_path and System.doesFileExist(custom_path) then
                                             img_path = (SystemsToScan[(def)].localCoverPath) .. app_title .. ".png" --custom cover by app name
+                                            file_subfolder.cover = true
                                         elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                             img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
+                                            file_subfolder.cover = true
                                         else
                                             if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                                                 img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                                file_subfolder.cover = false
                                             else
                                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                                file_subfolder.cover = false
                                             end
                                         end
 
@@ -5360,13 +5577,17 @@ function listDirectory(dir)
 
                                     if custom_path and System.doesFileExist(custom_path) then
                                         img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.title .. ".png" --custom cover by app name
+                                        file_subfolder.cover = true
                                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                         img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
+                                        file_subfolder.cover = true
                                     else
                                         if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                                             img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                            file_subfolder.cover = false
                                         else
                                             img_path = "app0:/DATA/noimg.png" --blank grey
+                                            file_subfolder.cover = false
                                         end
                                     end
 
@@ -5480,13 +5701,17 @@ function listDirectory(dir)
 
                     if custom_path and System.doesFileExist(custom_path) then
                         img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
+                        file.cover = true
                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                         img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
+                        file.cover = true
                     else
                         if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                             img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                            file.cover = false
                         else
                             img_path = "app0:/DATA/noimg.png" --blank grey
+                            file.cover = false
                         end
                     end
 
@@ -5590,13 +5815,17 @@ function listDirectory(dir)
 
                     if custom_path and System.doesFileExist(custom_path) then
                         img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
+                        file.cover = true
                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                         img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
+                        file.cover = true
                     else
                         if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                             img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                            file.cover = false
                         else
                             img_path = "app0:/DATA/noimg.png" --blank grey
+                            file.cover = false
                         end
                     end
 
@@ -5693,13 +5922,17 @@ function listDirectory(dir)
 
                             if custom_path and System.doesFileExist(custom_path) then
                                 img_path = (SystemsToScan[(def)].localCoverPath) .. app_title .. ".png" --custom cover by app name
+                                file.cover = true
                             elseif custom_path_id and System.doesFileExist(custom_path_id) then
                                 img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
+                                file.cover = true
                             else
                                 if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                                     img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                    file.cover = false
                                 else
                                     img_path = "app0:/DATA/noimg.png" --blank grey
+                                    file.cover = false
                                 end
                             end
 
@@ -5815,16 +6048,21 @@ function listDirectory(dir)
 
                     if custom_path and System.doesFileExist(custom_path) then
                         img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
+                        file.cover = true
                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                         img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
+                        file.cover = true
                     else
                         if System.doesFileExist(pico_cart_path) then
                             img_path = pico_cart_path
+                            file.cover = true
                         else
                             if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                                 img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                file.cover = false
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                file.cover = false
                             end
                         end
                     end
@@ -6009,13 +6247,17 @@ function listDirectory(dir)
 
                     if custom_path and System.doesFileExist(custom_path) then
                         img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
+                        file.cover = true
                     elseif custom_path_id and System.doesFileExist(custom_path_id) then
                         img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
+                        file.cover = true
                     else
                         if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                             img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                            file.cover = false
                         else
                             img_path = "app0:/DATA/noimg.png" --blank grey
+                            file.cover = false
                         end
                     end
 
@@ -6194,22 +6436,27 @@ function listDirectory(dir)
 
                         if custom_path and System.doesFileExist(custom_path) then
                             img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
+                            file.cover = true
                         elseif custom_path_id and System.doesFileExist(custom_path_id) then
                             img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
+                            file.cover = true
                         else
                             if System.doesFileExist("ur0:appmeta/" .. file.name .. "/pic0.png") then
                                 img_path = "ur0:appmeta/" .. file.name .. "/pic0.png"  --app icon
+                                file.cover = true
                             elseif System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                                 img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                file.cover = false
                             else
                                 img_path = "app0:/DATA/noimg.png" --blank grey
+                                file.cover = false
                             end
                         end
                         
                         file.app_type=((def))
                         file.app_type_default=((def))
 
-                        -- file.filename = file.name 
+                        -- file.filename = file.name
                         file.filename = file.titleid
                         file.name = file.titleid
                         file.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
@@ -6345,13 +6592,17 @@ function listDirectory(dir)
                     img_path = (SystemsToScan[(def)].localCoverPath) .. file.title .. ".png" --custom cover by app name
                 elseif custom_path_game_path_folder and System.doesFileExist(custom_path_game_path_folder) then
                     img_path = (SystemsToScan[(def)].localCoverPath) .. file.game_path_folder .. ".png" --custom cover by scummvm game folder name
+                    file.cover = true
                 elseif custom_path_id and System.doesFileExist(custom_path_id) then
                     img_path = (SystemsToScan[(def)].localCoverPath) .. file.name .. ".png" --custom cover by app id
+                    file.cover = true
                 else
                     if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
                         img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                        file.cover = false
                     else
                         img_path = "app0:/DATA/noimg.png" --blank grey
+                        file.cover = false
                     end
                 end
                 
@@ -6535,6 +6786,52 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
                 -- If hiding games, only import non-hidden games
                 if showHidden==0 then
                     if v.hidden==false then
+
+                        -- Show missing covers if off
+                        if showMissingCovers == 0 then
+                            if v.cover==true then
+                                table.insert(folders_table, v)
+                                table.insert((def_table_name), v)
+
+                                --add blank icon to all
+                                v.icon = imgCoverTmp
+                                v.icon_path = v.icon_path
+
+                                v.apptitle = v.apptitle
+                                table.insert(files_table, count_of_systems, v.apptitle)
+                            else
+                            end
+
+                        else
+                            table.insert(folders_table, v)
+                            table.insert((def_table_name), v)
+
+                            --add blank icon to all
+                            v.icon = imgCoverTmp
+                            v.icon_path = v.icon_path
+
+                            v.apptitle = v.apptitle
+                            table.insert(files_table, count_of_systems, v.apptitle)
+                        end
+                    else
+                    end
+                else
+                    -- Show missing covers if off
+                    if showMissingCovers == 0 then
+                        if v.cover==true then
+                            table.insert(folders_table, v)
+                            table.insert((def_table_name), v)
+
+                            --add blank icon to all
+                            v.icon = imgCoverTmp
+                            v.icon_path = v.icon_path
+
+                            v.apptitle = v.apptitle
+                            table.insert(files_table, count_of_systems, v.apptitle)
+                        else
+                        end
+
+                    else
                         table.insert(folders_table, v)
                         table.insert((def_table_name), v)
 
@@ -6544,18 +6841,7 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
 
                         v.apptitle = v.apptitle
                         table.insert(files_table, count_of_systems, v.apptitle)
-                    else
                     end
-                else
-                    table.insert(folders_table, v)
-                    table.insert((def_table_name), v)
-
-                    --add blank icon to all
-                    v.icon = imgCoverTmp
-                    v.icon_path = v.icon_path
-
-                    v.apptitle = v.apptitle
-                    table.insert(files_table, count_of_systems, v.apptitle)
                 end
 
             end
@@ -7302,14 +7588,19 @@ function QuickOverride_Vita()
     -- Cover
     if System.doesFileExist(SystemsToScan[1].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png") then
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[1].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png" --custom cover by app name
+        xAppNumTableLookup(apptype)[key].cover = true
     elseif System.doesFileExist(SystemsToScan[1].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png") then
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[1].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
+        xAppNumTableLookup(apptype)[key].cover = true
     elseif System.doesFileExist("ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png") then
         xAppNumTableLookup(apptype)[key].icon_path = "ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png"  --app icon
+        xAppNumTableLookup(apptype)[key].cover = true
     elseif System.doesFileExist("app0:/DATA/missing_cover_psv.png") then
         xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/missing_cover_psv.png"
+        xAppNumTableLookup(apptype)[key].cover = false
     else
-        xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png"
+        xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png" --blank grey
+        xAppNumTableLookup(apptype)[key].cover = false
     end
 end
 
@@ -7322,12 +7613,16 @@ function QuickOverride_PSP()
     -- Cover
     if System.doesFileExist(SystemsToScan[3].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png") then
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[3].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png" --custom cover by app name
+        xAppNumTableLookup(apptype)[key].cover = true
     elseif System.doesFileExist(SystemsToScan[3].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png") then
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[3].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
+        xAppNumTableLookup(apptype)[key].cover = true
     elseif System.doesFileExist("app0:/DATA/missing_cover_psp.png") then
         xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/missing_cover_psp.png"  --app icon
+        xAppNumTableLookup(apptype)[key].cover = false
     else
         xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png" --blank grey
+        xAppNumTableLookup(apptype)[key].cover = false
     end
 end
 
@@ -7340,12 +7635,16 @@ function QuickOverride_PSX()
     -- Cover
     if System.doesFileExist(SystemsToScan[4].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png") then
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[4].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png" --custom cover by app name
+        xAppNumTableLookup(apptype)[key].cover = true
     elseif System.doesFileExist(SystemsToScan[4].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png") then
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[4].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
+        xAppNumTableLookup(apptype)[key].cover = true
     elseif System.doesFileExist("app0:/DATA/missing_cover_psx.png") then
         xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/missing_cover_psx.png"  --app icon
+        xAppNumTableLookup(apptype)[key].cover = false
     else
         xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png" --blank grey
+        xAppNumTableLookup(apptype)[key].cover = false
     end
 end
 
@@ -7358,14 +7657,19 @@ function QuickOverride_Homebrew()
     -- Cover
     if System.doesFileExist(SystemsToScan[2].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png") then
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[2].localCoverPath .. xAppNumTableLookup(apptype)[key].apptitle .. ".png" --custom cover by app name
+        xAppNumTableLookup(apptype)[key].cover = true
     elseif System.doesFileExist(SystemsToScan[2].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png") then
         xAppNumTableLookup(apptype)[key].icon_path = SystemsToScan[2].localCoverPath .. xAppNumTableLookup(apptype)[key].name .. ".png" --custom cover by app id
+        xAppNumTableLookup(apptype)[key].cover = true
     elseif System.doesFileExist("ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png") then
         xAppNumTableLookup(apptype)[key].icon_path = "ur0:/appmeta/" .. xAppNumTableLookup(apptype)[key].name .. "/icon0.png"  --app icon
+        xAppNumTableLookup(apptype)[key].cover = true
     elseif System.doesFileExist("app0:/DATA/icon_homebrew.png") then
         xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/icon_homebrew.png"
+        xAppNumTableLookup(apptype)[key].cover = false
     else
         xAppNumTableLookup(apptype)[key].icon_path = "app0:/DATA/noimg.png" --blank grey
+        xAppNumTableLookup(apptype)[key].cover = false
     end
 end
 
@@ -7748,6 +8052,17 @@ function DownloadCovers()
             end
         end
 
+        -- If not showing missing covers - temporarily re-enable and import cache so can download - then disable again
+        if showMissingCovers == 1 then
+            showMissingCovers = 0
+            -- Import cache to update
+            FreeIcons()
+            count_cache_and_reload()
+            check_for_out_of_bounds()
+            GetNameAndAppTypeSelected()
+            showMissingCovers = 1
+        end
+
         -- def_getCovers, def_table_name, def_lang_lines_Downloading_SysName_covers)
         DownloadCovers_System(0,    return_table,           lang_lines.Downloading_all_covers)
         DownloadCovers_System(1,    games_table,            lang_lines.Downloading_PS_Vita_covers)
@@ -8036,6 +8351,57 @@ local function DrawCover(x, y, text, icon, sel, apptype)
     
     Render.setCamera(camX, 0, 0, 0.0, 0.0, 0.0)
     
+    
+    function closestBox()
+
+        local box_width = Graphics.getImageWidth(icon)
+        local box_height = Graphics.getImageHeight(icon)
+        local box_pixel_combined = box_height + box_width
+        local box_height_dif = (box_height / box_pixel_combined) * 100
+
+        if      box_height_dif >= 59                                then return modCoverSNESJapan   -- Average approx 62.83
+        elseif  box_height_dif >= 58     and box_height_dif < 59    then return modCoverMD          -- Average approx 58.5
+        elseif  box_height_dif >= 57     and box_height_dif < 58    then return modCoverNES         -- Average approx 57.87
+        elseif  box_height_dif >= 55     and box_height_dif < 57    then return modCoverATARI       -- Average approx 57.66
+        elseif  box_height_dif >= 54     and box_height_dif < 55    then return modCoverLYNX        -- Average approx 54.51
+        elseif  box_height_dif >= 52     and box_height_dif < 54    then return modCoverMiddle      -- Average approx 52
+        elseif  box_height_dif >= 48     and box_height_dif < 52    then return modCoverGB          -- Average approx 50.00
+        else
+            if apptype==5 or apptype==6 then
+                return  modCoverN64 -- Average approx 42.31
+            else
+                return modCoverGB
+            end
+        end
+
+    end
+
+    function closestBoxNoref()
+
+        local box_width = Graphics.getImageWidth(icon)
+        local box_height = Graphics.getImageHeight(icon)
+        local box_pixel_combined = box_height + box_width
+        local box_height_dif = (box_height / box_pixel_combined) * 100
+
+        if      box_height_dif >= 59                                then return modCoverSNESJapanNoref   -- Average approx 62.83
+        elseif  box_height_dif >= 58     and box_height_dif < 59    then return modCoverMDNoref          -- Average approx 58.5
+        elseif  box_height_dif >= 57     and box_height_dif < 58    then return modCoverNESNoref         -- Average approx 57.87
+        elseif  box_height_dif >= 55     and box_height_dif < 57    then return modCoverATARINoref       -- Average approx 57.66
+        elseif  box_height_dif >= 54     and box_height_dif < 55    then return modCoverLYNXNoref        -- Average approx 54.51
+        elseif  box_height_dif >= 52     and box_height_dif < 54    then return modCoverMiddleNoref      -- Average approx 52
+        elseif  box_height_dif >= 48     and box_height_dif < 52    then return modCoverGBNoref          -- Average approx 50.00
+        else
+            if apptype==5 or apptype==6 then
+                return  modCoverN64Noref -- Average approx 42.31
+            else
+                return modCoverGBNoref
+            end
+        end
+
+    end
+
+
+
     if hideBoxes <= 0 then
         if apptype==1 then
             -- PSVita Boxes
@@ -8068,15 +8434,16 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverPSXNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
                 Render.drawModel(modBoxPSXNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==5 or apptype==6 then
+        elseif apptype==5 or apptype==6 or apptype==12 or apptype==17 or apptype==18 or apptype==19 or apptype==20 or apptype==21 or apptype==34 or apptype==35 or apptype==36 or apptype==38 then
+            -- Get closest cover: N64, Snes, Sega CD, TG16, TG CD, PCE, PCE CD, Amiga, FBA, Mame 2003, Mame 2000, ScummVM
             if setReflections == 1 then
-                Render.useTexture(modCoverN64, icon)
-                Render.drawModel(modCoverN64, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+                Render.useTexture(closestBox(), icon)
+                Render.drawModel(closestBox(), x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             else
-                Render.useTexture(modCoverN64Noref, icon)
-                Render.drawModel(modCoverN64Noref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+                Render.useTexture(closestBoxNoref(), icon)
+                Render.drawModel(closestBoxNoref(), x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
-        elseif apptype==7 or apptype==12 or apptype==17 or apptype==18 or apptype==19 or apptype==20 or apptype==21 or apptype==23 or apptype==24 or apptype==34 or apptype==35 or apptype==36 or apptype==37 or apptype==38 or apptype==40 then
+        elseif apptype==7 or apptype==23 or apptype==24 or apptype==37 or apptype==40 then
             if setReflections == 1 then
                 Render.useTexture(modCoverNES, icon)
                 Render.drawModel(modCoverNES, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
@@ -8101,12 +8468,22 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverMDNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
         elseif apptype==22 or apptype==25 or apptype==26 or apptype==27 then
-            if setReflections == 1 then
-                Render.useTexture(modCoverTAPE, icon)
-                Render.drawModel(modCoverTAPE, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+            if showCat >= 1 and showCat <= 41 then
+                if setReflections == 1 then
+                    Render.useTexture(modCoverMD, icon)
+                    Render.drawModel(modCoverMD, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+                else
+                    Render.useTexture(modCoverMDNoref, icon)
+                    Render.drawModel(modCoverMDNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+                end
             else
-                Render.useTexture(modCoverTAPENoref, icon)
-                Render.drawModel(modCoverTAPENoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+                if setReflections == 1 then
+                    Render.useTexture(modCoverTAPE, icon)
+                    Render.drawModel(modCoverTAPE, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+                else
+                    Render.useTexture(modCoverTAPENoref, icon)
+                    Render.drawModel(modCoverTAPENoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
+                end
             end
         elseif apptype==28 or apptype==29 or apptype==30 or apptype==32 or apptype==33 then
             if setReflections == 1 then
@@ -8240,8 +8617,10 @@ function DownloadSingleCover()
             local apptitle = (def_table_name)[app_idx].apptitle
             if System.doesFileExist(coverspath .. apptitle .. ".png") then
                 (def_table_name)[app_idx].icon_path=coverspath .. apptitle .. ".png"
+                (def_table_name)[app_idx].cover = true
             else
                 (def_table_name)[app_idx].icon_path=coverspath .. app_titleid .. ".png"
+                (def_table_name)[app_idx].cover = true
             end
 
             -- Instant cover update - Credit BlackSheepBoy69
@@ -8259,6 +8638,7 @@ function DownloadSingleCover()
                 key = find_game_table_pos_key(recently_played_table, app_titleid)
                 if key ~= nil then
                     recently_played_table[key].icon_path=coverspath .. app_titleid .. ".png"
+                    recently_played_table[key].cover = true
                     update_cached_table_recently_played()
                 else
                 end
@@ -8272,8 +8652,10 @@ function DownloadSingleCover()
             local apptitle = recently_played_table[app_idx].apptitle
             if System.doesFileExist(coverspath .. apptitle .. ".png") then
                 recently_played_table[app_idx].icon_path=coverspath .. apptitle .. ".png"
+                recently_played_table[app_idx].cover = true
             else
                 recently_played_table[app_idx].icon_path=coverspath .. app_titleid .. ".png"
+                recently_played_table[app_idx].cover = true
             end
 
             -- Instant cover update - Credit BlackSheepBoy69
@@ -8291,6 +8673,7 @@ function DownloadSingleCover()
                 key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
                 if key ~= nil then
                     xAppNumTableLookup(apptype)[key].icon_path=coverspath .. app_titleid .. ".png"
+                    xAppNumTableLookup(apptype)[key].cover = true
                     update_cached_table(xAppDbFileLookup(apptype), xAppNumTableLookup(apptype))
                 else
                 end
@@ -8303,8 +8686,10 @@ function DownloadSingleCover()
             local apptitle = xCatLookup(showCat)[app_idx].apptitle
             if System.doesFileExist(coverspath .. apptitle .. ".png") then
                 xCatLookup(showCat)[app_idx].icon_path=coverspath .. apptitle .. ".png"
+                xCatLookup(showCat)[app_idx].cover = true
             else
                 xCatLookup(showCat)[app_idx].icon_path=coverspath .. app_titleid .. ".png"
+                xCatLookup(showCat)[app_idx].cover = true
             end
 
             -- Instant cover update - Credit BlackSheepBoy69
@@ -8322,6 +8707,7 @@ function DownloadSingleCover()
                 key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
                 if key ~= nil then
                     xAppNumTableLookup(apptype)[key].icon_path=coverspath .. app_titleid .. ".png"
+                    xAppNumTableLookup(apptype)[key].cover = true
                     update_cached_table(xAppDbFileLookup(apptype), xAppNumTableLookup(apptype))
                 else
                 end
@@ -9300,6 +9686,12 @@ while true do
         function set_cover_image (def_table_name)
             --Graphics.setImageFilters(games_table[p].icon, FILTER_LINEAR, FILTER_LINEAR)
             if (def_table_name)[p].ricon ~= nil then
+
+                local box_width = Graphics.getImageWidth((def_table_name)[p].ricon)
+                local box_height = Graphics.getImageHeight((def_table_name)[p].ricon)
+                local box_pixel_combined = box_height + box_width
+                box_height_dif = (box_height / box_pixel_combined) * 100
+
                 Render.useTexture(modCoverNoref, (def_table_name)[p].ricon) -- games_table
                 Render.useTexture(modCoverHbrNoref, (def_table_name)[p].ricon) -- homebrews_table
                 Render.useTexture(modCoverPSPNoref, (def_table_name)[p].ricon) -- psp_table
@@ -9345,7 +9737,16 @@ while true do
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].ricon) -- recently played
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].ricon) -- search
 
+                Render.useTexture(modCoverSNESJapanNoref, (def_table_name)[p].ricon) -- Snes Japan
+                Render.useTexture(modCoverMiddleNoref, (def_table_name)[p].ricon) -- Middle
+
             else 
+
+                local box_width = Graphics.getImageWidth((def_table_name)[p].icon)
+                local box_height = Graphics.getImageHeight((def_table_name)[p].icon)
+                local box_pixel_combined = box_height + box_width
+                box_height_dif = (box_height / box_pixel_combined) * 100
+
                 Render.useTexture(modCoverNoref, (def_table_name)[p].icon) -- games_table
                 Render.useTexture(modCoverHbrNoref, (def_table_name)[p].icon) -- homebrews_table
                 Render.useTexture(modCoverPSPNoref, (def_table_name)[p].icon) -- psp_table
@@ -9391,12 +9792,33 @@ while true do
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].icon) -- recently played
                 Render.useTexture(modCoverMDNoref, (def_table_name)[p].icon) -- search
 
+                Render.useTexture(modCoverSNESJapanNoref, (def_table_name)[p].icon) -- Snes Japan
+                Render.useTexture(modCoverMiddleNoref, (def_table_name)[p].icon) -- Middle
+
+
             end
         end
         
         -- Set cover image
         set_cover_image (xCatLookup(showCat))
 
+        function closestBoxNoref_getinfo()
+
+            if      box_height_dif >= 59                                then return modCoverSNESJapanNoref   -- Average approx 62.83
+            elseif  box_height_dif >= 58     and box_height_dif < 59    then return modCoverMDNoref          -- Average approx 58.5
+            elseif  box_height_dif >= 57     and box_height_dif < 58    then return modCoverNESNoref         -- Average approx 57.87
+            elseif  box_height_dif >= 55     and box_height_dif < 57    then return modCoverATARINoref       -- Average approx 57.66
+            elseif  box_height_dif >= 54     and box_height_dif < 55    then return modCoverLYNXNoref        -- Average approx 54.51
+            elseif  box_height_dif >= 52     and box_height_dif < 54    then return modCoverMiddleNoref      -- Average approx 52
+            elseif  box_height_dif >= 48     and box_height_dif < 52    then return modCoverGBNoref          -- Average approx 50.00
+            else
+                if apptype==5 or apptype==6 then
+                    return  modCoverN64Noref -- Average approx 42.31
+                else
+                    return modCoverGBNoref
+                end
+            end
+        end
         
         local tmpapptype=""
         local tmpcatText=""
@@ -9415,10 +9837,10 @@ while true do
             Render.drawModel(modBoxPSXNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.PS1_Game 
         elseif apptype==5 then
-            Render.drawModel(modCoverN64Noref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.N64_Game 
         elseif apptype==6 then
-            Render.drawModel(modCoverN64Noref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.SNES_Game 
         elseif apptype==7 then
             Render.drawModel(modCoverNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
@@ -9436,7 +9858,7 @@ while true do
             Render.drawModel(modCoverGBNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.DC_Game
         elseif apptype==12 then
-            Render.drawModel(modCoverNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.SCD_Game 
         elseif apptype==13 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
@@ -9451,22 +9873,23 @@ while true do
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.GG_Game 
         elseif apptype==17 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.TurboGrafx_16_Game 
         elseif apptype==18 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.TurboGrafx_CD_Game 
         elseif apptype==19 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.PC_Engine_Game 
         elseif apptype==20 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.PC_Engine_CD_Game
         elseif apptype==21 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.Amiga_Game
         elseif apptype==22 then
-            Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            -- Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.C64_Game
         elseif apptype==23 then
             Render.drawModel(modCoverNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
@@ -9475,13 +9898,16 @@ while true do
             Render.drawModel(modCoverNESNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.WSWAN_Game
         elseif apptype==25 then
-            Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            -- Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.MSX2_Game
         elseif apptype==26 then
-            Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            -- Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.MSX_Game
         elseif apptype==27 then
-            Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            -- Render.drawModel(modCoverTAPENoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.ZXS_Game
         elseif apptype==28 then
             Render.drawModel(modCoverATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
@@ -9502,25 +9928,25 @@ while true do
             Render.drawModel(modCoverATARINoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.VECTREX_Game
         elseif apptype==34 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.FBA2012_Game
         elseif apptype==35 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.MAME2003_Game 
         elseif apptype==36 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.MAME_2000_Game 
         elseif apptype==37 then
             Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.Neo_Geo_Game 
         elseif apptype==38 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.Neo_Geo_Pocket_Color_Game 
         elseif apptype==39 then
             Render.drawModel(modCoverHbrNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.Playstation_Mobile_Game
         elseif apptype==40 then
-            Render.drawModel(modCoverMDNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
+            Render.drawModel(closestBoxNoref_getinfo(), prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
             tmpapptype = lang_lines.ScummVM_Game
         elseif apptype==41 then
             Render.drawModel(modCoverLYNXNoref, prevX, -1.0, -5 + prevZ, 0, math.deg(prevRot+prvRotY), 0)
@@ -12470,7 +12896,7 @@ while true do
         Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
 
-        menuItems = 3
+        menuItems = 4
 
         -- MENU 19 / #0 Back
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
@@ -12493,8 +12919,16 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y2, lang_lines.Standard, white)--Standard
         end
 
-        -- MENU 19 / #3 Edit collections
-        Font.print(fnt22, setting_x, setting_y3, lang_lines.Edit_collections, white)--Edit collections
+        -- MENU 19 / #3 Show missing covers
+        Font.print(fnt22, setting_x, setting_y3,  lang_lines.Show_missing_covers_colon, white)
+        if showMissingCovers == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y3, lang_lines.On, white)--ON
+        else
+            Font.print(fnt22, setting_x_offset, setting_y3, lang_lines.Off, white)--OFF
+        end
+
+        -- MENU 19 / #4 Edit collections
+        Font.print(fnt22, setting_x, setting_y4, lang_lines.Edit_collections, white)--Edit collections
 
         -- MENU 19 - FUNCTIONS
         status = System.getMessageState()
@@ -12523,7 +12957,44 @@ while true do
                         setAdrPSButton = 0
                     end
 
-                elseif menuY == 3 then -- #3 Edit collections
+                elseif menuY == 3 then -- #3 Show missing covers
+                    if showMissingCovers == 1 then
+
+                        -- Show missing covers is now off
+                        showMissingCovers = 0
+                        
+
+                        -- Does cache contain missing cover info?
+                        if games_table[1].cover == nil then
+
+                            -- No, save settings
+                            SaveSettings()
+
+                            -- Rescan
+                            delete_cache()
+                            FreeIcons()
+                            FreeMemory()
+                            Network.term()
+                            dofile("app0:index.lua")
+                        else
+                            -- Yes, import cache to update
+                            FreeIcons()
+                            count_cache_and_reload()
+                            check_for_out_of_bounds()
+                            GetNameAndAppTypeSelected()
+                        end
+
+                    else
+                        -- Show missing covers is now on
+                        showMissingCovers = 1
+                        -- Import cache to update
+                        FreeIcons()
+                        count_cache_and_reload()
+                        check_for_out_of_bounds()
+                        GetNameAndAppTypeSelected()
+                    end
+
+                elseif menuY == 4 then -- #4 Edit collections
                     showMenu = 24 
                     menuY = 0
                 end
@@ -13642,6 +14113,175 @@ while true do
         end
 
 
+-- MENU 25 - FILTER GAMES
+    elseif showMenu == 25 then
+        
+        -- SETTINGS
+        -- Footer buttons and icons
+        -- Get text widths for positioning
+        label1 = Font.getTextWidth(fnt20, lang_lines.Close)--Close
+        label2 = Font.getTextWidth(fnt20, lang_lines.Select)--Select
+
+
+        -- GET MENU ITEM COUNT (Some menus app type specific)
+            
+            menuItems = 2
+        
+            -- Calculate vertical centre
+            vertically_centre_mini_menu(menuItems)
+
+        -- GRAPHIC SETUP
+        
+            -- Apply mini menu margins
+            local setting_x = setting_x + mini_menu_x_margin
+
+            -- Draw black overlay
+            Graphics.fillRect(0, 960, 0, 540, blackalpha)
+
+            -- Draw footer
+            Graphics.fillRect(0, 960, 496, 544, themeCol)
+
+            Graphics.drawImage(900-label1, 510, btnO)
+            Font.print(fnt20, 900+28-label1, 508, lang_lines.Close, white)--Close
+
+            Graphics.drawImage(900-(btnMargin * 2)-label1-label2, 510, btnX)
+            Font.print(fnt20, 900+28-(btnMargin * 2)-label1-label2, 508, lang_lines.Select, white)--Select
+            
+            -- Draw dark overlay
+            Graphics.fillRect(60 + mini_menu_x_margin, 900 - mini_menu_x_margin, y_centre_top_margin, y_centre_top_margin + y_centre_box_height, dark)
+
+            -- Draw white line
+            Graphics.fillRect(60 + mini_menu_x_margin, 900 - mini_menu_x_margin, y_centre_white_line_start, y_centre_white_line_start + 3, white)
+            
+            -- Draw selection
+            Graphics.fillRect(60 + mini_menu_x_margin, 900 - mini_menu_x_margin, y_centre_selection_start + (menuY * 47), y_centre_selection_end + (menuY * 47), themeCol)-- selection
+
+
+        -- MENU 25 / Heading
+        Font.print(fnt22, setting_x, setting_yh + y_centre_text_offset, lang_lines.Category, white)--Category
+
+        -- MENU 25 / #0 Favorites
+        Graphics.drawImage(setting_x, setting_y0 + y_centre_text_offset, setting_icon_heart)
+        Font.print(fnt22, setting_x_icon_offset + 70, setting_y0 + y_centre_text_offset, lang_lines.Favorites, white)--Favourites
+
+        -- MENU 25 / #1 Recently Played
+        Graphics.drawImage(setting_x, setting_y1 + y_centre_text_offset, setting_icon_categories)
+        Font.print(fnt22, setting_x_icon_offset + 70, setting_y1 + y_centre_text_offset, lang_lines.Recently_Played, white)--Recently Played
+
+        -- MENU 25 / #2 Filter games
+        Graphics.drawImage(setting_x, setting_y2 + y_centre_text_offset, setting_icon_filter)
+
+        if filterGames == 0 then
+            Font.print(fnt22, setting_x_icon_offset + 70, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.All .. "  >", white)
+        else
+            Font.print(fnt22, setting_x_icon_offset + 70, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.Collections .. "  >", white)
+        end
+
+        
+        -- MENU 25 - FUNCTIONS
+        status = System.getMessageState()
+        if status ~= RUNNING then
+            
+            if (Controls.check(pad, SCE_CTRL_CROSS_MAP) and not Controls.check(oldpad, SCE_CTRL_CROSS_MAP)) then
+
+                oldpad = pad
+
+                -- MENU 20
+                if menuY == 0 then -- #0 Favorites
+
+                    -- Check if there are favourites first
+                    create_fav_count_table(files_table)
+
+                    -- Favourites found
+                    if #fav_count > 0 then
+                        -- Skip to favorites
+                        showCat = 42
+                        p = 1
+                        master_index = p
+                        showMenu = 0
+                        GetNameAndAppTypeSelected()
+                    else
+                    -- No favourites, do nothing
+                    end
+
+                    
+                elseif menuY == 1 then -- #1 Recently Played
+
+                    if #recently_played_table > 0 then
+                        -- Skip to recent
+                        showCat = 43
+                        p = 1
+                        master_index = p
+                        showMenu = 0
+                        GetNameAndAppTypeSelected()
+                    else
+                    -- No recently played, do nothing
+                    end
+                    
+                elseif menuY == 2 then -- #2 Filter
+
+                    if filterGames == 1 then
+                        if collection_count ~= 0 then   
+                            showCat = 45
+                            p = 1
+                            master_index = p
+                            showMenu = 0
+                            GetNameAndAppTypeSelected()
+                        end
+                    else
+                        if showAll==1 then
+                            showCat = 0
+                        else
+                            showCat = 1
+                        end
+                        p = 1
+                        master_index = p
+                        showMenu = 0
+                        GetNameAndAppTypeSelected()
+                    end
+
+                SaveSettings()
+
+                                     
+                end
+
+
+
+            elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
+                if menuY > 0 then
+                    menuY = menuY - 1
+                    else
+                    menuY=menuItems
+                end
+            elseif (Controls.check(pad, SCE_CTRL_DOWN)) and not (Controls.check(oldpad, SCE_CTRL_DOWN)) then
+                if menuY < menuItems then
+                    menuY = menuY + 1
+                    else
+                    menuY=0
+                end
+            elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
+                if menuY == 2 then -- #2 Filter
+                    if filterGames > 0 then
+                        filterGames = filterGames - 1
+                    else
+                        filterGames = 1
+                    end
+                else
+                end
+            elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
+                if menuY == 2 then -- #2 Filter
+                    if filterGames < 1 then
+                        filterGames = filterGames + 1
+                    else
+                        filterGames = 0
+                    end
+                else
+                end
+            elseif Controls.check(pad, SCE_CTRL_CIRCLE_MAP) and not Controls.check(oldpad, SCE_CTRL_CIRCLE_MAP) then
+                
+            end
+        end
+
 
 -- END OF MENUS
     end
@@ -13956,25 +14596,46 @@ while true do
 
                    -- CATEGORY - Move Backwards
 
-                    if showCat > 1 then
-                        showCat = showCat - 1
-                    elseif showCat == 1 then
-                        if showAll==0 then -- All is off
+                    -- filterGames = 1
+
+                    if filterGames == 1 then
+
+                        -- Only Collections
+                        if collection_count ~= 0 then   
+                            -- if showCat < collection_syscount and showCat >= 42 then
+                            if showCat >= 46 then
+                                showCat = showCat - 1
+                            else
+                                showCat = collection_syscount
+                            end
+                        end
+
+                    else
+
+                        -- All categories including collections
+                        if showCat > 1 then
+                            showCat = showCat - 1
+                        elseif showCat == 1 then
+                            if showAll==0 then -- All is off
+                                if showCollections == 0 then
+                                    showCat = count_of_categories
+                                else
+                                    showCat = collection_syscount
+                                end
+                            else
+                                showCat = 0
+                            end
+                        elseif showCat == 0 then
                             if showCollections == 0 then
                                 showCat = count_of_categories
                             else
                                 showCat = collection_syscount
                             end
-                        else
-                            showCat = 0
                         end
-                    elseif showCat == 0 then
-                        if showCollections == 0 then
-                            showCat = count_of_categories
-                        else
-                            showCat = collection_syscount
-                        end
+
                     end
+
+
 
                     if showCat == 44 then
                         curTotal = #search_results_table   
@@ -14072,24 +14733,49 @@ while true do
                         create_fav_count_table(files_table)
                     end
 
-                    if showCat < collection_syscount then
-                        -- Skip All category if disabled
-                        if showCat==0 and showAll==0 then 
-                            showCat = 1
-                        -- Skip Homebrews category if disabled
-                        elseif showCat==1 and showHomebrews==0 then
-                            showCat = 3
-                        else
-                            showCat = showCat + 1
+                    -- filterGames = 1
+
+                    if filterGames == 1 then
+
+                        -- Only Collections
+                        if collection_count ~= 0 then   
+                            if showCat < collection_syscount and showCat >= 42 then
+
+                                if showCat == 42 or showCat == 43 then -- Recent and Fav
+                                    showCat = 45
+                                else
+                                    showCat = showCat + 1
+                                end
+                            
+                            else
+                                showCat = 45
+                            end
                         end
-                    elseif showCat == collection_syscount then
-                        if showAll==0 then
-                            showCat = 1
+
+                    else
+
+                        -- All categories including collections
+                        if showCat < collection_syscount then
+                            -- Skip All category if disabled
+                            if showCat==0 and showAll==0 then 
+                                showCat = 1
+                            -- Skip Homebrews category if disabled
+                            elseif showCat==1 and showHomebrews==0 then
+                                showCat = 3
+                            else
+                                showCat = showCat + 1
+                            end
+                        elseif showCat == collection_syscount then
+                            if showAll==0 then
+                                showCat = 1
+                            else
+                                showCat = 0
+                            end
                         else
                             showCat = 0
                         end
-                    else
-                        showCat = 0
+
+
                     end
 
                     
@@ -14373,24 +15059,10 @@ while true do
             state = Keyboard.getState()
             if state ~= RUNNING then
 
-                -- Press Up to skip to favourites
+                -- Filter games
 
-                -- Check if there are favourites first
-                create_fav_count_table(files_table)
-
-                -- Favourites found
-                if #fav_count > 0 then
-                    -- Skip to favorites
-                    if showCat == 42 then
-                    else
-                        showCat = 42
-                        p = 1
-                        master_index = p
-                        GetNameAndAppTypeSelected()
-                    end
-                else
-                -- No favourites, do nothing
-                end
+                showMenu = 25
+                menuY = 0
 
             else
             end
@@ -14497,7 +15169,7 @@ while true do
                     menuY=0
                 elseif showMenu == 24 then -- Edit collections
                     showMenu = 19
-                    menuY=3
+                    menuY=4
                     
                 elseif showMenu == 2 then
                     -- If search cancelled with circle, return to settings menu

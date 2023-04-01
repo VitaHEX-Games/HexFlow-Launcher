@@ -306,6 +306,7 @@ return {
 ["Menu"] = "메뉴",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "표준",
+["Show_missing_covers_colon"] = "누락된 표지 표시: ",
 
 -- Game options
 ["Options"] = "옵션",

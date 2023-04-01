@@ -306,6 +306,7 @@ return {
 ["Menu"] = "Vakio",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Standard",
+["Show_missing_covers_colon"] = "Näytä puuttuvat kannet:",
 
 -- Game options
 ["Options"] = "Vaihtoehdot",

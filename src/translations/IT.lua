@@ -306,6 +306,7 @@ return {
 ["Menu"] = "Menù",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Standard",
+["Show_missing_covers_colon"] = "Mostra copertine mancanti:",
 
 -- Game options
 ["Options"] = "Opzioni",

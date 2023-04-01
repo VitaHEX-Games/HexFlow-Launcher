@@ -306,6 +306,7 @@ return {
 ["Menu"] = "メニュー",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "標準",
+["Show_missing_covers_colon"] = "見つからないカバーを表示：",
 
 -- Game options
 ["Options"] = "オプション",

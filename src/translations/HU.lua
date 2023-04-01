@@ -306,6 +306,7 @@ return {
 ["Menu"] = "Menü",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Alapértelmezett",
+["Show_missing_covers_colon"] = "Hiányzó borítók mutatása:",
 
 -- Game options
 ["Options"] = "Beállítások",

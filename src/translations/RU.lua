@@ -306,6 +306,7 @@ return {
 ["Menu"] = "Меню",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Стандарт",
+["Show_missing_covers_colon"] = "Показать недостающие обложки:",
 
 -- Game options
 ["Options"] = "Параметры",

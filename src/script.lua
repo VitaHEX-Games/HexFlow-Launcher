@@ -488,7 +488,7 @@
 	function cleanup_game_title(def_sfo_TITLE)
 		local sfo_title = {}
 		-- sfo_title = tostring((def_sfo_TITLE)):gsub("™",""):gsub("â„¢",""):gsub(" ®",""):gsub("â€¢",""):gsub("Â®",""):gsub('[Â]',''):gsub('[®]',''):gsub('[â]',''):gsub('[„]',''):gsub('[¢]',''):gsub("„","")
-		sfo_title = tostring((def_sfo_TITLE)):gsub("™",""):gsub(" ®",""):gsub("®","")
+		sfo_title = tostring((def_sfo_TITLE)):gsub("™",""):gsub(" ®",""):gsub("®",""):gsub("\"+", "")
 
 		sfo_title = removeMultilines(sfo_title)
 		return sfo_title

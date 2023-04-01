@@ -306,6 +306,7 @@ return {
 ["Menu"] = "Menü",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Standart",
+["Show_missing_covers_colon"] = "Eksik kapakları göster:",
 
 -- Game options
 ["Options"] = "Seçenekler",

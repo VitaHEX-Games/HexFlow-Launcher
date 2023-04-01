@@ -306,6 +306,7 @@ return {
 ["Menu"] = "Meny",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Standard",
+["Show_missing_covers_colon"] = "Visa saknade omslag:",
 
 -- Game options
 ["Options"] = "Alternativ",
