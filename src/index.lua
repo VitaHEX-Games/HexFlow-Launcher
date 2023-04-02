@@ -9242,8 +9242,8 @@ while true do
                             xCatLookup(showCat)[p].icon_path = xCatLookup(showCat)[p].game_path
 
                         -- Missing cover png -- find me
-                        elseif System.doesFileExist("app0:/DATA/" .. xAppNumTableLookup_Missing_Cover(xAppNumTableLookup(showCat)[p].app_type) .. ".png") then
-                            xCatLookup(showCat)[p].icon_path = "app0:/DATA/" .. xAppNumTableLookup_Missing_Cover(xAppNumTableLookup(showCat)[p].app_type) .. ".png"
+                        elseif System.doesFileExist("app0:/DATA/" .. xAppNumTableLookup_Missing_Cover(xCatLookup(showCat)[p].app_type) .. ".png") then
+                            xCatLookup(showCat)[p].icon_path = "app0:/DATA/" .. xAppNumTableLookup_Missing_Cover(xCatLookup(showCat)[p].app_type) .. ".png"
 
                         -- Fallback - blank grey
                         else
