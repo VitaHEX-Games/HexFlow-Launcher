@@ -2158,6 +2158,15 @@ end
 Swap_X_O_buttons()
 
 
+-- Check model, if PSTV battery wont be shown and affects UI elements
+    local pstv = false
+    local pstv_offset = 0
+    model = System.getModel()
+    if string.match(tostring(model), "131072") then
+        pstv = true
+        pstv_offset = 105
+    end
+    
 -- Menu Layout
     btnMargin = 32 -- Distance between footer buttons
 
@@ -2200,6 +2209,14 @@ function vertically_centre_mini_menu(def_menuItems)
     y_centre_selection_end = y_centre_selection_start + 47
     y_centre_white_line_start = y_centre_top_margin + 47
     y_centre_text_offset = y_centre_top_margin - 32
+
+    -- Round up decimals to next round number
+    y_centre_box_height = math.ceil(y_centre_box_height)
+    y_centre_top_margin = math.ceil(y_centre_top_margin)
+    y_centre_selection_start = math.ceil(y_centre_selection_start)
+    y_centre_selection_end = math.ceil(y_centre_selection_end)
+    y_centre_white_line_start = math.ceil(y_centre_white_line_start)
+    y_centre_text_offset = math.ceil(y_centre_text_offset)
 end 
 
 -- Message - Check if RetroFlow Adrenaline Launcher needs to be installed
@@ -6744,6 +6761,15 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
 
             for k, v in ipairs(db_import) do
 
+                -- PSM - check for cover on import
+                if v.app_type == 39 then
+                    if System.doesFileExist("ur0:appmeta/" .. v.name .. "/pic0.png") then
+                        img_path = "ur0:appmeta/" .. v.name .. "/pic0.png"  --app icon
+                        v.icon_path = img_path
+                        v.cover = true
+                    end
+                end
+
                 -- For each game to be imported, cross reference against then hidden games list
                 for l, file in ipairs(hidden_games_table) do
 
@@ -8294,6 +8320,7 @@ local function DrawCover(x, y, text, icon, sel, apptype)
             extraz = 6
             extrax = -1
         end
+        extray = -0.05 -- Nudge down as vita cover white line sits very close to UI element
     elseif showView == 2 then
         -- zoomin view
         space = 1.6
@@ -8908,7 +8935,7 @@ function drawCategory (def)
                 -- Show fav icon if game if a favourite
                 favourite_flag = (def)[p].favourite
                 if (def)[p].favourite == true then
-                    Graphics.drawImage(685, 36, imgFavorite_small_on)
+                    Graphics.drawImage(685 + pstv_offset, 36, imgFavorite_small_on)
                 else
                 end
 
@@ -8917,9 +8944,9 @@ function drawCategory (def)
                 if (def)[p].hidden == true then
                     favourite_flag = (def)[p].favourite
                     if (def)[p].favourite == true then
-                        Graphics.drawImage(685 - 42, 36, imgHidden_small_on)
+                        Graphics.drawImage(685 + pstv_offset - 42, 36, imgHidden_small_on)
                     else
-                        Graphics.drawImage(685, 36, imgHidden_small_on)
+                        Graphics.drawImage(685 + pstv_offset, 36, imgHidden_small_on)
                     end
                 else
                 end
@@ -8938,7 +8965,7 @@ function drawCategory (def)
                 -- Show fav icon if game if a favourite
                 favourite_flag = (def)[p].favourite
                 if (def)[p].favourite == true then
-                    Graphics.drawImage(685, 36, imgFavorite_small_on)
+                    Graphics.drawImage(685 + pstv_offset, 36, imgFavorite_small_on)
                 else
                 end
 
@@ -8947,9 +8974,9 @@ function drawCategory (def)
                 if (def)[p].hidden == true then
                     favourite_flag = (def)[p].favourite
                     if (def)[p].favourite == true then
-                        Graphics.drawImage(685 - 42, 36, imgHidden_small_on)
+                        Graphics.drawImage(685 + pstv_offset - 42, 36, imgHidden_small_on)
                     else
-                        Graphics.drawImage(685, 36, imgHidden_small_on)
+                        Graphics.drawImage(685 + pstv_offset, 36, imgHidden_small_on)
                     end
                 else
                 end
@@ -9441,11 +9468,14 @@ while true do
 
         -- Header
         h, m, s = System.getTime()
-        Font.print(fnt20, 726, 34, string.format("%02d:%02d", h, m), white)-- Draw time
-        life = System.getBatteryPercentage()
-        Font.print(fnt20, 830, 34, life .. "%", white)-- Draw battery
-        Graphics.drawImage(888, 39, imgBattery)
-        Graphics.fillRect(891, 891 + (life / 5.2), 43, 51, white)
+        Font.print(fnt20, 726 + pstv_offset, 34, string.format("%02d:%02d", h, m), white)-- Draw time
+
+        if pstv == false then
+            life = System.getBatteryPercentage()
+            Font.print(fnt20, 830, 34, life .. "%", white)-- Draw battery
+            Graphics.drawImage(888, 39, imgBattery)
+            Graphics.fillRect(891, 891 + (life / 5.2), 43, 51, white)
+        end
 
         -- Footer buttons and icons
         -- Get text widths for positioning
@@ -9503,7 +9533,7 @@ while true do
         else Font.print(fnt22, 32, 34, lang_lines.All, white)
         end
         if Network.isWifiEnabled() then
-            Graphics.drawImage(800, 35, imgWifi)-- wifi icon
+            Graphics.drawImage(800 + pstv_offset, 35, imgWifi)-- wifi icon
         end
 
     
