@@ -1327,7 +1327,7 @@ else
     elseif  System.getLanguage() == 4  then setLanguage = 2  -- German
     elseif  System.getLanguage() == 5  then setLanguage = 4  -- Italian
     elseif  System.getLanguage() == 6  then setLanguage = 12 -- Dutch
-    elseif  System.getLanguage() == 7  then setLanguage = 6  -- Portuguese
+    elseif  System.getLanguage() == 7  then setLanguage = 6  -- Portuguese (Portugal)
     elseif  System.getLanguage() == 8  then setLanguage = 8  -- Russian
     elseif  System.getLanguage() == 9  then setLanguage = 17 -- Korean
     elseif  System.getLanguage() == 10 then setLanguage = 10 -- Chinese (Traditional)
@@ -1337,7 +1337,7 @@ else
     elseif  System.getLanguage() == 14 then setLanguage = 13 -- Danish
     elseif  System.getLanguage() == 15 then setLanguage = 14 -- Norwegian
     elseif  System.getLanguage() == 16 then setLanguage = 11 -- Polski
-    elseif  System.getLanguage() == 17 then setLanguage = 6  -- Portuguese (Brazil)
+    elseif  System.getLanguage() == 17 then setLanguage = 21 -- Portuguese (Brasil)
     elseif  System.getLanguage() == 18 then setLanguage = 0  -- English (United Kingdom)
     elseif  System.getLanguage() == 19 then setLanguage = 16 -- Turkish
     elseif  System.getLanguage() == 20 then setLanguage = 5  -- Spanish (Latin America)
@@ -1352,55 +1352,57 @@ end
 
     -- Language - Lookup 'set language' and cross reference to set the choose language menu
     function xchooseLanguageLookup(setLanguage)
-        if     setLanguage == 1     then return 1  -- English (United States)
-        elseif setLanguage == 2     then return 2  -- German
-        elseif setLanguage == 3     then return 3  -- French
-        elseif setLanguage == 4     then return 4  -- Italian
-        elseif setLanguage == 5     then return 5  -- Spanish
-        elseif setLanguage == 6     then return 6  -- Portuguese
-        elseif setLanguage == 7     then return 9  -- Swedish
-        elseif setLanguage == 8     then return 15 -- Russian
-        elseif setLanguage == 9     then return 18 -- Japanese
-        elseif setLanguage == 10    then return 16 -- Chinese (Traditional)
-        elseif setLanguage == 11    then return 8  -- Polski
-        elseif setLanguage == 12    then return 7  -- Dutch
-        elseif setLanguage == 13    then return 10 -- Danish
-        elseif setLanguage == 14    then return 11 -- Norwegian
-        elseif setLanguage == 15    then return 12 -- Finnish
-        elseif setLanguage == 16    then return 13 -- Turkish
-        elseif setLanguage == 17    then return 20 -- Korean
-        elseif setLanguage == 18    then return 17 -- Chinese (Simplified)
-        elseif setLanguage == 19    then return 19 -- Japanese (Ryukyuan)
-        elseif setLanguage == 20    then return 14 -- Hungarian
-        else                             return 0  -- English (United Kingdom)
+        if     setLanguage == 1     then return 3  -- English (United States)
+        elseif setLanguage == 2     then return 1  -- Deutsch - German
+        elseif setLanguage == 3     then return 5  -- French
+        elseif setLanguage == 4     then return 6  -- Italian
+        elseif setLanguage == 5     then return 4  -- Spanish
+        elseif setLanguage == 6     then return 12 -- Portuguese (Portugal)
+        elseif setLanguage == 7     then return 15 -- Swedish
+        elseif setLanguage == 8     then return 13 -- Russian
+        elseif setLanguage == 9     then return 17 -- Japanese
+        elseif setLanguage == 10    then return 21 -- Chinese (Traditional)
+        elseif setLanguage == 11    then return 10 -- Polski
+        elseif setLanguage == 12    then return 8  -- Dutch
+        elseif setLanguage == 13    then return 0  -- Danish
+        elseif setLanguage == 14    then return 9  -- Norwegian
+        elseif setLanguage == 15    then return 14 -- Finnish
+        elseif setLanguage == 16    then return 16 -- Turkish
+        elseif setLanguage == 17    then return 19 -- Korean
+        elseif setLanguage == 18    then return 20 -- Chinese (Simplified)
+        elseif setLanguage == 19    then return 18 -- Japanese (Ryukyuan)
+        elseif setLanguage == 20    then return 7  -- Hungarian
+        elseif setLanguage == 21    then return 11 -- Portuguese (Brasil)
+        else                             return 2  -- English (United Kingdom)
         end
     end
 
 
     -- Language - Lookup 'choose language menu' and cross reference to set the language number
+    -- Alphabetical order
     function xsetLanguageLookup(chooseLanguage)
-        if     chooseLanguage == 1  then return 1  -- English (United States)
-        elseif chooseLanguage == 2  then return 2  -- German
-        elseif chooseLanguage == 3  then return 3  -- French
-        elseif chooseLanguage == 4  then return 4  -- Italian
-        elseif chooseLanguage == 5  then return 5  -- Spanish
-        elseif chooseLanguage == 6  then return 6  -- Portuguese
-        elseif chooseLanguage == 7  then return 12 -- Dutch
-        elseif chooseLanguage == 8  then return 11 -- Polski
-        elseif chooseLanguage == 9  then return 7  -- Swedish
-        elseif chooseLanguage == 10 then return 13 -- Danish
-        elseif chooseLanguage == 11 then return 14 -- Norwegian
-        elseif chooseLanguage == 12 then return 15 -- Finnish
-        elseif chooseLanguage == 13 then return 16 -- Turkish
-        elseif chooseLanguage == 14 then return 20 -- Hungarian
-        elseif chooseLanguage == 15 then return 8  -- Russian
-        elseif chooseLanguage == 16 then return 10 -- Chinese (Traditional)
-        elseif chooseLanguage == 17 then return 18 -- Chinese (Simplified)
-        elseif chooseLanguage == 18 then return 9  -- Japanese
-        elseif chooseLanguage == 19 then return 19 -- Japanese (Ryukyuan)        
-        elseif chooseLanguage == 20 then return 17 -- Korean
-        
-        else                             return 0  -- English (United Kingdom)
+        if     chooseLanguage == 1  then return 2  -- Deutsch - German
+        elseif chooseLanguage == 2  then return 0  -- English (United Kingdom)
+        elseif chooseLanguage == 3  then return 1  -- English (United States)
+        elseif chooseLanguage == 4  then return 5  -- Español - Spanish
+        elseif chooseLanguage == 5  then return 3  -- Français - French
+        elseif chooseLanguage == 6  then return 4  -- Italiano - Italian
+        elseif chooseLanguage == 7  then return 20 -- Magyar - Hungarian
+        elseif chooseLanguage == 8  then return 12 -- Nederlands - Dutch
+        elseif chooseLanguage == 9  then return 14 -- Norsk - Norwegian
+        elseif chooseLanguage == 10 then return 11 -- Polski - Polish
+        elseif chooseLanguage == 11 then return 21 -- Portuguese (Brasil)
+        elseif chooseLanguage == 12 then return 6  -- Portuguese (Portgual)
+        elseif chooseLanguage == 13 then return 8  -- Pусский - Russian
+        elseif chooseLanguage == 14 then return 15 -- Suomi - Finnish
+        elseif chooseLanguage == 15 then return 7  -- Svenska - Swedish
+        elseif chooseLanguage == 16 then return 16 -- Türkçe - Turkish
+        elseif chooseLanguage == 17 then return 9  -- 日本語 - Japanese
+        elseif chooseLanguage == 18 then return 19 -- 琉球語派 - Japanese (Ryukyuan)
+        elseif chooseLanguage == 19 then return 17 -- 한국어 - Korean
+        elseif chooseLanguage == 20 then return 18 -- 简体中文 - Chinese (Simplified)
+        elseif chooseLanguage == 21 then return 10 -- 繁體中文 - Chinese (Traditional)
+        else                             return 13 -- Dansk - Danish
         end
     end
 
@@ -2091,6 +2093,9 @@ function ChangeLanguage(def)
     elseif setLanguage == 20 then
         lang = "HU.lua"
         ChangeFont(font_default)
+    elseif setLanguage == 21 then
+        lang = "PT_BR.lua"
+        ChangeFont(font_default)
     else
         lang = "EN.lua"
         ChangeFont(font_default)
@@ -2107,8 +2112,8 @@ function ChangeLanguage(def)
         lang_lines = lang_default
     end
 
-    if setLanguage == 2 or setLanguage == 3 or setLanguage == 6 or setLanguage == 8 or setLanguage == 9 or setLanguage == 12 or setLanguage == 16 or setLanguage == 19 then
-    -- German, French, Portugeuse, Russian, Japanese, Turkish, Dutch, Japanese (Ryukyuan) language fix
+    if setLanguage == 2 or setLanguage == 3 or setLanguage == 6 or setLanguage == 8 or setLanguage == 9 or setLanguage == 12 or setLanguage == 16 or setLanguage == 19 or setLanguage == 21 then
+    -- German, French, Portugeuse, Russian, Japanese, Turkish, Dutch, Japanese (Ryukyuan) language fix, Portuguese (Brasil)
         setting_x_offset = 460
     else
         -- setting_x_offset = 365
@@ -2179,8 +2184,8 @@ Swap_X_O_buttons()
     mini_menu_x_margin = 60
 
     
-    if setLanguage == 2 or setLanguage == 3 or setLanguage == 6 or setLanguage == 8 or setLanguage == 9 or setLanguage == 12 or setLanguage == 16 or setLanguage == 19 then
-    -- German, French, Portugeuse, Russian, Japanese, Turkish, Dutch, Japanese (Ryukyuan) language fix
+    if setLanguage == 2 or setLanguage == 3 or setLanguage == 6 or setLanguage == 8 or setLanguage == 9 or setLanguage == 12 or setLanguage == 16 or setLanguage == 19 or setLanguage == 21 then
+    -- German, French, Portugeuse, Russian, Japanese, Turkish, Dutch, Japanese (Ryukyuan) language fix, Portugeuse (Brasil)
         setting_x_offset = 460
     else
         -- setting_x_offset = 365
@@ -10337,8 +10342,8 @@ while true do
                 Press_Button_to_apply_Category = tostring(lang_lines.Press_X_to_apply_Category)
             end
 
-            -- Wrap text for wider languages: German, French, Russian, Portuguese, Dutch, Turkish, Hungarian
-            if setLanguage == 2 or setLanguage == 3 or setLanguage == 6 or setLanguage == 8 or setLanguage == 12 or setLanguage == 16 or setLanguage == 20 then
+            -- Wrap text for wider languages: German, French, Russian, Portuguese, Dutch, Turkish, Hungarian, Portuguese (Brasil)
+            if setLanguage == 2 or setLanguage == 3 or setLanguage == 6 or setLanguage == 8 or setLanguage == 12 or setLanguage == 16 or setLanguage == 20 or setLanguage == 21 then
                 Font.print(fnt22, 50, 352+40, lang_lines.Override_Category_colon.. "\n< " .. tmpcatText .. " >\n( " .. Press_Button_to_apply_Category .. ")", white)
             else
                 Font.print(fnt22, 50, 352+50, lang_lines.Override_Category_colon.. "< " .. tmpcatText .. " >\n( " .. Press_Button_to_apply_Category .. ")", white)
@@ -10511,88 +10516,11 @@ while true do
         Font.print(fnt22, setting_x_icon_offset, setting_y7, lang_lines.Language_colon, white)--Language
 
         -- MENU 2 / #7 Language 
-        if chooseLanguage == 1 then setLanguage = 1
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "English - American", white) -- English (United States)
-            -- Megadrive, update regional missing cover
-            for k, v in pairs(md_table) do
-                  if v.icon_path=="app0:/DATA/missing_cover_md.png" then
-                      v.icon_path="app0:/DATA/missing_cover_md_usa.png"
-                  end
-            end
-            -- Dreamcast, update regional missing cover - USA - Red logo
-            for k, v in pairs(dreamcast_table) do 
-                  if v.icon_path=="app0:/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="app0:/DATA/missing_cover_dreamcast_j.png" then
-                      v.icon_path="app0:/DATA/missing_cover_dreamcast_usa.png"
-                  end
-            end
-        elseif chooseLanguage == 2 then 
-            -- setLanguage = 2
+        if chooseLanguage == 1 then 
             Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Deutsch", white) -- German
-        elseif chooseLanguage == 3 then 
-            -- setLanguage = 3
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, " Français", white) -- French
-        elseif chooseLanguage == 4 then 
-            -- setLanguage = 4
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Italiano", white) -- Italian
-        elseif chooseLanguage == 5 then 
-            -- setLanguage = 5
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Español", white) -- Spanish
-        elseif chooseLanguage == 6 then 
-            -- setLanguage = 6
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Português", white) -- Portuguese
-        elseif chooseLanguage == 7 then 
-            -- setLanguage = 12
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Nederlands", white) -- Dutch
-        elseif chooseLanguage == 8 then 
-            -- setLanguage = 11
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Polski", white) -- Polish
-        elseif chooseLanguage == 9 then 
-            -- setLanguage = 7
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Svenska", white) -- Swedish
-        elseif chooseLanguage == 10 then 
-            -- setLanguage = 13
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Dansk", white) -- Danish
-        elseif chooseLanguage == 11 then 
-            -- setLanguage = 14
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Norsk", white) -- Norwegian
-        elseif chooseLanguage == 12 then 
-            -- setLanguage = 15
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Suomi", white) -- Finnish
-        elseif chooseLanguage == 13 then 
-            -- setLanguage = 16
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Türkçe", white) -- Turkish
-        elseif chooseLanguage == 14 then
-            -- setLanguage = 20
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Magyar", white) -- Hungarian
-        elseif chooseLanguage == 15 then 
-            -- setLanguage = 8
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Pусский", white) -- Russian
-        elseif chooseLanguage == 16 then 
-            -- setLanguage = 10
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "繁體中文", white) -- Chinese (Traditional)
-        elseif chooseLanguage == 17 then
-            -- then setLanguage = 18
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "简体中文", white) -- Chinese (Simplified)
-        elseif chooseLanguage == 18 then 
-            -- setLanguage = 9
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "日本語", white) -- Japanese
-            -- Dreamcast, update regional missing cover - Japan - Orange logo
-            for k, v in pairs(dreamcast_table) do
-                  if v.icon_path=="app0:/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="app0:/DATA/missing_cover_dreamcast_usa.png" then
-                      v.icon_path="app0:/DATA/missing_cover_dreamcast_j.png"
-                  end
-            end
-        elseif chooseLanguage == 19 then
-            -- then setLanguage = 18
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "琉球語派", white) -- Japanese (Ryukyuan)   
-        elseif chooseLanguage == 20 then 
-            -- setLanguage = 17
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "T한국어", white) -- Korean
-        
-        
-        else 
-            -- setLanguage = 0
-            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "English", white) -- English (United Kingdom)
+            
+        elseif chooseLanguage == 2 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "English (United Kingdom)", white) -- English (United Kingdom)
 
             -- Megadrive, update regional missing cover
             for k, v in pairs(md_table) do
@@ -10606,6 +10534,66 @@ while true do
                       v.icon_path="app0:/DATA/missing_cover_dreamcast_eur.png"
                   end
             end
+
+        elseif chooseLanguage == 3 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "English (United States)", white) -- English (United States)
+            -- Megadrive, update regional missing cover
+            for k, v in pairs(md_table) do
+                  if v.icon_path=="app0:/DATA/missing_cover_md.png" then
+                      v.icon_path="app0:/DATA/missing_cover_md_usa.png"
+                  end
+            end
+            -- Dreamcast, update regional missing cover - USA - Red logo
+            for k, v in pairs(dreamcast_table) do 
+                  if v.icon_path=="app0:/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="app0:/DATA/missing_cover_dreamcast_j.png" then
+                      v.icon_path="app0:/DATA/missing_cover_dreamcast_usa.png"
+                  end
+            end
+
+        elseif chooseLanguage == 4 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Español", white) -- Spanish
+        elseif chooseLanguage == 5 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, " Français", white) -- French
+        elseif chooseLanguage == 6 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Italiano", white) -- Italian
+        elseif chooseLanguage == 7 then
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Magyar", white) -- Hungarian
+        elseif chooseLanguage == 8 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Nederlands", white) -- Dutch
+        elseif chooseLanguage == 9 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Norsk", white) -- Norwegian
+        elseif chooseLanguage == 10 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Polski", white) -- Polish
+        elseif chooseLanguage == 11 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Português (Brasil)", white) -- Portuguese (Brasil)
+        elseif chooseLanguage == 12 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Português (Portugal)", white) -- Portuguese
+        elseif chooseLanguage == 13 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Pусский", white) -- Russian
+        elseif chooseLanguage == 14 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Suomi", white) -- Finnish
+        elseif chooseLanguage == 15 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Svenska", white) -- Swedish
+        elseif chooseLanguage == 16 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Türkçe", white) -- Turkish
+        elseif chooseLanguage == 17 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "日本語", white) -- Japanese
+            -- Dreamcast, update regional missing cover - Japan - Orange logo
+            for k, v in pairs(dreamcast_table) do
+                  if v.icon_path=="app0:/DATA/missing_cover_dreamcast_eur.png" or v.icon_path=="app0:/DATA/missing_cover_dreamcast_usa.png" then
+                      v.icon_path="app0:/DATA/missing_cover_dreamcast_j.png"
+                  end
+            end
+        elseif chooseLanguage == 18 then
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "琉球語派", white) -- Japanese (Ryukyuan) 
+        elseif chooseLanguage == 19 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "한국어", white) -- Korean
+        elseif chooseLanguage == 20 then
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "简体中文", white) -- Chinese (Simplified)
+        elseif chooseLanguage == 21 then 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "繁體中文", white) -- Chinese (Traditional)    
+        else 
+            Font.print(fnt22, setting_x_icon_offset + label_lang, setting_y7, "Dansk", white) -- Danish            
         end
 
         
@@ -10642,7 +10630,7 @@ while true do
                     showMenu = 19
                     menuY = 0
                 elseif menuY == 7 then -- Language
-                    if chooseLanguage < 20 then
+                    if chooseLanguage < 21 then
                         chooseLanguage = chooseLanguage + 1
                     else
                         chooseLanguage = 0

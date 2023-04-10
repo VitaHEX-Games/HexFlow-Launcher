@@ -95,6 +95,8 @@
         	lang = "JA_ryu.lua"
         elseif setLanguage == 20 then
         	lang = "HU.lua"
+        elseif setLanguage == 21 then
+        	lang = "PT_BR.lua"
 	    else
 	        lang = "EN.lua"
 	    end
