@@ -6875,6 +6875,149 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
     end
 end
 
+function import_cached_DB_homebrews_in_collections(def_user_db_file, def_table_name)
+
+    if collection_count >= 1 then
+        temp_hb_collection = {}
+        for z, collection_file_num in ipairs(collection_files) do
+            
+            -- Import lua file into temp table
+            local temp_db_import = {}
+            temp_db_import = dofile(collections_dir .. collection_file_num.filename)
+            
+            for l, file in ipairs(temp_db_import) do
+                if file.app_type == 0 then
+                    table.insert(temp_hb_collection, file)
+                end
+            end
+
+        end
+
+        if System.doesFileExist(db_Cache_Folder .. (def_user_db_file)) then
+            db_Cache = db_Cache_Folder .. (def_user_db_file)
+
+            local db_import = {}
+            db_import = dofile(db_Cache)
+
+            for k, v in ipairs(db_import) do
+
+                -- For each game to be imported, cross reference against then hidden games list
+                for l, file in ipairs(hidden_games_table) do
+
+                    -- Check the app type matches
+                    if file.app_type == v.app_type then
+
+                        -- Check if hidden game is in the import table
+                        local key = {}
+                        key = find_game_table_pos_key(db_import, file.name)
+
+                        if key ~= nil then
+                            -- Game found 
+                            -- Update hidden key
+                            if file.hidden == true then
+                                db_import[key].hidden = true
+                            else
+                                db_import[key].hidden = false
+                            end
+                        else
+                            -- Game not found
+                            -- If showing hidden games, then check the game file / folder exists for adding to the import table
+                            if showHidden==1 then
+                                if v.directory == false then
+                                    if System.doesFileExist(v.game_path) then
+                                        table.insert(db_import, file)
+                                    end
+                                else
+                                    if System.doesDirExist(v.game_path) then
+                                        table.insert(db_import, file)
+                                    end
+                                end
+                            else
+                            end
+                        end
+                    else
+                    end
+
+                end
+
+                -- Import homebrew if in collection
+                for key, data in pairs(temp_hb_collection) do
+                    if data.name == v.name then
+
+                        -- If hiding games, only import non-hidden games
+                        if showHidden==0 then
+                            if v.hidden==false then
+
+                                -- Show missing covers if off
+                                if showMissingCovers == 0 then
+                                    if v.cover==true then
+                                        table.insert(folders_table, v)
+                                        table.insert(homebrews_table, v)
+
+                                        --add blank icon to all
+                                        v.icon = imgCoverTmp
+                                        v.icon_path = v.icon_path
+
+                                        v.apptitle = v.apptitle
+                                        table.insert(files_table, count_of_systems, v.apptitle)
+                                    else
+                                    end
+
+                                else
+                                    table.insert(folders_table, v)
+                                    table.insert(homebrews_table, v)
+
+                                    --add blank icon to all
+                                    v.icon = imgCoverTmp
+                                    v.icon_path = v.icon_path
+
+                                    v.apptitle = v.apptitle
+                                    table.insert(files_table, count_of_systems, v.apptitle)
+                                end
+                            else
+                            end
+                        else
+                            -- Show missing covers if off
+                            if showMissingCovers == 0 then
+                                if v.cover==true then
+                                    table.insert(folders_table, v)
+                                    table.insert(homebrews_table, v)
+
+                                    --add blank icon to all
+                                    v.icon = imgCoverTmp
+                                    v.icon_path = v.icon_path
+
+                                    v.apptitle = v.apptitle
+                                    table.insert(files_table, count_of_systems, v.apptitle)
+                                else
+                                end
+
+                            else
+                                table.insert(folders_table, v)
+                                table.insert(homebrews_table, v)
+
+                                --add blank icon to all
+                                v.icon = imgCoverTmp
+                                v.icon_path = v.icon_path
+
+                                v.apptitle = v.apptitle
+                                table.insert(files_table, count_of_systems, v.apptitle)
+                            end
+                        end
+
+                    end
+                end
+
+            end        
+        end
+
+    else
+    end
+
+
+
+end
+
 
 function import_cached_DB()
     -- dir = System.listDirectory(dir)
@@ -6926,6 +7069,7 @@ function import_cached_DB()
     fav_count = {}
     renamed_games_table = {}
     hidden_games_table = {}
+    
 
     local file_over = System.openFile(cur_dir .. "/overrides.dat", FREAD)
     local filesize = System.sizeFile(file_over)
@@ -6935,10 +7079,13 @@ function import_cached_DB()
     import_renamed_games()
     import_hidden_games()
 
+
     import_cached_DB_tables("db_games.lua", games_table)
     if showHomebrews == 1 then
         import_cached_DB_tables("db_homebrews.lua", homebrews_table)
     else
+        -- Show Homebrew is off - only import if in a collection
+        import_cached_DB_homebrews_in_collections("db_homebrews.lua", homebrews_table)
     end
     import_cached_DB_tables("db_psp.lua", psp_table)
     import_cached_DB_tables("db_psx.lua", psx_table)
@@ -7411,6 +7558,63 @@ function update_favorites_table_files(def_table_name)
     end
 end
 
+
+
+function temp_import_homebrew()
+    -- If homebrew is hidden then Temporarily import for caching
+    if showHomebrews == 0 and #homebrews_table == 0 then
+        local temp_homebrews_table = {}
+        if System.doesFileExist("ux0:/data/RetroFlow/CACHE/db_homebrews.lua") then
+            import_cached_DB_tables("db_homebrews.lua", temp_homebrews_table)
+        else
+        end
+
+        if #temp_hb_collection ~= nil then
+            for k, v in pairs(temp_homebrews_table) do
+
+                for key, data in pairs(temp_hb_collection) do
+                    if data.name == v.name then
+                    else
+                        table.insert(homebrews_table,k)
+                    end
+                end
+            end
+        end
+
+    else
+    end
+end
+
+function temp_import_homebrew_cleanup()
+    -- Remove hidden games from homebrew
+    if showHidden == 0 and #homebrews_table ~= nil then
+        for l, file in pairs(homebrews_table) do
+            if file.hidden == true then
+                table.remove(homebrews_table,l)
+            else
+            end
+        end
+    end
+
+    -- Remove homebrew if hidden
+    if showHomebrews == 0 and #homebrews_table ~= nil then
+        for l, file in pairs(files_table) do
+            if file.app_type == 0 then
+                table.remove(files_table,l)
+            else
+            end
+        end
+        homebrews_table = {}
+    end
+
+    if showHomebrews == 0 then
+        import_cached_DB_homebrews_in_collections("db_homebrews.lua", homebrews_table)
+    else
+        import_cached_DB_tables("db_homebrews.lua", homebrews_table)
+    end
+end
+
+
 function AddOrRemoveFavorite()
 
     if System.doesFileExist(cur_dir .. "/favorites.dat") then
@@ -7434,6 +7638,9 @@ function AddOrRemoveFavorite()
         file_override = io.open(cur_dir .. "/favorites.dat", "w")
         file_override:write(lines)
         file_override:close()
+
+
+        temp_import_homebrew()
 
         -- Update and cache tables
 
@@ -7485,6 +7692,9 @@ function AddOrRemoveFavorite()
         -- update_cached_table("db_files.lua", files_table)
         update_cached_table_recently_played()
 
+
+        temp_import_homebrew_cleanup()
+
         --Reload
         -- FreeIcons()
         -- FreeMemory()
@@ -7496,6 +7706,8 @@ end
 
 
 function AddOrRemoveHidden(def_hide_game_flag)
+
+    temp_import_homebrew()
 
     -- Recent cat
     if showCat == 43 then
@@ -7517,7 +7729,13 @@ function AddOrRemoveHidden(def_hide_game_flag)
     -- Other cats
     else
         -- Update app type table
-        xAppNumTableLookup(apptype)[p].hidden=(def_hide_game_flag)
+
+        -- xAppNumTableLookup(apptype)[p].hidden=(def_hide_game_flag)
+        local key = find_game_table_pos_key(xAppNumTableLookup(apptype), app_titleid)
+        if key ~= nil then
+            xAppNumTableLookup(apptype)[key].hidden=(def_hide_game_flag)
+        end
+
         update_cached_table(xAppDbFileLookup(apptype), xAppNumTableLookup(apptype))
 
         -- Update recent table
@@ -7532,6 +7750,8 @@ function AddOrRemoveHidden(def_hide_game_flag)
         end
         
     end
+
+    temp_import_homebrew_cleanup()
 
 end
 
@@ -8993,9 +9213,9 @@ function drawCategory (def)
             end
         end
         end
-        if showView ~= 2 then
-        PrintCentered(fnt20, 480, 462, p .. lang_lines.of .. #(def), white, 20)-- Draw total items
-        end
+    if showView ~= 2 then
+    PrintCentered(fnt20, 480, 462, p .. lang_lines.of .. #(def), white, 20)-- Draw total items
+    end
 end
 
 functionTime = Timer.getTime(oneLoopTimer)
@@ -9272,6 +9492,7 @@ while true do
                     else
                     end
 
+                    temp_import_homebrew()
 
                     -- Apptype table
                     update_cached_table(xAppDbFileLookup(apptype), xAppNumTableLookup(apptype))
@@ -10650,10 +10871,14 @@ while true do
                         -- Import cache to update All games category
                         FreeIcons()
                         count_cache_and_reload()
-                        GetInfoSelected()
+                        
                         -- If currently on homebrew category view, move to Vita category to hide empty homebrew category
                         if showCat == 2 then
                             showCat = 1
+                            p = 1
+                            master_index = p
+                            GetInfoSelected()
+                        else
                             GetInfoSelected()
                         end
                     else
