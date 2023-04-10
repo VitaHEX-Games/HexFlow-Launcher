@@ -2974,7 +2974,7 @@ function create_fav_count_table(def_table_input)
 end
 
 
-function include_game_in_recent(def_app_type, def_game_path)
+function include_game_in_recent(def_app_type, def_game_path, def_name)
     local adr_partition_string = ""
 
     -- Adrenaline partition settings
@@ -3007,8 +3007,19 @@ function include_game_in_recent(def_app_type, def_game_path)
             -- If show homebrew on, include
             return true
         else
-            -- If show homebrew off, exclude
-            return false
+            -- If show homebrew off, exclude unless in a collection
+            if #temp_hb_collection ~= nil then
+                for k, v in pairs(temp_hb_collection) do
+
+                    for key, data in pairs(temp_hb_collection) do
+                        if data.name == (def_name) then
+                            return true
+                        end
+                    end
+                end
+            else
+                return false
+            end
         end
     else
         -- Include
@@ -3072,7 +3083,7 @@ function import_recently_played()
                 -- If file
                 if v.directory == false then
                     if System.doesFileExist(v.game_path) then
-                        if include_game_in_recent(v.app_type, v.game_path) == true then
+                        if include_game_in_recent(v.app_type, v.game_path, v.name) == true then
                             table.insert(recently_played_table, v)
                             --add blank icon to all
                             v.icon = imgCoverTmp
@@ -3083,7 +3094,7 @@ function import_recently_played()
                 else
                     -- Not file, is folder
                     if System.doesDirExist(v.game_path) then
-                        if include_game_in_recent(v.app_type, v.game_path) == true then
+                        if include_game_in_recent(v.app_type, v.game_path, v.name) == true then
                             table.insert(recently_played_table, v)
                             --add blank icon to all
                             v.icon = imgCoverTmp
