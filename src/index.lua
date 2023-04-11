@@ -2124,8 +2124,8 @@ function ChangeLanguage(def)
     wallpaper_table_settings[1].wallpaper_string = lang_lines.Off
 
     -- Check if the get info screen needs to be wider for long translations
-    -- Hungarian
-    if setLanguage == 20 then
+    -- French, Hungarian
+    if setLanguage == 3 or setLanguage == 20 then
         wide_getinfoscreen = true
     else
         wide_getinfoscreen = false
