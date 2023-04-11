@@ -1412,8 +1412,8 @@ chooseLanguage = xchooseLanguageLookup(setLanguage)
 
 -- Check if the get info screen needs to be wider for long translations
 local wide_getinfoscreen = false
--- Hungarian
-if setLanguage == 20 then
+-- French, Hungarian
+if setLanguage == 3 or setLanguage == 20 then
     wide_getinfoscreen = true
 else
     wide_getinfoscreen = false
