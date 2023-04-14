@@ -14854,7 +14854,11 @@ while true do
 
                    -- CATEGORY - Move Backwards
 
-                    -- filterGames = 1
+                    -- empty the search results
+                    curTotal = #search_results_table   
+                    if #search_results_table ~= nil then 
+                        search_results_table = {}
+                    end
 
                     if filterGames == 1 then
 
@@ -14892,8 +14896,6 @@ while true do
                         end
 
                     end
-
-
 
                     if showCat == 44 then
                         curTotal = #search_results_table   
@@ -14986,12 +14988,17 @@ while true do
 
                     -- CATEGORY - Move Forwards
 
+                    -- empty the search results
+                    curTotal = #search_results_table   
+                    if #search_results_table ~= nil then 
+                        search_results_table = {}
+                    end
+
                     if showCat == 42 then
                         -- count favorites
                         create_fav_count_table(files_table)
                     end
 
-                    -- filterGames = 1
 
                     if filterGames == 1 then
 
@@ -15020,6 +15027,12 @@ while true do
                             -- Skip Homebrews category if disabled
                             elseif showCat==1 and showHomebrews==0 then
                                 showCat = 3
+                            elseif showCat==44 then
+                                if showAll==0 then
+                                    showCat = 1
+                                else
+                                    showCat = 0
+                                end
                             else
                                 showCat = showCat + 1
                             end
