@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Fond personnalisé :",
 ["Reflection_Effect_colon"] = "Effet miroir :",
+["Smooth_Scrolling_colon"] = "Défilement fluide :",
 ["Theme_Color_colon"] = "Couleur du thème :",
 ["Red"] = "Rouge",
 ["Yellow"] = "Jaune",

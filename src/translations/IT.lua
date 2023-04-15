@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Sfondo Personalizzato: ",
 ["Reflection_Effect_colon"] = "Effetto di riflessione: ",
+["Smooth_Scrolling_colon"] = "Scorrimento fluido: ",
 ["Theme_Color_colon"] = "Colore del Tema: ",
 ["Red"] = "Rosso",
 ["Yellow"] = "Giallo",

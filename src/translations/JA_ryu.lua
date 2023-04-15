@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "バックグラウンドぬ画像：",
 ["Reflection_Effect_colon"] = "反射結果：",
+["Smooth_Scrolling_colon"] = "スムーズなスクロール：",
 ["Theme_Color_colon"] = "テーマぬいる：",
 ["Red"] = "あかー",
 ["Yellow"] = "ちーる",

@@ -21,7 +21,8 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Eigen achtergrond: ",
 ["Reflection_Effect_colon"] = "Reflectie-effect: ",
-["Theme_Color_colon"] = "Thema Kleur: ",
+["Smooth_Scrolling_colon"] = "Soepel scrollen: ",
+["Theme_Color_colon"] = "Thema kleur: ",
 ["Red"] = "Rood",
 ["Yellow"] = "Geel",
 ["Green"] = "Groen",

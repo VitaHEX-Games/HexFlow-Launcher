@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Custom Background: ",
 ["Reflection_Effect_colon"] = "Reflection Effect: ",
+["Smooth_Scrolling_colon"] = "Smooth Scrolling: ",
 ["Theme_Color_colon"] = "Theme Color: ",
 ["Red"] = "Red",
 ["Yellow"] = "Yellow",

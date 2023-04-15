@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Niestandardowe tło: ",
 ["Reflection_Effect_colon"] = "Efekt odbicia: ",
+["Smooth_Scrolling_colon"] = "Płynne przewijanie: ",
 ["Theme_Color_colon"] = "Kolor motywu: ",
 ["Red"] = "Czerwony",
 ["Yellow"] = "Żółty",

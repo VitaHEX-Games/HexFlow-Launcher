@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Özel Arka Plan: ",
 ["Reflection_Effect_colon"] = "Yansıma Etkisi: ",
+["Smooth_Scrolling_colon"] = "Düzgün Kaydırma: ",
 ["Theme_Color_colon"] = "Tema Rengi: ",
 ["Red"] = "Kırmızı",
 ["Yellow"] = "Sarı",

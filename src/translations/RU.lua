@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Собственный Фон: ",
 ["Reflection_Effect_colon"] = "Эффект Отражения: ",
+["Smooth_Scrolling_colon"] = "Плавный прокрутка: ",
 ["Theme_Color_colon"] = "Цвет Темы: ",
 ["Red"] = "Красный",
 ["Yellow"] = "Желтый",

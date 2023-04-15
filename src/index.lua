@@ -741,16 +741,17 @@ local imgWifi = Graphics.loadImage("app0:/DATA/wifi.png")
 local imgBattery = Graphics.loadImage("app0:/DATA/bat.png")
 local imgBack = Graphics.loadImage("app0:/DATA/back_01.jpg")
 local imgFloor = Graphics.loadImage("app0:/DATA/floor.png")
+local footer_gradient = Graphics.loadImage("app0:/DATA/footer_gradient.png")
+
 local imgFavorite_small_on = Graphics.loadImage("app0:/DATA/fav-small-on.png")
 local imgFavorite_large_on = Graphics.loadImage("app0:/DATA/fav-large-on.png")
 local imgFavorite_large_off = Graphics.loadImage("app0:/DATA/fav-large-off.png")
 local imgHidden_small_on = Graphics.loadImage("app0:/DATA/hidden-small-on.png")
 local imgHidden_large_on = Graphics.loadImage("app0:/DATA/hidden-large-on.png")
 
-local file_browser_folder_open = Graphics.loadImage("app0:/DATA/file-browser-folder-open.png")
-local file_browser_folder_closed = Graphics.loadImage("app0:/DATA/file-browser-folder-closed.png")
-local file_browser_file = Graphics.loadImage("app0:/DATA/file-browser-file.png")
-local footer_gradient = Graphics.loadImage("app0:/DATA/footer_gradient.png")
+file_browser_folder_open = Graphics.loadImage("app0:/DATA/file-browser-folder-open.png")
+file_browser_folder_closed = Graphics.loadImage("app0:/DATA/file-browser-folder-closed.png")
+file_browser_file = Graphics.loadImage("app0:/DATA/file-browser-file.png")
 
 setting_icon_theme = Graphics.loadImage("app0:/DATA/setting-icon-theme.png")
 setting_icon_artwork = Graphics.loadImage("app0:/DATA/setting-icon-artwork.png")
@@ -1177,6 +1178,10 @@ local getRomDir = 1
 local getSnaps = 0
 local tmpappcat = 0
 
+-- Smooth scrolling
+quick_scrolling_factor = 0
+quick_scrolling_factor_goal = 0
+
 local game_adr_bin_driver = 0
 local game_adr_exec_bin = 0
 
@@ -1219,6 +1224,7 @@ startCategory_collection = "not_set"
 
 local filterGames = 0 -- All
 local showMissingCovers = 1 -- On
+local smoothScrolling = 1 -- On
 
 function SaveSettings()
 
@@ -1265,7 +1271,8 @@ function SaveSettings()
         "\nShow_collections=" .. showCollections .. " " .. 
         "\nStartup_Collection=" .. startCategory_collection .. " " .. 
         "\nFilter_Games=" .. filterGames .. " " .. 
-        "\nShow_missing_covers=" .. showMissingCovers
+        "\nShow_missing_covers=" .. showMissingCovers .. " " .. 
+        "\nSmooth_scrolling=" .. smoothScrolling
 
         file_config:write(settings)
         file_config:close()
@@ -1310,6 +1317,7 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
     local getCollections = settingValue[19]; if getCollections ~= nil then showCollections = getCollections end
     local getFilterGames = settingValue[20]; if getFilterGames ~= nil then filterGames = getFilterGames end
     local getshowMissingCovers = settingValue[21]; if getshowMissingCovers ~= nil then showMissingCovers = getshowMissingCovers end
+    local getsmoothScrolling = settingValue[22]; if getsmoothScrolling ~= nil then smoothScrolling = getsmoothScrolling end
 
     selectedwall = setBackground
 
@@ -1611,6 +1619,7 @@ local lang_default =
 -- Appearance
 ["Custom_Background_colon"] = "Custom Background: ",
 ["Reflection_Effect_colon"] = "Reflection Effect: ",
+["Smooth_Scrolling_colon"] = "Smooth Scrolling: ",
 ["Theme_Color_colon"] = "Theme Color: ",
 ["Red"] = "Red",
 ["Yellow"] = "Yellow",
@@ -8549,70 +8558,174 @@ local function DrawCover(x, y, text, icon, sel, apptype)
     zoom = 0
     camX = 0
     Graphics.setImageFilters(icon, FILTER_LINEAR, FILTER_LINEAR)
+    
+    -- How much around 0 is considered as the middle (where the selected cover is displayed)
+    if     showView == 1 then space = 1.6
+    elseif showView == 2 then space = 1.6
+    elseif showView == 3 then space = 1.5
+    elseif showView == 4 then space = 1
+    else                      space = 1
+    end
+
+    side_factor = x / space -- This is 0 when x is in the exact center, and 1 or -1 when x is at a side of the middle zone
+    abs_side_factor = math.abs(side_factor)
+
+    dezoom_factor = math.max(abs_side_factor, quick_scrolling_factor)
+
     if showView == 1 then
         -- flat zoom out view
-        space = 1.6
         zoom = 0
-        if x > 0.5 then
-            extraz = 6
-            extrax = 1
-        elseif x < -0.5 then
-            extraz = 6
-            extrax = -1
+
+        if smoothScrolling == 1 then
+            -- Smooth scrolling is on
+            if x > space then
+                extraz = 6
+                extrax = 1
+            elseif x < -space then
+                extraz = 6
+                extrax = -1
+            else
+                extraz = 6 * dezoom_factor
+                extrax = 1 * side_factor
+            end
+        else
+            -- Smooth scrolling is off
+            if x > 0.5 then
+                extraz = 6
+                extrax = 1
+            elseif x < -0.5 then
+                extraz = 6
+                extrax = -1
+            end
         end
+
         extray = -0.05 -- Nudge down as vita cover white line sits very close to UI element
     elseif showView == 2 then
         -- zoomin view
-        space = 1.6
         zoom = -1
         extray = -0.6
-        if x > 0.5 then
-            rot = -1
-            extraz = 0
-            extrax = 1
-        elseif x < -0.5 then
-            rot = 1
-            extraz = 0
-            extrax = -1
+
+        if smoothScrolling == 1 then
+            -- Smooth scrolling is on
+            if x > space then
+                rot = -1
+                extraz = 0
+                extrax = 1
+            elseif x < -space then
+                rot = 1
+                extraz = 0
+                extrax = -1
+            else
+                rot = -side_factor
+                extrax =  side_factor
+            end
+        else
+            -- Smooth scrolling is off
+            if x > 0.5 then
+                rot = -1
+                extraz = 0
+                extrax = 1
+            elseif x < -0.5 then
+                rot = 1
+                extraz = 0
+                extrax = -1
+            end
         end
+
     elseif showView == 3 then
         -- left side view
-        space = 1.5
         zoom = -0.6
         extray = -0.3
         camX = 1
-        if x > 0.5 then
-            rot = -0.5
-            extraz = 2 + (x / 2)
-            extrax = 0.6
-        elseif x < -0.5 then
-            rot = 0.5
-            extraz = 2
-            extrax = -10
+
+        if smoothScrolling == 1 then
+            -- Smooth scrolling is on
+            if x > space then
+                rot = -0.5
+                extraz = 2 + (x / 2)
+                extrax = 0.6
+            elseif x <= space and x > 0 then
+                rot = -0.5 * abs_side_factor
+                extraz = (2 + (x / 2)) * dezoom_factor
+                extrax = 0.6 * abs_side_factor
+            elseif x < -space then
+                rot = 0.5
+                extraz = 2
+                extrax = -10
+            elseif x >= -space and x < 0 then
+                rot = 0.5 * abs_side_factor
+                extraz = 2 * dezoom_factor
+                extrax = -10 * abs_side_factor
+            end
+        else
+            -- Smooth scrolling is off
+            if x > 0.5 then
+                rot = -0.5
+                extraz = 2 + (x / 2)
+                extrax = 0.6
+            elseif x < -0.5 then
+                rot = 0.5
+                extraz = 2
+                extrax = -10
+            end
         end
+
     elseif showView == 4 then
         -- scroll around
-        space = 1
         zoom = 0
-        if x > 0.5 then
-            extraz = 2 + (x / 1.5)
-            extrax = 1
-        elseif x < -0.5 then
-            extraz = 2 - (x / 1.5)
-            extrax = -1
+
+        if smoothScrolling == 1 then
+            -- Smooth scrolling is on
+            if x > space then
+                extraz = 2 + (x / 1.5)
+                extrax = 1
+            elseif x < -space then
+                extraz = 2 - (x / 1.5)
+                extrax = -1
+            else
+                extraz = (2 + (math.abs(x) / 1.5)) * dezoom_factor
+                extrax = side_factor
+            end
+        else
+            -- Smooth scrolling is off
+            if x > 0.5 then
+                extraz = 2 + (x / 1.5)
+                extrax = 1
+            elseif x < -0.5 then
+                extraz = 2 - (x / 1.5)
+                extrax = -1
+            end
         end
     else
         -- default view
-        space = 1
         zoom = 0
-        if x > 0.5 then
-            rot = -1
-            extraz = 3
-            extrax = 1
-        elseif x < -0.5 then
-            rot = 1
-            extraz = 3
-            extrax = -1
+
+        if smoothScrolling == 1 then
+            -- Smooth scrolling is on
+            if x > space then
+                rot = -1
+                extraz = 3
+                extrax = 1
+            elseif x < -space then
+                rot = 1
+                extraz = 3
+                extrax = -1
+            else
+                rot = -side_factor
+                extraz = 3 * dezoom_factor
+                extrax = side_factor
+            end
+        else
+            -- Smooth scrolling is off
+            if x > 0.5 then
+                rot = -1
+                extraz = 3
+                extrax = 1
+            elseif x < -0.5 then
+                rot = 1
+                extraz = 3
+                extrax = -1
+            end
         end
     end
     
@@ -9821,7 +9934,25 @@ while true do
 
         -- Smooth move items horizontally
         if targetX ~= base_x then
-            targetX = targetX - ((targetX - base_x) * 0.1)
+            if smoothScrolling == 1 then
+                targetX = targetX - ((targetX - base_x) * 0.17)
+            else
+                targetX = targetX - ((targetX - base_x) * 0.1)
+            end
+        end
+
+
+        if smoothScrolling == 1 then
+            -- Smooth dezoom factor
+            if mx < 64 or mx > 180 then -- Don't zoom on covers if quick scrolling
+                quick_scrolling_factor_goal = 1
+            else
+                quick_scrolling_factor_goal = 0
+            end
+
+            if quick_scrolling_factor ~= quick_scrolling_factor_goal then
+                quick_scrolling_factor = quick_scrolling_factor - ((quick_scrolling_factor - quick_scrolling_factor_goal) * 0.17)
+            end
         end
         
         -- Instantly move to selection
@@ -11009,7 +11140,7 @@ while true do
         Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
 
-        menuItems = 3
+        menuItems = 4
 
         -- MENU 4 / #0 Back
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
@@ -11059,6 +11190,14 @@ while true do
             wallpaper_print_string (setBackground)
         end
 
+        -- MENU 4 / #4 Smooth scrolling
+        Font.print(fnt22, setting_x, setting_y4, lang_lines.Smooth_Scrolling_colon, white) -- Smooth scrolling
+        if smoothScrolling == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.On, white)--ON
+        else
+            Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.Off, white)--OFF
+        end
+
 
         -- MENU 4 - FUNCTIONS
         status = System.getMessageState()
@@ -11099,6 +11238,12 @@ while true do
                         imgCustomBack = Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
                         Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
                         Render.useTexture(modBackground, imgCustomBack)
+                    end
+                elseif menuY == 4 then -- #4 Smooth scrolling
+                    if smoothScrolling == 1 then
+                        smoothScrolling = 0
+                    else
+                        smoothScrolling = 1
                     end
                 end
 
@@ -14897,6 +15042,8 @@ while true do
 
                     end
 
+
+
                     if showCat == 44 then
                         curTotal = #search_results_table   
                         if #search_results_table == 0 then 
@@ -14998,7 +15145,6 @@ while true do
                         -- count favorites
                         create_fav_count_table(files_table)
                     end
-
 
                     if filterGames == 1 then
 

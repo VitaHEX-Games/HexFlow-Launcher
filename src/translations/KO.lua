@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "사용자 정의 배경: ",
 ["Reflection_Effect_colon"] = "반사 효과: ",
+["Smooth_Scrolling_colon"] = "부드러운 스크롤: ",
 ["Theme_Color_colon"] = "테마 색상: ",
 ["Red"] = "빨간색",
 ["Yellow"] = "노란색",

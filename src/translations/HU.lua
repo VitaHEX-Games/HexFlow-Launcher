@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Egyéni Háttér: ",
 ["Reflection_Effect_colon"] = "Tükörkép Effekt: ",
+["Smooth_Scrolling_colon"] = "Sima Görgetés:",
 ["Theme_Color_colon"] = "Téma Szín: ",
 ["Red"] = "Piros",
 ["Yellow"] = "Sárga",

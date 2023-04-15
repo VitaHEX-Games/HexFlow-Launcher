@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Egendefinert bakgrunn: ",
 ["Reflection_Effect_colon"] = "Refleksjonseffekt: ",
+["Smooth_Scrolling_colon"] = "Glatt rulling: ",
 ["Theme_Color_colon"] = "Temafarge: ",
 ["Red"] = "Rød",
 ["Yellow"] = "Gul",

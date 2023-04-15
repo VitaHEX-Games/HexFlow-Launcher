@@ -20,7 +20,8 @@ return {
 
 -- Appearance
 ["Custom_Background_colon"] = "バックグラウンドの画像：",
-["Reflection_Effect_colon"] = "反射結果 : ",
+["Reflection_Effect_colon"] = "反射結果：",
+["Smooth_Scrolling_colon"] = "スムーズなスクロール：",
 ["Theme_Color_colon"] = "テーマの色：",
 ["Red"] = "赤色",
 ["Yellow"] = "黄色",
@@ -190,8 +191,8 @@ return {
 ["Downloading_PICO8_backgrounds"] = "PICO-8の背景をダウンロードする",
 
 -- Info Screen
-["App_ID_colon"] = "アプリID:",
-["Size_colon"] = "サイズ:",
+["App_ID_colon"] = "アプリID：",
+["Size_colon"] = "サイズ：",
 ["Version_colon"] = "バージョン：",
 ["Download_Cover"] = "表紙をダウンロード",
 ["Download_Background"] = "背景をダウンロード",

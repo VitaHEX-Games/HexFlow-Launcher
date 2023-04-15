@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Mukautettu tausta: ",
 ["Reflection_Effect_colon"] = "Heijastustehoste: ",
+["Smooth_Scrolling_colon"] = "Tasainen vieritys: ",
 ["Theme_Color_colon"] = "Teeman väri: ",
 ["Red"] = "Punainen",
 ["Yellow"] = "Keltainen",

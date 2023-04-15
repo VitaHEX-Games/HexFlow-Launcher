@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "Eigener Hintergrund: ",
 ["Reflection_Effect_colon"] = "Spiegelungseffekt: ",
+["Smooth_Scrolling_colon"] = "Glatt Scrollen: ",
 ["Theme_Color_colon"] = "Themenfarbe: ",
 ["Red"] = "Rot",
 ["Yellow"] = "Gelb",

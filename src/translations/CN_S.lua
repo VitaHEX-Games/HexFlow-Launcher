@@ -21,6 +21,7 @@ return {
 -- Appearance
 ["Custom_Background_colon"] = "自定义背景 : ",
 ["Reflection_Effect_colon"] = "反射效果 : ",
+["Smooth_Scrolling_colon"] = "平滑滚动 : ",
 ["Theme_Color_colon"] = "主题颜色 : ",
 ["Red"] = "红色",
 ["Yellow"] = "黄色",
