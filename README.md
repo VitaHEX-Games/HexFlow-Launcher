@@ -112,6 +112,11 @@ Navigate your library using the **DPad** or the **Left Stick** or with the **Tou
 
 **DPad Down + L/R triggers**: Skip games alphabetically
 
+
+# Troubleshooting
+
+Please see the [FAQ's](https://github.com/jimbob4000/RetroFlow-Launcher/blob/main/docs/FAQs.md) page before positing an issue.
+
 # Customisation
 
 
