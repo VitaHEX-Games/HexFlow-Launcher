@@ -37,7 +37,6 @@ Support for launchers was added after July 5, 2021. Please try a more current ve
 <!--### ScummVM some games won't launch
 I found some games don't launch on ScummVM version 2.7.0, please try a previous version such as 2.6.1. Direct download link: [https://downloads.scummvm.org/frs/scummvm/2.6.1/scummvm-2.6.1-vita.vpk](https://downloads.scummvm.org/frs/scummvm/2.6.1/scummvm-2.6.1-vita.vpk).
 <br><br>-->
-
 ### Atari 5200 loads the memopad in RetroArch?
 When the game is running in RetroArch bring up the RetroArch quick menu.
 
@@ -83,9 +82,9 @@ To change the core for an entire system, search for "Retroarch Cores" in the fil
 The RetroArch core files can be found here: `ux0:/app/RETROVITA/`
 <br><br>
 
-### Can I change the game folder locations?
+### Can I change the rom folder locations?
 Yes, from version 4.0 onwards.
-Go to 'Scan settings' and then 'Edit game directories' to change the path to game folders.
+Go to 'Scan settings' and then 'Edit game directories' to change the path to rom folders.
 <br><br>
 
 ### Can I use HexFlow too?
