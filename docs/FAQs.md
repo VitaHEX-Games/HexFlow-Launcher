@@ -53,7 +53,7 @@ It's recommended that your roms are named using the **no-intro** file naming con
 ### Why is there no option to download homebrew covers?
 Covers haven't been made for homebrew applications as it's not necessary as the app icon is used. 
 
-If you move a homebrew game port into the Vita category you can download a cover if it's available. Vita style covers for homebrew applications won't be added, bt you can always add your own.
+If you move a homebrew game port into the Vita category you can download a cover if it's available. Vita style covers for homebrew applications won't be added, but you can always add your own.
 <br><br>
 
 ### How do I add disk based games?
