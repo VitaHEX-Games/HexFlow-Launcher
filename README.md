@@ -202,8 +202,7 @@ I don't accept dontations or payment for this project, however if you would like
 
 You can also donate to them using [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RM8ECMVYMTXGJ&source=url). If you would like to follow them, you can find VitaHex on [Twitter](https://twitter.com/VitaHex), or their website [vitahex.weebly.com](https://vitahex.weebly.com/).
 
-**Disclaimer:** 
+### Disclaimer
 RetroFlow DOES NOT support or facilitate piracy in any way, on the contrary we are against it.
-
-**Terms of use:** 
+ 
 RetroFlow and any individual software authors will not be held responsible for any damages or loss resulting from the use of the homebrew software, by downloading the application you are agreeing to these terms.
