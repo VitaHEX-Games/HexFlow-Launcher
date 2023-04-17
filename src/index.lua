@@ -9705,9 +9705,28 @@ while true do
                 if state == CANCELED then
                 else
 
-                    -- ret_collection_display_name =  ret_collection
-                    -- ret_collection_table_name =    "Collection_" .. ret_collection:gsub(" ", "_")
-                    ret_collection_filename =      "Collection_" .. ret_collection:gsub(" ", "_") .. ".lua"
+                    ret_collection_filename = "Collection_" .. ret_collection:gsub(" ", "_") .. ".lua"
+
+
+                    local duplicate_name_num = 1
+                    function check_if_collection_file_exists(def_duplicate_name_num)
+                        if System.doesFileExist(collections_dir .. "Collection_" .. ret_collection:gsub(" ", "_") .. "_(" .. (def_duplicate_name_num) .. ")".. ".lua") then
+                            return true
+                        else
+                            return false
+                        end
+                    end
+
+                    -- Append number if filename already exists (prevents overwriting a list)
+                    if System.doesFileExist(collections_dir .. ret_collection_filename) then
+                        
+                        while check_if_collection_file_exists(duplicate_name_num) == true do
+                            duplicate_name_num = duplicate_name_num + 1  
+                        end
+
+                        ret_collection_filename = "Collection_" .. ret_collection:gsub(" ", "_") .. "_(" .. duplicate_name_num .. ")".. ".lua"
+                    else
+                    end
 
                     new_collection = {}
                     new_collection = 
