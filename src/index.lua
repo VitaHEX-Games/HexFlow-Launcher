@@ -2734,11 +2734,28 @@ function AutoMakeBootBin(def_rom_location, def_driver, def_bin)
 
 end
 
+function import_launch_overrides()
+
+    if System.doesFileExist("ux0:/data/RetroFlow/launch_overrides.lua") then
+        db_Cache_launch_overrides = "ux0:/data/RetroFlow/launch_overrides.lua"
+
+        db_launch_overrides = {}
+        db_launch_overrides = dofile(db_Cache_launch_overrides)
+
+        for k, v in ipairs(db_launch_overrides) do
+            table.insert(launch_overrides_table, v)
+        end
+    end
+end
+
+launch_overrides_table = {}
+import_launch_overrides()
+
 function launch_Adrenaline(def_rom_location, def_rom_title_id, def_rom_filename)
 
     -- Check if game has custom launch overrides
     if #launch_overrides_table ~= nil then
-        local key = find_game_table_pos_key(launch_overrides_table, app_titleid)
+        local key = find_game_table_pos_key(launch_overrides_table, (def_rom_title_id))
         if key ~= nil then
             -- Overrides found
             saved_driver = launch_overrides_table[key].driver
@@ -3313,23 +3330,6 @@ function import_hidden_games()
         end
     end
 end
-
-function import_launch_overrides()
-
-    launch_overrides_table = {}
-    if System.doesFileExist("ux0:/data/RetroFlow/launch_overrides.lua") then
-        db_Cache_launch_overrides = "ux0:/data/RetroFlow/launch_overrides.lua"
-
-        local db_launch_overrides = {}
-        db_launch_overrides = dofile(db_Cache_launch_overrides)
-
-        for k, v in ipairs(db_launch_overrides) do
-            table.insert(launch_overrides_table, v)
-        end
-    end
-end
-
-import_launch_overrides()
 
 function count_loading_tasks()
 
@@ -13945,7 +13945,11 @@ while true do
                         -- Save the renamed table for importing on restart
                         update_cached_table_launch_overrides()
                         showMenu = 20
-                        menuY=3
+                        if remove_from_collection_flag == true then
+                            menuY=5
+                        else
+                            menuY=4
+                        end
                     else
                     end
 
