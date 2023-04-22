@@ -14,6 +14,7 @@ With RetroFlow you can also integerate retro games without the need to create bu
 
 * No need to create bubbles for games
 * Retro game categories added
+* Create your own categories (Collections)
 * Favourite games category 
 * Recently played category
 * Ability to search for games
@@ -23,10 +24,11 @@ With RetroFlow you can also integerate retro games without the need to create bu
 * Support for multiple wallapers
 * Load from cache for faster startup
 * File browser added for setting up game directories
+* Smooth scrolling of game covers
 * Fully translated
 
 **Supported systems:**
-PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Dreamcast, Sega CD, Sega 32X, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear, PC Engine, PC Engine CD, TurboGrafx-16, TurboGrafx-CD, Commodore Amiga, Commodore 64, WonderSwan, WonderSwan Color, MSX, MSX2, ZX Spectrum, Atari Lynx, Atari 600, Atari 5200, Atari 7800, ColecoVision, Vectrex, FBA 2012, MAME 2003 Plus, MAME 2000, Neo Geo (FBA 2012) and Neo Geo Pocket Color.
+PS Vita, PSP, Playstation, Playstation Mobile, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Dreamcast, Sega CD, Sega 32X, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear, PC Engine, PC Engine CD, TurboGrafx-16, TurboGrafx-CD, Commodore Amiga, Commodore 64, WonderSwan, WonderSwan Color, MSX, MSX2, ZX Spectrum, Atari Lynx, Atari 600, Atari 5200, Atari 7800, ColecoVision, Vectrex, FBA 2012, MAME 2003 Plus, MAME 2000, Neo Geo (FBA 2012), Neo Geo Pocket Color, ScummVM and PICO-8.
 
 
 # Installation & setup
@@ -42,7 +44,11 @@ PS Vita, PSP, Playstation, Nintendo 64, Super Nintendo, Nintendo Entertainment S
 * [DaedalusX64](https://github.com/Rinnegatamante/DaedalusX64-vitaGL/releases) is required for N64 games. 
 * [RetroArch](https://www.retroarch.com/index.php?page=platforms) is required for other retro systems.  
 * [Flycast](https://www.psx-place.com/threads/release-flycast-vita-v-1-0-3-sega-dreamcast-emulator-for-psvita-pstv.38180/) is required to play Dreamcast games. Also see the [compatability list](https://newflycast.rinnegatamante.it/)  as not all games are playable yet.
-* **Important:** If Adrenaline games aren't launching after you have finished the setup, please install [AdrBubbleBooterInstaller](https://vitadb.rinnegatamante.it/#/info/307). Or try installing [Adrenaline Bubble Manager](https://github.com/ONElua/AdrenalineBubbleManager/releases).
+* [FAKE-08](https://github.com/jtothebell/fake-08/releases) is required for PICO-8 games.
+* [ScummVM](https://www.scummvm.org/downloads/) is required for ScummVM games.
+
+
+**Important:** If Adrenaline games aren't launching after you have finished the setup, please install [Adrenaline Bubble Manager](https://github.com/ONElua/AdrenalineBubbleManager/releases). Or try installing [AdrBubbleBooterInstaller](https://vitadb.rinnegatamante.it/#/info/307).
 
 
 ## 3. Check your PS1 and PSP are in the right Adrenaline folders
@@ -75,6 +81,7 @@ For best results it's recommended that your games are named using the **no-intro
  * Dreamcast:  '.gdi' and '.cdi' games are supported.
  * PS1 using RetroArch - They will use the 'PCSX ReARMed' core, more information on supported extensions here: [https://docs.libretro.com/library/pcsx_rearmed/](https://docs.libretro.com/library/pcsx_rearmed/)
 
+
 ## 5. Rescan to find your games
 
 * Press 'Start' and go to 'Scan Settings', select your Adrenaline location, and if you are using custom game folders, select those too, then select 'Rescan'.
@@ -92,7 +99,7 @@ For best results it's recommended that your games are named using the **no-intro
 
 Navigate your library using the **DPad** or the **Left Stick** or with the **Touch Screen**.
 
-**DPad Up**: Skip to favorites category
+**DPad Up**: Jump to the recently played / favourites category, or filter categories to only show collections.
 
 **R/L triggers**: Skip 5 items
 
@@ -111,7 +118,6 @@ Navigate your library using the **DPad** or the **Left Stick** or with the **Tou
 **DPad Down + Square**: Go back one category
 
 **DPad Down + L/R triggers**: Skip games alphabetically
-
 
 # Troubleshooting
 
@@ -150,10 +156,9 @@ You can change your background within the app by going to the settings menu > th
 
 
 
-# Possible incompatabilities
+## Known issues
 
-**Repatch**
-Potential issue with repatch / repatch_4 plugins in the tai config. May cause the Vita to shutdown. Try disabling these if you encounter an issue.
+* PSP background extraction: May need to be run more than once, after around 150 games it skips the rest. 
 
 
 # Credits
@@ -162,8 +167,8 @@ Potential issue with repatch / repatch_4 plugins in the tai config. May cause th
 * Programming/UI: Sakis RG.
 * Developed with [Lua Player Plus](http://rinnegatamante.github.io/lpp-vita/) by Rinnegatamante.
 * Scanning PSP and PSX games made possible by using [ONELua](http://onelua.x10.mx/) by Team ONElua.
+* Extracting Vita backgrounds: Based on code for [copyicons](https://github.com/cy33hc/copyicons) by cy33hc.
 * Aurora wallaper: Photo by [Maria Vojtovicova](https://unsplash.com/@maripopeo).
-
 
 ### Special thanks
 
@@ -176,12 +181,14 @@ Potential issue with repatch / repatch_4 plugins in the tai config. May cause th
 
 #### Translations
 
-* French - @chronoss
+* French - @chronoss and @Axce
 * German - @stuermerandreas
+* Hungarian - @dagadtwok
 * Spanish - @kodyna91
 * Italian - @TheheroGAC
 * Russian - @\_novff
 * Portuguese - @nighto
+* Portuguese (Brazil) - @dariofflima
 * Japanese - @kuragehimekurara1 and @iGlitch
 * Chinese - @acd13141
 * Polish - @SK00RUPA

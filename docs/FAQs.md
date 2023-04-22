@@ -6,8 +6,8 @@
 
 * [Adrenaline - My games aren't working?](#adrenaline---my-games-arent-working)
 * [RetroArch fails to load games with "&" symbol in the game name](#retroarch-fails-to-load-games-with--symbol-in-the-game-name)
-<!--* [PICO-8 games won't launch](#pico-8-games-wont-launch)-->
-<!--* [ScummVM some games won't launch](#scummvm-some-games-wont-launch)-->
+* [PICO-8 games won't launch](#pico-8-games-wont-launch)
+* [ScummVM some games won't launch](#scummvm-some-games-wont-launch)
 * [Atari 5200 loads the memopad in RetroArch?](#atari-5200-loads-the-memopad-in-retroarch)
 * [Missing artwork - How should I name my games so covers are found?](#missing-artwork---how-should-i-name-my-games-so-covers-are-found)
 * [Why is there no option to download homebrew covers?](#why-is-there-no-option-to-download-homebrew-covers)
@@ -31,12 +31,12 @@ Or try installing [AdrBubbleBooterInstaller](https://vitadb.rinnegatamante.it/#/
 ### RetroArch fails to load games with "&" symbol in the game name
 This appears to be an issue with RetroArch version 1.11 onward, try installing an [older version](https://buildbot.libretro.com/stable/) of RetroArch until the issue is resolved.
 <br><br>
-<!--### PICO-8 games won't launch
+### PICO-8 games won't launch
 Support for launchers was added after July 5, 2021. Please try a more current version of [FAKE-08](https://github.com/jtothebell/fake-08/releases). 
-<br><br>-->
-<!--### ScummVM some games won't launch
+<br><br>
+### ScummVM some games won't launch
 I found some games don't launch on ScummVM version 2.7.0, please try a previous version such as 2.6.1. Direct download link: [https://downloads.scummvm.org/frs/scummvm/2.6.1/scummvm-2.6.1-vita.vpk](https://downloads.scummvm.org/frs/scummvm/2.6.1/scummvm-2.6.1-vita.vpk).
-<br><br>-->
+<br><br>
 ### Atari 5200 loads the memopad in RetroArch?
 When the game is running in RetroArch bring up the RetroArch quick menu.
 
