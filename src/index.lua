@@ -8636,7 +8636,6 @@ local function DrawCover(x, y, text, icon, sel, apptype)
         -- left side view
         zoom = -0.6
         extray = -0.3
-        camX = 1
 
         if smoothScrolling == 1 then
             -- Smooth scrolling is on
@@ -8669,6 +8668,8 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 extrax = -10
             end
         end
+
+        extrax = extrax - 1 --move to the left
 
     elseif showView == 4 then
         -- scroll around
