@@ -2029,7 +2029,7 @@ else
     else
         if System.doesFileExist(wallpaper_table_settings[selectedwall].wallpaper_path) then
             imgCustomBack = Graphics.loadImage(wallpaper_table_settings[selectedwall].wallpaper_path)
-            Graphics.setImageFilters(imgCustomBack, FILTER_LINEAR, FILTER_LINEAR)
+            --Graphics.setImageFilters(imgCustomBack, FILTER_LINEAR, FILTER_LINEAR)
             Render.useTexture(modBackground, imgCustomBack)
         end
     end
