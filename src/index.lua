@@ -6,7 +6,7 @@ local oneLoopTimer = Timer.new()
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "6.0"
+local appversion = "6.0.1"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -2029,7 +2029,7 @@ else
     else
         if System.doesFileExist(wallpaper_table_settings[selectedwall].wallpaper_path) then
             imgCustomBack = Graphics.loadImage(wallpaper_table_settings[selectedwall].wallpaper_path)
-            --Graphics.setImageFilters(imgCustomBack, FILTER_LINEAR, FILTER_LINEAR)
+            -- Graphics.setImageFilters(imgCustomBack, FILTER_LINEAR, FILTER_LINEAR)
             Render.useTexture(modBackground, imgCustomBack)
         end
     end
@@ -7639,7 +7639,7 @@ function temp_import_homebrew_cleanup()
     if showHomebrews == 0 then
         import_cached_DB_homebrews_in_collections("db_homebrews.lua", homebrews_table)
     else
-        import_cached_DB_tables("db_homebrews.lua", homebrews_table)
+        -- import_cached_DB_tables("db_homebrews.lua", homebrews_table)
     end
 end
 
