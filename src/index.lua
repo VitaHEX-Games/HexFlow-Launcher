@@ -2029,7 +2029,7 @@ else
     else
         if System.doesFileExist(wallpaper_table_settings[selectedwall].wallpaper_path) then
             imgCustomBack = Graphics.loadImage(wallpaper_table_settings[selectedwall].wallpaper_path)
-            Graphics.setImageFilters(imgCustomBack, FILTER_LINEAR, FILTER_LINEAR)
+            --Graphics.setImageFilters(imgCustomBack, FILTER_LINEAR, FILTER_LINEAR)
             Render.useTexture(modBackground, imgCustomBack)
         end
     end
@@ -8636,7 +8636,6 @@ local function DrawCover(x, y, text, icon, sel, apptype)
         -- left side view
         zoom = -0.6
         extray = -0.3
-        camX = 1
 
         if smoothScrolling == 1 then
             -- Smooth scrolling is on
@@ -8669,6 +8668,8 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 extrax = -10
             end
         end
+
+        extrax = extrax - 1 --move to the left
 
     elseif showView == 4 then
         -- scroll around
