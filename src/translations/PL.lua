@@ -309,7 +309,7 @@ return {
 ["Menu"] = "Menu",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Standardowo",
-["Show_missing_covers_colon"] = "Pokazuj brakujące okładek:",
+["Show_missing_covers_colon"] = "Pokazuj brakujące okładki:",
 
 -- Game options
 ["Options"] = "Opcje",
