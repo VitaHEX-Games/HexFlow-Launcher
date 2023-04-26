@@ -5158,6 +5158,8 @@ function listDirectory(dir)
                     or string.match(file.name, "%.ccd")
                     or string.match(file.name, "%.pbp")
                     or string.match(file.name, "%.PBP")
+                    or string.match(file.name, "%.chd")
+                    or string.match(file.name, "%.CHD")
                     -- and string.match(file.name, "%.") -- has an extension 
                     and not string.match(file.name, "eboot.pbp") 
                     and not string.match(file.name, "EBOOT.PBP")
@@ -5374,6 +5376,8 @@ function listDirectory(dir)
                             or string.match(file_subfolder.name, "%.ccd")
                             or string.match(file_subfolder.name, "%.pbp")
                             or string.match(file_subfolder.name, "%.PBP")
+                            or string.match(file_subfolder.name, "%.chd")
+                            or string.match(file_subfolder.name, "%.CHD")
                             -- and string.match(file_subfolder.name, "%.") -- has an extension
                             and not string.match(file_subfolder.name, "eboot.pbp") 
                             and not string.match(file_subfolder.name, "EBOOT.PBP")
@@ -6678,8 +6682,8 @@ function listDirectory(dir)
     
     -- SCAN ROMS
     -- Scan_Type        (def,  def_table_name)
-    scan_Rom_PS1_Eboot  (SystemsToScan[4].romFolder, "psx.lua") -- Retroarch rom folder
-    Scan_Rom_PS1            (4, psx_table)
+    scan_Rom_PS1_Eboot  (SystemsToScan[4].romFolder, "psx.lua") 
+    Scan_Rom_PS1            (4, psx_table) -- Retroarch rom folder
     Scan_Rom_Simple         (5, n64_table)
     Scan_Rom_Simple         (6, snes_table)
     Scan_Rom_Simple         (7, nes_table)
