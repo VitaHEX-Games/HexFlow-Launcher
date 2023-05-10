@@ -6,7 +6,7 @@ local oneLoopTimer = Timer.new()
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "6.0.1"
+local appversion = "6.1.0"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -739,7 +739,7 @@ local btnT = Graphics.loadImage("app0:/DATA/t.png")
 local btnS = Graphics.loadImage("app0:/DATA/s.png")
 local imgWifi = Graphics.loadImage("app0:/DATA/wifi.png")
 local imgBattery = Graphics.loadImage("app0:/DATA/bat.png")
-local imgBack = Graphics.loadImage("app0:/DATA/back_01.jpg")
+local imgBack = Graphics.loadImage("app0:/DATA/BG_Default.png")
 local imgFloor = Graphics.loadImage("app0:/DATA/floor.png")
 local footer_gradient = Graphics.loadImage("app0:/DATA/footer_gradient.png")
 
@@ -768,63 +768,70 @@ setting_icon_filter = Graphics.loadImage("app0:/DATA/setting-icon-filter.png")
 
 -- Start of ROM Browser setup
 
-local grey_dir = Color.new(200, 200, 200)
-local white_opaque = Color.new(255, 255, 255, 100)
-local transparent = Color.new(255, 255, 255, 0)
+    local grey_dir = Color.new(200, 200, 200)
+    local white_opaque = Color.new(255, 255, 255, 100)
+    local transparent = Color.new(255, 255, 255, 0)
 
-local scripts = System.listDirectory("ux0:/")
+    local scripts = System.listDirectory("ux0:/")
 
-function scripts_sort_by_folder_first()
-    sorted_directories = {}
-    for k, v in pairs(scripts) do
-        if v.directory == true then
-            table.insert(sorted_directories, v)
+    function scripts_sort_by_folder_first()
+        sorted_directories = {}
+        for k, v in pairs(scripts) do
+            if v.directory == true then
+                table.insert(sorted_directories, v)
+            end
+        end
+        table.sort(sorted_directories, function(a, b) return (a.name:lower() < b.name:lower()) end)
+
+        sorted_files = {}
+        for k, v in pairs(scripts) do
+            if v.directory == false then
+                table.insert(sorted_files, v)
+            end
+        end
+        table.sort(sorted_files, function(a, b) return (a.name:lower() < b.name:lower()) end)
+
+        scripts = {}
+        for k, v in pairs(sorted_directories) do
+            table.insert(scripts, v)
+        end
+        for k, v in pairs(sorted_files) do
+            table.insert(scripts, v)
         end
     end
-    table.sort(sorted_directories, function(a, b) return (a.name:lower() < b.name:lower()) end)
 
-    sorted_files = {}
+    scripts_sort_by_folder_first()
     for k, v in pairs(scripts) do
-        if v.directory == false then
-            table.insert(sorted_files, v)
-        end
+        v.previous_directory = false
+        v.save = false
     end
-    table.sort(sorted_files, function(a, b) return (a.name:lower() < b.name:lower()) end)
 
-    scripts = {}
-    for k, v in pairs(sorted_directories) do
-        table.insert(scripts, v)
-    end
-    for k, v in pairs(sorted_files) do
-        table.insert(scripts, v)
-    end
-end
+    selection = {}
+    selection.name = "Use this directory"
+    selection.directory = true
+    selection.previous_directory = false
+    selection.save = true
 
-scripts_sort_by_folder_first()
-for k, v in pairs(scripts) do
-    v.previous_directory = false
-    v.save = false
-end
+    level_up = {}
+    level_up.name = "..."
+    level_up.directory = true
+    level_up.previous_directory = true
+    level_up.save = false
 
-selection = {}
-selection.name = "Use this directory"
-selection.directory = true
-selection.previous_directory = false
-selection.save = true
+    local cur_dir_fm = "ux0:/"
 
-level_up = {}
-level_up.name = "..."
-level_up.directory = true
-level_up.previous_directory = true
-level_up.save = false
-
-local cur_dir_fm = "ux0:/"
-
--- Init a index
-local i = 1
+    -- Init a index
+    local i = 1
 
 -- End of ROM Browser setup
 
+
+-- Start of Game list view setup
+
+    -- Init a index
+    -- local gl = 1
+
+-- End of Game list view setup
 
 
 Graphics.setImageFilters(imgFloor, FILTER_LINEAR, FILTER_LINEAR)
@@ -889,10 +896,12 @@ end
 local db_Cache_Folder = "ux0:/data/RetroFlow/CACHE/"
 System.createDirectory(db_Cache_Folder)
 
--- Move old background images to new location
-if System.doesFileExist("ux0:/data/RetroFlow/Background.jpg") then System.rename("ux0:/data/RetroFlow/Background.jpg", "ux0:/data/RetroFlow/WALLPAPER/Background.jpg") end
-if System.doesFileExist("ux0:/data/RetroFlow/Background.png") then System.rename("ux0:/data/RetroFlow/Background.png", "ux0:/data/RetroFlow/WALLPAPER/Background.png") end
+-- Copy default backgrounds to wallpaper folder
 if not System.doesFileExist(background_dir .. "Aurora.png") then System.copyFile("app0:/DATA/Aurora.png", background_dir .. "Aurora.png") end
+if not System.doesFileExist(background_dir .. "Blur 1.jpg") then System.copyFile("app0:/DATA/Blur 1.jpg", background_dir .. "Blur 1.jpg") end
+if not System.doesFileExist(background_dir .. "Blur 2.jpg") then System.copyFile("app0:/DATA/Blur 2.jpg", background_dir .. "Blur 2.jpg") end
+if not System.doesFileExist(background_dir .. "Blur 3.jpg") then System.copyFile("app0:/DATA/Blur 3.jpg", background_dir .. "Blur 3.jpg") end
+if not System.doesFileExist(background_dir .. "Grey.png") then System.copyFile("app0:/DATA/Grey.png", background_dir .. "Grey.png") end
 
 
 -- Retroarch Cores
@@ -1163,6 +1172,7 @@ local themeCol = Color.new(2, 72, 158)
 local loading_bar_bg = Color.new(255,255,255,50)
 local transparent = Color.new(255, 255, 255, 0)
 local timercolor = transparent
+local darkgrey = Color.new(61, 68, 80)
 
 local targetX = 0
 local xstart = 0
@@ -1177,6 +1187,20 @@ local getCovers = 0
 local getRomDir = 1
 local getSnaps = 0
 local tmpappcat = 0
+
+-- Flat view layout (Spaced)
+fv_left_margin = 70
+fv_cover_height = 220
+fv_cover_y = (496 - fv_cover_height) / 2 + 10 -- Vertically centre
+fv_gutter = 20
+fv_border = 5
+
+-- Flat view layout (Tight)
+-- fv_left_margin = 75
+-- fv_cover_height = 200
+-- fv_cover_y = (496 - fv_cover_height) / 2 + 10 -- Vertically centre
+-- fv_gutter = 8
+-- fv_border = 4
 
 -- Smooth scrolling
 quick_scrolling_factor = 0
@@ -1203,7 +1227,7 @@ local startCategory = 1
 local setReflections = 1
 local setSounds = 1
 local setMusic = 1
-local themeColor = 0 -- 0 blue, 1 red, 2 yellow, 3 green, 4 grey, 5 black, 6 purple, 7 darkpurple, 8 orange
+local themeColor = 9 -- 0 blue, 1 red, 2 yellow, 3 green, 4 grey, 5 black, 6 purple, 7 darkpurple, 8 orange, 9 dark grey
 local menuItems = 3
 local setBackground = 1
 local setLanguage = 0
@@ -1573,6 +1597,8 @@ function SetThemeColor()
         themeCol = darkpurple
     elseif themeColor == 8 then
         themeCol = orange
+    elseif themeColor == 9 then
+        themeCol = darkgrey
     else
         themeCol = blue -- default blue
     end
@@ -1977,9 +2003,9 @@ wallpaper_table_default =
 {
     [1] = 
     {
-        ["filename"] = "back_01.jpg",
+        ["filename"] = "BG_Default.png",
         ["wallpaper_string"] = lang_lines.Off,
-        ["wallpaper_path"] = "app0:/DATA/back_01.jpg",
+        ["wallpaper_path"] = "app0:/DATA/BG_Default.png",
     },
 }
 
@@ -5488,91 +5514,91 @@ function listDirectory(dir)
 
                                     else
 
-                                        -- check if game is in the favorites list
-                                        if System.doesFileExist(cur_dir .. "/favorites.dat") then
-                                            if string.find(strFav, file_subfolder.name,1,true) ~= nil then
-                                                file_subfolder.favourite = true
-                                            else
-                                                file_subfolder.favourite = false
-                                            end
-                                        end
+                                        -- -- check if game is in the favorites list
+                                        -- if System.doesFileExist(cur_dir .. "/favorites.dat") then
+                                        --     if string.find(strFav, file_subfolder.name,1,true) ~= nil then
+                                        --         file_subfolder.favourite = true
+                                        --     else
+                                        --         file_subfolder.favourite = false
+                                        --     end
+                                        -- end
 
-                                        file_subfolder.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name .. "/" .. file_subfolder.name)
+                                        -- file_subfolder.game_path = ((SystemsToScan[(def)].romFolder) .. "/" .. file.name .. "/" .. file_subfolder.name)
 
-                                        romname_withExtension = file_subfolder.name
-                                        cleanRomNames()
-                                        info = romname_noRegion_noExtension
-                                        app_title = romname_noRegion_noExtension
+                                        -- romname_withExtension = file_subfolder.name
+                                        -- cleanRomNames()
+                                        -- info = romname_noRegion_noExtension
+                                        -- app_title = romname_noRegion_noExtension
                                         
 
-                                        file_subfolder.filename = file_subfolder.name
-                                        file_subfolder.name = romname_noExtension
-                                        file_subfolder.title = romname_noRegion_noExtension
-                                        file_subfolder.name_online = romname_url_encoded
-                                        file_subfolder.version = romname_region
-                                        file_subfolder.apptitle = romname_noRegion_noExtension
-                                        file_subfolder.date_played = 0
-                                        file_subfolder.snap_path_local = (SystemsToScan[(def)].localSnapPath)
-                                        file_subfolder.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
-                                        file_subfolder.app_type = 3
-                                        file_subfolder.app_type_default = 3
+                                        -- file_subfolder.filename = file_subfolder.name
+                                        -- file_subfolder.name = romname_noExtension
+                                        -- file_subfolder.title = romname_noRegion_noExtension
+                                        -- file_subfolder.name_online = romname_url_encoded
+                                        -- file_subfolder.version = romname_region
+                                        -- file_subfolder.apptitle = romname_noRegion_noExtension
+                                        -- file_subfolder.date_played = 0
+                                        -- file_subfolder.snap_path_local = (SystemsToScan[(def)].localSnapPath)
+                                        -- file_subfolder.snap_path_online = (SystemsToScan[(def)].onlineSnapPathSystem)
+                                        -- file_subfolder.app_type = 3
+                                        -- file_subfolder.app_type_default = 3
 
-                                        -- Check for renamed game names
-                                        if #renamed_games_table ~= nil then
-                                            local key = find_game_table_pos_key(renamed_games_table, file_subfolder.name)
-                                            if key ~= nil then
-                                              -- Yes - Find in files table
-                                              app_title = renamed_games_table[key].title
-                                              file_subfolder.title = renamed_games_table[key].title
-                                              file_subfolder.apptitle = renamed_games_table[key].title
-                                            else
-                                              -- No
-                                            end
-                                        else
-                                        end
+                                        -- -- Check for renamed game names
+                                        -- if #renamed_games_table ~= nil then
+                                        --     local key = find_game_table_pos_key(renamed_games_table, file_subfolder.name)
+                                        --     if key ~= nil then
+                                        --       -- Yes - Find in files table
+                                        --       app_title = renamed_games_table[key].title
+                                        --       file_subfolder.title = renamed_games_table[key].title
+                                        --       file_subfolder.apptitle = renamed_games_table[key].title
+                                        --     else
+                                        --       -- No
+                                        --     end
+                                        -- else
+                                        -- end
 
-                                        -- Check for hidden game names
-                                        file_subfolder.hidden = check_for_hidden_tag_on_scan(file_subfolder.name, file_subfolder.app_type)
+                                        -- -- Check for hidden game names
+                                        -- file_subfolder.hidden = check_for_hidden_tag_on_scan(file_subfolder.name, file_subfolder.app_type)
 
-                                        custom_path = (SystemsToScan[(def)].localCoverPath) .. app_title .. ".png"
-                                        custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png"
+                                        -- custom_path = (SystemsToScan[(def)].localCoverPath) .. app_title .. ".png"
+                                        -- custom_path_id = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png"
 
-                                        if custom_path and System.doesFileExist(custom_path) then
-                                            img_path = (SystemsToScan[(def)].localCoverPath) .. app_title .. ".png" --custom cover by app name
-                                            file_subfolder.cover = true
-                                        elseif custom_path_id and System.doesFileExist(custom_path_id) then
-                                            img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
-                                            file_subfolder.cover = true
-                                        else
-                                            if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
-                                                img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
-                                                file_subfolder.cover = false
-                                            else
-                                                img_path = "app0:/DATA/noimg.png" --blank grey
-                                                file_subfolder.cover = false
-                                            end
-                                        end
+                                        -- if custom_path and System.doesFileExist(custom_path) then
+                                        --     img_path = (SystemsToScan[(def)].localCoverPath) .. app_title .. ".png" --custom cover by app name
+                                        --     file_subfolder.cover = true
+                                        -- elseif custom_path_id and System.doesFileExist(custom_path_id) then
+                                        --     img_path = (SystemsToScan[(def)].localCoverPath) .. file_subfolder.name .. ".png" --custom cover by app id
+                                        --     file_subfolder.cover = true
+                                        -- else
+                                        --     if System.doesFileExist("app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)) then
+                                        --         img_path = "app0:/DATA/" .. (SystemsToScan[(def)].Missing_Cover)  --app icon
+                                        --         file_subfolder.cover = false
+                                        --     else
+                                        --         img_path = "app0:/DATA/noimg.png" --blank grey
+                                        --         file_subfolder.cover = false
+                                        --     end
+                                        -- end
 
-                                        update_loading_screen_progress()
+                                        -- update_loading_screen_progress()
 
-                                        table.insert(folders_table, file_subfolder)
-                                        table.insert((def_table_name), file_subfolder)
+                                        -- table.insert(folders_table, file_subfolder)
+                                        -- table.insert((def_table_name), file_subfolder)
 
-                                        table.insert(files_table, count_of_systems, file_subfolder.app_type) 
-                                        table.insert(files_table, count_of_systems, file_subfolder.name)
-                                        table.insert(files_table, count_of_systems, file_subfolder.title)
-                                        table.insert(files_table, count_of_systems, file_subfolder.name_online)
-                                        table.insert(files_table, count_of_systems, file_subfolder.version)
+                                        -- table.insert(files_table, count_of_systems, file_subfolder.app_type) 
+                                        -- table.insert(files_table, count_of_systems, file_subfolder.name)
+                                        -- table.insert(files_table, count_of_systems, file_subfolder.title)
+                                        -- table.insert(files_table, count_of_systems, file_subfolder.name_online)
+                                        -- table.insert(files_table, count_of_systems, file_subfolder.version)
 
-                                        file_subfolder.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
-                                        file_subfolder.cover_path_local = (SystemsToScan[(def)].localCoverPath)
+                                        -- file_subfolder.cover_path_online = (SystemsToScan[(def)].onlineCoverPathSystem)
+                                        -- file_subfolder.cover_path_local = (SystemsToScan[(def)].localCoverPath)
 
-                                        --add blank icon to all
-                                        file_subfolder.icon = imgCoverTmp
-                                        file_subfolder.icon_path = img_path
+                                        -- --add blank icon to all
+                                        -- file_subfolder.icon = imgCoverTmp
+                                        -- file_subfolder.icon_path = img_path
                                         
-                                        table.insert(files_table, count_of_systems, file_subfolder.icon) 
-                                        table.insert(files_table, count_of_systems, file_subfolder.apptitle)
+                                        -- table.insert(files_table, count_of_systems, file_subfolder.icon) 
+                                        -- table.insert(files_table, count_of_systems, file_subfolder.apptitle)
                                     end
                                 else
 
@@ -8554,7 +8580,85 @@ function DownloadSnaps()
     gettingBackgrounds = false
 end
 
-local function DrawCover(x, y, text, icon, sel, apptype)
+
+function get_cover_scale(icon)
+
+    cover_height = Graphics.getImageHeight(icon)
+    cover_width = Graphics.getImageWidth(icon)
+
+    fv_cover_scale = fv_cover_height / cover_height
+    fv_cover_scale_px = cover_width * fv_cover_scale
+
+    -- return fv_cover_scale_px
+end
+
+
+local function DrawCover_Flat(x, y, text, color, icon, cur_p)
+
+    if cur_p == p then
+        Graphics.fillRect(x - fv_border, x + fv_cover_scale_px + fv_border, fv_cover_y - fv_border, fv_cover_y + fv_cover_height + fv_border, white)
+    end
+
+    Graphics.setImageFilters(icon, FILTER_LINEAR, FILTER_LINEAR)
+
+    Graphics.drawScaleImage(x, fv_cover_y, icon, fv_cover_scale, fv_cover_height / cover_height)
+
+    -- Add dark overlay to cover left of current
+    if cur_p == master_index -1 then
+        Graphics.fillRect(x, x + fv_cover_scale_px, fv_cover_y, fv_cover_y + fv_cover_height, Color.new(0,0,0,75))
+    else
+    end    
+    
+end
+
+local function DrawCover_List(icon)
+
+    local portrait = false
+    local landscape = false
+    local square = false
+
+    lv_cover_target_size = 300
+    lv_cover_x_pos = 614
+    lv_cover_y_pos = 140
+
+    cover_height = Graphics.getImageHeight(icon)
+    cover_width = Graphics.getImageWidth(icon)
+
+    if cover_height == cover_width then
+        square = true
+            lv_cover_scale = lv_cover_target_size / cover_height
+            lv_cover_scale_px = lv_cover_scale * cover_width
+    elseif cover_height > cover_width then
+        portrait = true
+            lv_cover_scale = lv_cover_target_size / cover_height
+            lv_cover_scale_px = lv_cover_scale * cover_width
+    else
+        landscape = true
+            lv_cover_scale = lv_cover_target_size / cover_width
+            lv_cover_scale_px = lv_cover_scale * cover_height
+    end
+
+
+    Graphics.setImageFilters(icon, FILTER_LINEAR, FILTER_LINEAR)
+
+    if square == true then
+        Graphics.drawScaleImage(lv_cover_x_pos, lv_cover_y_pos, icon, lv_cover_scale, lv_cover_scale)
+    end
+
+    if portrait == true then
+        Graphics.drawScaleImage(lv_cover_x_pos + ((lv_cover_target_size - lv_cover_scale_px) / 2), lv_cover_y_pos, icon, lv_cover_scale, lv_cover_scale)
+    end
+
+    if landscape == true then
+        Graphics.drawScaleImage(lv_cover_x_pos, lv_cover_y_pos + ((lv_cover_target_size - lv_cover_scale_px) / 2), icon, lv_cover_scale, lv_cover_scale)
+    end
+
+    
+
+end
+
+
+local function DrawCover(x, y, text, icon, sel, apptype, cur_p)
     rot = 0
     extraz = 0
     extrax = 0
@@ -8896,6 +9000,8 @@ local function DrawCover(x, y, text, icon, sel, apptype)
                 Render.drawModel(modCoverHbrNoref, x + extrax, y + extray, -5 - extraz - zoom, 0, math.deg(rot), 0)
             end
         end
+
+
     else
         -- hideBoxes = hideBoxes - 0.1
     end
@@ -9256,103 +9362,293 @@ function DownloadSingleSnap()
     gettingBackgrounds = false
 end
 
+function drawCategory_icons (def)
+
+    -- Show fav icon if game if a favourite
+    favourite_flag = (def)[p].favourite
+    if (def)[p].favourite == true then
+        Graphics.drawImage(685 + pstv_offset, 36, imgFavorite_small_on)
+    else
+    end
+
+    -- Show hidden icon if game is hidden
+    hide_game_flag = (def)[p].hidden
+    if (def)[p].hidden == true then
+        favourite_flag = (def)[p].favourite
+        if (def)[p].favourite == true then
+            Graphics.drawImage(685 + pstv_offset - 42, 36, imgHidden_small_on)
+        else
+            Graphics.drawImage(685 + pstv_offset, 36, imgHidden_small_on)
+        end
+    else
+    end
+
+end
+
+
 function drawCategory (def)
-    for l, file in pairs((def)) do
 
-        if (def)[p+7] and (def)[p+7].ricon then -- Credit BlackSheepBoy69
-            render_distance = 16
-        else
-            render_distance = 8
-        end
+    -- Draw flat covers
+    if showView == 5 then
 
-        if (l >= master_index) then
-            base_x = base_x + space
-        end
+        base_y = fv_left_margin
+        base_y_left = 0
 
-        if l > p-render_distance and l < p+render_distance+2 then -- Credit BlackSheepBoy69 - Experimental fix.
-            if FileLoad[file] == nil then --add a new check here
-                FileLoad[file] = true
-                Threads.addTask(file, {
-                    Type = "ImageLoad",
-                    Path = file.icon_path,
-                    Table = file,
-                    Index = "ricon"
-                })
-            end
-            if file.ricon ~= nil then
-                --draw visible covers only
-                DrawCover(
-                    (targetX + l * space) - (#(def) * space + space), 
-                    -0.6, 
-                    file.name, 
-                    file.ricon, 
-                    l==p, -- Credit BlackSheepBoy69 - Uses l==p (which returns as true or false) to say where selector goes.
-                    file.app_type
-                )
+        for l, file in pairs((def)) do
 
-                -- Show fav icon if game if a favourite
-                favourite_flag = (def)[p].favourite
-                if (def)[p].favourite == true then
-                    Graphics.drawImage(685 + pstv_offset, 36, imgFavorite_small_on)
-                else
-                end
-
-                -- Show hidden icon if game is hidden
-                hide_game_flag = (def)[p].hidden
-                if (def)[p].hidden == true then
-                    favourite_flag = (def)[p].favourite
-                    if (def)[p].favourite == true then
-                        Graphics.drawImage(685 + pstv_offset - 42, 36, imgHidden_small_on)
-                    else
-                        Graphics.drawImage(685 + pstv_offset, 36, imgHidden_small_on)
-                    end
-                else
-                end
-
+            if (def)[p+7] and (def)[p+7].ricon then -- Credit BlackSheepBoy69
+                render_distance = 16
             else
-                --draw visible covers only
-                DrawCover(
-                    (targetX + l * space) - (#(def) * space + space),
-                    -0.6,
-                    file.name,
-                    file.icon,
-                    l==p, -- Credit BlackSheepBoy69 - Uses l==p (which returns as true or false) to say where selector goes.
-                    file.app_type
-                )
+                render_distance = 8
+            end
 
-                -- Show fav icon if game if a favourite
-                favourite_flag = (def)[p].favourite
-                if (def)[p].favourite == true then
-                    Graphics.drawImage(685 + pstv_offset, 36, imgFavorite_small_on)
-                else
-                end
+            if (l >= master_index) then
+                base_x = base_x + space
+            end
 
-                -- Show hidden icon if game is hidden
-                hide_game_flag = (def)[p].hidden
-                if (def)[p].hidden == true then
-                    favourite_flag = (def)[p].favourite
-                    if (def)[p].favourite == true then
-                        Graphics.drawImage(685 + pstv_offset - 42, 36, imgHidden_small_on)
-                    else
-                        Graphics.drawImage(685 + pstv_offset, 36, imgHidden_small_on)
+            -- Draw covers, next and one to left of current
+            if (l >= master_index) or (l == master_index -1) then
+
+                if l > p-render_distance and l < p+render_distance+2 or l == master_index -1 then -- Credit BlackSheepBoy69 - Experimental fix.
+                    if FileLoad[file] == nil then --add a new check here
+                        FileLoad[file] = true
+                        Threads.addTask(file, {
+                            Type = "ImageLoad",
+                            Path = file.icon_path,
+                            Table = file,
+                            Index = "ricon"
+                        })
                     end
+
+                    -- Draw covers to right
+                    if (l >= master_index) then
+                        if file.ricon ~= nil then
+                            get_cover_scale(file.ricon)
+                            DrawCover_Flat(base_y,152,file.name,color, file.ricon, l)
+                            if fv_cover_scale_px ~= nil then
+                                base_y = base_y + fv_cover_scale_px + fv_gutter
+                            end
+
+                            drawCategory_icons((def))
+                        else
+                            get_cover_scale(file.icon)
+                            DrawCover_Flat(base_y,152,file.name,color, file.icon, l)
+                            if fv_cover_scale_px ~= nil then
+                                base_y = base_y + fv_cover_scale_px + fv_gutter
+                            end
+                            
+                            drawCategory_icons((def))
+                        end
+
+
+                    -- Draw one previous cover to left
+                    elseif (l == master_index -1) then
+                        if file.ricon ~= nil then
+                            get_cover_scale(file.ricon)
+                            if fv_cover_scale_px ~= nil then
+                                base_y_left = 0 - fv_cover_scale_px + fv_left_margin - fv_gutter
+                                DrawCover_Flat(base_y_left,152,file.name,color, file.ricon, l)
+                            end
+                             
+                        else
+                            get_cover_scale(file.icon)
+                            if fv_cover_scale_px ~= nil then
+                                base_y_left = 0 - fv_cover_scale_px + fv_left_margin - fv_gutter
+                                DrawCover_Flat(base_y_left,152,file.name,color, file.icon, l)
+                            end
+                            
+                        end
+                    else
+                    end
+
                 else
+                    if FileLoad[file] == true then
+                        FileLoad[file] = nil
+                        Threads.remove(file)
+                    end
+                    if file.ricon then
+                        Graphics.freeImage(file.ricon)
+                        file.ricon = nil
+                    end
                 end
+
+            end
+
+        end
+
+
+    -- Game list view
+    elseif showView == 6 then
+
+        local y = 106
+
+        x_listview = 32
+
+        Graphics.fillRect(0, 960, 93, 96, white)
+        Graphics.fillRect(0, 568, 96, 146, themeCol)-- selection
+    
         
+        -- Write visible menu entries
+        for l, file in pairs((def)) do
+
+            if (def)[p+7] and (def)[p+7].ricon then -- Credit BlackSheepBoy69
+                render_distance = 16
+            else
+                render_distance = 8
+            end
+
+            if (l >= master_index) then
+                base_x = base_x + space
+            end
+
+            -- Draw cover
+            -- if (l >= p) or (l == p -1) then
+
+                if l > p-render_distance and l < p+render_distance+2 or l == p -1 then -- Credit BlackSheepBoy69 - Experimental fix.
+                    if FileLoad[file] == nil then --add a new check here
+                        FileLoad[file] = true
+                        Threads.addTask(file, {
+                            Type = "ImageLoad",
+                            Path = file.icon_path,
+                            Table = file,
+                            Index = "ricon"
+                        })
+                    end
+
+                    -- Draw cover
+                    if (l == p) then
+                        if file.ricon ~= nil then
+                            DrawCover_List(file.ricon)
+                            drawCategory_icons((def))
+                        else
+                            DrawCover_List(file.icon)
+                            drawCategory_icons((def))
+                        end
+                    end
+
+                else
+                    if FileLoad[file] == true then
+                        FileLoad[file] = nil
+                        Threads.remove(file)
+                    end
+                    if file.ricon then
+                        Graphics.freeImage(file.ricon)
+                        file.ricon = nil
+                    end
+                end
+
+            -- end
+
+
+            -- Draw list of games
+            x = x_listview
+            if l >= p and y < 496 then
+                if p == l then
+                    color = white
+                    x = x_listview
+                else
+                    color = white
+                end
+                
+                -- Trim long game names and add "..."
+                    apptitle_len = string.len (file.apptitle)
+                    apptitle_len_max = 45
+                    if apptitle_len >= apptitle_len_max then
+                        apptitle_trimmed = string.sub(file.apptitle, 1, apptitle_len_max) .. "..."
+                    else
+                        apptitle_trimmed = file.apptitle
+                    end
+
+                Font.print(fnt22, x_listview, y, apptitle_trimmed, color)
+                y = y + 49
+            end
+
+            -- Check for out of bounds in menu
+            if p > #(def) then
+                p = 1
+            elseif i < 1 then
+                p = #(def)
+            end
+
+        end
+
+    -- Draw covers in 3D obj models
+    else
+
+        for l, file in pairs((def)) do
+
+            if (def)[p+7] and (def)[p+7].ricon then -- Credit BlackSheepBoy69
+                render_distance = 16
+            else
+                render_distance = 8
+            end
+
+            if (l >= master_index) then
+                base_x = base_x + space
+            end
+
+            if l > p-render_distance and l < p+render_distance+2 then -- Credit BlackSheepBoy69 - Experimental fix.
+                if FileLoad[file] == nil then --add a new check here
+                    FileLoad[file] = true
+                    Threads.addTask(file, {
+                        Type = "ImageLoad",
+                        Path = file.icon_path,
+                        Table = file,
+                        Index = "ricon"
+                    })
+                end
+                if file.ricon ~= nil then
+                    --draw visible covers only
+                    DrawCover(
+                        (targetX + l * space) - (#(def) * space + space), 
+                        -0.6, 
+                        file.name, 
+                        file.ricon, 
+                        l==p, -- Credit BlackSheepBoy69 - Uses l==p (which returns as true or false) to say where selector goes.
+                        file.app_type,
+                        l
+                    )
+
+                    drawCategory_icons((def))
+
+                else
+                    --draw visible covers only
+                    DrawCover(
+                        (targetX + l * space) - (#(def) * space + space),
+                        -0.6,
+                        file.name,
+                        file.icon,
+                        l==p, -- Credit BlackSheepBoy69 - Uses l==p (which returns as true or false) to say where selector goes.
+                        file.app_type,
+                        l
+                    )         
+
+                    drawCategory_icons((def))
+            
+                end
+            else
+                if FileLoad[file] == true then
+                    FileLoad[file] = nil
+                    Threads.remove(file)
+                end
+                if file.ricon then
+                    Graphics.freeImage(file.ricon)
+                    file.ricon = nil
+                end
+            end
+        end
+
+    end
+        
+    if showView ~= 2 then
+        if showView >= 5 then
+            -- Font.print(fnt20, fv_left_margin - fv_border, fv_cover_height + fv_cover_y + 60, p .. lang_lines.of .. #(def), white_opaque)
+            if showView == 6 then
+                Font.print(fnt20, 32, 508, p .. lang_lines.of .. #(def), white)-- Draw total items
             end
         else
-            if FileLoad[file] == true then
-                FileLoad[file] = nil
-                Threads.remove(file)
-            end
-            if file.ricon then
-                Graphics.freeImage(file.ricon)
-                file.ricon = nil
-            end
+            PrintCentered(fnt20, 480, 462, p .. lang_lines.of .. #(def), white, 20)-- Draw total items
         end
-        end
-    if showView ~= 2 then
-    PrintCentered(fnt20, 480, 462, p .. lang_lines.of .. #(def), white, 20)-- Draw total items
     end
 end
 
@@ -9844,6 +10140,14 @@ while true do
     if showMenu == 0 then
         -- MAIN VIEW
 
+        -- game lst view
+        if showView == 6 then
+            -- Graphics.fillRect(0, 960, 0, 496, Color.new(0,0,0, (255/100) * 40)) -- Overall fill
+            Graphics.fillRect(0, 960, 0, 92, Color.new(0,0,0, math.abs(255/100) * 30)) -- Top bar
+            Graphics.fillRect(0, 568, 96, 496, Color.new(0,0,0, math.abs(255/100) * 30)) -- List area - 30% black opacity
+            Graphics.fillRect(568, 960, 96, 496, Color.new(0,0,0, math.abs(255/100) * 45)) -- Game image
+        end
+
         -- Header
         h, m, s = System.getTime()
         Font.print(fnt20, 726 + pstv_offset, 34, string.format("%02d:%02d", h, m), white)-- Draw time
@@ -9916,8 +10220,13 @@ while true do
 
     
         if showView ~= 2 then
-            Graphics.fillRect(0, 960, 424, 496, black)-- black footer bottom
-            PrintCentered(fnt25, 480, 430, app_title, white, 25)-- Draw title
+            if showView == 5 then
+                Font.print(fnt22, fv_left_margin - fv_border, fv_cover_height + fv_cover_y + 30, app_title, white)
+            elseif showView == 6 then
+            else
+                Graphics.fillRect(0, 960, 424, 496, black)-- black footer bottom
+                PrintCentered(fnt25, 480, 430, app_title, white, 25)-- Draw title
+            end
         else
             Graphics.fillRect(0, 960, 496, 544, themeCol)-- footer bottom
             
@@ -9978,7 +10287,7 @@ while true do
                 quick_scrolling_factor = quick_scrolling_factor - ((quick_scrolling_factor - quick_scrolling_factor_goal) * 0.17)
             end
         end
-        
+
         -- Instantly move to selection
         if startCovers == false then
             targetX = base_x
@@ -9994,7 +10303,9 @@ while true do
                 floorY = -0.3
             end
             --Draw half transparent floor for reflection effect
-            Render.drawModel(modFloor, 0, -0.6+floorY, 0, 0, 0, 0)
+            if showView <= 4 then
+                Render.drawModel(modFloor, 0, -0.6+floorY, 0, 0, 0, 0)
+            end
         end
         
         prevX = 0
@@ -11187,6 +11498,8 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Dark_Purple, white)--Dark Purple
         elseif themeColor == 8 then
             Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Orange, white)--Orange
+        elseif themeColor == 9 then
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Grey, white)--Grey
         else
             Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Blue, white)--Blue
         end
@@ -11232,7 +11545,7 @@ while true do
                     showMenu = 2
                     menuY = 2 -- Theme
                 elseif menuY == 1 then -- #1 Theme Color
-                    if themeColor < 7 then
+                    if themeColor < 9 then
                         themeColor = themeColor + 1
                     else
                         themeColor = 0
@@ -14749,39 +15062,63 @@ while true do
     end
     --Controls Start
     if showMenu == 0 then
-        --Navigation Left Analog
-        if mx < 64 then
-            if delayButton < 0.5 then
-                delayButton = 1
-                if setSounds == 1 then
-                    Sound.play(click, NO_LOOP)
+        
+        -- Game list view
+        if showView == 6 then
+            if my < 64 then
+                if delayButton < 0.5 then
+                    delayButton = 1
+                    if setSounds == 1 then
+                        Sound.play(click, NO_LOOP)
+                    end
+                    p = p - 1
                 end
-                p = p - 1
-                
-                if p > 0 then
-                    GetNameAndAppTypeSelected()
-                end
-                
-                if (p <= master_index) then
-                    master_index = p
-                end
-            end
-        elseif mx > 180 then
-            if delayButton < 0.5 then
-                delayButton = 1
-                if setSounds == 1 then
-                    Sound.play(click, NO_LOOP)
-                end
-                p = p + 1
-                
-                if p <= curTotal then
-                    GetNameAndAppTypeSelected()
-                end
-                
-                if (p >= master_index) then
-                    master_index = p
+            elseif my > 180 then
+                if delayButton < 0.5 then
+                    delayButton = 1
+                    if setSounds == 1 then
+                        Sound.play(click, NO_LOOP)
+                    end
+                    p = p + 1
                 end
             end
+        else
+
+            --Navigation Left Analog
+            if mx < 64 then
+                if delayButton < 0.5 then
+                    delayButton = 1
+                    if setSounds == 1 then
+                        Sound.play(click, NO_LOOP)
+                    end
+                    p = p - 1
+                    
+                    if p > 0 then
+                        GetNameAndAppTypeSelected()
+                    end
+                    
+                    if (p <= master_index) then
+                        master_index = p
+                    end
+                end
+            elseif mx > 180 then
+                if delayButton < 0.5 then
+                    delayButton = 1
+                    if setSounds == 1 then
+                        Sound.play(click, NO_LOOP)
+                    end
+                    p = p + 1
+                    
+                    if p <= curTotal then
+                        GetNameAndAppTypeSelected()
+                    end
+                    
+                    if (p >= master_index) then
+                        master_index = p
+                    end
+                end
+            end
+            
         end
         
         -- Navigation Buttons
@@ -15340,11 +15677,22 @@ while true do
             state = Keyboard.getState()
             if state ~= RUNNING then
                 -- don't change view if cancel search
-                if showView < 4 then
+                if showView < 6 then
                     showView = showView + 1
                 else
                     showView = 0
+
+                    master_index = p
+
+                    -- Instantly move to selection
+                    if startCovers == false then
+                        targetX = base_x
+                        startCovers = true
+                        GetInfoSelected()
+                    end
+
                 end
+
                 menuY = 0
                 startCovers = false
 
@@ -15354,38 +15702,53 @@ while true do
             end
 
         elseif (Controls.check(pad, SCE_CTRL_LEFT)) and not (Controls.check(oldpad, SCE_CTRL_LEFT)) then
-            state = Keyboard.getState()
-            if state ~= RUNNING then
-                if setSounds == 1 then
-                    Sound.play(click, NO_LOOP)
-                end
-                p = p - 1
-                
-                if p > 0 then
-                    GetNameAndAppTypeSelected()
-                end
-                
-                if (p <= master_index) then
-                    master_index = p
+            if showView ~= 6 then
+                state = Keyboard.getState()
+                if state ~= RUNNING then
+                    if setSounds == 1 then
+                        Sound.play(click, NO_LOOP)
+                    end
+                    p = p - 1
+                    
+                    if p > 0 then
+                        GetNameAndAppTypeSelected()
+                    end
+                    
+                    if (p <= master_index) then
+                        master_index = p
+                    end
+                else
                 end
             else
             end
         elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
-            state = Keyboard.getState()
-            if state ~= RUNNING then
-                if setSounds == 1 then
-                    Sound.play(click, NO_LOOP)
-                end
-                p = p + 1
-                
-                if p <= curTotal then
-                    GetNameAndAppTypeSelected()
-                end
-                
-                if (p >= master_index) then
-                    master_index = p
+            if showView ~= 6 then
+                state = Keyboard.getState()
+                if state ~= RUNNING then
+                    if setSounds == 1 then
+                        Sound.play(click, NO_LOOP)
+                    end
+                    p = p + 1
+                    
+                    if p <= curTotal then
+                        GetNameAndAppTypeSelected()
+                    end
+                    
+                    if (p >= master_index) then
+                        master_index = p
+                    end
+                else
                 end
             else
+                state = Keyboard.getState()
+                if state ~= RUNNING then
+
+                    -- Filter games
+                    showMenu = 25
+                    menuY = 0
+
+                else
+                end
             end
         elseif (Controls.check(pad, SCE_CTRL_LTRIGGER)) and not (Controls.check(oldpad, SCE_CTRL_LTRIGGER)) then
             state = Keyboard.getState()
@@ -15438,7 +15801,11 @@ while true do
                         end
 
                     else
-                        p = p - 5
+                        if showView == 6 then
+                            p = p - 8 -- page up in list view
+                        else
+                            p = p - 5
+                        end
                     end
 
                 if p > 0 then
@@ -15488,7 +15855,11 @@ while true do
                         end
 
                     else
-                    p = p + 5
+                        if showView == 6 then
+                            p = p + 8 -- page down in list view
+                        else
+                            p = p + 5
+                        end
                     end
                 
                 if p <= curTotal then
@@ -15500,51 +15871,104 @@ while true do
                 end
             else
             end
+
+        -- game list
         elseif (Controls.check(pad, SCE_CTRL_UP)) and not (Controls.check(oldpad, SCE_CTRL_UP)) then
-            state = Keyboard.getState()
-            if state ~= RUNNING then
+            if showView ~= 6 then
+                state = Keyboard.getState()
+                if state ~= RUNNING then
 
-                -- Filter games
+                    -- Filter games
+                    showMenu = 25
+                    menuY = 0
 
-                showMenu = 25
-                menuY = 0
+                else
+                end
+            else
+                if setSounds == 1 then
+                    Sound.play(click, NO_LOOP)
+                end
+                p = p - 1
+            end
 
+        -- game list
+        elseif (Controls.check(pad, SCE_CTRL_DOWN)) and not (Controls.check(oldpad, SCE_CTRL_DOWN)) then
+            if showView == 6 then
+                if setSounds == 1 then
+                    Sound.play(click, NO_LOOP)
+                end
+                p = p + 1
             else
             end
         end
         
         -- Touch Input
-        if x1 ~= nil then
-            if touchdown == 0 and delayTouch < 0.5 then
-                touchdown = 1
-                xstart = x1
-                delayTouch = 5
+        if showView ~= 6 then
+            if x1 ~= nil then
+                if touchdown == 0 and delayTouch < 0.5 then
+                    touchdown = 1
+                    xstart = x1
+                    delayTouch = 5
+                end
+                if touchdown > 0 and delayTouch > 0.5 then
+                    if x1 > xstart + 60 then
+                        touchdown = 2
+                        xstart = x1
+                        p = p - 1
+                        if p > 0 then
+                            GetNameAndAppTypeSelected()
+                        end
+                        if (p <= master_index) then
+                            master_index = p
+                        end
+                    elseif x1 < xstart - 60 then
+                        touchdown = 2
+                        xstart = x1
+                        p = p + 1
+                        if p <= curTotal then
+                            GetNameAndAppTypeSelected()
+                        end
+                        if (p >= master_index) then
+                            master_index = p
+                        end
+                    
+                    end
+                end
             end
-            if touchdown > 0 and delayTouch > 0.5 then
-                if x1 > xstart + 60 then
-                    touchdown = 2
-                    xstart = x1
-                    p = p - 1
-                    if p > 0 then
-                        GetNameAndAppTypeSelected()
+        else
+            if y1 ~= nil then
+                if touchdown == 0 and delayTouch < 0.5 then
+                    touchdown = 1
+                    ystart = y1
+                    delayTouch = 5
+                end
+                if touchdown > 0 and delayTouch > 0.5 then
+                    if y1 > ystart + 60 then
+                        touchdown = 2
+                        ystart = y1
+                        p = p - 1
+                        if p > 0 then
+                            GetNameAndAppTypeSelected()
+                        end
+                        if (p <= master_index) then
+                            master_index = p
+                        end
+                    elseif y1 < ystart - 60 then
+                        touchdown = 2
+                        ystart = y1
+                        p = p + 1
+                        if p <= curTotal then
+                            GetNameAndAppTypeSelected()
+                        end
+                        if (p >= master_index) then
+                            master_index = p
+                        end
+                    
                     end
-                    if (p <= master_index) then
-                        master_index = p
-                    end
-                elseif x1 < xstart - 60 then
-                    touchdown = 2
-                    xstart = x1
-                    p = p + 1
-                    if p <= curTotal then
-                        GetNameAndAppTypeSelected()
-                    end
-                    if (p >= master_index) then
-                        master_index = p
-                    end
-                
                 end
             end
         end
+        
     elseif showMenu > 0 then
         if (Controls.check(pad, SCE_CTRL_CIRCLE_MAP) and not Controls.check(oldpad, SCE_CTRL_CIRCLE_MAP)) then
             status = System.getMessageState()
@@ -15695,6 +16119,24 @@ while true do
     elseif i < 1 then
         i = #scripts
     end
+
+    if showView == 6 then
+        -- Check for out of bounds in - Game list view
+        curTotal = #xCatLookup(showCat)
+
+        if p > curTotal then
+            p = 1
+            master_index = p
+            startCovers = false
+            GetInfoSelected()
+        elseif p < 1 then
+            p = curTotal
+            master_index = p
+            startCovers = false
+            GetInfoSelected()
+        end
+    end
+
     
     -- Refreshing screen and oldpad
     Screen.waitVblankStart()
