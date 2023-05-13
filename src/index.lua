@@ -1222,6 +1222,8 @@ local total_homebrews = 0
 local total_favorites = 0
 local curTotal = 1
 
+local temp_import = false
+
 -- Settings
 local startCategory = 1
 local setReflections = 1
@@ -6875,7 +6877,10 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
                         -- Show missing covers if off
                         if showMissingCovers == 0 then
                             if v.cover==true then
-                                table.insert(folders_table, v)
+
+                                if temp_import ~= true then
+                                    table.insert(folders_table, v)
+                                end
                                 table.insert((def_table_name), v)
 
                                 --add blank icon to all
@@ -6883,12 +6888,16 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
                                 v.icon_path = v.icon_path
 
                                 v.apptitle = v.apptitle
-                                table.insert(files_table, count_of_systems, v.apptitle)
+                                if temp_import ~= true then
+                                    table.insert(files_table, count_of_systems, v.apptitle)
+                                end
                             else
                             end
 
                         else
-                            table.insert(folders_table, v)
+                            if temp_import ~= true then
+                                table.insert(folders_table, v)
+                            end
                             table.insert((def_table_name), v)
 
                             --add blank icon to all
@@ -6896,7 +6905,9 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
                             v.icon_path = v.icon_path
 
                             v.apptitle = v.apptitle
-                            table.insert(files_table, count_of_systems, v.apptitle)
+                            if temp_import ~= true then
+                                table.insert(files_table, count_of_systems, v.apptitle)
+                            end
                         end
                     else
                     end
@@ -6904,7 +6915,9 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
                     -- Show missing covers if off
                     if showMissingCovers == 0 then
                         if v.cover==true then
-                            table.insert(folders_table, v)
+                            if temp_import ~= true then
+                                table.insert(folders_table, v)
+                            end
                             table.insert((def_table_name), v)
 
                             --add blank icon to all
@@ -6912,12 +6925,16 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
                             v.icon_path = v.icon_path
 
                             v.apptitle = v.apptitle
-                            table.insert(files_table, count_of_systems, v.apptitle)
+                            if temp_import ~= true then
+                                table.insert(files_table, count_of_systems, v.apptitle)
+                            end
                         else
                         end
 
                     else
-                        table.insert(folders_table, v)
+                        if temp_import ~= true then
+                            table.insert(folders_table, v)
+                        end
                         table.insert((def_table_name), v)
 
                         --add blank icon to all
@@ -6925,7 +6942,9 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
                         v.icon_path = v.icon_path
 
                         v.apptitle = v.apptitle
-                        table.insert(files_table, count_of_systems, v.apptitle)
+                        if temp_import ~= true then
+                            table.insert(files_table, count_of_systems, v.apptitle)
+                        end
                     end
                 end
 
@@ -7620,6 +7639,9 @@ end
 
 
 function temp_import_homebrew()
+
+    temp_import = true
+
     -- If homebrew is hidden then Temporarily import for caching
     if showHomebrews == 0 and #homebrews_table == 0 then
         local temp_homebrews_table = {}
@@ -7642,9 +7664,13 @@ function temp_import_homebrew()
 
     else
     end
+
+    temp_import = false
 end
 
 function temp_import_homebrew_cleanup()
+
+
     -- Remove hidden games from homebrew
     if showHidden == 0 and #homebrews_table ~= nil then
         for l, file in pairs(homebrews_table) do
@@ -8619,7 +8645,7 @@ local function DrawCover_List(icon)
 
     lv_cover_target_size = 300
     lv_cover_x_pos = 614
-    lv_cover_y_pos = 140
+    lv_cover_y_pos = 146
 
     cover_height = Graphics.getImageHeight(icon)
     cover_width = Graphics.getImageWidth(icon)
@@ -11348,6 +11374,7 @@ while true do
                             master_index = p
                             GetInfoSelected()
                         else
+                            check_for_out_of_bounds()
                             GetInfoSelected()
                         end
                     else
@@ -15045,6 +15072,7 @@ while true do
             end
         end
     end
+
     if showMenu == 11 then
         --Scroll through ROM Browser
         if my < 64 then
@@ -15058,8 +15086,40 @@ while true do
                 i = i + 1
             end
         end
+    end
+
+    if showMenu > 1 
+        and showMenu ~= 11 -- ROM Browser
+        and showMenu ~= 13 -- Guide 1
+        and showMenu ~= 14 -- Guide 2
+        and showMenu ~= 15 -- Guide 3
+        and showMenu ~= 16 -- Guide 4
+        and showMenu ~= 17 -- Guide 5
+        and showMenu ~= 18 -- Guide 6
+        then
+        --Scroll through menus
+        if my < 64 then
+            if delayButton < 0.5 then
+                delayButton = 1
+                if menuY > 0 then
+                    menuY = menuY - 1
+                    else
+                    menuY=menuItems
+                end
+            end
+        elseif my > 180 then
+            if delayButton < 0.5 then
+                delayButton = 1
+                if menuY < menuItems then
+                    menuY = menuY + 1
+                    else
+                    menuY=0
+                end
+            end
+        end
 
     end
+
     --Controls Start
     if showMenu == 0 then
         

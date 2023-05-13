@@ -26,6 +26,7 @@ With RetroFlow you can also integerate retro games without the need to create bu
 * File browser added for setting up game directories
 * Smooth scrolling of game covers
 * Fully translated
+* Two more views added, a 2D list view and also a 2D side scrolling view
 
 **Supported systems:**
 PS Vita, PSP, Playstation, Playstation Mobile, Nintendo 64, Super Nintendo, Nintendo Entertainment System, Game Boy Advance, Game Boy Color, Game Boy, Sega Dreamcast, Sega CD, Sega 32X, Sega Mega Drive / Genesis, Sega Master System, Sega Game Gear, PC Engine, PC Engine CD, TurboGrafx-16, TurboGrafx-CD, Commodore Amiga, Commodore 64, WonderSwan, WonderSwan Color, MSX, MSX2, ZX Spectrum, Atari Lynx, Atari 600, Atari 5200, Atari 7800, ColecoVision, Vectrex, FBA 2012, MAME 2003 Plus, MAME 2000, Neo Geo (FBA 2012), Neo Geo Pocket Color, ScummVM and PICO-8.
@@ -169,6 +170,7 @@ You can change your background within the app by going to the settings menu > th
 * Scanning PSP and PSX games made possible by using [ONELua](http://onelua.x10.mx/) by Team ONElua.
 * Extracting Vita backgrounds: Based on code for [copyicons](https://github.com/cy33hc/copyicons) by cy33hc.
 * Aurora wallaper: Photo by [Maria Vojtovicova](https://unsplash.com/@maripopeo).
+* Blur 2 and Blur 3 wallaper by [Tech & ALL](https://techandall.com/10-blur-wallpapers-backgrounds-for-your-website/).
 
 ### Special thanks
 
