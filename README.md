@@ -94,7 +94,7 @@ For best results it's recommended that your games are named using the **no-intro
 
 * To download cover images, press start, go to 'Artwork' then choose which covers or backgrounds you would like to download.
 * From version 5 onwards you can also extract background images for PSP games from PSP iso files.
-
+* If you add your own covers, rescan for them to be updated.
 
 # Controls
 
