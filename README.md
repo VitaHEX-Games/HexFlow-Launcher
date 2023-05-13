@@ -100,7 +100,7 @@ For best results it's recommended that your games are named using the **no-intro
 
 Navigate your library using the **DPad** or the **Left Stick** or with the **Touch Screen**.
 
-**DPad Up**: Jump to the recently played / favourites category, or filter categories to only show collections.
+**DPad Up**: Jump to the recently played / favourites category, or filter categories to only show collections. (DPad Right when viewing games in list view)
 
 **R/L triggers**: Skip 5 items
 
