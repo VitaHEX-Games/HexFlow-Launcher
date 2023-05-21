@@ -1298,12 +1298,12 @@ function SaveSettings()
         "\nAdrenaline_PS_Button=" .. setAdrPSButton .. " " .. 
         "\nShow_hidden_games=" .. showHidden .. " " .. 
         "\nShow_collections=" .. showCollections .. " " .. 
-        "\nStartup_Collection=" .. startCategory_collection .. " " .. 
         "\nFilter_Games=" .. filterGames .. " " .. 
         "\nShow_missing_covers=" .. showMissingCovers .. " " .. 
         "\nSmooth_scrolling=" .. smoothScrolling .. " " .. 
-        "\n2D_views=" .. set2DViews .. " " .. 
-        "\nChange_views=" .. setChangeViews
+        "\nTwo_D_views=" .. set2DViews .. " " .. 
+        "\nChange_views=" .. setChangeViews .. " " .. 
+        "\nStartup_Collection=" .. startCategory_collection -- MUST ALWAYS BE LAST -- the config is split into a table using number values which this setting does not have. Need to add proper ini file reading
 
         file_config:write(settings)
         file_config:close()
@@ -1346,12 +1346,12 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
     local getAdrPSButton = settingValue[17]; if getAdrPSButton ~= nil then setAdrPSButton = getAdrPSButton end
     local getHidden = settingValue[18]; if getHidden ~= nil then showHidden = getHidden end
     local getCollections = settingValue[19]; if getCollections ~= nil then showCollections = getCollections end
-    -- settingValue[20] is startup collection
-    local getFilterGames = settingValue[21]; if getFilterGames ~= nil then filterGames = getFilterGames end
-    local getshowMissingCovers = settingValue[22]; if getshowMissingCovers ~= nil then showMissingCovers = getshowMissingCovers end
-    local getsmoothScrolling = settingValue[23]; if getsmoothScrolling ~= nil then smoothScrolling = getsmoothScrolling end
-    local get2DViews = settingValue[24]; if get2DViews ~= nil then set2DViews = get2DViews end
-    local getChangeViews = settingValue[25]; if getChangeViews ~= nil then setChangeViews = getChangeViews end
+    local getFilterGames = settingValue[20]; if getFilterGames ~= nil then filterGames = getFilterGames end
+    local getshowMissingCovers = settingValue[21]; if getshowMissingCovers ~= nil then showMissingCovers = getshowMissingCovers end
+    local getsmoothScrolling = settingValue[22]; if getsmoothScrolling ~= nil then smoothScrolling = getsmoothScrolling end
+    local get2DViews = settingValue[23]; if get2DViews ~= nil then set2DViews = get2DViews end
+    local getChangeViews = settingValue[24]; if getChangeViews ~= nil then setChangeViews = getChangeViews end
+    -- settingValue[25] is startup collection 
 
     selectedwall = setBackground
 
