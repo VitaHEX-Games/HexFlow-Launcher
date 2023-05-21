@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "Żółty",
 ["Green"] = "Zielony",
 ["Grey"] = "Szary",
+["Dark_Grey"] = "Ciemny Szary",
 ["Black"] = "Czarny",
 ["Purple"] = "Fioletowy",
 ["Dark_Purple"] = "Ciemny fiolet",
 ["Orange"] = "Pomarańczowy",
 ["Blue"] = "Niebieski",
+["Views_2D_colon"] = "Widoki 2D: ",
+["Change_Views_colon"] = "Zmień widoki: ",
 
 -- Audio
 ["Audio"] = "Dźwięk",
@@ -309,7 +312,7 @@ return {
 ["Menu"] = "Menu",
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Standardowo",
-["Show_missing_covers_colon"] = "Pokazuj brakujące okładki:",
+["Show_missing_covers_colon"] = "Pokazuj brakujące okładek:",
 
 -- Game options
 ["Options"] = "Opcje",

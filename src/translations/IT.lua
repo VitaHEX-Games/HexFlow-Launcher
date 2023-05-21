@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "Giallo",
 ["Green"] = "Verde",
 ["Grey"] = "Grigio",
+["Dark_Grey"] = "Grigio scuro",
 ["Black"] = "Nero",
 ["Purple"] = "Viola",
 ["Dark_Purple"] = "Viola scuro",
 ["Orange"] = "Arancione",
 ["Blue"] = "Blu",
+["Views_2D_colon"] = "Visualizzazioni 2D: ",
+["Change_Views_colon"] = "Modifica visualizzazioni: ",
 
 -- Audio
 ["Audio"] = "Audio",

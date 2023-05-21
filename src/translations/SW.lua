@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "Gul",
 ["Green"] = "Grön",
 ["Grey"] = "Grå",
+["Dark_Grey"] = "Mörkgrå",
 ["Black"] = "Svart",
 ["Purple"] = "Lila",
 ["Dark_Purple"] = "Mörklila",
 ["Orange"] = "Orange",
 ["Blue"] = "Blå",
+["Views_2D_colon"] = "2D-vyer: ",
+["Change_Views_colon"] = "Ändra vyer: ",
 
 -- Audio
 ["Audio"] = "Audio",

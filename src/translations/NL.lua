@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "Geel",
 ["Green"] = "Groen",
 ["Grey"] = "Grijs",
+["Dark_Grey"] = "Donkergrijs",
 ["Black"] = "Zwart",
 ["Purple"] = "Purper",
 ["Dark_Purple"] = "Donkerpaars",
 ["Orange"] = "Oranje",
 ["Blue"] = "Blauw",
+["Views_2D_colon"] = "2D-weergaven: ",
+["Change_Views_colon"] = "Weergaven wijzigen: ",
 
 -- Audio
 ["Audio"] = "Audio",

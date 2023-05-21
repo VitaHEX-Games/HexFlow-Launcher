@@ -6,7 +6,7 @@ local oneLoopTimer = Timer.new()
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "6.1.0"
+local appversion = "6.1.1"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -743,11 +743,11 @@ local imgBack = Graphics.loadImage("app0:/DATA/BG_Default.png")
 local imgFloor = Graphics.loadImage("app0:/DATA/floor.png")
 local footer_gradient = Graphics.loadImage("app0:/DATA/footer_gradient.png")
 
-local imgFavorite_small_on = Graphics.loadImage("app0:/DATA/fav-small-on.png")
-local imgFavorite_large_on = Graphics.loadImage("app0:/DATA/fav-large-on.png")
-local imgFavorite_large_off = Graphics.loadImage("app0:/DATA/fav-large-off.png")
-local imgHidden_small_on = Graphics.loadImage("app0:/DATA/hidden-small-on.png")
-local imgHidden_large_on = Graphics.loadImage("app0:/DATA/hidden-large-on.png")
+imgFavorite_small_on = Graphics.loadImage("app0:/DATA/fav-small-on.png")
+imgFavorite_large_on = Graphics.loadImage("app0:/DATA/fav-large-on.png")
+imgFavorite_large_off = Graphics.loadImage("app0:/DATA/fav-large-off.png")
+imgHidden_small_on = Graphics.loadImage("app0:/DATA/hidden-small-on.png")
+imgHidden_large_on = Graphics.loadImage("app0:/DATA/hidden-large-on.png")
 
 file_browser_folder_open = Graphics.loadImage("app0:/DATA/file-browser-folder-open.png")
 file_browser_folder_closed = Graphics.loadImage("app0:/DATA/file-browser-folder-closed.png")
@@ -1252,6 +1252,9 @@ local filterGames = 0 -- All
 local showMissingCovers = 1 -- On
 local smoothScrolling = 1 -- On
 
+local set2DViews = 1 -- On
+local setChangeViews = 1 -- On
+
 function SaveSettings()
 
     local file_config = assert(io.open(cur_dir .. "/config.dat", "w"), "Failed to open config.dat")
@@ -1298,7 +1301,9 @@ function SaveSettings()
         "\nStartup_Collection=" .. startCategory_collection .. " " .. 
         "\nFilter_Games=" .. filterGames .. " " .. 
         "\nShow_missing_covers=" .. showMissingCovers .. " " .. 
-        "\nSmooth_scrolling=" .. smoothScrolling
+        "\nSmooth_scrolling=" .. smoothScrolling .. " " .. 
+        "\n2D_views=" .. set2DViews .. " " .. 
+        "\nChange_views=" .. setChangeViews
 
         file_config:write(settings)
         file_config:close()
@@ -1341,9 +1346,12 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
     local getAdrPSButton = settingValue[17]; if getAdrPSButton ~= nil then setAdrPSButton = getAdrPSButton end
     local getHidden = settingValue[18]; if getHidden ~= nil then showHidden = getHidden end
     local getCollections = settingValue[19]; if getCollections ~= nil then showCollections = getCollections end
-    local getFilterGames = settingValue[20]; if getFilterGames ~= nil then filterGames = getFilterGames end
-    local getshowMissingCovers = settingValue[21]; if getshowMissingCovers ~= nil then showMissingCovers = getshowMissingCovers end
-    local getsmoothScrolling = settingValue[22]; if getsmoothScrolling ~= nil then smoothScrolling = getsmoothScrolling end
+    -- settingValue[20] is startup collection
+    local getFilterGames = settingValue[21]; if getFilterGames ~= nil then filterGames = getFilterGames end
+    local getshowMissingCovers = settingValue[22]; if getshowMissingCovers ~= nil then showMissingCovers = getshowMissingCovers end
+    local getsmoothScrolling = settingValue[23]; if getsmoothScrolling ~= nil then smoothScrolling = getsmoothScrolling end
+    local get2DViews = settingValue[24]; if get2DViews ~= nil then set2DViews = get2DViews end
+    local getChangeViews = settingValue[25]; if getChangeViews ~= nil then setChangeViews = getChangeViews end
 
     selectedwall = setBackground
 
@@ -1653,11 +1661,14 @@ local lang_default =
 ["Yellow"] = "Yellow",
 ["Green"] = "Green",
 ["Grey"] = "Grey",
+["Dark_Grey"] = "Dark Grey",
 ["Black"] = "Black",
 ["Purple"] = "Purple",
 ["Dark_Purple"] = "Dark Purple",
 ["Orange"] = "Orange",
 ["Blue"] = "Blue",
+["Views_2D_colon"] = "2D Views: ",
+["Change_Views_colon"] = "Change Views: ",
 
 -- Audio
 ["Audio"] = "Audio",
@@ -10273,8 +10284,10 @@ while true do
         Graphics.drawImage(900-(btnMargin * 4)-label1-label2-label3, 510, btnS)
         Font.print(fnt20, 900+28-(btnMargin * 4)-label1-label2-label3, 508, lang_lines.Category, white)--Category
 
-        Graphics.drawImage(900-(btnMargin * 6)-label1-label2-label3-label4, 510, btnO)
-        Font.print(fnt20, 900+28-(btnMargin * 6)-label1-label2-label3-label4, 508, lang_lines.View, white)--View
+        if setChangeViews == 1 then
+            Graphics.drawImage(900-(btnMargin * 6)-label1-label2-label3-label4, 510, btnO)
+            Font.print(fnt20, 900+28-(btnMargin * 6)-label1-label2-label3-label4, 508, lang_lines.View, white)--View
+        end
         
         -- Draw Covers
         base_x = 0
@@ -11502,7 +11515,7 @@ while true do
         Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
 
-        menuItems = 4
+        menuItems = 6
 
         -- MENU 4 / #0 Back
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
@@ -11516,7 +11529,7 @@ while true do
         elseif themeColor == 3 then
             Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Green, white)--Green
         elseif themeColor == 4 then
-            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Grey, white)--Grey
+            Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Dark_Grey, white)-- Dark Grey
         elseif themeColor == 5 then
             Font.print(fnt22, setting_x_offset, setting_y1, lang_lines.Black, white)--Black
         elseif themeColor == 6 then
@@ -11562,6 +11575,22 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.Off, white)--OFF
         end
 
+        -- MENU 4 / #5 2D Views
+        Font.print(fnt22, setting_x, setting_y5, lang_lines.Views_2D_colon, white) -- 2D Views:
+        if set2DViews == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y5, lang_lines.On, white)--ON
+        else
+            Font.print(fnt22, setting_x_offset, setting_y5, lang_lines.Off, white)--OFF
+        end
+
+        -- MENU 4 / #6 Change views
+        Font.print(fnt22, setting_x, setting_y6, lang_lines.Change_Views_colon, white) -- Change Views:
+        if setChangeViews == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y6, lang_lines.On, white)--ON
+        else
+            Font.print(fnt22, setting_x_offset, setting_y6, lang_lines.Off, white)--OFF
+        end
+
 
         -- MENU 4 - FUNCTIONS
         status = System.getMessageState()
@@ -11588,19 +11617,19 @@ while true do
                     bgtotal = #wallpaper_table_settings
                     if setBackground < bgtotal then
                         setBackground = setBackground + 1
-                        -- Graphics.freeImage(imgBack)
+                        Graphics.freeImage(imgBack)
                         imgBack = Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
                         imgCustomBack = imgBack
                         imgCustomBack = Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
-                        Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
+                        -- Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
                         Render.useTexture(modBackground, imgCustomBack)
                     else
                         setBackground = 1 -- workaround hack as game backgrounds only show if setBackground is not 0
-                        -- Graphics.freeImage(imgBack)
+                        Graphics.freeImage(imgBack)
                         imgBack = Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
                         imgCustomBack = imgBack
                         imgCustomBack = Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
-                        Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
+                        -- Graphics.loadImage(wallpaper_table_settings[setBackground].wallpaper_path)
                         Render.useTexture(modBackground, imgCustomBack)
                     end
                 elseif menuY == 4 then -- #4 Smooth scrolling
@@ -11608,6 +11637,32 @@ while true do
                         smoothScrolling = 0
                     else
                         smoothScrolling = 1
+                    end
+                elseif menuY == 5 then -- #5 2D Views
+                    if set2DViews == 1 then
+                        set2DViews = 0
+
+                        if showView > 4 then
+                            showView = 0
+
+                            master_index = p
+
+                            -- Instantly move to selection
+                            if startCovers == false then
+                                targetX = base_x
+                                startCovers = true
+                                GetInfoSelected()
+                            end
+                        end
+
+                    else
+                        set2DViews = 1
+                    end
+                elseif menuY == 6 then -- #6 Change views
+                    if setChangeViews == 1 then
+                        setChangeViews = 0
+                    else
+                        setChangeViews = 1
                     end
                 end
 
@@ -15731,13 +15786,20 @@ while true do
 
             else
             end
-        elseif (Controls.check(pad, SCE_CTRL_CIRCLE_MAP) and not Controls.check(oldpad, SCE_CTRL_CIRCLE_MAP)) then
+        elseif (Controls.check(pad, SCE_CTRL_CIRCLE_MAP) and not Controls.check(oldpad, SCE_CTRL_CIRCLE_MAP)) and setChangeViews == 1 then
             -- VIEW
             
             state = Keyboard.getState()
             if state ~= RUNNING then
                 -- don't change view if cancel search
-                if showView < 6 then
+
+                if set2DViews == 1 then
+                    showViewMax = 6
+                else
+                    showViewMax = 4
+                end
+
+                if showView < showViewMax then
                     showView = showView + 1
                 else
                     showView = 0
@@ -15752,6 +15814,8 @@ while true do
                     end
 
                 end
+
+                
 
                 menuY = 0
                 startCovers = false

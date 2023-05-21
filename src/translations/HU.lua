@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "Sárga",
 ["Green"] = "Zöld",
 ["Grey"] = "Szürke",
+["Dark_Grey"] = "Sötétszürke",
 ["Black"] = "Fekete",
 ["Purple"] = "Lila",
 ["Dark_Purple"] = "Sötét Lila",
 ["Orange"] = "Narancs",
 ["Blue"] = "Kék",
+["Views_2D_colon"] = "2D nézetek: ",
+["Change_Views_colon"] = "Nézetek módosítása: ",
 
 -- Audio
 ["Audio"] = "Hang",

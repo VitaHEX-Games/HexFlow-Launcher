@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "노란색",
 ["Green"] = "녹색",
 ["Grey"] = "회색",
+["Dark_Grey"] = "어두운 회색",
 ["Black"] = "검정",
 ["Purple"] = "보라",
 ["Dark_Purple"] = "어두운 보라색",
 ["Orange"] = "주황색",
 ["Blue"] = "푸른",
+["Views_2D_colon"] = "2D 보기: ",
+["Change_Views_colon"] = "보기 변경: ",
 
 -- Audio
 ["Audio"] = "오디오",

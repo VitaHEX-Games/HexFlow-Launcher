@@ -5,7 +5,7 @@ return {
 ["Launch"] = "Start",
 ["Details"] = "Detaljer",
 ["Category"] = "Kategori",
-["View"] = "Se",
+["View"] = "Vy",
 ["Close"] = "Luk",
 ["Select"] = "Vælg",
 ["About"] = "Om",
@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "Sarı",
 ["Green"] = "Yeşil",
 ["Grey"] = "Gri",
+["Dark_Grey"] = "Mörkgrå",
 ["Black"] = "Siyah",
 ["Purple"] = "Mor",
 ["Dark_Purple"] = "Koyu mor",
 ["Orange"] = "Turuncu",
 ["Blue"] = "Mavi",
+["Views_2D_colon"] = "2D-vyer: ",
+["Change_Views_colon"] = "Ändra vyer: ",
 
 -- Audio
 ["Audio"] = "Lyd",

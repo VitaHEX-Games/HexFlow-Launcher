@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "ちーる",
 ["Green"] = "おーるー",
 ["Grey"] = "ふぇーいる",
+["Dark_Grey"] = "濃グレー",
 ["Black"] = "くるー",
 ["Purple"] = "むらさち",
 ["Dark_Purple"] = "濃紫いる",
 ["Orange"] = "くにぶ",
 ["Blue"] = "おーるー",
+["Views_2D_colon"] = "2D 表示：",
+["Change_Views_colon"] = "表示ーの変更：",
 
 -- Audio
 ["Audio"] = "オーディオ",

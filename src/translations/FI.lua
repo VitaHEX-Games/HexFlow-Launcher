@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "Keltainen",
 ["Green"] = "Vihreä",
 ["Grey"] = "Harmaa",
+["Dark_Grey"] = "Tummanharmaa",
 ["Black"] = "Musta",
 ["Purple"] = "Violetti",
 ["Dark_Purple"] = "Tumma violetti",
 ["Orange"] = "Oranssi",
 ["Blue"] = "Sininen",
+["Views_2D_colon"] = "2D-näkymät: ",
+["Change_Views_colon"] = "Muuta näkymiä: ",
 
 -- Audio
 ["Audio"] = "Audio",

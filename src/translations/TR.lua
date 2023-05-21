@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "Sarı",
 ["Green"] = "Yeşil",
 ["Grey"] = "Gri",
+["Dark_Grey"] = "Koyu gri",
 ["Black"] = "Siyah",
 ["Purple"] = "Mor",
 ["Dark_Purple"] = "Koyu mor",
 ["Orange"] = "Turuncu",
 ["Blue"] = "Mavi",
+["Views_2D_colon"] = "2B Görünümler: ",
+["Change_Views_colon"] = "Görünümleri Değiştir: ",
 
 -- Audio
 ["Audio"] = "Ses",

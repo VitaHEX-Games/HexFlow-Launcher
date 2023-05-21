@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "黄色",
 ["Green"] = "绿色",
 ["Grey"] = "灰色",
+["Dark_Grey"] = "深灰色",
 ["Black"] = "黑色",
 ["Purple"] = "紫色",
 ["Dark_Purple"] = "深紫色",
 ["Orange"] = "橘色",
 ["Blue"] = "蓝色",
+["Views_2D_colon"] = "二维视图 : ",
+["Change_Views_colon"] = "更改视图 : ",
 
 -- Audio
 ["Audio"] = "音频",

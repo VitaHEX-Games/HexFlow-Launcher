@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "Yellow",
 ["Green"] = "Green",
 ["Grey"] = "Grey",
+["Dark_Grey"] = "Dark Grey",
 ["Black"] = "Black",
 ["Purple"] = "Purple",
 ["Dark_Purple"] = "Dark Purple",
 ["Orange"] = "Orange",
 ["Blue"] = "Blue",
+["Views_2D_colon"] = "2D Views: ",
+["Change_Views_colon"] = "Change Views: ",
 
 -- Audio
 ["Audio"] = "Audio",

@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "黄色",
 ["Green"] = "緑色",
 ["Grey"] = "灰色",
+["Dark_Grey"] = "濃灰色",
 ["Black"] = "黒色",
 ["Purple"] = "紫色",
 ["Dark_Purple"] = "濃紫色",
 ["Orange"] = "オレンジ",
 ["Blue"] = "青色",
+["Views_2D_colon"] = "2D 表示：",
+["Change_Views_colon"] = "表示ーの変更：",
 
 -- Audio
 ["Audio"] = "オーディオ",

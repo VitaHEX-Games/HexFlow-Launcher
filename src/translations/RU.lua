@@ -27,11 +27,14 @@ return {
 ["Yellow"] = "Желтый",
 ["Green"] = "Зеленый",
 ["Grey"] = "Серый",
+["Dark_Grey"] = "темно серый",
 ["Black"] = "Черный",
 ["Purple"] = "Фиолетовый",
 ["Dark_Purple"] = "Темно фиолетовый",
 ["Orange"] = "Оранжевый",
 ["Blue"] = "Синий",
+["Views_2D_colon"] = "2D-виды: ",
+["Change_Views_colon"] = "Изменить виды: ",
 
 -- Audio
 ["Audio"] = "Аудио",
