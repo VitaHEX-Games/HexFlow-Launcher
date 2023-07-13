@@ -12427,6 +12427,7 @@ while true do
                     else
                         startupScan = 1
                         --Save settings
+                        delete_onelua_title_files()
                         SaveSettings()
                         FreeIcons()
                         count_cache_and_reload()
