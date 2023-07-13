@@ -1057,6 +1057,48 @@ local ret_rename_collection = ""
 -- Loading progress
 -- loading_tasks = 0
 
+-- Import title info scanned from onelua script
+function import_onelua_titles()
+    -- Import onelua sfo scanned psp and psx titles
+    if System.doesFileExist (user_DB_Folder .. "sfo_scan_isos.lua") then
+        sfo_scan_isos_db = dofile(user_DB_Folder .. "sfo_scan_isos.lua")
+    else
+        sfo_scan_isos_db = {}
+    end
+    if System.doesFileExist (user_DB_Folder .. "sfo_scan_games.lua") then
+        sfo_scan_games_db = dofile(user_DB_Folder .. "sfo_scan_games.lua")
+    else
+        sfo_scan_games_db = {}
+    end
+    if System.doesFileExist (user_DB_Folder .. "sfo_scan_retroarch.lua") then
+        sfo_scan_retroarch_db = dofile(user_DB_Folder .. "sfo_scan_retroarch.lua")
+    else
+        sfo_scan_retroarch_db = {}
+    end
+    if System.doesFileExist (user_DB_Folder .. "scan_scummvm.lua") then
+        scan_scummvm_db = dofile(user_DB_Folder .. "scan_scummvm.lua")
+    else
+        scan_scummvm_db = {}
+    end
+end
+import_onelua_titles()
+
+
+function delete_onelua_title_files()
+    -- Function used for startup scan on - triggers rescan
+    if System.doesFileExist (user_DB_Folder .. "sfo_scan_isos.lua") then
+        System.deleteFile(user_DB_Folder .. "sfo_scan_isos.lua")
+    end
+    if System.doesFileExist (user_DB_Folder .. "sfo_scan_games.lua") then
+        System.deleteFile(user_DB_Folder .. "sfo_scan_games.lua")
+    end
+    if System.doesFileExist (user_DB_Folder .. "sfo_scan_retroarch.lua") then
+        System.deleteFile(user_DB_Folder .. "sfo_scan_retroarch.lua")
+    end
+    if System.doesFileExist (user_DB_Folder .. "scan_scummvm.lua") then
+        System.deleteFile(user_DB_Folder .. "scan_scummvm.lua")
+    end
+end
 
 function count_cache_and_reload()
     cache_file_count = System.listDirectory(db_Cache_Folder)
@@ -1072,7 +1114,7 @@ function count_cache_and_reload()
 end
 
 
--- PRINT TABLE FUNCTIONS
+
 function delete_cache()
     dofile("app0:addons/printTable.lua")
     delete_tables()
@@ -1095,6 +1137,9 @@ function delete_cache()
         System.deleteFile(scan_scummvm_lua)
     end
 end
+
+
+-- PRINT TABLE FUNCTIONS
 function cache_all_tables()
     dofile("app0:addons/printTable.lua")
     print_tables()
@@ -1122,6 +1167,35 @@ end
 function update_cached_table_launch_overrides()
     dofile("app0:addons/printTable.lua")
     print_table_launch_overrides()
+end
+
+function print_onelua_title_files()
+    -- Related to startup scan setting - save scanned titles tables to lua file so can be imported when startup scan is off 
+    function write_ini(pathini, tbl)
+        file = io.open(pathini, "w+")
+        file:write("return" .. "\n" .. "{" .. "\n")
+        for k, v in pairs((tbl)) do
+            file:write('["' .. k .. '"] = {title = "' .. v.title .. '", titleid = "' .. v.titleid .. '", region = "' .. v.region .. '", path = "' .. v.path .. '"},' .. "\n")
+        end
+        file:write('}')
+        file:close()
+    end
+
+    function write_ini_scummvm(pathini, tbl)
+        file = io.open(pathini, "w+")
+        file:write("return" .. "\n" .. "{" .. "\n")
+        for k, v in pairs((tbl)) do
+            file:write('[' .. k .. '] = {gameid = "' .. v.gameid .. '", description = "' .. v.description .. '", path = "' .. v.path .. '"},' .. "\n")
+
+        end
+        file:write('}')
+        file:close()
+    end
+
+    write_ini(user_DB_Folder .. "sfo_scan_isos.lua", sfo_scan_isos_db)
+    write_ini(user_DB_Folder .. "sfo_scan_games.lua", sfo_scan_games_db)
+    write_ini(user_DB_Folder .. "sfo_scan_retroarch.lua", sfo_scan_retroarch_db)
+    write_ini_scummvm(user_DB_Folder .. "scan_scummvm.lua", scan_scummvm_db)
 end
 
 
@@ -3528,6 +3602,7 @@ function update_loading_screen_complete()
     Screen.clear()
 end
 
+
 function listDirectory(dir)
     dir = System.listDirectory(dir)
     -- vita_table = {}
@@ -3605,27 +3680,7 @@ function listDirectory(dir)
     import_renamed_games()
     import_hidden_games()
 
-    -- Import onelua sfo scanned psp and psx titles
-    if System.doesFileExist (user_DB_Folder .. "sfo_scan_isos.lua") then
-        sfo_scan_isos_db = dofile(user_DB_Folder .. "sfo_scan_isos.lua")
-    else
-        sfo_scan_isos_db = {}
-    end
-    if System.doesFileExist (user_DB_Folder .. "sfo_scan_games.lua") then
-        sfo_scan_games_db = dofile(user_DB_Folder .. "sfo_scan_games.lua")
-    else
-        sfo_scan_games_db = {}
-    end
-    if System.doesFileExist (user_DB_Folder .. "sfo_scan_retroarch.lua") then
-        sfo_scan_retroarch_db = dofile(user_DB_Folder .. "sfo_scan_retroarch.lua")
-    else
-        sfo_scan_retroarch_db = {}
-    end
-    if System.doesFileExist (user_DB_Folder .. "scan_scummvm.lua") then
-        scan_scummvm_db = dofile(user_DB_Folder .. "scan_scummvm.lua")
-    else
-        scan_scummvm_db = {}
-    end
+    
 
     for i, file in pairs(dir) do
     local custom_path, custom_path_id, app_type = nil, nil, nil
@@ -7294,6 +7349,7 @@ if startupScan == 1 then
     files_table = listDirectory(System.currentDirectory())
     files_table = import_cached_DB()
     import_collections()
+    delete_onelua_title_files() -- triggers rescan using onelua script next time opening app
 else
     -- Startup scan is OFF
 
@@ -8629,10 +8685,11 @@ function get_cover_scale(icon)
     -- return fv_cover_scale_px
 end
 
+cover_widths_x_bonus = 0
 
-local function DrawCover_Flat(x, y, text, color, icon, cur_p)
+local function DrawCover_Flat(x, y, text, color, icon, sel)
 
-    if cur_p == p then
+    if sel == p then
         Graphics.fillRect(x - fv_border, x + fv_cover_scale_px + fv_border, fv_cover_y - fv_border, fv_cover_y + fv_cover_height + fv_border, white)
     end
 
@@ -8641,12 +8698,41 @@ local function DrawCover_Flat(x, y, text, color, icon, cur_p)
     Graphics.drawScaleImage(x, fv_cover_y, icon, fv_cover_scale, fv_cover_height / cover_height)
 
     -- Add dark overlay to cover left of current
-    if cur_p == master_index -1 then
+    if sel == master_index -1 then
         Graphics.fillRect(x, x + fv_cover_scale_px, fv_cover_y, fv_cover_y + fv_cover_height, Color.new(0,0,0,75))
     else
     end    
     
 end
+
+
+local function DrawCover_Flat_Smooth(x, y, text, color, icon, sel)
+    x = x * (fv_cover_height + fv_gutter) + cover_widths_x_bonus + fv_left_margin
+
+    if sel >= p then
+       cover_widths_x_bonus = cover_widths_x_bonus + fv_cover_scale_px - fv_cover_height
+
+    elseif sel == p-1 then
+        -- Add dark overlay to cover left of current
+        x = x + fv_cover_height - fv_cover_scale_px
+        Graphics.fillRect(x, x + fv_cover_scale_px, fv_cover_y, fv_cover_y + fv_cover_height, Color.new(0,0,0,75))
+    end
+
+    if sel == p then
+        Graphics.fillRect(x - fv_border, x + fv_cover_scale_px + fv_border, fv_cover_y - fv_border, fv_cover_y + fv_cover_height + fv_border, white)
+    end
+
+    Graphics.setImageFilters(icon, FILTER_LINEAR, FILTER_LINEAR)
+
+    Graphics.drawScaleImage(x, fv_cover_y, icon, fv_cover_scale, fv_cover_height / cover_height)
+
+    -- Add dark overlay to cover left of current
+    if sel == master_index -1 then
+        Graphics.fillRect(x, x + fv_cover_scale_px, fv_cover_y, fv_cover_y + fv_cover_height, Color.new(0,0,0,75))
+    end    
+    
+end
+
 
 local function DrawCover_List(icon)
 
@@ -9430,6 +9516,7 @@ function drawCategory (def)
 
         base_y = fv_left_margin
         base_y_left = 0
+        cover_widths_x_bonus = 0
 
         for l, file in pairs((def)) do
 
@@ -9461,7 +9548,15 @@ function drawCategory (def)
                     if (l >= master_index) then
                         if file.ricon ~= nil then
                             get_cover_scale(file.ricon)
+
+                            -- Smooth scrolling disabled until can improve
+                            -- if smoothScrolling == 1 then
+                            --     DrawCover_Flat_Smooth((l-curTotal-1) + targetX,152,file.name,color, file.ricon, l)            
+                            -- else
+                            --     DrawCover_Flat(base_y,152,file.name,color, file.ricon, l)
+                            -- end
                             DrawCover_Flat(base_y,152,file.name,color, file.ricon, l)
+
                             if fv_cover_scale_px ~= nil then
                                 base_y = base_y + fv_cover_scale_px + fv_gutter
                             end
@@ -9469,6 +9564,13 @@ function drawCategory (def)
                             drawCategory_icons((def))
                         else
                             get_cover_scale(file.icon)
+
+                            -- Smooth scrolling disabled until can improve
+                            -- if smoothScrolling == 1 then
+                            --     DrawCover_Flat_Smooth((l-curTotal-1) + targetX,152,file.name,color, file.icon, l)
+                            -- else
+                            --     DrawCover_Flat(base_y,152,file.name,color, file.icon, l)
+                            -- end
                             DrawCover_Flat(base_y,152,file.name,color, file.icon, l)
                             if fv_cover_scale_px ~= nil then
                                 base_y = base_y + fv_cover_scale_px + fv_gutter
@@ -9484,14 +9586,22 @@ function drawCategory (def)
                             get_cover_scale(file.ricon)
                             if fv_cover_scale_px ~= nil then
                                 base_y_left = 0 - fv_cover_scale_px + fv_left_margin - fv_gutter
-                                DrawCover_Flat(base_y_left,152,file.name,color, file.ricon, l)
+                                if smoothScrolling == 1 then
+                                    DrawCover_Flat_Smooth((l-curTotal-1) + targetX,152,file.name,color, file.ricon, l)
+                                else
+                                    DrawCover_Flat(base_y_left,152,file.name,color, file.ricon, l)
+                                end
                             end
                              
                         else
                             get_cover_scale(file.icon)
                             if fv_cover_scale_px ~= nil then
                                 base_y_left = 0 - fv_cover_scale_px + fv_left_margin - fv_gutter
-                                DrawCover_Flat(base_y_left,152,file.name,color, file.icon, l)
+                                if smoothScrolling == 1 then
+                                    DrawCover_Flat((l-curTotal-1) + targetX,152,file.name,color, file.icon, l)
+                                else
+                                    DrawCover_Flat(base_y_left,152,file.name,color, file.icon, l)
+                                end
                             end
                             
                         end
@@ -10307,7 +10417,13 @@ while true do
         -- Smooth move items horizontally
         if targetX ~= base_x then
             if smoothScrolling == 1 then
-                targetX = targetX - ((targetX - base_x) * 0.17)
+                if showView == 5 then
+                    -- Smooth scrolling disabled until can improve
+                    -- targetX = targetX - ((targetX - base_x) * 0.25)
+                    targetX = targetX - ((targetX - base_x) * 1)
+                else
+                    targetX = targetX - ((targetX - base_x) * 0.17)
+                end
             else
                 targetX = targetX - ((targetX - base_x) * 0.1)
             end
@@ -12305,6 +12421,7 @@ while true do
                         --Save settings
                         SaveSettings()
                         -- Print to Cache folder
+                        print_onelua_title_files() -- Added so rescan not triggered, other cache files exist
                         FreeIcons()
                         count_cache_and_reload()
                     else
