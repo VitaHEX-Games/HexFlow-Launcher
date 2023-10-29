@@ -136,7 +136,7 @@ Please see the [FAQ's](https://github.com/jimbob4000/RetroFlow-Launcher/blob/mai
 * Custom game backgrounds can be saved in the game folders here: `ux0:/data/RetroFlow/BACKGROUNDS/`.
 
 #### Filenames:
-* For Vita, PSP, PSX games and Homebrew the The cover image file name must match the **Game ID** or the **Game Name** of each app. 
+* For Vita, PSP, PSX, PSM games and Homebrew the The cover image file name must match the **Game ID** or the **Game Name** of each app. 
 * For retro games the cover image name should match the **Game Name** i.e. "Game Name (USA).png".
 
 #### Image format:

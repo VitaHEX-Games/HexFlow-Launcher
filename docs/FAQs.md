@@ -5,6 +5,7 @@
 **Topics:**
 
 * [Adrenaline - My games aren't working?](#adrenaline---my-games-arent-working)
+* [Adrenaline opens then closes without loading the game?](#adrenaline-opens-then-closes-without-loading-the-game)
 * [RetroArch fails to load games with "&" symbol in the game name](#retroarch-fails-to-load-games-with--symbol-in-the-game-name)
 * [PICO-8 games won't launch](#pico-8-games-wont-launch)
 * [ScummVM some games won't launch](#scummvm-some-games-wont-launch)
@@ -26,7 +27,13 @@
  * If Adrenaline games aren't launching, please install [Adrenaline Bubble Manager](https://github.com/ONElua/AdrenalineBubbleManager/releases). <br>
 Or try installing [AdrBubbleBooterInstaller](https://vitadb.rinnegatamante.it/#/info/307).
  * Check you have installed the 'RetroFlow Adrenaline Launcher' and that Adrenaline is functioning okay outside of RetroFlow.
-<br>
+<br><br>
+
+### Adrenaline opens then closes without loading the game?
+Behaviour: Adrenaline opens and then closes without loading the game (returning you to the livearea).
+
+This is a known issue with Adrenaline, called the 'double launch bug'. This can be easily fixed by following the guide here: [https://github.com/TheOfficialFloW/Adrenaline#getting-rid-of-double-launch-bug](https://github.com/TheOfficialFloW/Adrenaline#getting-rid-of-double-launch-bug)
+<br><br>
 
 ### RetroArch fails to load games with "&" symbol in the game name
 This appears to be an issue with RetroArch version 1.11 onward, try installing an [older version](https://buildbot.libretro.com/stable/) of RetroArch until the issue is resolved.
