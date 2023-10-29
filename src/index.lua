@@ -6889,13 +6889,14 @@ function import_cached_DB_tables(def_user_db_file, def_table_name)
             for k, v in ipairs(db_import) do
 
                 -- PSM - check for cover on import
-                if v.app_type == 39 then
-                    if System.doesFileExist("ur0:appmeta/" .. v.name .. "/pic0.png") then
-                        img_path = "ur0:appmeta/" .. v.name .. "/pic0.png"  --app icon
-                        v.icon_path = img_path
-                        v.cover = true
-                    end
-                end
+                -- Commented out, was preventing custom covers being shown - Can't remember why this was in here?
+                -- if v.app_type == 39 then
+                --     if System.doesFileExist("ur0:appmeta/" .. v.name .. "/pic0.png") then
+                --         img_path = "ur0:appmeta/" .. v.name .. "/pic0.png"  --app icon
+                --         v.icon_path = img_path
+                --         v.cover = true
+                --     end
+                -- end
 
                 -- For each game to be imported, cross reference against then hidden games list
                 for l, file in ipairs(hidden_games_table) do
