@@ -74,7 +74,7 @@ Vita, PSP, PSX, PSM and Homebrew example:
 	Normal cover name = PCSE123456.png
 	Custom cover name = My Game.png
 
-Make sure your custom cover is saved in the cover directory and in the correct subfolder i.e.
+Make sure your custom cover is saved in the cover directory and in the correct subfolder i.e. <br>
 `ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy Advance`
 
 **Don't forget** you need to rescan your games so the custom cover is found.
