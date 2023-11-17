@@ -11,6 +11,7 @@
 * [ScummVM some games won't launch](#scummvm-some-games-wont-launch)
 * [Atari 5200 loads the memopad in RetroArch?](#atari-5200-loads-the-memopad-in-retroarch)
 * [Missing artwork - How should I name my games so covers are found?](#missing-artwork---how-should-i-name-my-games-so-covers-are-found)
+* [Custom covers - How do I add custom covers?](#custom-covers---how-do-i-add-custom-covers)
 * [Why is there no option to download homebrew covers?](#why-is-there-no-option-to-download-homebrew-covers)
 * [How do I add disk based games?](#how-do-i-add-disk-based-games)
 * [PS1 and RetroArch, how do I set it up?](#ps1-and-retroarch-how-do-i-set-it-up)
@@ -57,6 +58,28 @@ The games should work provided you have everything else setup.
 It's recommended that your roms are named using the **no-intro** file naming convention, e.g. "Game Name (USA)", these names are used to match with cover images.
 <br><br>
 
+### Custom covers - How do I add custom covers?
+
+Custom covers are used to override the default covers, the name should match the game name that you see within RetroFlow.
+
+Retro game example:
+
+	Game name = My Game (USA).gba
+	Normal cover name = My Game (USA).png
+	Custom cover name = My Game.png
+	
+Vita, PSP, PSX, PSM and Homebrew example:
+
+	App ID = PCSE123456
+	Normal cover name = PCSE123456.png
+	Custom cover name = My Game.png
+
+Make sure your custom cover is saved in the cover directory and in the correct subfolder i.e.
+`ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy Advance`
+
+**Don't forget** you need to rescan your games so the custom cover is found.
+
+<br><br>
 ### Why is there no option to download homebrew covers?
 Covers haven't been made for homebrew applications as it's not necessary as the app icon is used. 
 
