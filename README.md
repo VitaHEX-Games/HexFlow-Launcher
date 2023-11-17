@@ -139,6 +139,7 @@ Please see the [FAQ's](https://github.com/jimbob4000/RetroFlow-Launcher/blob/mai
 * For Vita, PSP, PSX, PSM games and Homebrew the cover image file name must match the **Game ID** or the **Game Name** of each app. 
 * For retro games the cover image name should match the **Game Name** i.e. "Game Name (USA).png".
 * See the [FAQ's](https://github.com/jimbob4000/RetroFlow-Launcher/blob/main/docs/FAQs.md#custom-covers---how-do-i-add-custom-covers) page for more information.
+* **Don't forget** you need to **rescan your games** so the custom cover is found.
 
 #### Image format:
 * Cover and background images must be in **png** format. 
