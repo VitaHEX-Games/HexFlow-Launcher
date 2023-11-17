@@ -77,7 +77,7 @@ Vita, PSP, PSX, PSM and Homebrew example:
 Make sure your custom cover is saved in the cover directory and in the correct subfolder i.e. <br>
 `ux0:/data/RetroFlow/COVERS/Nintendo - Game Boy Advance`
 
-**Don't forget** you need to rescan your games so the custom cover is found.
+**Don't forget** you need to **rescan your games** so the custom cover is found.
 
 <br><br>
 ### Why is there no option to download homebrew covers?
