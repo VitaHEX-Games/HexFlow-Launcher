@@ -6,7 +6,7 @@ local oneLoopTimer = Timer.new()
 
 dofile("app0:addons/threads.lua")
 local working_dir = "ux0:/app"
-local appversion = "6.1.1"
+local appversion = "6.2.0"
 function System.currentDirectory(dir)
     if dir == nil then
         return working_dir
@@ -1262,6 +1262,8 @@ local getRomDir = 1
 local getSnaps = 0
 local tmpappcat = 0
 
+
+
 -- Flat view layout (Spaced)
 fv_left_margin = 70
 fv_cover_height = 220
@@ -1282,6 +1284,11 @@ quick_scrolling_factor_goal = 0
 
 local game_adr_bin_driver = 0
 local game_adr_exec_bin = 0
+game_adr_plugins = 0
+game_adr_speed = 0
+game_adr_hm = 0
+game_adr_nonpdrm = 0
+game_adr_suspend = 0
 
 local collection_number = 0
 local xcollection_number = 1
@@ -1321,6 +1328,7 @@ local setAdrPSButton = 0 -- 0 Menu
 local showHidden = 0 -- 0 Off
 local showCollections = 1 -- On
 startCategory_collection = "not_set"
+setTime = 0 -- 24 hour
 
 local filterGames = 0 -- All
 local showMissingCovers = 1 -- On
@@ -1377,6 +1385,7 @@ function SaveSettings()
         "\nSmooth_scrolling=" .. smoothScrolling .. " " .. 
         "\nTwo_D_views=" .. set2DViews .. " " .. 
         "\nChange_views=" .. setChangeViews .. " " .. 
+        "\nTime=" .. setTime .. " " .. 
         "\nStartup_Collection=" .. startCategory_collection -- MUST ALWAYS BE LAST -- the config is split into a table using number values which this setting does not have. Need to add proper ini file reading
 
         file_config:write(settings)
@@ -1425,7 +1434,8 @@ if System.doesFileExist(cur_dir .. "/config.dat") then
     local getsmoothScrolling = settingValue[22]; if getsmoothScrolling ~= nil then smoothScrolling = getsmoothScrolling end
     local get2DViews = settingValue[23]; if get2DViews ~= nil then set2DViews = get2DViews end
     local getChangeViews = settingValue[24]; if getChangeViews ~= nil then setChangeViews = getChangeViews end
-    -- settingValue[25] is startup collection 
+    local getTime = settingValue[25]; if getTime ~= nil then setTime = getTime end
+    -- settingValue[26] is startup collection 
 
     selectedwall = setBackground
 
@@ -2019,12 +2029,24 @@ local lang_default =
 ["LiveArea"] = "LiveArea",
 ["Standard"] = "Standard",
 ["Show_missing_covers_colon"] = "Show missing covers:",
+["Time_colon"] = "Time:",
+["Time_12hr"] = "12-Hour Clock",
+["Time_24hr"] = "24-Hour Clock",
 
 -- Game options
 ["Options"] = "Options",
 ["Adrenaline_options"] = "Adrenaline options",
 ["Driver_colon"] = "Driver: ",
 ["Execute_colon"] = "Execute: ",
+["Plugins_colon"] = "Plugins: ",
+["CPU_speed_colon"] = "CPU speed: ",
+["High_memory_colon"] = "High memory: ",
+["NoDRM_engine_colon"] = "NoDRM engine: ",
+["Suspend_threads_colon"] = "Suspend threads: ",
+["Enable"] = "Enable",
+["Disable"] = "Disable",
+["Yes"] = "Yes",
+["No"] = "No",
 ["Save"] = "Save",
 ["Add_to_favorites"] = "Add to favorites",
 ["Remove_from_favorites"] = "Remove from favorites",
@@ -2292,10 +2314,21 @@ Swap_X_O_buttons()
 -- Check model, if PSTV battery wont be shown and affects UI elements
     local pstv = false
     local pstv_offset = 0
+
     model = System.getModel()
     if string.match(tostring(model), "131072") then
         pstv = true
-        pstv_offset = 105
+        if Network.isWifiEnabled() then
+            pstv_offset = 110
+        else
+            pstv_offset = 125
+        end
+    end
+
+-- Check time setting to offset icons in top
+    time24_offset = 0
+    if setTime == 1 then
+        time24_offset = 25
     end
     
 -- Menu Layout
@@ -2330,6 +2363,7 @@ Swap_X_O_buttons()
     setting_y5 = 327
     setting_y6 = 374
     setting_y7 = 421
+    setting_y8 = 468
     setting_y_smallfont_offset = 2
 
 function vertically_centre_mini_menu(def_menuItems)
@@ -2765,7 +2799,7 @@ end
 
 
 
-function AutoMakeBootBin(def_rom_location, def_driver, def_bin)
+function AutoMakeBootBin(def_rom_location, def_driver, def_bin, def_plugins, def_speed, def_hm, def_nonpdrm, def_suspend)
 
     -- Driver and bin tables
     local drivers = { "ENABLE", "INFERN0", "MARCH33", "NP9660" } -- 0,0,1,2
@@ -2783,6 +2817,11 @@ function AutoMakeBootBin(def_rom_location, def_driver, def_bin)
     
     local driver = tostring(def_driver)
     local bin = tostring(def_bin)
+    local plugins = def_plugins
+    local speed = def_speed
+    local hm = def_hm
+    local nonpdrm = def_nonpdrm
+    local suspend = def_suspend
 
     -- Copy boot bin for editing
     if System.doesDirExist("ux0:/app/RETROLNCR/data") then
@@ -2802,7 +2841,6 @@ function AutoMakeBootBin(def_rom_location, def_driver, def_bin)
                 elseif driver == "NP9660" then number = "\x02\x00\x00\x00"
                 end
                 fp:write(number)
-
                 number = 0
 
                 -- Bin Execute
@@ -2812,6 +2850,68 @@ function AutoMakeBootBin(def_rom_location, def_driver, def_bin)
                 elseif bin == "BOOT.BIN" then number = "\x02\x00\x00\x00"
                 end
                 fp:write(number)
+                number = 0
+
+                -- Suspend
+                if suspend ~= 0 then
+                    fp:seek("set", 0x18)
+                    if suspend == 1 then number = "\x01\x00\x00\x00"        -- No
+                    end
+                    fp:write(number)
+                    number = 0
+                end
+
+                -- cpuspeed
+                if speed ~= 0 then
+                    fp:seek("set", 0x1C)
+                    if speed == 1      then number = "\x01\x00\x00\x00"     -- 20/10
+                    elseif speed == 2  then number = "\x02\x00\x00\x00"     -- 50/25
+                    elseif speed == 3  then number = "\x03\x00\x00\x00"     -- 75/37
+                    elseif speed == 4  then number = "\x04\x00\x00\x00"     -- 100/50
+                    elseif speed == 5  then number = "\x05\x00\x00\x00"     -- 111/55
+                    elseif speed == 6  then number = "\x06\x00\x00\x00"     -- 122/61
+                    elseif speed == 7  then number = "\x07\x00\x00\x00"     -- 133/66
+                    elseif speed == 8  then number = "\x08\x00\x00\x00"     -- 166/83
+                    elseif speed == 9  then number = "\x09\x00\x00\x00"     -- 200/100
+                    elseif speed == 10 then number = "\x0A\x00\x00\x00"     -- 222/111
+                    elseif speed == 11 then number = "\x0B\x00\x00\x00"     -- 266/133
+                    elseif speed == 12 then number = "\x0C\x00\x00\x00"     -- 288/144
+                    elseif speed == 13 then number = "\x0D\x00\x00\x00"     -- 300/150
+                    elseif speed == 14 then number = "\x0E\x00\x00\x00"     -- 333/166
+                    end
+                    fp:write(number)
+                    number = 0
+                end
+
+                -- Plugins
+                if plugins ~= 0 then
+                    fp:seek("set", 0x20)
+                    if plugins == 1 then number = "\x01\x00\x00\x00"        -- Enable
+                    elseif plugins == 2 then number = "\x02\x00\x00\x00"    -- Disable
+                    end
+                    fp:write(number)
+                    number = 0
+                end
+
+                -- NonpDRM
+                if nonpdrm ~= 0 then
+                    fp:seek("set", 0x24)
+                    if nonpdrm == 1 then number = "\x01\x00\x00\x00"        -- Enable
+                    elseif nonpdrm == 2 then number = "\x02\x00\x00\x00"    -- Disable
+                    end
+                    fp:write(number)
+                    number = 0
+                end
+
+                --HighMemory
+                if hm ~= 0 then
+                    fp:seek("set", 0x28)
+                    if hm == 1 then number = "\x01\x00\x00\x00"             -- Enable
+                    elseif hm == 2 then number = "\x02\x00\x00\x00"         -- Disable
+                    end
+                    fp:write(number)
+                    number = 0
+                end
 
                 -- Path2game
                 fp:seek("set",0x40)
@@ -2856,6 +2956,25 @@ function import_launch_overrides()
         db_launch_overrides = dofile(db_Cache_launch_overrides)
 
         for k, v in ipairs(db_launch_overrides) do
+
+            -- If queries are a legacy fix for new settings that were added
+            if v.plugins == nil then
+                v.plugins = game_adr_plugins
+            end
+            if v.speed == nil then
+                v.speed = game_adr_speed
+            end
+            if v.hm == nil then
+                v.hm = game_adr_hm
+            end
+            if v.nonpdrm == nil then
+                v.nonpdrm = game_adr_nonpdrm
+            end
+            if v.speed == nil then
+                v.suspend = game_adr_suspend
+            end
+
+
             table.insert(launch_overrides_table, v)
         end
     end
@@ -2893,6 +3012,12 @@ function launch_Adrenaline(def_rom_location, def_rom_title_id, def_rom_filename)
                 bin = "EBOOT.BIN"
             end
 
+            plugins = launch_overrides_table[key].plugins
+            speed = launch_overrides_table[key].speed
+            hm = launch_overrides_table[key].hm
+            nonpdrm = launch_overrides_table[key].nonpdrm
+            suspend = launch_overrides_table[key].suspend
+
         else
             -- Overrides not found, use default
             driver = "INFERN0"
@@ -2902,6 +3027,11 @@ function launch_Adrenaline(def_rom_location, def_rom_title_id, def_rom_filename)
         -- Table is empty, use default
         driver = "INFERN0"
         bin = "EBOOT.BIN"
+        plugins = 0
+        speed = 0
+        hm = 0
+        nonpdrm = 0
+        suspend = 0
     end
 
     -- Delete the old Adrenaline inf file
@@ -2914,9 +3044,7 @@ function launch_Adrenaline(def_rom_location, def_rom_title_id, def_rom_filename)
         System.deleteFile(launch_dir_adr .. "data/boot.bin")
     end
 
-
-
-    AutoMakeBootBin((def_rom_location), driver, bin)
+    AutoMakeBootBin((def_rom_location), driver, bin, plugins, speed, hm, nonpdrm, suspend)
 
 end
 
@@ -9491,7 +9619,7 @@ function drawCategory_icons (def)
     -- Show fav icon if game if a favourite
     favourite_flag = (def)[p].favourite
     if (def)[p].favourite == true then
-        Graphics.drawImage(685 + pstv_offset, 36, imgFavorite_small_on)
+        Graphics.drawImage(685 - time24_offset + pstv_offset + wifi_offset, 36, imgFavorite_small_on)
     else
     end
 
@@ -9500,9 +9628,9 @@ function drawCategory_icons (def)
     if (def)[p].hidden == true then
         favourite_flag = (def)[p].favourite
         if (def)[p].favourite == true then
-            Graphics.drawImage(685 + pstv_offset - 42, 36, imgHidden_small_on)
+            Graphics.drawImage(685 - time24_offset + pstv_offset + wifi_offset - 42, 36, imgHidden_small_on)
         else
-            Graphics.drawImage(685 + pstv_offset, 36, imgHidden_small_on)
+            Graphics.drawImage(685 - time24_offset + pstv_offset + wifi_offset, 36, imgHidden_small_on)
         end
     else
     end
@@ -10297,12 +10425,64 @@ while true do
         end
 
         -- Header
+
+        wifi_offset = 0
+        if Network.isWifiEnabled() then
+            Graphics.drawImage(798 + pstv_offset + wifi_offset, 35, imgWifi)-- wifi icon
+
+            if pstv == true then
+                pstv_offset = 110
+            end
+
+        else
+            wifi_offset = 30
+
+            if pstv == true then
+                pstv_offset = 125
+            end
+
+        end
+
         h, m, s = System.getTime()
-        Font.print(fnt20, 726 + pstv_offset, 34, string.format("%02d:%02d", h, m), white)-- Draw time
+
+        if setTime == 0 then
+            -- 24 hour clock
+            Font.print(fnt20, 726 + pstv_offset + wifi_offset, 34, string.format("%02d:%02d", h, m), white)-- Draw time
+        else
+            -- 12 hour clock
+            local ampm = " AM"
+
+            -- Get AM / PM string
+            if h < 12 then
+                ampm = " AM"
+            elseif h >= 12 then
+                ampm = " PM"
+            else
+            end
+                
+            -- Format 24 hr 2 digits to 12 hr 1 digit
+            if h >= 13 then
+                h = h -12
+            elseif h == 0 then
+                h = 12
+            end
+
+            -- Load small font for AM/PM string
+            if fnt14 == nil then
+                fnt14 = Font.load("app0:/DATA/" .. fontname)
+                Font.setPixelSizes(fnt14, 14)
+            end
+
+            local time12hr = (string.format("%d:%02d", h, m))
+            labeltime12hr = Font.getTextWidth(fnt14, time12hr)
+
+            Font.print(fnt20, 726 - time24_offset + pstv_offset + wifi_offset, 34, (string.format("%d:%02d", h, m)), white)-- Draw time
+            Font.print(fnt14, 726 - time24_offset + pstv_offset + wifi_offset + labeltime12hr + 15, 40, ampm, white)-- Draw time
+        end
 
         if pstv == false then
             life = System.getBatteryPercentage()
-            Font.print(fnt20, 830, 34, life .. "%", white)-- Draw battery
+            Font.print(fnt20, 840, 34, life .. "%", white)-- Draw battery
             Graphics.drawImage(888, 39, imgBattery)
             Graphics.fillRect(891, 891 + (life / 5.2), 43, 51, white)
         end
@@ -10362,10 +10542,6 @@ while true do
 
         else Font.print(fnt22, 32, 34, lang_lines.All, white)
         end
-        if Network.isWifiEnabled() then
-            Graphics.drawImage(800 + pstv_offset, 35, imgWifi)-- wifi icon
-        end
-
     
         if showView ~= 2 then
             if showView == 5 then
@@ -13837,7 +14013,7 @@ while true do
         Graphics.fillRect(60, 900, 82 + (menuY * 47), 129 + (menuY * 47), themeCol)-- selection
 
 
-        menuItems = 4
+        menuItems = 5
 
         -- MENU 19 / #0 Back
         Font.print(fnt22, setting_x, setting_y0, lang_lines.Back_Chevron, white)--Back
@@ -13868,8 +14044,16 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y3, lang_lines.Off, white)--OFF
         end
 
-        -- MENU 19 / #4 Edit collections
-        Font.print(fnt22, setting_x, setting_y4, lang_lines.Edit_collections, white)--Edit collections
+        -- MENU 19 / #4 Time
+        Font.print(fnt22, setting_x, setting_y4, lang_lines.Time_colon, white)--Time
+        if setTime == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.Time_12hr, white)--24-Hour Clock
+        else
+            Font.print(fnt22, setting_x_offset, setting_y4, lang_lines.Time_24hr, white)--12-Hour Clock
+        end
+
+        -- MENU 19 / #5 Edit collections
+        Font.print(fnt22, setting_x, setting_y5, lang_lines.Edit_collections, white)--Edit collections
 
         -- MENU 19 - FUNCTIONS
         status = System.getMessageState()
@@ -13934,8 +14118,15 @@ while true do
                         check_for_out_of_bounds()
                         GetNameAndAppTypeSelected()
                     end
-
-                elseif menuY == 4 then -- #4 Edit collections
+                elseif menuY == 4 then -- #4 Time
+                    if setTime == 1 then
+                        setTime = 0
+                        time24_offset = 0 -- Updates positioning of clock in UI
+                    else
+                        setTime = 1
+                        time24_offset = 25 -- Updates positioning of clock in UI
+                    end
+                elseif menuY == 5 then -- #5 Edit collections
                     showMenu = 24 
                     menuY = 0
                 end
@@ -14143,12 +14334,24 @@ while true do
                         game_adr_bin_driver = 0
                         game_adr_exec_bin = 0
 
+                        game_adr_plugins = 0
+                        game_adr_speed = 0
+                        game_adr_hm = 0
+                        game_adr_nonpdrm = 0
+                        game_adr_suspend = 0
+
                         -- Get existing settings
                         local key = find_game_table_pos_key(launch_overrides_table, app_titleid)
                         if key ~= nil then
                             -- Yes - it's already in the launch override list, update it.
                             game_adr_bin_driver = launch_overrides_table[key].driver
                             game_adr_exec_bin = launch_overrides_table[key].bin
+
+                            game_adr_plugins = launch_overrides_table[key].plugins
+                            game_adr_speed = launch_overrides_table[key].speed
+                            game_adr_hm = launch_overrides_table[key].hm
+                            game_adr_nonpdrm = launch_overrides_table[key].nonpdrm
+                            game_adr_suspend = launch_overrides_table[key].suspend
                         end
 
                         showMenu = 21
@@ -14351,7 +14554,7 @@ while true do
 
         -- GET MENU ITEM COUNT
             
-            menuItems = 3
+            menuItems = 8
             
         -- Calculate vertical centre
             vertically_centre_mini_menu(menuItems)
@@ -14401,11 +14604,13 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. "MARCH33" .. "  >", white)
         elseif game_adr_bin_driver == 3 then
             Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. "NP9660" .."  >", white)
-        elseif setLanguage == 11 then
-            -- Use alternate translation for Polish
-            Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. lang_lines.Default_alt_translation_1 .. "  >", white)
         else
-            Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
+            if setLanguage == 11 then
+                -- Use alternate translation for Polish
+                Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. lang_lines.Default_alt_translation_2 .. "  >", white)
+            else
+                Font.print(fnt22, setting_x_offset, setting_y1 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
+            end
         end
 
         -- MENU 21 / #2 Execute bin
@@ -14417,16 +14622,110 @@ while true do
             Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. "EBOOT.OLD" .. "  >", white)
         elseif game_adr_exec_bin == 3 then
             Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. "BOOT.BIN" .."  >", white)
-        elseif setLanguage == 11 then
-            -- Use alternate translation for Polish
-            Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.Default_alt_translation_2 .. "  >", white)
         else
-            Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
+            if setLanguage == 11 then
+                -- Use alternate translation for Polish
+                Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.Default_alt_translation_2 .. "  >", white)
+            else
+                Font.print(fnt22, setting_x_offset, setting_y2 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
+            end
         end
 
+        -- MENU 21 / #3 Plugins
+        Font.print(fnt22, setting_x, setting_y3 + y_centre_text_offset, lang_lines.Plugins_colon, white)--Plugins
+        if game_adr_plugins == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y3 + y_centre_text_offset, "<  " .. lang_lines.Enable .. "  >", white)
+        elseif game_adr_plugins == 2 then
+            Font.print(fnt22, setting_x_offset, setting_y3 + y_centre_text_offset, "<  " .. lang_lines.Disable .. "  >", white)
+        else
+            if setLanguage == 11 then
+                -- Use alternate translation for Polish
+                Font.print(fnt22, setting_x_offset, setting_y3 + y_centre_text_offset, "<  " .. lang_lines.Default_alt_translation_2 .. "  >", white)
+            else
+                Font.print(fnt22, setting_x_offset, setting_y3 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
+            end
+        end
+        
 
-        -- MENU 21 / #3 Save
-        Font.print(fnt22, setting_x, setting_y3 + y_centre_text_offset, lang_lines.Save, white)--Save
+        -- MENU 21 / #4 CPU speed
+        Font.print(fnt22, setting_x, setting_y4 + y_centre_text_offset, lang_lines.CPU_speed_colon, white)--CPU speed
+        if game_adr_speed == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "20/10" .. "  >", white)
+        elseif game_adr_speed == 2 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "50/25" .. "  >", white)
+        elseif game_adr_speed == 3 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "75/37" .. "  >", white)
+        elseif game_adr_speed == 4 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "100/50" .. "  >", white)
+        elseif game_adr_speed == 5 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "111/55" .. "  >", white)
+        elseif game_adr_speed == 6 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "122/61" .. "  >", white)
+        elseif game_adr_speed == 7 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "133/66" .. "  >", white)
+        elseif game_adr_speed == 8 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "166/83" .. "  >", white)
+        elseif game_adr_speed == 9 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "200/100" .. "  >", white)
+        elseif game_adr_speed == 10 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "222/111" .. "  >", white)
+        elseif game_adr_speed == 11 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "266/133" .. "  >", white)
+        elseif game_adr_speed == 12 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "288/144" .. "  >", white)
+        elseif game_adr_speed == 13 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "300/150" .. "  >", white)
+        elseif game_adr_speed == 14 then
+            Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. "333/166" .. "  >", white)
+        else
+            if setLanguage == 11 then
+                -- Use alternate translation for Polish
+                Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. lang_lines.Default_alt_translation_2 .. "  >", white)
+            else
+                Font.print(fnt22, setting_x_offset, setting_y4 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
+            end
+        end
+
+        -- MENU 21 / #5 High memory
+        Font.print(fnt22, setting_x, setting_y5 + y_centre_text_offset, lang_lines.High_memory_colon, white)--High memory
+        if game_adr_hm == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y5 + y_centre_text_offset, "<  " .. lang_lines.Enable .. "  >", white)
+        elseif game_adr_hm == 2 then
+            Font.print(fnt22, setting_x_offset, setting_y5 + y_centre_text_offset, "<  " .. lang_lines.Disable .. "  >", white)
+        else
+            if setLanguage == 11 then
+                -- Use alternate translation for Polish
+                Font.print(fnt22, setting_x_offset, setting_y5 + y_centre_text_offset, "<  " .. lang_lines.Default_alt_translation_2 .. "  >", white)
+            else
+                Font.print(fnt22, setting_x_offset, setting_y5 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
+            end
+        end
+
+        -- MENU 21 / #6 NoDRM engine
+        Font.print(fnt22, setting_x, setting_y6 + y_centre_text_offset, lang_lines.NoDRM_engine_colon, white)--NoDRM engine
+        if game_adr_nonpdrm == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y6 + y_centre_text_offset, "<  " .. lang_lines.Enable .. "  >", white)
+        elseif game_adr_nonpdrm == 2 then
+            Font.print(fnt22, setting_x_offset, setting_y6 + y_centre_text_offset, "<  " .. lang_lines.Disable .. "  >", white)
+        else
+            if setLanguage == 11 then
+                -- Use alternate translation for Polish
+                Font.print(fnt22, setting_x_offset, setting_y6 + y_centre_text_offset, "<  " .. lang_lines.Default_alt_translation_2 .. "  >", white)
+            else
+                Font.print(fnt22, setting_x_offset, setting_y6 + y_centre_text_offset, "<  " .. lang_lines.Default .. "  >", white)
+            end
+        end
+
+        -- MENU 21 / #7 Suspend threads
+        Font.print(fnt22, setting_x, setting_y7 + y_centre_text_offset, lang_lines.Suspend_threads_colon, white)--Suspend threads
+        if game_adr_suspend == 1 then
+            Font.print(fnt22, setting_x_offset, setting_y7 + y_centre_text_offset, "<  " .. lang_lines.No .. "  >", white)
+        else
+            Font.print(fnt22, setting_x_offset, setting_y7 + y_centre_text_offset, "<  " .. lang_lines.Yes .. "  >", white)
+        end
+
+        -- MENU 21 / #8 Save
+        Font.print(fnt22, setting_x, setting_y8 + y_centre_text_offset, lang_lines.Save, white)--Save
 
         
         -- MENU 21 - FUNCTIONS
@@ -14444,7 +14743,7 @@ while true do
                         menuY=4
                     end
 
-                elseif menuY == 3 then -- #3 Save the setting
+                elseif menuY == 8 then -- #3 Save the setting
                     
                     if #launch_overrides_table ~= nil then
                         local key = find_game_table_pos_key(launch_overrides_table, app_titleid)
@@ -14452,10 +14751,25 @@ while true do
                             -- Yes - it's already in the launch override list, update it.
                             launch_overrides_table[key].driver = game_adr_bin_driver
                             launch_overrides_table[key].bin = game_adr_exec_bin
+                            launch_overrides_table[key].plugins = game_adr_plugins
+                            launch_overrides_table[key].speed = game_adr_speed
+                            launch_overrides_table[key].hm = game_adr_hm
+                            launch_overrides_table[key].nonpdrm = game_adr_nonpdrm
+                            launch_overrides_table[key].suspend = game_adr_suspend
+
                         else
                             -- No, it's new, add it to the launch override list
                             launch_overrides_temp = {}
-                            table.insert(launch_overrides_temp, {name = app_titleid, driver = game_adr_bin_driver, bin = game_adr_exec_bin, apptitle = app_title, app_type = apptype})
+                            table.insert(launch_overrides_temp, {
+                                name = app_titleid, 
+                                driver = game_adr_bin_driver, 
+                                bin = game_adr_exec_bin, 
+                                plugins = game_adr_plugins,
+                                speed = game_adr_speed,
+                                hm = game_adr_hm,
+                                nonpdrm = game_adr_nonpdrm,
+                                suspend = game_adr_suspend,
+                                apptitle = app_title, app_type = apptype})
 
                             for i, file in ipairs(launch_overrides_temp) do
                                 table.insert(launch_overrides_table, file)
@@ -14500,6 +14814,36 @@ while true do
                     else
                         game_adr_exec_bin = 3
                     end
+                elseif menuY == 3 then -- #3 Plugins
+                    if game_adr_plugins > 0 then
+                        game_adr_plugins = game_adr_plugins - 1
+                    else
+                        game_adr_plugins = 2
+                    end
+                elseif menuY == 4 then -- #4 CPU speed
+                    if game_adr_speed > 0 then
+                        game_adr_speed = game_adr_speed - 1
+                    else
+                        game_adr_speed = 14
+                    end
+                elseif menuY == 5 then -- #5 High memory
+                    if game_adr_hm > 0 then
+                        game_adr_hm = game_adr_hm - 1
+                    else
+                        game_adr_hm = 2
+                    end
+                elseif menuY == 6 then -- #6 NoDRM engine
+                    if game_adr_nonpdrm > 0 then
+                        game_adr_nonpdrm = game_adr_nonpdrm - 1
+                    else
+                        game_adr_nonpdrm = 2
+                    end
+                elseif menuY == 7 then -- #7 Suspend threads
+                    if game_adr_suspend > 0 then
+                        game_adr_suspend = game_adr_suspend - 1
+                    else
+                        game_adr_suspend = 1
+                    end
                 else
                 end
             elseif (Controls.check(pad, SCE_CTRL_RIGHT)) and not (Controls.check(oldpad, SCE_CTRL_RIGHT)) then
@@ -14515,6 +14859,36 @@ while true do
                         game_adr_exec_bin = game_adr_exec_bin + 1
                     else
                         game_adr_exec_bin = 0
+                    end
+                elseif menuY == 3 then -- #3 Plugins
+                    if game_adr_plugins < 2 then
+                        game_adr_plugins = game_adr_plugins + 1
+                    else
+                        game_adr_plugins = 0
+                    end
+                elseif menuY == 4 then -- #4 CPU speed
+                    if game_adr_speed < 14 then
+                        game_adr_speed = game_adr_speed + 1
+                    else
+                        game_adr_speed = 0
+                    end
+                elseif menuY == 5 then -- #5 High memory
+                    if game_adr_hm < 2 then
+                        game_adr_hm = game_adr_hm + 1
+                    else
+                        game_adr_hm = 0
+                    end
+                elseif menuY == 6 then -- #6 NoDRM engine
+                    if game_adr_nonpdrm < 2 then
+                        game_adr_nonpdrm = game_adr_nonpdrm + 1
+                    else
+                        game_adr_nonpdrm = 0
+                    end
+                elseif menuY == 7 then -- #7 Suspend threads
+                    if game_adr_suspend < 1 then
+                        game_adr_suspend = game_adr_suspend + 1
+                    else
+                        game_adr_suspend = 0
                     end
                 else
                 end
@@ -14975,7 +15349,7 @@ while true do
                 -- MENU 2
                 if menuY == 0 then -- #0 Back
                     showMenu = 19  -- Other settings
-                    menuY = 3
+                    menuY = 5
 
                 elseif menuY == 2 then -- #2 Rename collection
                     -- Do something
@@ -16281,7 +16655,7 @@ while true do
                     menuY=0
                 elseif showMenu == 24 then -- Edit collections
                     showMenu = 19
-                    menuY=4
+                    menuY=5
                     
                 elseif showMenu == 2 then
                     -- If search cancelled with circle, return to settings menu
