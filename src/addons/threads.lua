@@ -29,7 +29,8 @@ function Threads.update()
         Task = table.remove(Queue, 1)
         if Task.Type == "ImageLoad" then
             if Task.Path then
-                Graphics.loadImageAsync(Task.Path)
+                local Task_Path_GSub = Task.Path:gsub("%%", "%%%%")
+                Graphics.loadImageAsync(Task_Path_GSub)
             else
                 uniques[Task.UniqueKey] = nil
                 Task = nil
@@ -99,7 +100,7 @@ function Threads.addTask(UniqueKey, T)
         Table = T.Table,
         Index = T.Index,
         Path = T.Path,
-        Retry = 3,
+        Retry = 1,
         UniqueKey = UniqueKey
     }
     Queue[#Queue + 1] = newTask
